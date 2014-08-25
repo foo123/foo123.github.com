@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        
+        <title>Image Processing with Filter.js</title>
+        
+        <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+        <style type="text/css">
+            body {
+                position:relative;
+                font-family: Monospace;
+                font-size:12px;
+                background-color: #121212;
+                color:#aaa;
+                margin: 0;
+                padding:0;
+                height:100%;
+                min-height:900px; 
+                overflow:scroll;
+            }
+            .panel {
+                display:inline-block;
+                max-width:240px;
+                position:relative;
+                margin:0;
+                padding:0;
+                cursor:pointer;
+                vertical-align:top;
+                padding-right:10px;
+                border-right:4px solid #aaa;
+            }
+            #aside {
+                position:absolute;
+                color:#aaa;
+                font-size:12px;
+                z-index:200;
+                width:250px;
+                right:0;
+                top:100px;
+            }
+            #container { max-width:400px; }
+            #filters { max-width:600px; }
+            span  {
+                vertical-aligh:top;
+                position:relative;
+                display:inline-block;
+                width:25px;
+                padding:0;
+                padding-left:10px;
+            }
+            #forkongithub
+            {
+                width:100%;
+            }
+            .button {
+                -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
+                -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
+                box-shadow:inset 0px 1px 0px 0px #f5978e;
+                background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
+                background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
+                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
+                background-color:#f24537;
+                -webkit-border-top-left-radius:20px;
+                -moz-border-radius-topleft:20px;
+                border-top-left-radius:20px;
+                -webkit-border-top-right-radius:20px;
+                -moz-border-radius-topright:20px;
+                border-top-right-radius:20px;
+                -webkit-border-bottom-right-radius:20px;
+                -moz-border-radius-bottomright:20px;
+                border-bottom-right-radius:20px;
+                -webkit-border-bottom-left-radius:20px;
+                -moz-border-radius-bottomleft:20px;
+                border-bottom-left-radius:20px;
+                text-indent:0;
+                border:1px solid #d02718;
+                display:inline-block;
+                color:#ffffff;
+                font-family:Arial;
+                font-size:15px;
+                font-weight:bold;
+                font-style:normal;
+                height:50px;
+                line-height:50px;
+                width:2000px;
+                text-decoration:none;
+                text-align:center;
+                text-shadow:1px 1px 0px #810e05;
+            }
+            .button:hover {
+                background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
+                background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
+                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
+                background-color:#c62d1f;
+            }.button:active {
+                position:relative;
+                top:1px;
+            }
+            .button {
+                width:120px;
+                height:40px;
+                line-height:40px;
+                position:relative;
+                cursor:pointer;
+            }
+            
+            .img-area-select {
+                border: 2px dotted #79b900;
+                cursor: arrow;
+            }
+            #forkongithub a{background:#c83022;color:#fff;}
+        </style>
+        <script type="text/javascript" src="../../js/utils.min.js"></script>
+        <script src="../common/js/filter.bundle.js"></script>
+    </head>
+    <body>
+        <span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
+        
+        <header id="header">
+            <h1>Image Processing with Filter.js</h1><br /><br />
+        </header>
+        <div style="padding:0;margin:0;position:relative;z-index:1000;margin-left:25px">
+            <button id="parallel" class="button">Parallel</button>
+            <button id="synchronous" class="button">Synchronous</button>
+        </div>
+        <br />
+        
+        
+        <aside id="aside">
+            <button id="test" class="button">Apply Filters</button>
+        </aside>
+        
+        <div id="container" class="panel"></div>
+        
+        <div id="filters" class="panel"></div>
+        
+        <script>//<![CDATA[
+            
+            // utils
+            function br() { return U.Tag('br'); }
+            function text(t) { return U.Text(t); }
+            function span(t) { return U.Wrap('span', t); }
+            
+            var $F = FILTER, parallelWorkers = /(&|\?)parallel\b/i.test( location.href );
+            
+            if ( parallelWorkers && !$F.Browser.supportsWorker )
+            {
+                alert('Browser does not support workers');
+            }
+                
+            parallelWorkers = $F.Browser.supportsWorker && parallelWorkers;
+            
+            var baseUrl = location.href.split(/#|\?/)[ 0 ]
+                ,che = '../common/assets/che.jpg'
+                ,aside = U.Get('aside'), test = U.Get('test')
+                ,container = U.Get('container'), filters = U.Get('filters')
+                 
+                 // displacemap
+                ,displacemap = new $F.Image( )
+                
+                ,disposeWorker = function( ) {
+                    this.worker( false );
+                }
+                
+                 // images
+                ,im1 = new $F.Image(che, function( ) {
+                    var grd;
+                    // create a displace map image
+                    displacemap.createImageData(im1.width, im1.height);
+                    displacemap.context.fillStyle="rgb(128,128,128)";
+                    displacemap.context.fillRect(0,0, displacemap.width, displacemap.height);
+                    // create radial gradient
+                    grd = displacemap.context.createRadialGradient(displacemap.width/2, displacemap.height/2, 0, displacemap.width/2, displacemap.height/2, displacemap.width/2);
+                    grd.addColorStop(1, "#808080"); // neutral
+                    grd.addColorStop(0, "#ffffff"); // white
+                    displacemap.context.fillStyle = grd;
+                    displacemap.context.beginPath();
+                    displacemap.context.arc(displacemap.width/2,displacemap.height/2,displacemap.width/2,0,Math.PI*2,true);
+                    displacemap.context.fill();
+                    //displacemap._refresh();
+                })
+                ,im2 = new $F.Image( che )
+                ,im3 = new $F.Image( che )
+                ,im4 = new $F.Image( che )
+                ,im5 = new $F.Image( che )
+                ,im6 = new $F.Image( che )
+                ,im7 = new $F.Image( che )
+                ,im8 = new $F.Image( che )
+                ,im9 = new $F.Image( che )
+                ,im10 = new $F.Image( che )
+                ,im11 = new $F.Image( che )
+                ,im12 = new $F.Image( che )
+                ,im13 = new $F.Image( che )
+                ,im14 = new $F.Image( che )
+                
+                 // filters
+                //,redChannel = new $F.ColorMatrixFilter( ).worker( parallelWorkers ).redChannel( )
+                ,redChannel = new $F.CustomFilter(function(im, w, h) { 
+                    var l = im.length, i;
+                    // get red channel using a custom filter that can run in parallel worker also
+                    for (i=0; i<l; i+=4)
+                    {
+                        im[ i+1 ] = 0;
+                        im[ i+2 ] = 0;
+                    }
+                    return im;
+                }).worker( parallelWorkers )
+                ,greenChannel = new $F.ColorMatrixFilter( ).worker( parallelWorkers ).greenChannel( )
+                ,blueChannel = new $F.ColorMatrixFilter( ).worker( parallelWorkers ).blueChannel( )
+                ,clr = new $F.ColorMatrixFilter( ).worker( parallelWorkers ).colorize( 0xff0000 )
+                //,gamma = new $F.TableLookupFilter( ).worker( parallelWorkers ).gammaCorrection( 1.7 )
+                //,solarize = new $F.TableLookupFilter( ).worker( parallelWorkers ).solarize( 0.5 )
+                ,posterize = new $F.TableLookupFilter( ).worker( parallelWorkers ).posterize( 4 )
+                //,extract = new $F.TableLookupFilter( ).worker( parallelWorkers ).extract( $F.CHANNEL.RED, [0x75, 0x91] )
+                //,mask = new $F.TableLookupFilter( ).worker( parallelWorkers ).mask( 0xffff7732 )
+                //,swapChannels = new $F.ColorMatrixFilter( ).worker( parallelWorkers ).swapChannels( $F.CHANNEL.BLUE, $F.CHANNEL.GREEN )
+                //,maskChannel = new $F.ColorMatrixFilter( ).worker( parallelWorkers ).maskChannel( $F.CHANNEL.GREEN )
+                //,invert = new $F.TableLookupFilter( ).worker( parallelWorkers ).invert( )
+                /*,erode = new $F.MorphologicalFilter( ).worker( parallelWorkers ).erode([
+                    0, 0, 0, 1,
+                    0, 0, 1, 0,
+                    0, 1, 0, 0,
+                    1, 0, 0, 0
+                ])*/
+                ,equalize = new $F.HistogramEqualizeFilter( ).worker( parallelWorkers )
+                //,rgbequalize = new $F.RGBHistogramEqualizeFilter( ).worker( parallelWorkers )
+                //,noise = new $F.NoiseFilter( -127, 127 ).worker( parallelWorkers )
+                ,sepia = new $F.ColorMatrixFilter( ).worker( parallelWorkers ).sepia2( )
+                ,gray = new $F.ColorMatrixFilter( ).worker( parallelWorkers ).grayscale( )
+                //,binary = new $F.TableLookupFilter( ).worker( parallelWorkers ).threshold( 0.7 )
+                //,threshold = new $F.ColorMatrixFilter( ).worker( parallelWorkers ).threshold_rgb( 128 )
+                ,grc = new $F.ColorMatrixFilter( ).worker( parallelWorkers ).grayscale( ).contrast( 1 )
+                //,median = new $F.StatisticalFilter( ).worker( parallelWorkers ).median( 5 )
+                //,maximum = new $F.StatisticalFilter( ).worker( parallelWorkers ).maximum( 15 )
+                //,pixelate = new $F.PixelateFilter( 10 ).worker( parallelWorkers )
+                //,pixelate = new $F.TriangularPixelateFilter( 10 ).worker( parallelWorkers )
+                ,pixelate = new $F.HexagonalPixelateFilter( 20 ).worker( parallelWorkers )
+                //,hueExtractor = new $F.HueExtractorFilter([10, 36]).worker( parallelWorkers ) // extract hues corresponding to skin color
+                //,thresh = new $F.TableLookupFilter( ).worker( parallelWorkers ).threshold( 0.94 )
+                //,hsv = new $F.HSVConverterFilter( ).worker( parallelWorkers )
+                //,skinExtractor = new $F.CompositeFilter([hsv, redChannel, invert, gray, thresh]).worker( parallelWorkers ) // extract skin region
+                //,laplace = new $F.ConvolutionMatrixFilter( ).worker( parallelWorkers ).laplace( 7 )
+                ,twirl = new $F.GeometricMapFilter( ).worker( parallelWorkers ).twirl( Math.PI/2, 120, 0.33, 0.27 )
+                //,rotate = new $F.GeometricMapFilter( ).worker( parallelWorkers ).rotateCCW( )
+                //,blur = new $F.ConvolutionMatrixFilter( ).worker( parallelWorkers ).boxBlur( 3 )
+                //,gauss = new $F.ConvolutionMatrixFilter( ).worker( parallelWorkers ).fastGauss( 3 )//gaussBlur(3)
+                //,vertical = new $F.ConvolutionMatrixFilter( ).worker( parallelWorkers ).verticalBlur( 21 )
+                //,diagonal = new $F.ConvolutionMatrixFilter( ).worker( parallelWorkers ).directionalBlur( 45, 9 )
+                ,sobel = new $F.ConvolutionMatrixFilter( ).worker( parallelWorkers ).sobel( 3 )
+                //,glow = new $F.ConvolutionMatrixFilter( ).worker( parallelWorkers ).glow( )
+                ,emboss = new $F.ConvolutionMatrixFilter( ).worker( parallelWorkers ).emboss( )
+                ,grsb = new $F.CompositeFilter([gray, sobel/*, binary*/]).worker( parallelWorkers )
+                ,displace = new $F.DisplacementMapFilter( /*displacemap*/ ).worker( parallelWorkers )
+                //,bokeh = new $F.BokehFilter(80, 90, 60, 10).worker( parallelWorkers )
+            ;
+            
+            /*var func = function(im, w, h){ 
+                var l = im.length, i;
+                // get red channel
+                for (i=0; i<l; i+=4)
+                {
+                    im[ i+1 ] = im[ i ];
+                    im[ i+2 ] = im[ i ];
+                }
+                return im;
+            };
+            console.log( func.toString() );*/
+            
+            U.Get('parallel').Event( 'click', function( ) {
+                location.href = baseUrl + '?parallel=1';
+            });
+            U.Get('synchronous').Event( 'click', function( ) {
+                location.href = baseUrl + '?synchronous=1';
+            });
+            
+            container.AddAll([
+                span('1.'), im1.domElement,
+                span('2.'), im2.domElement,
+                br(),
+                span('3.'), im3.domElement,
+                span('4.'), im4.domElement,
+                br(),
+                span('14.'), im14.domElement,
+                span('M:'), displacemap.domElement
+            ]);
+            filters.AddAll([
+                span('5.'), im5.domElement,
+                span('6.'), im6.domElement,
+                span('7.'), im7.domElement,
+                br(),
+                span('8.'), im8.domElement,
+                span('9.'), im9.domElement,
+                span('10.'), im10.domElement,
+                br(),
+                span('11.'), im11.domElement,
+                span('11.'), im12.domElement,
+                span('13.'), im13.domElement
+            ]);
+            
+            function doTest(event)
+            {
+                displace.setMap( displacemap );
+                displace.scaleX = 100;
+                displace.scaleY = 100;
+                
+                // apply them
+                // NOTE: this also works => redChannel.apply( im2, disposeWorker ); etc..
+                im2.apply( redChannel, disposeWorker );
+                im3.apply( greenChannel, disposeWorker );
+                im4.apply( blueChannel, disposeWorker );
+                // apply to right half of image
+                im5.select(0.5, 0, 1, 1).apply( clr, function( ) { 
+                    this.worker( false );
+                    im5.deselect( ); 
+                });
+                im6.apply( grc, disposeWorker );
+                im7.apply( sepia, disposeWorker );
+                im8.apply( posterize, disposeWorker );
+                //im9.apply( gauss, disposeWorker );
+                im9.apply( pixelate, disposeWorker );
+                //im10.apply( skinExtractor, disposeWorker );
+                im10.apply( emboss, disposeWorker );
+                im11.apply( twirl, disposeWorker );
+                im12.apply( displace, disposeWorker );
+                im13.apply( grsb, disposeWorker );
+                //im13.apply( glow, disposeWorker );
+                im14.apply( equalize, disposeWorker );
+                
+                aside.Append("<div><ol><li>Original Image</li><li>Red Channel</li><li>Green Channel</li><li>Blue Channel</li><li>Red Colorized applied to Selection</li><li>Grayscale and Contrast</li><li>Quick Sepia</li><li>Posterize</li><li>Pixelate (Plugin)</li><li>Emboss</li><li>Geometric Twirl Map</li><li>Displace Map</li><li>Grayscale, Sobel Gradient Magnitude (Composite)</li><li>Histogram Equalization (Plugin)</li></ol>M: Displace Map</div>");
+                
+                return false;
+            }
+            
+            /*function dotest2()
+            {
+                var A=$F.ImArray, 
+                    a, a2;
+                a = new A([1,2,3]);
+                a2 = new A(a);
+                
+                a[1] = 5;
+                console.log(a[1]);
+                console.log(a2[1]);            
+                
+                // in Opera, a2[1]=5 now, it is copy-by-reference
+                // if a2 is simple Uint8Array, a copy by-value is done, Opera bug??
+                console.log($F.Browser.isOpera);
+                console.log($F.ImArray.toString());
+                console.log(Uint8ClampedArray.toString());
+            }*/
+            
+            test.Event('click', doTest);
+            
+        //]]></script>
+    </body>
+</html>

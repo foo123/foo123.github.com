@@ -1,0 +1,289 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie lt-ie9">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" class="no-ie">
+<!--<![endif]-->
+    <head>
+        <title>Regex Analyzer</title>
+        
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="description" content="Regex Analyzer" />
+        
+        
+        <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+        
+    <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
+    <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
+    <link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
+    <style type="text/css">
+        #output {
+            position:relative;
+            padding:10px;
+            width: 90%;
+            height: 450px;
+        }
+        
+        #regex {
+            position:relative;
+            display:inline-block;
+            width:80%;
+        }
+        
+        .button {
+            -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+            -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+            box-shadow:inset 0px 1px 0px 0px #ffffff;
+            background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+            background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+            background-color:#ededed;
+            -webkit-border-top-left-radius:20px;
+            -moz-border-radius-topleft:20px;
+            border-top-left-radius:20px;
+            -webkit-border-top-right-radius:20px;
+            -moz-border-radius-topright:20px;
+            border-top-right-radius:20px;
+            -webkit-border-bottom-right-radius:20px;
+            -moz-border-radius-bottomright:20px;
+            border-bottom-right-radius:20px;
+            -webkit-border-bottom-left-radius:20px;
+            -moz-border-radius-bottomleft:20px;
+            border-bottom-left-radius:20px;
+            text-indent:0;
+            border:1px solid #dcdcdc;
+            display:inline-block;
+            color:#777777;
+            font-family:Arial;
+            font-size:15px;
+            font-weight:bold;
+            font-style:normal;
+            height:50px;
+            line-height:50px;
+            width:86px;
+            text-decoration:none;
+            text-align:center;
+            text-shadow:1px 1px 0px #ffffff;
+        }
+        .button:hover {
+            background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+            background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+            background-color:#dfdfdf;
+        }.button:active {
+            position:relative;
+            top:1px;
+        }
+        .button {
+            width:90px;
+            height:30px;
+            line-height:30px;
+            cursor:pointer;
+            position:relative;
+        }
+    </style>
+
+        
+    
+        
+        <script type="text/javascript" src="../common/js/jquery.js"></script>
+        <script type="text/javascript" src="../common/js/mvc.bundle.js"></script>
+        
+    <script src="../common/js/codemirror/codemirror.min.js"></script>
+    <script src="../common/js/codemirror/mode/javascript.js"></script>
+    <script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
+    <script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
+    <script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
+    <script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
+    <script src="../common/js/regexanalyzer.min.js"></script>
+
+        
+    
+    </head>
+    
+    <body>
+        <span id="forkongithub"><a href="https://github.com/foo123/regex-analyzer">Match me on GitHub</a></span>
+        
+        
+    <header id="header">
+        <h1>Regex Analyzer</h1>
+        <i>A simple Regex Analyzer for JavaScript and Node.js</i>
+    </header>
+    
+    <br /><br />
+
+        
+        
+<div id="screen" class="fluid col-1-1">
+    <div class="fluid col-1-1">
+    
+        <strong>Regular Expression:</strong>
+        &nbsp;&nbsp;<input type="button" class="button" id="analyze" data-bind='{"click":"analyze"}' value="Analyze" />
+        &nbsp;&nbsp;<input type="button" class="button" id="peek" data-bind='{"click":"peek"}' value="Peek" />
+        <br /><br />
+        <input type="text" size=120 id="regex" name="model[regex]" value="/[abc\d]+/gi" />
+    </div>
+    
+    <br /><br />
+    
+    <div class="fluid col-1-1">
+    
+        <strong>Output:</strong><br /><br />
+        <textarea id="output"></textarea>
+        
+    </div>
+</div>
+
+        
+        
+<footer id="footer">
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
+    
+    <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
+    <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
+    <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
+    <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
+</footer>
+<br /><br />
+
+        
+        
+    <script type="text/javascript">//<![CDATA[
+        !function( window, $, $T, $R, $MV, RegExAnalyzer, CodeMirror, undef ) {
+            "use strict";
+            
+            var $window = $(window), $screen = $('#screen'), output = document.getElementById('output'),
+                appTask, appModel, appView, appRouter, analyzer = new RegExAnalyzer(), code,
+                width = output.clientWidth, height = output.clientHeight
+            ;
+            
+            code = CodeMirror.fromTextArea(output, {
+                mode: "application/json",
+                lineWrapping: true,
+                lineNumbers : true,
+                indentUnit: 4,
+                indentWithTabs: false,
+                theme: 'lesser-dark',
+                foldGutter: true,
+                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+            });
+            code.setSize( width, height );
+                
+            appTask = {
+                analyze: function( ) {
+                    var input = appModel.get('regex'), output;
+                    
+                    analyzer.setRegex( input ).analyze( );
+                    
+                    output = [
+                        "Input: " + input
+                        ,"Regular Expression: " + analyzer.regex
+                        ,"Regular Expression Flags: "
+                        ,JSON.stringify( analyzer.flags )
+                        ,"Regular Expression Parts: "
+                        ,JSON.stringify(analyzer.parts, null, 4)
+                    ].join( "\n\n" );
+                    
+                    code.setValue( output );
+                },
+                
+                peek: function( ) {
+                    var input = appModel.get('regex'), output, peekChars;
+                    
+                    peekChars = analyzer.setRegex( input ).analyze( ).getPeekChars( );
+                    
+                    //console.log(peekChars);
+                    output = [
+                        "Input: " + input
+                        ,"Regular Expression: " + analyzer.regex
+                        ,"Regular Expression Flags: "
+                        ,JSON.stringify(analyzer.flags)
+                        ,["Regular Expression Peek Characters: "
+                        ,"// Experimental Feature, not all characters are expanded, eg. special characters (like .) appear as special"
+                        ,"// Peek Characters are the start characters of a hypothetical input string"
+                        ,"// which can generate a (further) possible match of the regular expression"].join("\n")
+                        ,JSON.stringify(peekChars, null, 4)
+                    ].join( "\n\n" );
+                    
+                    code.setValue( output );
+                }
+            };
+            
+            appRouter = new $R( );
+            appRouter.on('#{%ALL%:hash}', function( route, params ){
+                params = params && params.hash ? appRouter.unglue( params.hash ) : null;
+                if ( params && params.action && appTask[params.action] )
+                {
+                    if ( params.regex ) appModel.set('regex', params.regex, 1);
+                    appTask[ params.action ]( );
+                }
+            });
+            
+            $screen.modelview({
+                autobind: true
+                ,bindAttribute: 'data-bind'
+                
+                ,model: {
+                    id: 'model'
+                    ,data: { 
+                        regex: "/[abc\d]+/gi"
+                    }
+                    ,types: { 
+                        regex: $MV.Type.Cast.STRING
+                    }
+                }
+                ,actions: { 
+                    analyze: function(evt, $el, data) {
+                        location.hash = '#' + appRouter.glue({
+                            action: 'analyze',
+                            regex: appModel.get( 'regex' ),
+                            t: new Date( ).getTime( )
+                        });
+                    },
+                    
+                    peek: function(evt, $el, data) {
+                        location.hash = '#' + appRouter.glue({
+                            action: 'peek',
+                            regex: appModel.get( 'regex' ),
+                            t: new Date( ).getTime( )
+                        });
+                    }
+                }
+            });
+            appView = $screen.modelview( 'view' );
+            appModel = appView.model( );
+            $screen.modelview( 'sync' );
+                
+            $window
+                .on('resize', function( evt ) {
+                    var v = output.style.visibility,
+                        d = output.style.display
+                    ;
+                    output.style.visibility = 'hidden';
+                    output.style.display = 'block';
+                    width = output.clientWidth; 
+                    height = output.clientHeight;
+                    output.style.display = d;
+                    output.style.visibility = v;
+                    code.setSize( width, height );
+                })
+                .on('hashchange', function( evt ) {
+                    appRouter.route( location.hash );
+                })
+                .trigger( 'hashchange' )
+            ;
+        
+        }( window, jQuery, Contemplate, Dromeo, ModelView, RegExAnalyzer, CodeMirror );
+    //]]></script>
+
+    </body>
+</html>

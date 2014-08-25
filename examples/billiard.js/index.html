@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta name="description" content="Billiard, Pool Game with HTML5 and Javascript" />
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        
+        <title>BILLIARD Game (American and French) with HTML5 and javascript</title>
+        
+        <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+        <style>
+            body {
+                font-family: Monospace;
+                background-color: #121212;
+                margin: 0px;
+                overflow: hidden;
+                padding:0;
+                position:relative;
+                height:100%;
+                color:#aaa;
+            }
+            .button {
+                -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+                -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+                box-shadow:inset 0px 1px 0px 0px #ffffff;
+                background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+                background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+                background-color:#ededed;
+                -webkit-border-top-left-radius:20px;
+                -moz-border-radius-topleft:20px;
+                border-top-left-radius:20px;
+                -webkit-border-top-right-radius:20px;
+                -moz-border-radius-topright:20px;
+                border-top-right-radius:20px;
+                -webkit-border-bottom-right-radius:20px;
+                -moz-border-radius-bottomright:20px;
+                border-bottom-right-radius:20px;
+                -webkit-border-bottom-left-radius:20px;
+                -moz-border-radius-bottomleft:20px;
+                border-bottom-left-radius:20px;
+                text-indent:0;
+                border:1px solid #dcdcdc;
+                display:inline-block;
+                color:#777777;
+                font-family:Arial;
+                font-size:15px;
+                font-weight:bold;
+                font-style:normal;
+                height:50px;
+                line-height:50px;
+                width:86px;
+                text-decoration:none;
+                text-align:center;
+                text-shadow:1px 1px 0px #ffffff;
+            }
+            .button:hover {
+                background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+                background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+                background-color:#dfdfdf;
+            }.button:active {
+                position:relative;
+                top:1px;
+            }
+            .button {
+                position:relative;
+                width:120px;
+                height:30px;
+                line-height:30px;
+                cursor:pointer;
+                display:block;
+                margin: 3px 0px;
+            }
+            #forkongithub a, #forkongithub a:hover{background:#155817;color:#fff;}
+        </style>
+        <script src="./NEngine.min.js"></script>
+        <script src="./billiard.min.js"></script>
+    </head>
+    
+    <body>
+        <span id="forkongithub"><a href="https://github.com/foo123/Billiard.js">Boil me on GitHub</a></span>
+        
+        <img src='assets/logo.png' />
+        <div id='controls' style='position:absolute;top:200px;z-index:10'>
+            <select style="font-size:16px;" id='type'>
+                <option value="1" selected>American Pool</option>
+                <option value="2">French Billiard</option>
+            </select>
+            
+            <br /><br />
+            
+            <input class="button" type='button' id='newbt' value="New Game" onclick="newgame();"/>
+            
+            <br />
+            
+            <p style="width:120px;">
+                <ol style="width:120px;">
+                    <li>Rotate Stick with mouse to direct hit.</li>
+                    <li>Press 'Q' key to lock stick and move mouse to give strike force.</li>
+                    <li>Release 'Q' key to strike ball.</li>
+                </ol>
+            </p>
+        </div>
+        
+        <div id='foo' style="position:relative;width:700px;margin:0 auto;">
+            <canvas id='cnv' width=700 height=500></canvas>
+        </div>
+        
+        <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
+        
+        <script type="text/javascript">
+        //<![CDATA[ 
+            
+            var billiard;
+            
+            function newgame()
+            {
+                var types=document.getElementById('type');
+                billiard.init(parseInt(types.options[types.selectedIndex].value));
+            }
+            
+            billiard=new BILLIARD.Main(
+                document.getElementById('cnv'), 1, 
+                './assets/billiardtable1.png',
+                './assets/billiardtable2.png',
+                './assets/white.png',
+                './assets/black.png',
+                './assets/yellow.png',
+                './assets/red.png',
+                './assets/taco.png'
+            );
+            
+        //]]>
+        </script>
+    </body>
+</html>

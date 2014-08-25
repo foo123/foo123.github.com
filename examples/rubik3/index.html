@@ -1,0 +1,214 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie lt-ie9">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" class="no-ie">
+<!--<![endif]-->
+    <head>
+        <title>Rubik Cube with HTML5 canvas and three.js</title>
+        
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="description" content="Rubik Cube with HTML5 canvas and three.js" />
+        
+        
+        <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+        
+<style type="text/css">
+    body {
+        font-family: Monospace;
+        background: #121212 url('assets/back.png') no-repeat 50% 50%;
+        margin: 0px;
+        overflow: hidden;
+        padding:0;
+        position:relative;
+        height:100%;
+        color:#aaa;
+    }
+    .color-class
+    {
+        position:relative;
+        margin-bottom:10px;
+        margin-left:10px;
+        cursor:pointer;
+        float:left
+    }
+    .colorSelector {
+        width: 36px;
+        height: 36px;
+        background-image: url(assets/select.png);
+    }
+    .colorSelector div {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 30px;
+        height: 30px;
+        background-image: url(assets/select.png);
+        background-position:center center;
+    }
+    .button {
+        -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+        -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+        box-shadow:inset 0px 1px 0px 0px #ffffff;
+        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+        background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+        background-color:#ededed;
+        -webkit-border-top-left-radius:20px;
+        -moz-border-radius-topleft:20px;
+        border-top-left-radius:20px;
+        -webkit-border-top-right-radius:20px;
+        -moz-border-radius-topright:20px;
+        border-top-right-radius:20px;
+        -webkit-border-bottom-right-radius:20px;
+        -moz-border-radius-bottomright:20px;
+        border-bottom-right-radius:20px;
+        -webkit-border-bottom-left-radius:20px;
+        -moz-border-radius-bottomleft:20px;
+        border-bottom-left-radius:20px;
+        text-indent:0;
+        border:1px solid #dcdcdc;
+        display:inline-block;
+        color:#777777;
+        font-family:Arial;
+        font-size:15px;
+        font-weight:bold;
+        font-style:normal;
+        height:50px;
+        line-height:50px;
+        width:86px;
+        text-decoration:none;
+        text-align:center;
+        text-shadow:1px 1px 0px #ffffff;
+    }
+    .button:hover {
+        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+        background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+        background-color:#dfdfdf;
+    }.button:active {
+        position:relative;
+        top:1px;
+    }
+    .button {
+        width:120px;
+        height:30px;
+        line-height:30px;
+        cursor:pointer;
+        position:relative;
+        display:block;
+        margin: 3px 0px;
+    }
+    #forkongithub a, #forkongithub a:hover{background:#fd0002;color:#fff;}
+    #footer {
+        z-index: 100;
+        position:absolute;
+        left: 10px;
+        bottom: 80px;
+    }
+</style>
+<link rel="stylesheet" href="../common/css/colorpicker.css" type="text/css" />
+
+        
+    
+        
+<script type="text/javascript" src="../common/js/jquery.js"></script>
+<script type="text/javascript" src="../common/js/colorpicker.min.js"></script>
+<script type="text/javascript" src="../common/js/three_old.js"></script>
+<!--<script type="text/javascript" src='../common/js/THREEx.WindowResize.js'></script>-->
+<script type="text/javascript" src="../common/js/Tween.js"></script>
+<script type="text/javascript" src="./Rubik.js"></script>
+<script type="text/javascript" src="./RubikApplication.js"></script>
+
+    
+    </head>
+    
+    <body>
+        <span id="forkongithub"><a href="https://github.com/foo123/Rubik3">Twist me on GitHub</a></span>
+        
+        
+        
+        
+<!--    Rubik Cube Viewer (and future Solver) implementation in HTML 5 canvas, Javascript Three.js 3D Library
+        
+        Based on previous implementation of Rubik Cube Viewer and Solver in Actionscript 3 with PaperVision3D 2
+        https://github.com/foo123/Rubik3
+        
+        @Author Nikos M. [http://nikos-web-development.netai.net/]
+        
+        Free to use, modify, distribute, make the world a better place
+        A link back to author is appreciated
+-->
+
+<div id='controls' style='position:absolute;z-index:100;top: 0; left: 0; width:200px;margin:0;padding:0'>
+    <div id='pad' style="background-image:url('assets/pad.jpg');width:100px;height:100px;position:relative;cursor:pointer;">
+        <div id='cross' style="position:absolute;width:20px;height:20px;top:40px;left:40px;background:transparent url('assets/cross.png'); no-repeat 0 0"></div>
+    </div>
+    
+    <div>
+        <select style="margin:5px 0;margin-left:5px;font-size:16px" size="1" id="rubik-type">
+            <option value="2">2x2x2</option>    
+            <option value="3" selected="selected">3x3x3</option>
+            <option value="4">4x4x4</option>
+        </select>
+        
+        <br />
+        
+        <input class="button" type='button' id='newrubik' value='New Cube'/>
+        <input class="button" type='button' id='scramble' value='Scramble'/>
+        <input class="button" type='button' id='undo' value='Undo'/>
+        <br />
+        
+        <p>Drag Mouse with Button pressed over row or column to rotate sides</p>
+        
+    </div>
+    
+    <div id='colors' style="position:relative;">
+        <div class='color-class colorSelector'><div id='cstop1'></div></div>
+        <div class='color-class colorSelector'><div id='csbottom1'></div></div>
+        <div class='color-class colorSelector'><div id='csleft1'></div></div>
+        <div style="float:none;clear:both"></div>
+        <div class='color-class colorSelector'><div id='csright1'></div></div>
+        <div class='color-class colorSelector'><div id='csfront1'></div></div>
+        <div class='color-class colorSelector'><div id='csback1'></div></div>
+        <div style="float:none;clear:both"></div>
+        
+        <br /><br />
+        
+        <div class='color-class colorSelector'><div id='csinside1'></div></div>
+        <div style="float:none;clear:both"></div>
+    </div>
+</div>
+
+<div id="flatimage" style="position:absolute;z-index:10;bottom:50px;right:5px;"></div>
+
+<div id="container" style="position:relative;margin:0 auto;padding:0;z-index:0;cursor:pointer;"></div>
+
+        
+        
+        <footer id="footer">
+            <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
+            
+            
+        </footer>
+        <br /><br />
+        
+        
+        
+<script>//<![CDATA[
+
+    RubikApplication.init();
+
+//]]></script>
+
+    </body>
+</html>

@@ -1,0 +1,1289 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html class="ie lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<html class="ie lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie lt-ie9">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-ie">
+<!--<![endif]-->
+    <head>
+    
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        
+        <link rel="stylesheet" href="css/style.min.css">
+        <style type="text/css">
+        #panel
+        {
+            min-height: 300px;
+        }
+        #back_button
+        {
+            z-index: -1;
+            opacity: 0;
+            -webkit-transition: opacity .3s ease .1s;
+            -moz-transition: opacity .3s ease .1s;
+            -o-transition: opacity .3s ease .1s;
+            -ms-transition: opacity .3s ease .1s;
+            transition: opacity .3s ease .1s;
+        }
+        .controller:not(#controller_page_main):checked ~ #wrapper p #back_button
+        {
+            z-index: 5;
+            opacity: 1;
+            -webkit-transition: opacity .3s ease .1s;
+            -moz-transition: opacity .3s ease .1s;
+            -o-transition: opacity .3s ease .1s;
+            -ms-transition: opacity .3s ease .1s;
+            transition: opacity .3s ease .1s;
+        }
+        .page 
+        {
+            -webkit-transition: -webkit-transform .3s ease;
+            -moz-transition: -moz-transform .3s ease;
+            -o-transition: -o-transform .3s ease;
+            -ms-transition: -ms-transform .3s ease;
+            transition: transform .3s ease;
+        }
+        .controller:not(#controller_page_main):checked ~ #wrapper #panel #page_main
+        {
+            position: absolute;
+            
+            -webkit-transform: translateX(-100%);
+            -moz-transform: translateX(-100%);
+            -o-transform: translateX(-100%);
+            -ms-transform: translateX(-100%);
+            transform: translateX(-100%);
+            
+            -webkit-transition: -webkit-transform .3s ease;
+            -moz-transition: -moz-transform .3s ease;
+            -o-transition: -o-transform .3s ease;
+            -ms-transition: -ms-transform .3s ease;
+            transition: transform .3s ease;
+        }
+        
+        #controller_page_frameworks:checked ~ #wrapper #panel #page_frameworks
+        {
+            position: relative;
+            
+            -webkit-transform: translateX(0px);
+            -moz-transform: translateX(0px);
+            -o-transform: translateX(0px);
+            -ms-transform: translateX(0px);
+            transform: translateX(0px);
+            
+            -webkit-transition: -webkit-transform .3s ease;
+            -moz-transition: -moz-transform .3s ease;
+            -o-transition: -o-transform .3s ease;
+            -ms-transition: -ms-transform .3s ease;
+            transition: transform .3s ease;
+        }
+        
+        #controller_page_dsp:checked ~ #wrapper #panel #page_dsp
+        {
+            position: relative;
+            
+            -webkit-transform: translateX(0px);
+            -moz-transform: translateX(0px);
+            -o-transform: translateX(0px);
+            -ms-transform: translateX(0px);
+            transform: translateX(0px);
+            
+            -webkit-transition: -webkit-transform .3s ease;
+            -moz-transition: -moz-transform .3s ease;
+            -o-transition: -o-transform .3s ease;
+            -ms-transition: -ms-transform .3s ease;
+            transition: transform .3s ease;
+        }
+        
+        #controller_page_processors:checked ~ #wrapper #panel #page_processors
+        {
+            position: relative;
+            
+            -webkit-transform: translateX(0px);
+            -moz-transform: translateX(0px);
+            -o-transform: translateX(0px);
+            -ms-transform: translateX(0px);
+            transform: translateX(0px);
+            
+            -webkit-transition: -webkit-transform .3s ease;
+            -moz-transition: -moz-transform .3s ease;
+            -o-transition: -o-transform .3s ease;
+            -ms-transition: -ms-transform .3s ease;
+            transition: transform .3s ease;
+        }
+        
+        #controller_page_apps:checked ~ #wrapper #panel #page_apps
+        {
+            position: relative;
+            
+            -webkit-transform: translateX(0px);
+            -moz-transform: translateX(0px);
+            -o-transform: translateX(0px);
+            -ms-transform: translateX(0px);
+            transform: translateX(0px);
+            
+            -webkit-transition: -webkit-transform .3s ease;
+            -moz-transition: -moz-transform .3s ease;
+            -o-transition: -o-transform .3s ease;
+            -ms-transition: -ms-transform .3s ease;
+            transition: transform .3s ease;
+        }
+        
+        #controller_page_graphics:checked ~ #wrapper #panel #page_graphics
+        {
+            position: relative;
+            
+            -webkit-transform: translateX(0px);
+            -moz-transform: translateX(0px);
+            -o-transform: translateX(0px);
+            -ms-transform: translateX(0px);
+            transform: translateX(0px);
+            
+            -webkit-transition: -webkit-transform .3s ease;
+            -moz-transition: -moz-transform .3s ease;
+            -o-transition: -o-transform .3s ease;
+            -ms-transition: -ms-transform .3s ease;
+            transition: transform .3s ease;
+        }
+        
+        #controller_page_games:checked ~ #wrapper #panel #page_games
+        {
+            position: relative;
+            
+            -webkit-transform: translateX(0px);
+            -moz-transform: translateX(0px);
+            -o-transform: translateX(0px);
+            -ms-transform: translateX(0px);
+            transform: translateX(0px);
+            
+            -webkit-transition: -webkit-transform .3s ease;
+            -moz-transition: -moz-transform .3s ease;
+            -o-transition: -o-transform .3s ease;
+            -ms-transition: -ms-transform .3s ease;
+            transition: transform .3s ease;
+        }
+        
+        #controller_page_tools:checked ~ #wrapper #panel #page_tools
+        {
+            position: relative;
+            
+            -webkit-transform: translateX(0px);
+            -moz-transform: translateX(0px);
+            -o-transform: translateX(0px);
+            -ms-transform: translateX(0px);
+            transform: translateX(0px);
+            
+            -webkit-transition: -webkit-transform .3s ease;
+            -moz-transition: -moz-transform .3s ease;
+            -o-transition: -o-transform .3s ease;
+            -ms-transition: -ms-transform .3s ease;
+            transition: transform .3s ease;
+        }
+        
+        #controller_page_various:checked ~ #wrapper #panel #page_various
+        {
+            position: relative;
+            
+            -webkit-transform: translateX(0px);
+            -moz-transform: translateX(0px);
+            -o-transform: translateX(0px);
+            -ms-transform: translateX(0px);
+            transform: translateX(0px);
+            
+            -webkit-transition: -webkit-transform .3s ease;
+            -moz-transition: -moz-transform .3s ease;
+            -o-transition: -o-transform .3s ease;
+            -ms-transition: -ms-transform .3s ease;
+            transition: transform .3s ease;
+        }
+        
+        </style>
+        
+        <title>foo123.github.com</title>
+        
+    </head>
+    
+    <body>
+    
+        <!-- page controllers -->
+        <input name="pageController" type="radio" id="controller_page_main" class="controller" />
+        
+        <input name="pageController" type="radio" id="controller_page_frameworks" class="controller" />
+        
+        <input name="pageController" type="radio" id="controller_page_dsp" class="controller" />
+        
+        <input name="pageController" type="radio" id="controller_page_processors" class="controller" />
+        
+        <input name="pageController" type="radio" id="controller_page_apps" class="controller" />
+        
+        <input name="pageController" type="radio" id="controller_page_graphics" class="controller" />
+        
+        <input name="pageController" type="radio" id="controller_page_games" class="controller" />
+        
+        <input name="pageController" type="radio" id="controller_page_tools" class="controller" />
+        
+        <input name="pageController" type="radio" id="controller_page_various" class="controller" />
+        
+        <!-- /page controllers -->
+        
+        <header id="header" class="fluid col-1-1 clearfloat">
+        
+            <h1 class="fluid col-1-4">Demos and Showcases</h1>
+            <div  class="fluid col-3-4"><img src="gaza.jpg" /></div>
+            <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
+        </header>
+            
+        <hr />
+        
+        <div id="wrapper" class="fluid col-1-1 clearfloat">
+
+            <div class="side-links fluid col-1-5 right text-right autotext-left clearfloat">
+                <a href="https://github.com/foo123?tab=repositories">The repos</a> | <a href="http://nikos-web-development.netai.net/">The site</a>
+                <br />
+            </div>
+            
+            <p class="fluid col-4-5 text-left title"><strong>Demos, Experiments and Showcases</strong>
+                <label id="back_button" class="graybutton" for="controller_page_main">Back</label>
+            </p>
+            
+            <p class="fluid col-1-1 text-left" style="margin-bottom:20px;">
+                <i>The whole page is pure HTML/CSS, no JavaScript!</i>
+            </p>
+            
+            <div id="panel" class="fluid col-4-5 clearfloat">
+                
+                <!-- main page -->
+                <section id="page_main" class="fluid col-1-1 page">
+                    <ul id="demos_main" class="demos fluid col-1-1">
+                        
+                        
+                        <li class="demo fluid col-1-3">
+                            <label class="demo-link demo-group-link" for="controller_page_frameworks">
+                                <p class="demo-description animated fadeIn">
+                                    Frameworks, Modules, Engines, etc..
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/contemplate.jpg" alt="Frameworks, Modules, Engines, etc.." />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        
+                        
+                        <li class="demo fluid col-1-3">
+                            <label class="demo-link demo-group-link" for="controller_page_dsp">
+                                <p class="demo-description animated fadeIn">
+                                    Image, Video Processing, Sound Visualization, Feature Detection, Math stuff, etc..
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/filter.jpg" alt="Image, Video Processing, Sound Visualization, Feature Detection, Math stuff, etc.." />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        
+                        
+                        <li class="demo fluid col-1-3">
+                            <label class="demo-link demo-group-link" for="controller_page_processors">
+                                <p class="demo-description animated fadeIn">
+                                    Parsers, Processors, Template Engines, etc..
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/yo-regex.jpg" alt="Parsers, Processors, Template Engines, etc.." />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        
+                        
+                        <li class="demo fluid col-1-3">
+                            <label class="demo-link demo-group-link" for="controller_page_apps">
+                                <p class="demo-description animated fadeIn">
+                                    Demo Applications
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/sorting-algorithms.jpg" alt="Demo Applications" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        
+                        
+                        <li class="demo fluid col-1-3">
+                            <label class="demo-link demo-group-link" for="controller_page_graphics">
+                                <p class="demo-description animated fadeIn">
+                                    Graphics, 3D stuff, Transition Libraries, Slideshows, etc..
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/carousel3.jpg" alt="Graphics, 3D stuff, Transition Libraries, Slideshows, etc.." />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        
+                        
+                        <li class="demo fluid col-1-3">
+                            <label class="demo-link demo-group-link" for="controller_page_games">
+                                <p class="demo-description animated fadeIn">
+                                    Simple games, game ideas, etc..
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/billiard.jpg" alt="Simple games, game ideas, etc.." />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        
+                        
+                        <li class="demo fluid col-1-3">
+                            <label class="demo-link demo-group-link" for="controller_page_tools">
+                                <p class="demo-description animated fadeIn">
+                                    Various Tools and Scripts for automation tasks..
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/tools.jpg" alt="Various Tools and Scripts for automation tasks.." />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        
+                        
+                        <li class="demo fluid col-1-3">
+                            <label class="demo-link demo-group-link" for="controller_page_various">
+                                <p class="demo-description animated fadeIn">
+                                    Various experiments, studies, demos, etc..
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/optimization-methods.jpg" alt="Various experiments, studies, demos, etc.." />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        
+                    </ul>
+                </section>
+                <!-- /main page -->
+                
+                
+                <!-- frameworks page -->
+                <section id="page_frameworks" class="fluid col-1-1 page">
+                    <ul id="frameworks" class="demos demos-group fluid col-1-1">
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/contemplate">
+                                <p class="demo-description animated fadeIn">
+                                    Contemplate, a light-weight and flexible template engine for PHP, Python, Node/JS
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/contemplate-1.jpg" alt="Contemplate, a light-weight and flexible template engine for PHP, Python, Node/JS" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/modelview-todomvc">
+                                <p class="demo-description animated fadeIn">
+                                    TodoMVC with ModelView.js, a simple, extendable, light-weight, MV* (MVVM) framework based on jQuery
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/modelview-todomvc.jpg" alt="TodoMVC with ModelView.js, a simple, extendable, light-weight, MV* (MVVM) framework based on jQuery" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/Dromeo">
+                                <p class="demo-description animated fadeIn">
+                                    Dromeo, a simple and flexible router for PHP, Python, Node/JS
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/dromeo.jpg" alt="Dromeo, a simple and flexible router for PHP, Python, Node/JS" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/PublishSubscribe">
+                                <p class="demo-description animated fadeIn">
+                                    PublishSubscribe, simple Publish-Subscribe implementation for PHP, Python, Node/JS
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/publishsubscribe.jpg" alt="PublishSubscribe, simple Publish-Subscribe implementation for PHP, Python, Node/JS" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/HttpRequest">
+                                <p class="demo-description animated fadeIn">
+                                    HttpRequest, Http-Request implementation for PHP, Python, Node/JS (IN PROGRESS)
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/httprequest.jpg" alt="HttpRequest, Http-Request implementation for PHP, Python, Node/JS (IN PROGRESS)" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/Dialect">
+                                <p class="demo-description animated fadeIn">
+                                    Dialect, flexible, cross-vendor SQL builder for PHP, Python, Node/JS (IN PROGRESS)
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/dialect.jpg" alt="Dialect, flexible, cross-vendor SQL builder for PHP, Python, Node/JS (IN PROGRESS)" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/asynchronous.js">
+                                <p class="demo-description animated fadeIn">
+                                    Asynchronous, a simple manager for asynchronous, sequenced, interleaved, linearised and parallelised tasks for Node/JS
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/asynchronous.jpg" alt="Asynchronous, a simple manager for asynchronous, sequenced, interleaved, linearised and parallelised tasks for Node/JS" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/FunctionalLogic">
+                                <p class="demo-description animated fadeIn">
+                                    FunctionalLogic, where functional programming meets logic programming (IN PROGRESS)
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/functionallogic.jpg" alt="FunctionalLogic, where functional programming meets logic programming (IN PROGRESS)" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/classy.js">
+                                <p class="demo-description animated fadeIn">
+                                    classy.js, an Object-Oriented micro-framework for JavaScript
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/classy.jpg" alt="classy.js, an Object-Oriented micro-framework for JavaScript" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/Unicache">
+                                <p class="demo-description animated fadeIn">
+                                    Unicache, an agnostic, flexible Caching framework for PHP
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/unicache.jpg" alt="Unicache, an agnostic, flexible Caching framework for PHP" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/filter/">
+                                <p class="demo-description animated fadeIn">
+                                    Filter.js, an Image Processing library in JavaScript
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/filter.jpg" alt="Filter.js, an Image Processing library in JavaScript" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/as3-transitions-lib/">
+                                <p class="demo-description animated fadeIn">
+                                    ActionScript 3 Transitions Library (demo)
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/as3-transitions.jpg" alt="ActionScript 3 Transitions Library (demo)" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </section>
+                <!-- /frameworks page -->
+                
+                <!-- dsp page -->
+                <section id="page_dsp" class="fluid col-1-1 page">
+                    <ul id="dsp" class="demos demos-group fluid col-1-1">
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/filter/">
+                                <p class="demo-description animated fadeIn">
+                                    Filter.js, an Image Processing library in JavaScript
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/filter.jpg" alt="Filter.js, an Image Processing library in JavaScript" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/filter-three/">
+                                <p class="demo-description animated fadeIn">
+                                    Filter.js with Three.js
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/filter-three.jpg" alt="Filter.js with Three.js" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/filter-video/">
+                                <p class="demo-description animated fadeIn">
+                                    Real-time Video Processing with Filter.js
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/filter-video.jpg" alt="Real-time Video Processing with Filter.js" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/filter-sound/">
+                                <p class="demo-description animated fadeIn">
+                                    Sound Visualization with Filter.js and Dancer.js (Trioptic)
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/filter-sound.jpg" alt="Sound Visualization with Filter.js and Dancer.js (Trioptic)" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/face-detection/">
+                                <p class="demo-description animated fadeIn">
+                                    Interactive Face Detection with HAAR.js and openCV cascades
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/haar-face.jpg" alt="Interactive Face Detection with HAAR.js and openCV cascades" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/faces-detection/">
+                                <p class="demo-description animated fadeIn">
+                                    Many Faces Detection with HAAR.js and openCV cascades
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/haar-faces.jpg" alt="Many Faces Detection with HAAR.js and openCV cascades" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/mouth-detection/">
+                                <p class="demo-description animated fadeIn">
+                                    Interactive Mouth Detection with HAAR.js and openCV cascades
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/haar-mouth.jpg" alt="Interactive Mouth Detection with HAAR.js and openCV cascades" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/HAARPHP">
+                                <p class="demo-description animated fadeIn">
+                                    Face Detection with HAARPHP and openCV cascades
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/haar-php.jpg" alt="Face Detection with HAARPHP and openCV cascades" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/Simulacra">
+                                <p class="demo-description animated fadeIn">
+                                    Simulacra, a combinatorics, probability and simulation PHP package
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/simulacra.jpg" alt="Simulacra, a combinatorics, probability and simulation PHP package" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </section>
+                <!-- /dsp page -->
+                
+                <!-- processors page -->
+                <section id="page_processors" class="fluid col-1-1 page">
+                    <ul id="processors" class="demos demos-group fluid col-1-1">
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/contemplate">
+                                <p class="demo-description animated fadeIn">
+                                    Contemplate, a light-weight and flexible template engine for PHP, Python, Node/JS
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/contemplate-1.jpg" alt="Contemplate, a light-weight and flexible template engine for PHP, Python, Node/JS" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/codemirror-grammar">
+                                <p class="demo-description animated fadeIn">
+                                    Transform a grammar in JSON format to a Codemirror syntax-highlight mode with Codemirror Grammar
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/codemirror-grammar.jpg" alt="Transform a grammar in JSON format to a Codemirror syntax-highlight mode with Codemirror Grammar" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/ace-grammar">
+                                <p class="demo-description animated fadeIn">
+                                    Transform a grammar in JSON format to an ACE syntax-highlight mode with ACE Grammar
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/ace-grammar.jpg" alt="Transform a grammar in JSON format to an ACE syntax-highlight mode with ACE Grammar" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/prism-grammar">
+                                <p class="demo-description animated fadeIn">
+                                    Transform a grammar in JSON format to a syntax-highlighter for Prism with Prism Grammar
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/prism-grammar.jpg" alt="Transform a grammar in JSON format to a syntax-highlighter for Prism with Prism Grammar" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/regex-analyzer">
+                                <p class="demo-description animated fadeIn">
+                                    A simple Regex Analyzer for PHP, Python, Node/JS
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/yo-regex.jpg" alt="A simple Regex Analyzer for PHP, Python, Node/JS" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/regex-composer">
+                                <p class="demo-description animated fadeIn">
+                                    An intuitive Regex Composer for PHP, Python, Node/JS
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/yo-regex-composer.jpg" alt="An intuitive Regex Composer for PHP, Python, Node/JS" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/css-minifier">
+                                <p class="demo-description animated fadeIn">
+                                    Online CSS Processor and Minifier tool
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/cssmin.jpg" alt="Online CSS Processor and Minifier tool" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/PHPDeobfuscator">
+                                <p class="demo-description animated fadeIn">
+                                    Generic PHP Deobfuscator and Beautifier
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/tazmania.jpg" alt="Generic PHP Deobfuscator and Beautifier" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </section>
+                <!-- /processors page -->
+                
+                <!-- apps page -->
+                <section id="page_apps" class="fluid col-1-1 page">
+                    <ul id="apps" class="demos demos-group fluid col-1-1">
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/modelview-todomvc">
+                                <p class="demo-description animated fadeIn">
+                                    TodoMVC with ModelView.js, a simple, extendable, light-weight, MV* (MVVM) framework based on jQuery
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/modelview-todomvc.jpg" alt="TodoMVC with ModelView.js, a simple, extendable, light-weight, MV* (MVVM) framework based on jQuery" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/codemirror-grammar">
+                                <p class="demo-description animated fadeIn">
+                                    Transform a grammar in JSON format to a Codemirror syntax-highlight mode with Codemirror Grammar
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/codemirror-grammar.jpg" alt="Transform a grammar in JSON format to a Codemirror syntax-highlight mode with Codemirror Grammar" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/ace-grammar">
+                                <p class="demo-description animated fadeIn">
+                                    Transform a grammar in JSON format to an ACE syntax-highlight mode with ACE Grammar
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/ace-grammar.jpg" alt="Transform a grammar in JSON format to an ACE syntax-highlight mode with ACE Grammar" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/prism-grammar">
+                                <p class="demo-description animated fadeIn">
+                                    Transform a grammar in JSON format to a syntax-highlighter for Prism with Prism Grammar
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/prism-grammar.jpg" alt="Transform a grammar in JSON format to a syntax-highlighter for Prism with Prism Grammar" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/regex-analyzer">
+                                <p class="demo-description animated fadeIn">
+                                    A simple Regex Analyzer for PHP, Python, Node/JS
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/yo-regex.jpg" alt="A simple Regex Analyzer for PHP, Python, Node/JS" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/css-minifier">
+                                <p class="demo-description animated fadeIn">
+                                    Online CSS Processor and Minifier tool
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/cssmin.jpg" alt="Online CSS Processor and Minifier tool" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/filter-video/">
+                                <p class="demo-description animated fadeIn">
+                                    Real-time Video Processing with Filter.js
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/filter-video.jpg" alt="Real-time Video Processing with Filter.js" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/face-detection/">
+                                <p class="demo-description animated fadeIn">
+                                    Interactive Face Detection with HAAR.js and openCV cascades
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/haar-face.jpg" alt="Interactive Face Detection with HAAR.js and openCV cascades" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/mouth-detection/">
+                                <p class="demo-description animated fadeIn">
+                                    Interactive Mouth Detection with HAAR.js and openCV cascades
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/haar-mouth.jpg" alt="Interactive Mouth Detection with HAAR.js and openCV cascades" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/rubik3/">
+                                <p class="demo-description animated fadeIn">
+                                    Intuitive 3D Rubik Cube with Three.js
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/rubik3.jpg" alt="Intuitive 3D Rubik Cube with Three.js" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/3DRubikCube">
+                                <p class="demo-description animated fadeIn">
+                                    Intuitive 3D Rubik Cube in ActionScript3 with PaperVision3D
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/rubik-as3.jpg" alt="Intuitive 3D Rubik Cube in ActionScript3 with PaperVision3D" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/sorting-algorithms/">
+                                <p class="demo-description animated fadeIn">
+                                    A study and analysis of various Sorting Algorithms in JavaScript
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/sorting-algorithms.jpg" alt="A study and analysis of various Sorting Algorithms in JavaScript" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/pattern-matching-algorithms/">
+                                <p class="demo-description animated fadeIn">
+                                    A study and analysis of various Pattern Matching Algorithms in JavaScript
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/pattern-matching-algorithms.jpg" alt="A study and analysis of various Pattern Matching Algorithms in JavaScript" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/billiard.js/">
+                                <p class="demo-description animated fadeIn">
+                                    Sample Billiard game in pure JavaScript with Neraliu's NEngine.js
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/billiard.jpg" alt="Sample Billiard game in pure JavaScript with Neraliu's NEngine.js" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </section>
+                <!-- /apps page -->
+                
+                <!-- graphics page -->
+                <section id="page_graphics" class="fluid col-1-1 page">
+                    <ul id="graphics" class="demos demos-group fluid col-1-1">
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/filter-three/">
+                                <p class="demo-description animated fadeIn">
+                                    Filter.js with Three.js
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/filter-three.jpg" alt="Filter.js with Three.js" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/filter-sound/">
+                                <p class="demo-description animated fadeIn">
+                                    Sound Visualization with Filter.js and Dancer.js (Trioptic)
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/filter-sound.jpg" alt="Sound Visualization with Filter.js and Dancer.js (Trioptic)" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/as3-transitions-lib/">
+                                <p class="demo-description animated fadeIn">
+                                    ActionScript 3 Transitions Library (demo)
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/as3-transitions.jpg" alt="ActionScript 3 Transitions Library (demo)" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/flasher-xml-slideshow/">
+                                <p class="demo-description animated fadeIn">
+                                    Flasher XML Slideshow based on ActionScript3 Transitions Library
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/flasher.jpg" alt="Flasher XML Slideshow based on ActionScript3 Transitions Library" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/flipbook3/">
+                                <p class="demo-description animated fadeIn">
+                                    Real 3D Flipbook with MOD3.js and Three.js
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/flipbook3.jpg" alt="Real 3D Flipbook with MOD3.js and Three.js" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/dancing-box/">
+                                <p class="demo-description animated fadeIn">
+                                    Dancing Box with MOD3.js, Three,js and Dancer.js
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/dancing-box.jpg" alt="Dancing Box with MOD3.js, Three,js and Dancer.js" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/rubik3/">
+                                <p class="demo-description animated fadeIn">
+                                    Intuitive 3D Rubik Cube with Three.js
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/rubik3.jpg" alt="Intuitive 3D Rubik Cube with Three.js" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/carousel3/">
+                                <p class="demo-description animated fadeIn">
+                                    3D Carousel with Three.js
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/carousel3.jpg" alt="3D Carousel with Three.js" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/3DFlipBookEngine">
+                                <p class="demo-description animated fadeIn">
+                                    Real 3D Flipbook in ActionScript3 with PaperVision3D and AS3DMod
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/flipbook-as3.jpg" alt="Real 3D Flipbook in ActionScript3 with PaperVision3D and AS3DMod" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/3DRubikCube">
+                                <p class="demo-description animated fadeIn">
+                                    Intuitive 3D Rubik Cube in ActionScript3 with PaperVision3D
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/rubik-as3.jpg" alt="Intuitive 3D Rubik Cube in ActionScript3 with PaperVision3D" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/diagonal-slideshow">
+                                <p class="demo-description animated fadeIn">
+                                    Diagonal Slideshow jQuery plugin
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/diagonal-slideshow.jpg" alt="Diagonal Slideshow jQuery plugin" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/noflash">
+                                <p class="demo-description animated fadeIn">
+                                    NoFlash Slideshow jQuery plugin
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/noflash.jpg" alt="NoFlash Slideshow jQuery plugin" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/billiard.js/">
+                                <p class="demo-description animated fadeIn">
+                                    Sample Billiard game in pure JavaScript with Neraliu's NEngine.js
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/billiard.jpg" alt="Sample Billiard game in pure JavaScript with Neraliu's NEngine.js" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </section>
+                <!-- /graphics page -->
+                
+                <!-- games page -->
+                <section id="page_games" class="fluid col-1-1 page">
+                    <ul id="games" class="demos demos-group fluid col-1-1">
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/rubik3/">
+                                <p class="demo-description animated fadeIn">
+                                    Intuitive 3D Rubik Cube with Three.js
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/rubik3.jpg" alt="Intuitive 3D Rubik Cube with Three.js" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/3DRubikCube">
+                                <p class="demo-description animated fadeIn">
+                                    Intuitive 3D Rubik Cube in ActionScript3 with PaperVision3D
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/rubik-as3.jpg" alt="Intuitive 3D Rubik Cube in ActionScript3 with PaperVision3D" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/billiard.js/">
+                                <p class="demo-description animated fadeIn">
+                                    Sample Billiard game in pure JavaScript with Neraliu's NEngine.js
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/billiard.jpg" alt="Sample Billiard game in pure JavaScript with Neraliu's NEngine.js" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </section>
+                <!-- /games page -->
+                
+                <!-- tools page -->
+                <section id="page_tools" class="fluid col-1-1 page">
+                    <ul id="tools" class="demos demos-group fluid col-1-1">
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/contemplate">
+                                <p class="demo-description animated fadeIn">
+                                    Contemplate, a light-weight and flexible template engine for PHP, Python, Node/JS
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/contemplate-1.jpg" alt="Contemplate, a light-weight and flexible template engine for PHP, Python, Node/JS" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/asynchronous.js">
+                                <p class="demo-description animated fadeIn">
+                                    Asynchronous, a simple manager for asynchronous, sequenced, interleaved, linearised and parallelised tasks for Node/JS
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/asynchronous.jpg" alt="Asynchronous, a simple manager for asynchronous, sequenced, interleaved, linearised and parallelised tasks for Node/JS" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/FunctionalLogic">
+                                <p class="demo-description animated fadeIn">
+                                    FunctionalLogic, where functional programming meets logic programming (IN PROGRESS)
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/functionallogic.jpg" alt="FunctionalLogic, where functional programming meets logic programming (IN PROGRESS)" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/css-minifier">
+                                <p class="demo-description animated fadeIn">
+                                    Online CSS Processor and Minifier tool
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/cssmin.jpg" alt="Online CSS Processor and Minifier tool" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/PHPDeobfuscator">
+                                <p class="demo-description animated fadeIn">
+                                    Generic PHP Deobfuscator and Beautifier
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/tazmania.jpg" alt="Generic PHP Deobfuscator and Beautifier" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/Simulacra">
+                                <p class="demo-description animated fadeIn">
+                                    Simulacra, a combinatorics, probability and simulation PHP package
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/simulacra.jpg" alt="Simulacra, a combinatorics, probability and simulation PHP package" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/scripts">
+                                <p class="demo-description animated fadeIn">
+                                    Scripts and Tools for Automation Tasks
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/tools.jpg" alt="Scripts and Tools for Automation Tasks" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </section>
+                <!-- /tools page -->
+                
+                <!-- various page -->
+                <section id="page_various" class="fluid col-1-1 page">
+                    <ul id="various" class="demos demos-group fluid col-1-1">
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/regex-analyzer">
+                                <p class="demo-description animated fadeIn">
+                                    A simple Regex Analyzer for PHP, Python, Node/JS
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/yo-regex.jpg" alt="A simple Regex Analyzer for PHP, Python, Node/JS" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/regex-composer">
+                                <p class="demo-description animated fadeIn">
+                                    An intuitive Regex Composer for PHP, Python, Node/JS
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/yo-regex-composer.jpg" alt="An intuitive Regex Composer for PHP, Python, Node/JS" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/PHPDeobfuscator">
+                                <p class="demo-description animated fadeIn">
+                                    Generic PHP Deobfuscator and Beautifier
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/tazmania.jpg" alt="Generic PHP Deobfuscator and Beautifier" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/Simulacra">
+                                <p class="demo-description animated fadeIn">
+                                    Simulacra, a combinatorics, probability and simulation PHP package
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/simulacra.jpg" alt="Simulacra, a combinatorics, probability and simulation PHP package" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/dancing-box/">
+                                <p class="demo-description animated fadeIn">
+                                    Dancing Box with MOD3.js, Three,js and Dancer.js
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/dancing-box.jpg" alt="Dancing Box with MOD3.js, Three,js and Dancer.js" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/sorting-algorithms/">
+                                <p class="demo-description animated fadeIn">
+                                    A study and analysis of various Sorting Algorithms in JavaScript
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/sorting-algorithms.jpg" alt="A study and analysis of various Sorting Algorithms in JavaScript" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/pattern-matching-algorithms/">
+                                <p class="demo-description animated fadeIn">
+                                    A study and analysis of various Pattern Matching Algorithms in JavaScript
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/pattern-matching-algorithms.jpg" alt="A study and analysis of various Pattern Matching Algorithms in JavaScript" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="https://github.com/foo123/code-optimization-methods">
+                                <p class="demo-description animated fadeIn">
+                                    A summary of Code Optimization Methods
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/optimization-methods.jpg" alt="A summary of Code Optimization Methods" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                        <li class="demo fluid col-1-3">
+                            <a class="demo-link" href="examples/jquery-google-maps">
+                                <p class="demo-description animated fadeIn">
+                                    jQuery GoogleMaps plugin (v2 &amp; v3)
+                                </p>
+                                <div class="fluid col-1-1 img-loader animated fadeOut">
+                                    <img src="thumbs/googlemaps-v3.jpg" alt="jQuery GoogleMaps plugin (v2 &amp; v3)" />
+                                </div>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </section>
+                <!-- /various page -->
+                
+                
+            </div>
+            
+        </div>
+
+        <footer id="footer" class="fluid col-1-1 clearfloat">
+            
+            <div class="showcase">
+                CSS Animations by the excellent <a href="https://daneden.me/animate/" target="_blank">animate.css</a>
+            </div>
+            
+            <blockquote>
+                <strong class="def">foo :</strong> <i>An term used for unimportant variables in programming when the programmer is too lazy to think of an actual name.</i> - <a href="http://www.urbandictionary.com/define.php?term=foo">Urban Dictionary</a>
+            </blockquote>
+            
+            <blockquote>
+                <strong class="def">foo123 :</strong> <i>A lame workaround when the name foo is already taken.</i> 
+            </blockquote>
+            
+            <blockquote>
+                <i class="def">Cause until the philosophy, which holds one race superior and another inferior, is finally, and permanently, discredited and abandoned..</i> 
+            </blockquote>
+        
+        </footer>
+    </body>
+</html>

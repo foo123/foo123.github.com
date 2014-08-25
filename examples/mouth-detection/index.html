@@ -1,0 +1,369 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie lt-ie9">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" class="no-ie">
+<!--<![endif]-->
+    <head>
+        <title>Mouth detection with OpenCV cascades in JavaScript</title>
+        
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="description" content="Mouth detection with OpenCV cascades in JavaScript" />
+        
+        
+        <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+        
+    <link rel="stylesheet" type="text/css" href="../common/css/datgui.min.css" />
+    <style type="text/css">
+        body {
+            background-color:#121212;
+            color:#aaa;
+            font-size:12px;
+        }
+        
+        div {
+            position:relative;
+        }
+        
+        .block {
+            /*vertical-align:top;*/
+            /*float:left;*/
+        }
+        
+        
+        .button {
+            -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
+            -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
+            box-shadow:inset 0px 1px 0px 0px #f5978e;
+            background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
+            background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
+            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
+            background-color:#f24537;
+            -webkit-border-top-left-radius:20px;
+            -moz-border-radius-topleft:20px;
+            border-top-left-radius:20px;
+            -webkit-border-top-right-radius:20px;
+            -moz-border-radius-topright:20px;
+            border-top-right-radius:20px;
+            -webkit-border-bottom-right-radius:20px;
+            -moz-border-radius-bottomright:20px;
+            border-bottom-right-radius:20px;
+            -webkit-border-bottom-left-radius:20px;
+            -moz-border-radius-bottomleft:20px;
+            border-bottom-left-radius:20px;
+            text-indent:0;
+            border:1px solid #d02718;
+            display:inline-block;
+            color:#ffffff;
+            font-family:Arial;
+            font-size:15px;
+            font-weight:bold;
+            font-style:normal;
+            height:50px;
+            line-height:50px;
+            width:200px;
+            text-decoration:none;
+            text-align:center;
+            text-shadow:1px 1px 0px #810e05;
+        }
+        .button:hover {
+            background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
+            background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
+            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
+            background-color:#c62d1f;
+        }.button:active {
+            position:relative;
+            top:1px;
+        }        
+        .button {
+            margin: 3px 2px;
+            cursor:pointer;
+            position:relative;
+            height: 40px;
+            line-height: 40px;
+            width:160px;
+            font-size:12px;
+        }
+        .guidat {
+            float:left;
+        }
+        .guidat-controller.number {
+          border-left: 5px solid #c83022;
+        }
+
+        .guidat-controller.string {
+          border-left: 5px solid #c83022;
+        }
+
+        .guidat-controller.string input {
+          border: 0;
+          color: #c83022;
+          margin-right: 2px;
+          width: 148px;
+        }
+
+        .guidat-controller.boolean {
+          border-left: 5px solid #c83022;
+        }
+
+        .guidat-controller.function {
+          border-left: 5px solid #c83022;
+        }
+
+        .guidat-controller.number input[type=text] {
+          width: 35px;
+          margin-left: 5px;
+          margin-right: 2px;
+          color: #efefef;
+        }
+        .guidat-controller .guidat-slider-bg .guidat-slider-fg:hover,
+        .guidat-controller.active .guidat-slider-bg .guidat-slider-fg {
+          background-color: #c83022;
+        }
+        .guidat-slider-fg {
+          background-color: #c83022;
+        }
+        #forkongithub a{background:#c83022;color:#fff;}
+    </style>
+
+        
+    
+        
+        <script type="text/javascript" src="../common/js/jquery.js"></script>
+        <script type="text/javascript" src="../common/js/mvc.bundle.js"></script>
+        
+    <script type="text/javascript" src="../common/js/datgui.min.js"></script>
+    <!-- support parallel computations using web-workers (parallel.js) -->
+    <script type="text/javascript" src="../common/js/parallel/parallel.min.js"></script>
+    <script type="text/javascript" src="../common/js/haar-detector.min.js"></script>
+    <script type="text/javascript" src="../common/cascades/haarcascade_mcs_mouth.js"></script>
+
+        
+    
+    </head>
+    
+    <body>
+        <span id="forkongithub"><a href="https://github.com/foo123/HAAR.js">Spoon me on GitHub</a></span>
+        
+        
+<header id="header">
+    <h1>Mouth Detection with OpenCV haar cascades in JavaScript</h1>
+</header>
+
+        
+        
+<div id="screen" class="fluid col-1-1">
+    <div class="fluid col-1-3">
+        <div id="wait" style="display:none"><img src="../common/assets/ajax-loader.gif" /></div>
+        
+        <div id="container"><canvas id='image'></canvas></div>
+    </div>
+    
+    <div class="fluid col-1-3">
+        
+        <div id="controls" class="fluid col-1-1"></div>
+        
+        <br />
+        
+        <button id="rundetect" class="button" data-bind='{"click":"runDetect"}'>Detect</button>
+        
+        <br /><br />
+        
+        <div id="customImageContainer">
+            <label for="customImage">Use your custom Image: </label>
+            <input id="customImage" type="file" />
+        </div>
+        
+        <br />
+        
+        <div id="info" style="font-size:14px;">
+            
+            If <code>&quot;?parallel&quot;</code> is set in the URL, <strong>Parallel</strong> detection is used
+            <br />
+            else, <strong>Asynchronous</strong> detection is used
+            <br />
+            <span style="font-size:12px; font-style:oblique;">( Enable console to see the time statistics for each operation )</span>
+            <br /><br />
+            
+            <span data-bind='{"html":"mode"}'></span>
+        </div>
+        
+        <br />
+        
+        <button data-bind='{"click":"detectParallel"}' class="button">Parallel Detection</button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <button data-bind='{"click":"detectAsync"}' class="button">Asynchronous Detection</button>
+    </div>
+</div>
+
+        
+        
+        <footer id="footer">
+            <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
+            
+            
+            <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
+            <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
+        </footer>
+        <br /><br />
+        
+        
+        
+<script>//<![CDATA[
+
+    var startTime = (window.console && window.console.time) ? function(s) { window.console.time(s); } : function() {},
+        endTime = (window.console && window.console.timeEnd) ? function(s) { window.console.timeEnd(s); } : function() {},
+        Log = (window.console && window.console.log) ? function(s) { window.console.log(s); } : function() {},
+        
+        model, view, $screen = $('#screen'),
+        wait = $('#wait'), rundetect = $('#rundetect'), 
+        controlsContainer = $('#controls')[ 0 ],
+        baseUrl = location.href.split( '?' )[ 0 ],
+        useParallel = (/[?&]parallel\b/.test(location.href)) ? Parallel : false,
+        controls, image, customImage, imageReader, 
+        canvas = $('#image')[0], ctx = canvas.getContext('2d'),
+        scaling, cannyL, cannyH, basescale, scaleinc, inc, minneighbours,
+        defaultImage = '../common/assets/model1.jpg',  customImageSrc = null
+    ;
+
+    function DetectFeature( src )
+    {
+        image = new Image();
+        image.onload = function() {
+            endTime('Image Load');
+            // copy image onto a canvas
+            canvas.width = image.width; 
+            canvas.height = image.height;
+            //canvas.style.width = canvas.width + 'px';
+            //canvas.style.height = canvas.height + 'px';
+            ctx.drawImage(image, 0, 0);
+            
+            startTime('Feature Detect');
+            // detect the feature
+            new HAAR.Detector(haarcascade_mcs_mouth, useParallel)
+                    .image(canvas, scaling.getValue()) // use the image
+                    .interval(40) // set detection interval for asynchronous detection (if not parallel)
+                    .complete(function() {  // onComplete callback
+                        
+                        endTime('Feature Detect');
+                        var i, rect, l=this.objects.length;
+                        // hide loader
+                        wait.hide( );
+                        
+                        // draw selection
+                        ctx.strokeStyle = "rgba(220,0,0,1)"; 
+                        ctx.lineWidth=2;
+                        ctx.strokeRect(this.Selection.x, this.Selection.y, this.Selection.width, this.Selection.height);
+                        
+                        // draw any features found
+                        ctx.strokeStyle = "rgba(75,221,17,1)"; 
+                        ctx.lineWidth = 2;
+                        for (i=0; i<l; i++)
+                        {
+                            rect = this.objects[i];
+                            ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                        }
+                        
+                        // provide info
+                        Log('Selection Rectangle: ');
+                        Log(this.Selection.toString());
+                        Log('Detected Feature(s) (' + l +') :');
+                        Log(this.objects.toString());
+                        alert(l+" Object(s) found");
+                    })
+                    .cannyThreshold({low: cannyL.getValue(), high: cannyH.getValue()})  // custom thresholds for canny pruning (for best results)
+                    .detect(basescale.getValue(), scaleinc.getValue(), inc.getValue(), minneighbours.getValue(), true); // go
+        };
+        startTime('Image Load');
+        image.src = src; // load it
+    }
+
+    controls = new DAT.GUI( { height: 7*32, domElement: controlsContainer } );
+    scaling = controls.add({ scaling: 0.9}, 'scaling' ).name('Image Scaling').min(0).max(1);
+    cannyL = controls.add({ cannyL: 50}, 'cannyL' ).name('Canny Low Threshold');
+    cannyH = controls.add({ cannyH: 110}, 'cannyH' ).name('Canny High Threshold');
+    basescale = controls.add({ basescale: 1}, 'basescale' ).name('Base Scale').min(0);
+    scaleinc = controls.add({ scaleinc: 1.25}, 'scaleinc' ).name('Scale Increment').min(0);
+    inc = controls.add({ inc: 0.1}, 'inc' ).name('Step Increment').min(0);
+    minneighbours = controls.add({ minneighbours: 1}, 'minneighbours' ).name('Min. Neighbours').min(1);
+    
+    $screen.modelview({
+        autobind: true
+        ,bindAttribute: 'data-bind'
+        
+        ,model: {
+            id: 'model'
+            ,data: { 
+                mode: useParallel ? "CURRENT MODE: Parallel Detection" : "CURRENT MODE: Asynchronous Detection"
+            }
+        }
+        ,actions: { 
+            runDetect: function(evt, $el, data) {
+                // show loader
+                wait.show( );
+                DetectFeature( customImageSrc || defaultImage );
+            },
+            
+            detectParallel: function(evt, $el, data) {
+                document.location = baseUrl + "?parallel=1";
+            },
+            
+            detectAsync: function(evt, $el, data) {
+                document.location = baseUrl + "?async=1";
+            }
+        }
+    });
+    view = $screen.modelview( 'view' );
+    model = view.model( );
+    $screen.modelview( 'sync' );
+    
+    //Check File API support
+    if ( window.File && window.FileList && window.FileReader )
+    {
+        customImage = document.getElementById('customImage');
+        
+        customImage.addEventListener("change", function(event){
+            
+            var file = event.target.files[0] || null; //FileList object
+            
+            //Only pics
+            if ( !file || !file.type.match('image') )   return false;
+            
+            // show loader
+            wait.show( );
+            
+            imageReader = new FileReader();
+            
+            imageReader.addEventListener("load", function(event){
+                
+                // run detector
+                customImageSrc = event.target.result;
+                DetectFeature( customImageSrc );
+            });
+            
+             //Read the image
+            imageReader.readAsDataURL(file);
+           
+        });
+    }
+    else
+    {
+        //console.log("Your browser does not support File API");
+        $('#customImageContainer').hide( );
+    }
+    
+    rundetect.click( );
+
+//]]></script>
+
+    </body>
+</html>
