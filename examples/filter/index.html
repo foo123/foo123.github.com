@@ -113,7 +113,7 @@
             }
             #forkongithub a{background:#c83022;color:#fff;}
         </style>
-        <script type="text/javascript" src="../../js/utils.min.js"></script>
+        <script type="text/javascript" src="../common/js/utils.min.js"></script>
         <script src="../common/js/filter.bundle.js"></script>
     </head>
     <body>
@@ -235,9 +235,9 @@
                 ,grc = new $F.ColorMatrixFilter( ).worker( parallelWorkers ).grayscale( ).contrast( 1 )
                 //,median = new $F.StatisticalFilter( ).worker( parallelWorkers ).median( 5 )
                 //,maximum = new $F.StatisticalFilter( ).worker( parallelWorkers ).maximum( 15 )
-                //,pixelate = new $F.PixelateFilter( 10 ).worker( parallelWorkers )
+                ,pixelate = new $F.PixelateFilter( 10 ).worker( parallelWorkers )
                 //,pixelate = new $F.TriangularPixelateFilter( 10 ).worker( parallelWorkers )
-                ,pixelate = new $F.HexagonalPixelateFilter( 20 ).worker( parallelWorkers )
+                //,pixelate = new $F.HexagonalPixelateFilter( 20 ).worker( parallelWorkers )
                 //,hueExtractor = new $F.HueExtractorFilter([10, 36]).worker( parallelWorkers ) // extract hues corresponding to skin color
                 //,thresh = new $F.TableLookupFilter( ).worker( parallelWorkers ).threshold( 0.94 )
                 //,hsv = new $F.HSVConverterFilter( ).worker( parallelWorkers )
