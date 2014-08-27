@@ -152,7 +152,7 @@
         !function(window){
             
             var $F = FILTER 
-                ,useParallelFilters = /(&|\?)parallel\b/i.test( location.href )
+                ,useParallelFilters = $F.Browser.supportsWorker && /(&|\?)parallel\b/i.test( location.href )
                 ,baseUrl = location.href.split(/#|\?/)[ 0 ]
                 ,audio, container, statsContainer
                 
@@ -261,14 +261,28 @@
                 
                 triopticVisualizer = new $F.CompositeFilter([ trioptic, displace, blur ]).stable( true );
                 
-                if ( $F.Browser.supportsWorker && useParallelFilters )
+                if ( useParallelFilters )
                 {
                     // use parallel worker filters, along with the custom Trioptic filter
                     triopticVisualizer.worker( ).scripts( trioptic.path.file );
                 }
             }
 
-
+            function next( ) 
+            {
+                // up-scale it for rendering
+                upscaledVisualization.setImage( visualization.canvasElement );
+                
+                stats.end( );
+                
+                // update any param needed
+                z += 0.02;
+                //z += 0.1;
+                
+                requestAnimationFrame( animate );
+                //setTimeout(animate, renderInterval);
+            }
+            
             function animate( ) 
             {
                 if ( !dancer.isPlaying( ) ) 
@@ -292,20 +306,15 @@
                 displace.scaleY = z + 3;
                 
                 // apply the visualization
-                triopticVisualizer.apply( visualization, function( ) {
-                    
-                    // up-scale it for rendering
-                    upscaledVisualization.setImage( visualization.canvasElement );
-                    
-                    stats.end( );
-                    
-                    // update any param needed
-                    z += 0.02;
-                    //z += 0.1;
-                    
-                    requestAnimationFrame( animate );
-                    //setTimeout(animate, renderInterval);
-                });
+                if ( useParallelFilters )
+                {
+                    triopticVisualizer.apply( visualization, next );
+                }
+                else
+                {
+                    triopticVisualizer.apply( visualization );
+                    next( );
+                }
             }
 
             function init( ) 

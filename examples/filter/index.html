@@ -161,8 +161,8 @@
                  // displacemap
                 ,displacemap = new $F.Image( )
                 
-                ,disposeWorker = function( ) {
-                    this.worker( false );
+                ,disposeWorker = function( filter ) {
+                    filter.worker( false );
                 }
                 
                  // images
@@ -198,7 +198,7 @@
                 
                  // filters
                 //,redChannel = new $F.ColorMatrixFilter( ).worker( parallelWorkers ).redChannel( )
-                ,redChannel = new $F.CustomFilter(function(im, w, h) { 
+                ,redChannel = new $F.CustomFilter(function(filt, im, w, h) { 
                     var l = im.length, i;
                     // get red channel using a custom filter that can run in parallel worker also
                     for (i=0; i<l; i+=4)
@@ -312,8 +312,8 @@
                 im3.apply( greenChannel, disposeWorker );
                 im4.apply( blueChannel, disposeWorker );
                 // apply to right half of image
-                im5.select(0.5, 0, 1, 1).apply( clr, function( ) { 
-                    this.worker( false );
+                im5.select(0.5, 0, 1, 1).apply( clr, function( filt ) { 
+                    filt.worker( false );
                     im5.deselect( ); 
                 });
                 im6.apply( grc, disposeWorker );
