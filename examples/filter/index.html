@@ -161,12 +161,12 @@
                  // displacemap
                 ,displacemap = new $F.Image( )
                 
-                ,disposeWorker = function( filter ) {
-                    filter.worker( false );
+                ,disposeWorker = function( ) {
+                    this.worker( false );
                 }
                 
                  // images
-                ,im1 = new $F.Image(che, function( ) {
+                ,im1 = $F.Image(che, function( ) {
                     var grd;
                     // create a displace map image
                     displacemap.createImageData(im1.width, im1.height);
@@ -182,19 +182,19 @@
                     displacemap.context.fill();
                     //displacemap._refresh();
                 })
-                ,im2 = new $F.Image( che )
-                ,im3 = new $F.Image( che )
-                ,im4 = new $F.Image( che )
-                ,im5 = new $F.Image( che )
-                ,im6 = new $F.Image( che )
-                ,im7 = new $F.Image( che )
-                ,im8 = new $F.Image( che )
-                ,im9 = new $F.Image( che )
-                ,im10 = new $F.Image( che )
-                ,im11 = new $F.Image( che )
-                ,im12 = new $F.Image( che )
-                ,im13 = new $F.Image( che )
-                ,im14 = new $F.Image( che )
+                ,im2 = $F.Image( che )
+                ,im3 = $F.Image( che )
+                ,im4 = $F.Image( che )
+                ,im5 = $F.Image( che )
+                ,im6 = $F.Image( che )
+                ,im7 = $F.Image( che )
+                ,im8 = $F.Image( che )
+                ,im9 = $F.Image( che )
+                ,im10 = $F.Image( che )
+                ,im11 = $F.Image( che )
+                ,im12 = $F.Image( che )
+                ,im13 = $F.Image( che )
+                ,im14 = $F.Image( che )
                 
                  // filters
                 //,redChannel = new $F.ColorMatrixFilter( ).worker( parallelWorkers ).redChannel( )
@@ -307,27 +307,31 @@
                 displace.scaleY = 100;
                 
                 // apply them
-                // NOTE: this also works => redChannel.apply( im2, disposeWorker ); etc..
-                im2.apply( redChannel, disposeWorker );
-                im3.apply( greenChannel, disposeWorker );
-                im4.apply( blueChannel, disposeWorker );
+                // NOTE these also work:
+                // * redChannel.apply( im2, disposeWorker );
+                // * redChannel.apply( im1, im2, disposeWorker );
+                // * im2.apply( redChannel, disposeWorker );
+                // etc..
+                im1.apply2( redChannel, im2, disposeWorker );
+                im1.apply2( greenChannel, im3, disposeWorker );
+                im1.apply2( blueChannel, im4, disposeWorker );
                 // apply to right half of image
-                im5.select(0.5, 0, 1, 1).apply( clr, function( filt ) { 
-                    filt.worker( false );
+                im5.select(0.5, 0, 1, 1).apply( clr, function( ) { 
+                    this.worker( false );
                     im5.deselect( ); 
                 });
-                im6.apply( grc, disposeWorker );
-                im7.apply( sepia, disposeWorker );
-                im8.apply( posterize, disposeWorker );
-                //im9.apply( gauss, disposeWorker );
-                im9.apply( pixelate, disposeWorker );
-                //im10.apply( skinExtractor, disposeWorker );
-                im10.apply( emboss, disposeWorker );
-                im11.apply( twirl, disposeWorker );
-                im12.apply( displace, disposeWorker );
-                im13.apply( grsb, disposeWorker );
-                //im13.apply( glow, disposeWorker );
-                im14.apply( equalize, disposeWorker );
+                im1.apply2( grc, im6, disposeWorker );
+                im1.apply2( sepia, im7, disposeWorker );
+                im1.apply2( posterize, im8, disposeWorker );
+                //im1.apply2( gauss, im9, disposeWorker );
+                im1.apply2( pixelate, im9, disposeWorker );
+                //im1.apply2( skinExtractor, im10, disposeWorker );
+                im1.apply2( emboss, im10, disposeWorker );
+                im1.apply2( twirl, im11, disposeWorker );
+                im1.apply2( displace, im12, disposeWorker );
+                im1.apply2( grsb, im13, disposeWorker );
+                //im1.apply2( glow, im13, disposeWorker );
+                im1.apply2( equalize, im14, disposeWorker );
                 
                 aside.Append("<div><ol><li>Original Image</li><li>Red Channel</li><li>Green Channel</li><li>Blue Channel</li><li>Red Colorized applied to Selection</li><li>Grayscale and Contrast</li><li>Quick Sepia</li><li>Posterize</li><li>Pixelate (Plugin)</li><li>Emboss</li><li>Geometric Twirl Map</li><li>Displace Map</li><li>Grayscale, Sobel Gradient Magnitude (Composite)</li><li>Histogram Equalization (Plugin)</li></ol>M: Displace Map</div>");
                 

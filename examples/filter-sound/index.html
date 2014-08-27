@@ -242,9 +242,9 @@
                 //visualization = new $F.Image().fill('rgb(0,0,0)', 0, 0, _width, _height);
                 //container.Add( visualization.domElement );
                  // prepare down-scaled visualization image
-                visualization = new $F.Image( ).fill('rgb(0,0,0)', 0, 0, _width, _height);
+                visualization = $F.Image( ).fill('rgb(0,0,0)', 0, 0, _width, _height);
                 // up-scaled final rendered visualization image
-                upscaledVisualization = new $F.ScaledImage( upscaleX, upscaleY );
+                upscaledVisualization = $F.ScaledImage( upscaleX, upscaleY );
                 container.Add( upscaledVisualization.domElement );
                 
                 
@@ -268,21 +268,6 @@
                 }
             }
 
-            function next( ) 
-            {
-                // up-scale it for rendering
-                upscaledVisualization.setImage( visualization.canvasElement );
-                
-                stats.end( );
-                
-                // update any param needed
-                z += 0.02;
-                //z += 0.1;
-                
-                requestAnimationFrame( animate );
-                //setTimeout(animate, renderInterval);
-            }
-            
             function animate( ) 
             {
                 if ( !dancer.isPlaying( ) ) 
@@ -306,15 +291,19 @@
                 displace.scaleY = z + 3;
                 
                 // apply the visualization
-                if ( useParallelFilters )
-                {
-                    triopticVisualizer.apply( visualization, next );
-                }
-                else
-                {
-                    triopticVisualizer.apply( visualization );
-                    next( );
-                }
+                triopticVisualizer.apply( visualization, visualization, function( ) {
+                    // up-scale it for rendering
+                    upscaledVisualization.setImage( visualization.canvasElement );
+                    
+                    stats.end( );
+                    
+                    // update any param needed
+                    z += 0.02;
+                    //z += 0.1;
+                    
+                    requestAnimationFrame( animate );
+                    //setTimeout(animate, renderInterval);
+                });
             }
 
             function init( ) 
