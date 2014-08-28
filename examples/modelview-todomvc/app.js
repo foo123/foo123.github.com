@@ -381,8 +381,8 @@
                     
                     $todoModelView = getTodoMV( View.uuid( 'todo' ), title );
                     
-                    $todoList.append( $todoModelView );
-                    todoList.todos.push( $todoModelView.modelview( 'model' ) );
+                    $todoList.prepend( $todoModelView );
+                    todoList.todos.unshift( $todoModelView.modelview( 'model' ) );
                     todoList.active++;
                     
                     $el.val( '' );
