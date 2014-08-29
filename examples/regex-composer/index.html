@@ -510,15 +510,14 @@ new RegExComposer()
             }
             ,actions: { 
                 compose: function(evt, $el, data) {
-                    var res, e;
+                    var regex, e;
                     
                     try{
-                        res = eval("(function(){return "+code.getValue()+"}())");
+                        regex = eval("(function(){return "+code.getValue()+";}())");
                     } catch (e) { 
-                        res = "Error Occured"; 
+                        regex = "Error Occured"; 
                     }
-                    
-                    model.set('regex', res, true);
+                    model.set('regex', regex, true);
                 }
             }
         });
