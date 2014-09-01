@@ -241,8 +241,8 @@
                 ,data: todo
                 
                 ,types: {
-                    title: TypeCast.STRING
-                    ,completed: TypeCast.BOOLEAN
+                    title: TypeCast.STR
+                    ,completed: TypeCast.BOOL
                 }
             }
         });
@@ -363,7 +363,7 @@
             }
             
             ,types: {
-                displayMode: TypeCast.LCASE.AFTER( TypeCast.TRIMMED )
+                displayMode: TypeCast.LCASE.AFTER( TypeCast.TRIM )
             }
             
             ,validators: {
@@ -379,7 +379,7 @@
                 {
                     todoList = Model.get( 'todoList' );
                     
-                    $todoModelView = getTodoMV( View.uuid( 'todo' ), title );
+                    $todoModelView = getTodoMV( ModelView.UUID( 'todo' ), title );
                     
                     $todoList.prepend( $todoModelView );
                     todoList.todos.unshift( $todoModelView.modelview( 'model' ) );
@@ -476,8 +476,8 @@
         }
     });
     
-    Model = $screen.modelview( 'model' );
     View = $screen.modelview( 'view' );
+    Model = View.model( );
     Router = new Dromeo( );
     
     // Dromeo router for location.hash changes

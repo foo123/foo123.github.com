@@ -81,20 +81,20 @@
         </section>
         
         <footer id="footer">
-            <span id="todo-count" data-bind='{"html": "todoListItemsLabel"}'>0</span>
+            <span id="todo-count" data-bind='{"html":"todoListItemsLabel"}'>0</span>
             <ul id="filters">
                 <li>
-                    <a id="all" href="#/all" class="tab">All (<span data-bind='{"text": "todoList.todos.length"}'>0</span>)</a>
+                    <a id="all" href="#/all" class="tab">All (<span data-bind='{"text":"todoList.todos.length"}'>0</span>)</a>
                 </li>
                 <li>
-                    <a id="active" href="#/active" class="tab">Active (<span data-bind='{"text": "todoList.active"}'>0</span>)</a>
+                    <a id="active" href="#/active" class="tab">Active (<span data-bind='{"text":"todoList.active"}'>0</span>)</a>
                 </li>
                 <li>
-                    <a id="completed" href="#/completed" class="tab">Completed (<span data-bind='{"text": "todoList.completed"}'>0</span>)</a>
+                    <a id="completed" href="#/completed" class="tab">Completed (<span data-bind='{"text":"todoList.completed"}'>0</span>)</a>
                 </li>
             </ul>
             <button id="clear-completed" style="display: none;" data-bind='{"show":"todoList.completed", "click":"removeCompleted"}'>
-                Clear completed (<span data-bind='{"text": "todoList.completed"}'></span>)
+                Clear completed (<span data-bind='{"text":"todoList.completed"}'></span>)
             </button>
         </footer>
     </section>
