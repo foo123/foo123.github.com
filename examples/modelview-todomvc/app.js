@@ -69,9 +69,6 @@
         }
     };
     
-    // View cache(s) refresh interval, 1/2 min
-    ModelView.View._REFRESH_INTERVAL = 30000;
-
     var $window = $(window),
         $screen = $( "#todoapp" ), 
         $todoList = $( '#todo-list' ), 
@@ -83,7 +80,8 @@
         Model, View, Router, TodoView, 
         TypeCast = $.ModelView.Type.Cast, Validate = $.ModelView.Validation.Validate,
         STORAGE_KEY = "modelview_todomvc",
-        STORAGE_INTERVAL = 1000, 
+        // View cache(s) refresh interval, 1/2 min
+        STORAGE_INTERVAL = 1000, REFRESH_INTERVAL = 30000,
         KEY_ENTER = 13
     ;
     
@@ -216,14 +214,17 @@
         // use nested/composite view-model for each todo
         var todo,  $todo;
         
-        todo = { 
+        todo = new ModelView.Model(uuid, { 
             uuid: uuid, 
-            title: title, 
+            title: title || '', 
             completed: false, 
             editing: false 
-        };
+        }, {
+            title: TypeCast.STR
+            ,completed: TypeCast.BOOL
+        });
         
-        $todo = $( todoTpl.render( todo ) );
+        $todo = $( todoTpl.render( todo.$data ) );
         
         $todo.modelview({
             
@@ -235,23 +236,16 @@
             ,bindAttribute: 'data-bind-todo'
             ,events: [ 'change', 'dblclick', 'click', /*'blur',*/ 'focusout', 'keyup' ]
             
-            ,model: {
-                id: uuid
-                
-                ,data: todo
-                
-                ,types: {
-                    title: TypeCast.STR
-                    ,completed: TypeCast.BOOL
-                }
-            }
+            ,refreshInterval: REFRESH_INTERVAL
+            
+            ,model: todo
         });
         
         $todo.modelview( 'sync' );
         
         if ( !!completed )
         {
-            $todo.modelview( 'model' ).set( 'completed', true );
+            todo.set( 'completed', true );
             $todo.find( 'input.toggle' ).prop( 'checked', true );
             $todo.addClass( 'completed' );
         }
@@ -339,6 +333,8 @@
         ,bindAttribute: 'data-bind'
         ,events: [ 'change', 'click', 'blur'/*, 'focusout'*/ ]
         
+        ,refreshInterval: REFRESH_INTERVAL
+            
         ,model: {
             
             id: 'todos'
