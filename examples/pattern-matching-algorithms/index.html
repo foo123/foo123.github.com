@@ -132,11 +132,9 @@
         
     
         
-        <script type="text/javascript" src="../common/js/jquery.js"></script>
-        <script type="text/javascript" src="../common/js/mvc.bundle.js"></script>
+        <script type="text/javascript" src="../common/js/require.js"></script>
+        <script type="text/javascript" src="../common/js/require-config.js"></script>
         
-    <script type="text/javascript" src="../common/js/pattern.min.js"></script>
-    
     <script type="text/x-contemplate" id="algorithm-info">
         <# #>
         <strong>Selected Algorithm: <# $algo #></strong>
@@ -227,138 +225,142 @@
 
         
         
-<footer id="footer">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
-    
-    <div class="showcase">DOM abstraction by <a href="http://jquery.com/" target="_blank">jQuery</a></div>
-    <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
-    <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
-    <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
-</footer>
-<br /><br />
+        <footer id="footer">
+            <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
+            
+            
+<div class="showcase">DOM abstraction by <a href="http://jquery.com/" target="_blank">jQuery</a></div>
 
+            <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
+            <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
+            <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
+            <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
+        </footer>
+        <br /><br />
         
         
-    <script type="text/javascript">//<![CDATA[
-        !function( window, $, $T, $R, $MV, $P, undef ) {
-            "use strict";
+        
+<script type="text/javascript">//<![CDATA[
+    require(['jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Pattern'],
+        function( $, $T, $R, $MV, $P ) {
+        "use strict";
+        
+        var undef=undefined, $window = $(window), $panel = $('#panel'), 
+            appRouter, appView, appModel
+        ;
             
-            var $window = $(window), $panel = $('#panel'), 
-                appRouter, appView, appModel
+        function doTest( )
+        {
+            //
+            // get selected match algorithm
+            //
+            var model = appModel,
+                selectedAlgorithm, matcher,  reflink, desc,
+                pattern, text, result
             ;
-                
-            function doTest( )
-            {
-                //
-                // get selected match algorithm
-                //
-                var model = appModel,
-                    selectedAlgorithm, matcher,  reflink, desc,
-                    pattern, text, result
-                ;
-                
-                pattern = model.get('pattern');
-                text = model.get('text');
-                selectedAlgorithm = model.get('match_algorithm');
-                
-                matcher = new $P[ selectedAlgorithm ]( pattern );
-                
-                model.set('algorithmInfo', $T.tpl('algorithm-info', {
-                    'algo': selectedAlgorithm,
-                    'reflink': matcher.reference || '#',
-                    'desc': matcher.description || ''
-                }), true);
-                
-                model.set('testResults', '<div class="loader"></div>', true);
-                setTimeout(function( ) {
-                    result = matcher.match( text );
-                    matcher.dispose( );
-                    matcher = null;
-                    setTimeout(function( ){ 
-                        //
-                        // show results
-                        //
-                        model.set('testResults', $T.tpl('test-results', {
-                                matched: ( -1 < result ),
-                                pos: result,
-                                pattern: pattern,
-                                text: text
-                            }), true);
-                    }, 100);
+            
+            pattern = model.get('pattern');
+            text = model.get('text');
+            selectedAlgorithm = model.get('match_algorithm');
+            
+            matcher = new $P[ selectedAlgorithm ]( pattern );
+            
+            model.set('algorithmInfo', $T.tpl('algorithm-info', {
+                'algo': selectedAlgorithm,
+                'reflink': matcher.reference || '#',
+                'desc': matcher.description || ''
+            }), true);
+            
+            model.set('testResults', '<div class="loader"></div>', true);
+            setTimeout(function( ) {
+                result = matcher.match( text );
+                matcher.dispose( );
+                matcher = null;
+                setTimeout(function( ){ 
+                    //
+                    // show results
+                    //
+                    model.set('testResults', $T.tpl('test-results', {
+                            matched: ( -1 < result ),
+                            pos: result,
+                            pattern: pattern,
+                            text: text
+                        }), true);
                 }, 100);
-            }
+            }, 100);
+        }
+        
+        // templates defined in the dom
+        $T.add({
+            'algorithm-info' : '#algorithm-info',
+            'test-results' : '#test-results'
+        });
+        
+        $panel.modelview({
             
-            // templates defined in the dom
-            $T.add({
-                'algorithm-info' : '#algorithm-info',
-                'test-results' : '#test-results'
-            });
+            id: 'PatternMatchingAlgorithmsPanel',
             
-            $panel.modelview({
+            autobind: true,
+            events: ['change', 'click'],
+            
+            model: {
+                id: 'model',
                 
-                id: 'PatternMatchingAlgorithmsPanel',
-                
-                autobind: true,
-                events: ['change', 'click'],
-                
-                model: {
-                    id: 'model',
-                    
-                    data: {
-                        match_algorithm: 'BuiltinMatcher',
-                        pattern: 'rain',
-                        text: 'The rain in Spain stays mainly in the plain',
-                        algorithmInfo: '',
-                        testResults: ''
-                    },
-                    
-                    types: {
-                        match_algorithm: $MV.Type.Cast.STR,
-                        pattern: $MV.Type.Cast.STR,
-                        text: $MV.Type.Cast.STR
-                    },
-                    
-                    validators: {  }
+                data: {
+                    match_algorithm: 'BuiltinMatcher',
+                    pattern: 'rain',
+                    text: 'The rain in Spain stays mainly in the plain',
+                    algorithmInfo: '',
+                    testResults: ''
                 },
                 
-                actions: {
-                    test: function( evt, $el, data ) {
-                        location.hash = '#' + appRouter.glue({
-                            action: 'test',
-                            match_algorithm: appModel.get('match_algorithm'),
-                            pattern: appModel.get('pattern'),
-                            text: appModel.get('text'),
-                            r: new Date().getTime()
-                        });
-                        //doTest( );
-                    }
+                types: {
+                    match_algorithm: $MV.Type.Cast.STR,
+                    pattern: $MV.Type.Cast.STR,
+                    text: $MV.Type.Cast.STR
+                },
+                
+                validators: {  }
+            },
+            
+            actions: {
+                test: function( evt, $el, data ) {
+                    location.hash = '#' + appRouter.glue({
+                        action: 'test',
+                        match_algorithm: appModel.get('match_algorithm'),
+                        pattern: appModel.get('pattern'),
+                        text: appModel.get('text'),
+                        r: new Date().getTime()
+                    });
+                    //doTest( );
                 }
-            });
-            
-            appView = $panel.modelview('view');
-            appModel = appView.model( );
-            appRouter = new $R( );
-            $panel.modelview('sync');
-            
-            appRouter.on('#{%ALL%:hash}', function( route, params ) {
-                params = params && params.hash ? appRouter.unglue( params.hash ) : null;
-                if ( params && params.action && 'test' === params.action )
-                {
-                    if ( undef !== params.match_algorithm )
-                        appModel.set('match_algorithm', params.match_algorithm, 1 );
-                    if ( undef !== params.pattern )
-                        appModel.set('pattern', params.pattern, 1 );
-                    if ( undef !== params.text )
-                        appModel.set('text', params.text, 1 );
-                    doTest( );
-                }
-            });
-            $window.on('hashchange', function( evt ) {
-                appRouter.route( location.hash );
-            }).trigger( 'hashchange' );
-            
-        }( window, jQuery, Contemplate, Dromeo, ModelView, Pattern );
-    //]]></script>
+            }
+        });
+        
+        appView = $panel.modelview('view');
+        appModel = appView.model( );
+        appRouter = new $R( );
+        $panel.modelview('sync');
+        
+        appRouter.on('#{%ALL%:hash}', function( route, params ) {
+            params = params && params.hash ? appRouter.unglue( params.hash ) : null;
+            if ( params && params.action && 'test' === params.action )
+            {
+                if ( undef !== params.match_algorithm )
+                    appModel.set('match_algorithm', params.match_algorithm, 1 );
+                if ( undef !== params.pattern )
+                    appModel.set('pattern', params.pattern, 1 );
+                if ( undef !== params.text )
+                    appModel.set('text', params.text, 1 );
+                doTest( );
+            }
+        });
+        $window.on('hashchange', function( evt ) {
+            appRouter.route( location.hash );
+        }).trigger( 'hashchange' );
+        
+    });
+//]]></script>
 
     </body>
 </html>

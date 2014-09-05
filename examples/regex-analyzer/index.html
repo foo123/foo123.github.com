@@ -95,8 +95,8 @@
         
     
         
-        <script type="text/javascript" src="../common/js/jquery.js"></script>
-        <script type="text/javascript" src="../common/js/mvc.bundle.js"></script>
+        <script type="text/javascript" src="../common/js/require.js"></script>
+        <script type="text/javascript" src="../common/js/require-config.js"></script>
         
     <script src="../common/js/codemirror/codemirror.min.js"></script>
     <script src="../common/js/codemirror/mode/javascript.js"></script>
@@ -104,7 +104,6 @@
     <script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
     <script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
     <script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
-    <script src="../common/js/regexanalyzer.min.js"></script>
 
         
     
@@ -145,145 +144,148 @@
 
         
         
-<footer id="footer">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
-    
-    <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
-    <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
-    <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
-    <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
-</footer>
-<br /><br />
+        <footer id="footer">
+            <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
+            
+            
+<div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 
+            <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
+            <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
+            <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
+            <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
+        </footer>
+        <br /><br />
         
         
-    <script type="text/javascript">//<![CDATA[
-        !function( window, $, $T, $R, $MV, RegExAnalyzer, CodeMirror, undef ) {
-            "use strict";
+        
+<script type="text/javascript">//<![CDATA[
+require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
+    function( $, $R, $MV, RegExAnalyzer ) {
+    "use strict";
+    
+    var undef=undefined, $window = $(window), $screen = $('#screen'), output = document.getElementById('output'),
+        appTask, appModel, appView, appRouter, analyzer = new RegExAnalyzer(), code,
+        width = output.clientWidth, height = output.clientHeight
+    ;
+    
+    code = CodeMirror.fromTextArea(output, {
+        mode: "application/json",
+        lineWrapping: true,
+        lineNumbers : true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        theme: 'lesser-dark',
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+    });
+    code.setSize( width, height );
+        
+    appTask = {
+        analyze: function( ) {
+            var input = appModel.get('regex'), output;
             
-            var $window = $(window), $screen = $('#screen'), output = document.getElementById('output'),
-                appTask, appModel, appView, appRouter, analyzer = new RegExAnalyzer(), code,
-                width = output.clientWidth, height = output.clientHeight
+            analyzer.setRegex( input ).analyze( );
+            
+            output = [
+                "Input: " + input
+                ,"Regular Expression: " + analyzer.regex
+                ,"Regular Expression Flags: "
+                ,JSON.stringify( analyzer.flags )
+                ,"Regular Expression Parts: "
+                ,JSON.stringify(analyzer.parts, null, 4)
+            ].join( "\n\n" );
+            
+            code.setValue( output );
+        },
+        
+        peek: function( ) {
+            var input = appModel.get('regex'), output, peekChars;
+            
+            peekChars = analyzer.setRegex( input ).analyze( ).getPeekChars( );
+            
+            //console.log(peekChars);
+            output = [
+                "Input: " + input
+                ,"Regular Expression: " + analyzer.regex
+                ,"Regular Expression Flags: "
+                ,JSON.stringify(analyzer.flags)
+                ,["Regular Expression Peek Characters: "
+                ,"// Experimental Feature, not all characters are expanded, eg. special characters (like .) appear as special"
+                ,"// Peek Characters are the start characters of a hypothetical input string"
+                ,"// which can generate a (further) possible match of the regular expression"].join("\n")
+                ,JSON.stringify(peekChars, null, 4)
+            ].join( "\n\n" );
+            
+            code.setValue( output );
+        }
+    };
+    
+    appRouter = new $R( );
+    appRouter.on('#{%ALL%:hash}', function( route, params ){
+        params = params && params.hash ? appRouter.unglue( params.hash ) : null;
+        if ( params && params.action && appTask[params.action] )
+        {
+            if ( params.regex ) appModel.set('regex', params.regex, 1);
+            appTask[ params.action ]( );
+        }
+    });
+    
+    $screen.modelview({
+        autobind: true
+        ,bindAttribute: 'data-bind'
+        
+        ,model: {
+            id: 'model'
+            ,data: { 
+                regex: "/[abc\d]+/gi"
+            }
+            ,types: { 
+                regex: $MV.Type.Cast.STR
+            }
+        }
+        ,actions: { 
+            analyze: function(evt, $el, data) {
+                location.hash = '#' + appRouter.glue({
+                    action: 'analyze',
+                    regex: appModel.get( 'regex' ),
+                    t: new Date( ).getTime( )
+                });
+            },
+            
+            peek: function(evt, $el, data) {
+                location.hash = '#' + appRouter.glue({
+                    action: 'peek',
+                    regex: appModel.get( 'regex' ),
+                    t: new Date( ).getTime( )
+                });
+            }
+        }
+    });
+    appView = $screen.modelview( 'view' );
+    appModel = appView.model( );
+    $screen.modelview( 'sync' );
+        
+    $window
+        .on('resize', function( evt ) {
+            var v = output.style.visibility,
+                d = output.style.display
             ;
-            
-            code = CodeMirror.fromTextArea(output, {
-                mode: "application/json",
-                lineWrapping: true,
-                lineNumbers : true,
-                indentUnit: 4,
-                indentWithTabs: false,
-                theme: 'lesser-dark',
-                foldGutter: true,
-                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
-            });
+            output.style.visibility = 'hidden';
+            output.style.display = 'block';
+            width = output.clientWidth; 
+            height = output.clientHeight;
+            output.style.display = d;
+            output.style.visibility = v;
             code.setSize( width, height );
-                
-            appTask = {
-                analyze: function( ) {
-                    var input = appModel.get('regex'), output;
-                    
-                    analyzer.setRegex( input ).analyze( );
-                    
-                    output = [
-                        "Input: " + input
-                        ,"Regular Expression: " + analyzer.regex
-                        ,"Regular Expression Flags: "
-                        ,JSON.stringify( analyzer.flags )
-                        ,"Regular Expression Parts: "
-                        ,JSON.stringify(analyzer.parts, null, 4)
-                    ].join( "\n\n" );
-                    
-                    code.setValue( output );
-                },
-                
-                peek: function( ) {
-                    var input = appModel.get('regex'), output, peekChars;
-                    
-                    peekChars = analyzer.setRegex( input ).analyze( ).getPeekChars( );
-                    
-                    //console.log(peekChars);
-                    output = [
-                        "Input: " + input
-                        ,"Regular Expression: " + analyzer.regex
-                        ,"Regular Expression Flags: "
-                        ,JSON.stringify(analyzer.flags)
-                        ,["Regular Expression Peek Characters: "
-                        ,"// Experimental Feature, not all characters are expanded, eg. special characters (like .) appear as special"
-                        ,"// Peek Characters are the start characters of a hypothetical input string"
-                        ,"// which can generate a (further) possible match of the regular expression"].join("\n")
-                        ,JSON.stringify(peekChars, null, 4)
-                    ].join( "\n\n" );
-                    
-                    code.setValue( output );
-                }
-            };
-            
-            appRouter = new $R( );
-            appRouter.on('#{%ALL%:hash}', function( route, params ){
-                params = params && params.hash ? appRouter.unglue( params.hash ) : null;
-                if ( params && params.action && appTask[params.action] )
-                {
-                    if ( params.regex ) appModel.set('regex', params.regex, 1);
-                    appTask[ params.action ]( );
-                }
-            });
-            
-            $screen.modelview({
-                autobind: true
-                ,bindAttribute: 'data-bind'
-                
-                ,model: {
-                    id: 'model'
-                    ,data: { 
-                        regex: "/[abc\d]+/gi"
-                    }
-                    ,types: { 
-                        regex: $MV.Type.Cast.STR
-                    }
-                }
-                ,actions: { 
-                    analyze: function(evt, $el, data) {
-                        location.hash = '#' + appRouter.glue({
-                            action: 'analyze',
-                            regex: appModel.get( 'regex' ),
-                            t: new Date( ).getTime( )
-                        });
-                    },
-                    
-                    peek: function(evt, $el, data) {
-                        location.hash = '#' + appRouter.glue({
-                            action: 'peek',
-                            regex: appModel.get( 'regex' ),
-                            t: new Date( ).getTime( )
-                        });
-                    }
-                }
-            });
-            appView = $screen.modelview( 'view' );
-            appModel = appView.model( );
-            $screen.modelview( 'sync' );
-                
-            $window
-                .on('resize', function( evt ) {
-                    var v = output.style.visibility,
-                        d = output.style.display
-                    ;
-                    output.style.visibility = 'hidden';
-                    output.style.display = 'block';
-                    width = output.clientWidth; 
-                    height = output.clientHeight;
-                    output.style.display = d;
-                    output.style.visibility = v;
-                    code.setSize( width, height );
-                })
-                .on('hashchange', function( evt ) {
-                    appRouter.route( location.hash );
-                })
-                .trigger( 'hashchange' )
-            ;
-        
-        }( window, jQuery, Contemplate, Dromeo, ModelView, RegExAnalyzer, CodeMirror );
-    //]]></script>
+        })
+        .on('hashchange', function( evt ) {
+            appRouter.route( location.hash );
+        })
+        .trigger( 'hashchange' )
+    ;
+});
+//]]></script>
 
     </body>
 </html>

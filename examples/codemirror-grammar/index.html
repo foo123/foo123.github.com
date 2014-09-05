@@ -115,17 +115,17 @@
         
     
         
-        <script type="text/javascript" src="../common/js/jquery.js"></script>
-        <script type="text/javascript" src="../common/js/mvc.bundle.js"></script>
+        <script type="text/javascript" src="../common/js/require.js"></script>
+        <script type="text/javascript" src="../common/js/require-config.js"></script>
         
-    <script src="../common/js/codemirror/codemirror.min.js"></script>
-    <script src="../common/js/codemirror/addon/comment/comment.js"></script>
-    <script src="../common/js/codemirror/addon/lint/lint.js"></script>
-    <script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
-    <script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
-    <script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
-    <script src="../common/js/codemirror/grammar/json.js"></script>
-    <script src="../common/js/codemirror_grammar.bundle.js"></script>
+<script src="../common/js/codemirror/codemirror.min.js"></script>
+<script src="../common/js/codemirror/addon/comment/comment.js"></script>
+<script src="../common/js/codemirror/addon/lint/lint.js"></script>
+<script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
+<script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
+<script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
+<script src="../common/js/codemirror/grammar/json.js"></script>
+<script src="../common/js/codemirror_grammar.bundle.js"></script>
 
         
     
@@ -374,122 +374,125 @@ getMode = function(grammar, DEFAULT) {
             
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 
+            <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
             <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
+            <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
             <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
         </footer>
         <br /><br />
         
         
         
-    <script>
-    //<![CDATA[
-       
-       // on DOM Ready
-        jQuery(function($){
+<script>//<![CDATA[
+require(['jQuery', 'ModelView'], 
+    function( jQuery, ModelView ) {
+    
+   // on DOM Ready
+    jQuery(function($){
+    
+        var $w = $(window), $screen = $('#screen'), model, view,
+            code = $('#code'), grammar = $('#grammar'), apply = $('#apply'), 
+            lang = "customLang", i = 0, json_mode,
+            codeEditor, grammarEditor, width, height,
+            log = (console && console.log) ? function(s){console.log(s);} : function(){}
+        ;
         
-            var $w = $(window), $screen = $('#screen'), model, view,
-                code = $('#code'), grammar = $('#grammar'), apply = $('#apply'), 
-                lang = "customLang", i = 0, json_mode,
-                codeEditor, grammarEditor, width, height,
-                log = (console && console.log) ? function(s){console.log(s);} : function(){}
-            ;
-            
-            json_mode = CodeMirrorGrammar.getMode( json_grammar );
-            CodeMirror.defineMode( 'json', json_mode );
-            json_mode.supportGrammarAnnotations = true;
-            CodeMirror.registerHelper( "lint", 'json', json_mode( ).validator );
-            
-            // if codemirror activated, enable syntax highlight
-            codeEditor = CodeMirror.fromTextArea(code[0], {
-                mode: "text",
-                lineNumbers: true,
-                lineWrapping: false,
-                indentUnit: 4,
-                indentWithTabs: false,
-                // enable syntax validation
-                lint: false,
-                gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers"],
-                theme: 'lesser-dark',
-                extraKeys: {"Ctrl-L": "toggleComment"}
-            });
-            
-            grammarEditor = CodeMirror.fromTextArea(grammar[0], {
-                mode: "json",
-                lineNumbers: true,
-                lineWrapping: false,
-                indentUnit: 4,
-                indentWithTabs: false,
-                // enable syntax validation
-                lint: true,
-                foldGutter: true,
-                gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-                theme: 'lesser-dark'
-            });
-            
-            $screen.modelview({
-                autobind: true
-                ,bindAttribute: 'data-bind'
-                
-                ,model: {
-                    id: 'model'
-                    ,data: { 
-                        annotate: false
-                    }
-                    ,types: { 
-                        annotate: $.ModelView.Type.Cast.BOOLEAN
-                    }
-                }
-                ,actions: { 
-                    apply: function(evt, $el, data) {
-                        var gramm, lines, len, i, line, gramm_mode;
-                        lines = grammarEditor.getValue().split("\n");
-                        len = lines.length;
-                        gramm = [];
-                        for (i=0; i<len; i++)
-                        {
-                            // remove comments
-                            line = lines[i].replace(/^\s+/, '');
-                            if ('//' == line.substr(0, 2)) continue;
-                            gramm.push( lines[i] );
-                        }
-                        if ( gramm_mode )
-                        {
-                            CodeMirror.defineMode(lang, null);
-                        }
-                        gramm = JSON.parse(gramm.join("\n"));
-                        gramm_mode = CodeMirrorGrammar.getMode( gramm );
-                        CodeMirror.defineMode(lang, gramm_mode);
-                        if ( model.get('annotate') )
-                        {
-                            gramm_mode.supportGrammarAnnotations = true;
-                            CodeMirror.registerHelper("lint", lang, gramm_mode().validator);
-                            codeEditor.setOption("lint", true);
-                        }
-                        else
-                        {
-                            gramm_mode.supportGrammarAnnotations = false;
-                            codeEditor.setOption("lint", false);
-                        }
-                        codeEditor.setOption("mode", lang);
-                    }
-                }
-            });
-            
-            $w.resize(function( ) {
-                width = code.width( ); height = code.height( );
-                codeEditor.setSize( width, height );
-                width = grammar.width( ); height = grammar.height( );
-                grammarEditor.setSize( width, height );
-            });
-            
-            $w.trigger('resize');
-            view = $screen.modelview( 'view' );
-            model = view.model( );
-            $screen.modelview( 'sync' );
-            //apply.trigger('click');
+        json_mode = CodeMirrorGrammar.getMode( json_grammar );
+        CodeMirror.defineMode( 'json', json_mode );
+        json_mode.supportGrammarAnnotations = true;
+        CodeMirror.registerHelper( "lint", 'json', json_mode( ).validator );
+        
+        // if codemirror activated, enable syntax highlight
+        codeEditor = CodeMirror.fromTextArea(code[0], {
+            mode: "text",
+            lineNumbers: true,
+            lineWrapping: false,
+            indentUnit: 4,
+            indentWithTabs: false,
+            // enable syntax validation
+            lint: false,
+            gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers"],
+            theme: 'lesser-dark',
+            extraKeys: {"Ctrl-L": "toggleComment"}
         });
-    //]]>
-    </script>
+        
+        grammarEditor = CodeMirror.fromTextArea(grammar[0], {
+            mode: "json",
+            lineNumbers: true,
+            lineWrapping: false,
+            indentUnit: 4,
+            indentWithTabs: false,
+            // enable syntax validation
+            lint: true,
+            foldGutter: true,
+            gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+            theme: 'lesser-dark'
+        });
+        
+        $screen.modelview({
+            autobind: true
+            ,bindAttribute: 'data-bind'
+            
+            ,model: {
+                id: 'model'
+                ,data: { 
+                    annotate: false
+                }
+                ,types: { 
+                    annotate: $.ModelView.Type.Cast.BOOLEAN
+                }
+            }
+            ,actions: { 
+                apply: function(evt, $el, data) {
+                    var gramm, lines, len, i, line, gramm_mode;
+                    lines = grammarEditor.getValue().split("\n");
+                    len = lines.length;
+                    gramm = [];
+                    for (i=0; i<len; i++)
+                    {
+                        // remove comments
+                        line = lines[i].replace(/^\s+/, '');
+                        if ('//' == line.substr(0, 2)) continue;
+                        gramm.push( lines[i] );
+                    }
+                    if ( gramm_mode )
+                    {
+                        CodeMirror.defineMode(lang, null);
+                    }
+                    gramm = JSON.parse(gramm.join("\n"));
+                    gramm_mode = CodeMirrorGrammar.getMode( gramm );
+                    CodeMirror.defineMode(lang, gramm_mode);
+                    if ( model.get('annotate') )
+                    {
+                        gramm_mode.supportGrammarAnnotations = true;
+                        CodeMirror.registerHelper("lint", lang, gramm_mode().validator);
+                        codeEditor.setOption("lint", true);
+                    }
+                    else
+                    {
+                        gramm_mode.supportGrammarAnnotations = false;
+                        codeEditor.setOption("lint", false);
+                    }
+                    codeEditor.setOption("mode", lang);
+                }
+            }
+        });
+        
+        $w.resize(function( ) {
+            width = code.width( ); height = code.height( );
+            codeEditor.setSize( width, height );
+            width = grammar.width( ); height = grammar.height( );
+            grammarEditor.setSize( width, height );
+        });
+        
+        $w.trigger('resize');
+        view = $screen.modelview( 'view' );
+        model = view.model( );
+        $screen.modelview( 'sync' );
+        //apply.trigger('click');
+    });
+});
+//]]></script>
 
     </body>
 </html>

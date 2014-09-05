@@ -166,8 +166,8 @@
         
     
         
-        <script type="text/javascript" src="../common/js/jquery.js"></script>
-        <script type="text/javascript" src="../common/js/mvc.bundle.js"></script>
+        <script type="text/javascript" src="../common/js/require.js"></script>
+        <script type="text/javascript" src="../common/js/require-config.js"></script>
         
     <script src="../common/js/codemirror/codemirror.min.js"></script>
     <script src="../common/js/codemirror/mode/javascript.js"></script>
@@ -175,7 +175,6 @@
     <script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
     <script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
     <script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
-    <script src="../common/js/regexcomposer.min.js"></script>
 
         
     
@@ -468,80 +467,82 @@ new RegExComposer()
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 <div class="showcase">Regular Expressions Documentation by <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank">MDN</a></div>
 
+            <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
             <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
+            <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
             <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
         </footer>
         <br /><br />
         
         
         
-    <script>
-    //<![CDATA[
+<script>//<![CDATA[
+require(['jQuery', 'ModelView', 'RegExComposer'],
+    function($, ModelView, RegExComposer) {
+    
+    var model, view, $screen = $('#screen'),
+        codeEditor = document.getElementById('code'),
+        width = codeEditor.clientWidth, height = codeEditor.clientHeight
+    ;
+    
+    code = CodeMirror.fromTextArea(codeEditor, {
+        mode: "javascript",
+        lineWrapping: true,
+        lineNumbers : true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        theme: 'lesser-dark',
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+    });
+    code.setSize(width, height);
         
-        var model, view, $screen = $('#screen'),
-            codeEditor = document.getElementById('code'),
-            width = codeEditor.clientWidth, height = codeEditor.clientHeight
-        ;
+    $screen.modelview({
+        autobind: true
+        ,bindAttribute: 'data-bind'
         
-        code = CodeMirror.fromTextArea(codeEditor, {
-            mode: "javascript",
-            lineWrapping: true,
-            lineNumbers : true,
-            indentUnit: 4,
-            indentWithTabs: false,
-            theme: 'lesser-dark',
-            foldGutter: true,
-            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
-        });
+        ,model: {
+            id: 'model'
+            ,data: { 
+                regex: ""
+            }
+            ,types: { 
+                regex: $.ModelView.Type.Cast.STR
+            }
+        }
+        ,actions: { 
+            compose: function(evt, $el, data) {
+                var regex, e;
+                
+                try{
+                    regex = eval("(function(){return "+code.getValue()+";}())");
+                } catch (e) { 
+                    regex = "Error Occured"; 
+                }
+                model.set('regex', regex, true);
+            }
+        }
+    });
+    
+    window.addEventListener('resize', function() {
+    
+        var v = codeEditor.style.visibility;
+        var d = codeEditor.style.display;
+        codeEditor.style.visibility = 'hidden';
+        codeEditor.style.display = 'block';
+        width = codeEditor.clientWidth; 
+        height = codeEditor.clientHeight;
+        codeEditor.style.display = d;
+        codeEditor.style.visibility = v;
         code.setSize(width, height);
-            
-        $screen.modelview({
-            autobind: true
-            ,bindAttribute: 'data-bind'
-            
-            ,model: {
-                id: 'model'
-                ,data: { 
-                    regex: ""
-                }
-                ,types: { 
-                    regex: $.ModelView.Type.Cast.STR
-                }
-            }
-            ,actions: { 
-                compose: function(evt, $el, data) {
-                    var regex, e;
-                    
-                    try{
-                        regex = eval("(function(){return "+code.getValue()+";}())");
-                    } catch (e) { 
-                        regex = "Error Occured"; 
-                    }
-                    model.set('regex', regex, true);
-                }
-            }
-        });
         
-        window.addEventListener('resize', function() {
-        
-            var v = codeEditor.style.visibility;
-            var d = codeEditor.style.display;
-            codeEditor.style.visibility = 'hidden';
-            codeEditor.style.display = 'block';
-            width = codeEditor.clientWidth; 
-            height = codeEditor.clientHeight;
-            codeEditor.style.display = d;
-            codeEditor.style.visibility = v;
-            code.setSize(width, height);
-            
-        }, false);
-        
-        view = $screen.modelview( 'view' );
-        model = view.model( );
-        $screen.modelview( 'sync' );
-        
-    //]]>
-    </script>
+    }, false);
+    
+    view = $screen.modelview( 'view' );
+    model = view.model( );
+    $screen.modelview( 'sync' );
+});    
+//]]></script>
 
     </body>
 </html>

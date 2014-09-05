@@ -123,15 +123,9 @@
         
     
         
-        <script type="text/javascript" src="../common/js/jquery.js"></script>
-        <script type="text/javascript" src="../common/js/mvc.bundle.js"></script>
+        <script type="text/javascript" src="../common/js/require.js"></script>
+        <script type="text/javascript" src="../common/js/require-config.js"></script>
         
-    <script type="text/javascript" src="../common/js/datgui.min.js"></script>
-    <!-- support parallel computations using web-workers (parallel.js) -->
-    <script type="text/javascript" src="../common/js/parallel/parallel.min.js"></script>
-    <script type="text/javascript" src="../common/js/haar-detector.min.js"></script>
-    <script type="text/javascript" src="../common/cascades/haarcascade_frontalface_alt.js"></script>
-
         
     
     </head>
@@ -196,7 +190,9 @@
             <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
             
             
+            <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
             <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
+            <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
             <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
         </footer>
         <br /><br />
@@ -204,6 +200,8 @@
         
         
 <script>//<![CDATA[
+require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcascade_frontalface_alt'], 
+    function($, ModelView, DAT, HAAR, Parallel, haarcascade_frontalface_alt) {
 
     var startTime = (window.console && window.console.time) ? function(s) { window.console.time(s); } : function() {},
         endTime = (window.console && window.console.timeEnd) ? function(s) { window.console.timeEnd(s); } : function() {},
@@ -234,7 +232,7 @@
             
             startTime('Feature Detect');
             // detect the feature
-            new HAAR.Detector(haarcascade_frontalface_alt, useParallel)
+            new HAAR.Detector(haarcascade_frontalface_alt.haarcascade_frontalface_alt, useParallel)
                     .image(canvas, scaling.getValue()) // use the image
                     .interval(40) // set detection interval for asynchronous detection (if not parallel)
                     .complete(function() {  // onComplete callback
@@ -347,7 +345,7 @@
     }
     
     rundetect.click( );
-
+});
 //]]></script>
 
     </body>
