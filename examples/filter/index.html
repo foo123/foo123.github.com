@@ -113,8 +113,8 @@
             }
             #forkongithub a{background:#c83022;color:#fff;}
         </style>
-        <script type="text/javascript" src="../common/js/utils.min.js"></script>
-        <script src="../common/js/filter.bundle.js"></script>
+        <script src="../common/js/require.js"></script>
+        <script src="../common/js/require-config.js"></script>
     </head>
     <body>
         <span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
@@ -130,7 +130,7 @@
         
         
         <aside id="aside">
-            <button id="test" class="button">Apply Filters</button>
+            <button id="test" style="display:none" class="button">Apply Filters</button>
         </aside>
         
         <div id="container" class="panel"></div>
@@ -138,13 +138,23 @@
         <div id="filters" class="panel"></div>
         
         <script>//<![CDATA[
+        require.config({
+            paths: {
+                FilterBundle: "filter.bundle"
+            },
+            bundles: {
+                FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_PLUGINS"]
+            }
+        });
+        require(['Classy', 'Asynchronous', 'FILTER', 'FILTER_PLUGINS', 'utils'], function( $_1, $_2, $_3, $F, U ) {
             
+            document.getElementById('test').style.display = 'block';
             // utils
             function br() { return U.Tag('br'); }
             function text(t) { return U.Text(t); }
             function span(t) { return U.Wrap('span', t); }
             
-            var $F = FILTER, parallelWorkers = /(&|\?)parallel\b/i.test( location.href );
+            var parallelWorkers = /(&|\?)parallel\b/i.test( location.href );
             
             if ( parallelWorkers && !$F.Browser.supportsWorker )
             {
@@ -159,7 +169,7 @@
                 ,container = U.Get('container'), filters = U.Get('filters')
                  
                  // displacemap
-                ,displacemap = new $F.Image( )
+                ,displacemap = $F.Image( )
                 
                 ,disposeWorker = function( ) {
                     this.worker( false );
@@ -357,7 +367,7 @@
             }*/
             
             test.Event('click', doTest);
-            
+        });
         //]]></script>
     </body>
 </html>

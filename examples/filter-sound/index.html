@@ -75,38 +75,9 @@
             }
             #forkongithub a{background:#c83022;color:#fff;}
         </style>
-        
-        <script type="text/javascript" src="../common/js/utils.min.js"></script>
-        <script src="../common/js/stats.min.js"></script>
-        <script src="../common/js/dancer.min.js"></script>
-        <script src="../common/js/filter.bundle.js"></script>
-        <script src="./filter.trioptic.js"></script>
-        <script>//<![CDATA[
-            
-           /**
-             * Provides requestAnimationFrame in a cross browser way.
-             * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-             */
-
-            if ( !window.requestAnimationFrame ) {
-
-                window.requestAnimationFrame = ( function() {
-
-                    return window.webkitRequestAnimationFrame ||
-                    window.mozRequestAnimationFrame ||
-                    window.oRequestAnimationFrame ||
-                    window.msRequestAnimationFrame ||
-                    function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
-
-                        window.setTimeout( callback, 1000 / 60 );
-
-                    };
-
-                } )();
-
-            }
-            
-        //]]></script>
+        <script src="../common/js/require.js"></script>
+        <script src="../common/js/require-config.js"></script>
+        <!--<script src="./filter.trioptic.js"></script>-->
         
         <title>Sound visualization with Filter.js</title>
         
@@ -149,10 +120,55 @@
         <div id="container" class="fluid col-1-1"></div>
         
         <script>//<![CDATA[
-        !function(window){
+        
+       /**
+         * Provides requestAnimationFrame in a cross browser way.
+         * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+         */
+
+        if ( !window.requestAnimationFrame ) {
+
+            window.requestAnimationFrame = ( function() {
+
+                return window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimationFrame ||
+                function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
+
+                    window.setTimeout( callback, 1000 / 60 );
+
+                };
+
+            } )();
+
+        }
             
-            var $F = FILTER 
-                ,useParallelFilters = $F.Browser.supportsWorker && /(&|\?)parallel\b/i.test( location.href )
+        require.config({
+            paths: {
+                FilterBundle: "filter.bundle",
+                FilterTrioptic: "../../filter-sound/filter.trioptic"
+            },
+            bundles: {
+                FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_PLUGINS"]
+            },
+            shim: {
+                FilterTrioptic: {
+                    deps: ["FILTER"],
+                    exports: "FILTER.TriopticSimpleFilter",
+                    init: function( $F ) {
+                        var link = document.createElement('a');
+                        link.href = "./filter.trioptic.js";
+                        $F.TriopticSimpleFilter.prototype.path = $F.getPath({uri: link.protocol + "//" + link.host + link.pathname + link.search + link.hash});
+                        return $F.TriopticSimpleFilter;
+                    }
+                }
+            }
+        });
+        require(['Classy', 'Asynchronous', 'FILTER', 'FILTER_PLUGINS', 'Dancer', 'utils', 'Stats'/*, 'domReady!'*/], 
+            function( $_1, $_2, $_3, $F, Dancer, U, Stats ) {
+            
+            var useParallelFilters = $F.Browser.supportsWorker && /(&|\?)parallel\b/i.test( location.href )
                 ,baseUrl = location.href.split(/#|\?/)[ 0 ]
                 ,audio, container, statsContainer
                 
@@ -178,6 +194,10 @@
             U.Get('synchronous').Event( 'click', function( ) {
                 location.href = baseUrl + '?synchronous=1';
             });
+            
+            window.FILTER = $F; // global for external plugin
+            require(['FilterTrioptic'], init);
+            return;
             
             function prepareAudio( ) 
             {
@@ -308,6 +328,11 @@
 
             function init( ) 
             {
+                if ( useParallelFilters && !$F.Browser.supportsWorker )
+                {
+                    alert('Browser does not support workers');
+                }
+                
                 window.onunload = function( ) { 
                     if ( triopticVisualizer ) triopticVisualizer.dispose( true );
                     trioptic = null;
@@ -328,14 +353,9 @@
                 prepareAudio( );
             }
             
-            if ( useParallelFilters && !$F.Browser.supportsWorker )
-            {
-                alert('Browser does not support workers');
-            }
+            //init( );
             
-            init( );
-            
-         }(window);   
+         });   
         //]]></script>
     </body>
 </html>

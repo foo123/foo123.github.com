@@ -5,6 +5,7 @@
         
         ,paths: {
             Storage: "Storage"
+            ,AreaSelect: "areaselect.min"
             ,utils: "utils.min"
             ,jQuery: "jquery"
             ,Classy: "classy.min"
@@ -18,14 +19,14 @@
             ,HAAR: "haar-detector.min"
             //,HAARjs: "haar-detector.min"
             ,cascades: "../cascades"
-            //,FILTERjs: "filter.min"
-            //,FILTERjsPlugins: "filter.plugins.min"
-            ,FILTER: "filter.bundle"
+            ,FILTER: "filter.min"
+            ,FILTER_PLUGINS: "filter.plugins.min"
+            //,FilterBundle: "filter.bundle"
             ,MOD3: "mod3.min"
             ,Sort: "sort.min"
             ,Pattern: "pattern.min"
             ,NEngine: "NEngine.min"
-            ,codemirror: "codemirror"
+            //,codemirror: "codemirror"
             ,CodeMirror: "codemirror/codemirror.min"
             ,CodeMirrorGrammar: "codemirror_grammar.min"
             ,CodeMirrorGrammarBundle: "codemirror_grammar.bundle"
@@ -45,9 +46,15 @@
             ,ThreeOld: "three_old"
             ,Tween: "Tween"
         }
-        
+        /*,bundles: {
+            FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_PLUGINS"]
+            ,CodeMirrorGrammarBundle: ["Classy", "RegExAnalyzer", "CodeMirrorGrammar"]
+            ,AceGrammarBundle: ["Classy", "RegExAnalyzer", "AceGrammar"]
+            ,PrismGrammarBundle: ["Classy", "RegExAnalyzer", "PrismGrammar"]
+        }*/        
         ,shim: {
             Storage: { exports: 'Storage' }
+            ,AreaSelect: { exports: 'AreaSelect' }
             ,utils: { exports: 'U' }
             ,jQuery: { exports: 'jQuery' }
             ,Stats: { exports: 'Stats' }
