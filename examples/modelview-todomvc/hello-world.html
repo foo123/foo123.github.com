@@ -1,0 +1,193 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie lt-ie9">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" class="no-ie">
+<!--<![endif]-->
+    <head>
+        <title>modelview.js • Hello World</title>
+        
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="description" content="modelview.js • Hello World" />
+        
+        
+    <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+    <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
+    <link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
+    <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
+    <link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
+    <style type="text/css">
+    #forkongithub a{background:#aa0000;color:#fff;text-decoration:none;font-family:arial, sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:0.9rem;line-height:1.4rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#aa0000;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;z-index:100;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:absolute;display:block;z-index:100;top:0;right:0;width:200px;overflow:hidden;height:200px;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}
+    .button {
+        -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
+        -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
+        box-shadow:inset 0px 1px 0px 0px #f5978e;
+        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
+        background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
+        background-color:#f24537;
+        -webkit-border-top-left-radius:20px;
+        -moz-border-radius-topleft:20px;
+        border-top-left-radius:20px;
+        -webkit-border-top-right-radius:20px;
+        -moz-border-radius-topright:20px;
+        border-top-right-radius:20px;
+        -webkit-border-bottom-right-radius:20px;
+        -moz-border-radius-bottomright:20px;
+        border-bottom-right-radius:20px;
+        -webkit-border-bottom-left-radius:20px;
+        -moz-border-radius-bottomleft:20px;
+        border-bottom-left-radius:20px;
+        text-indent:0;
+        border:1px solid #d02718;
+        display:inline-block;
+        color:#ffffff;
+        font-family:Arial;
+        font-size:15px;
+        font-weight:bold;
+        font-style:normal;
+        height:50px;
+        line-height:50px;
+        width:2000px;
+        text-decoration:none;
+        text-align:center;
+        text-shadow:1px 1px 0px #810e05;
+    }
+    .button:hover {
+        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
+        background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
+        background-color:#c62d1f;
+    }.button:active {
+        position:relative;
+        top:1px;
+    }
+    .button {
+        width:120px;
+        height:40px;
+        line-height:40px;
+        position:relative;
+        cursor:pointer;
+    }
+    </style>
+
+    <script type="text/javascript" src="../common/js/require.js"></script>
+    <script type="text/javascript" src="../common/js/require-config.js"></script>
+    <script src="../common/js/codemirror/codemirror.min.js"></script>
+    <script src="../common/js/codemirror/mode/xml.js"></script>
+    <script src="../common/js/codemirror/mode/javascript.js"></script>
+    <script src="../common/js/codemirror/mode/css.js"></script>
+    <script src="../common/js/codemirror/mode/htmlmixed.js"></script>
+    <!--<script src="../common/js/codemirror/mode/htmlembedded.js"></script>-->
+    </head>
+    
+    <body>
+        <span id="forkongithub"><a href="https://github.com/foo123/modelview.js">View me on GitHub</a></span>
+        
+        <header id="header">
+            <h1>ModelView.js Hello World!</h1>
+        </header>
+        
+        <div id="html-snippet">
+        <div id="screen">
+            Hello <span data-bind='{"text":"msg"}'></span> &nbsp;&nbsp;(updated live on <i>change</i>)
+            <br /><br />
+            <input type="text" name="model[msg]" size="50" value="" />
+            <button class="button" data-bind='{"text":"alert_msg","click":"alert_msg"}'></button>
+        </div>
+        </div>
+    
+        <script id="js-snippet">
+        !function( window, require, undef ) {
+            // use requireJS
+            require(['jQuery', 'ModelView'], 
+                function( $, ModelView ) {
+                "use strict";
+                // jQuery is a dependency
+                $('#screen').modelview({
+                    
+                    id: 'view',
+                    
+                    autobind: true,
+                    bindAttribute: 'data-bind',
+                    events: [ 'change', 'click' ],
+                    
+                    model: {
+                        id: 'model',
+                        
+                        data: {
+                            // model data here ..
+                            msg: 'World!',
+                            alert_msg: 'Alert Message'
+                        },
+                        
+                        types: {
+                            // model data type-casters (if any) here ..
+                            msg: ModelView.Type.Cast.STR
+                        },
+                        
+                        validators: {
+                            // model data validators (if any) here ..
+                            msg: ModelView.Validation.Validate.NOT_EMPTY
+                        }
+                    },
+                    
+                    actions: {
+                        // custom view actions (if any) here ..
+                        alert_msg: function( evt, $el, bindData ) {
+                            alert( this.model().get('msg') );
+                        }
+                    }
+
+                });
+                // sync model to view
+                $('#screen').modelview('sync');
+            });
+        }(window, require);
+        </script>
+        
+        <br /><br /><br />
+        
+        <script>
+            var snippets = [
+                ['HTML Code', 'html-snippet', 'htmlmixed'],
+                ['JS Code', 'js-snippet', 'javascript']
+            ];
+            var i, title, snippet, textarea, editor, entry;
+            for (i=0; i<snippets.length; i++)
+            {
+                entry = snippets[ i ];
+                
+                title = document.createElement('h4');
+                title.innerHTML = entry[ 0 ] + ': <br />';
+                textarea = document.createElement('textarea');
+                document.body.appendChild( title );  document.body.appendChild( textarea );
+                
+                snippet = document.getElementById( entry[ 1 ] ).innerHTML;
+                //if ( /^html/i.test(entry[ 2 ]) ) snippet = snippet.split('<').join('&lt;');
+                if ( /^(html|xml)/i.test(entry[ 2 ]) ) snippet = snippet.split('"').join("'").split('&quot;').join('"');
+                
+                editor = CodeMirror.fromTextArea(textarea, {
+                    mode: entry[ 2 ],
+                    //value: snippet,
+                    readOnly: true,
+                    lineWrapping: true,
+                    lineNumbers : true,
+                    indentUnit: 4,
+                    indentWithTabs: false,
+                    theme: 'lesser-dark'
+                });
+                editor.setValue( snippet );
+            }
+        </script>
+    </body>
+</html>
