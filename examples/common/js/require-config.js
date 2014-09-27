@@ -8,6 +8,9 @@
             ,AreaSelect: "areaselect.min"
             ,utils: "utils.min"
             ,jQuery: "jquery"
+            ,lodash: "lodash.min"
+            ,platform: "platform.min"
+            ,Benchmark: "benchmark.min"
             ,Classy: "classy.min"
             ,Asynchronous: "asynchronous.min"
             ,RegExAnalyzer: "regexanalyzer.min"
@@ -57,6 +60,12 @@
             ,AreaSelect: { exports: 'AreaSelect' }
             ,utils: { exports: 'U' }
             ,jQuery: { exports: 'jQuery' }
+            ,lodash: { exports: '_' }
+            ,platform: { exports: 'platform' }
+            ,Benchmark: {
+                deps: ['lodash', 'platform'],
+                exports: 'Benchmark'
+            }
             ,Stats: { exports: 'Stats' }
             ,DatGUI: { exports: 'DAT' }
             ,Parallel: { exports: 'Parallel' }
