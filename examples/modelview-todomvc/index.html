@@ -50,10 +50,10 @@
         <li id="<# $uuid #>" class="todo">
             <div class="view">
                 <input class="toggle" data-bind-todo='{"change":"complete"}' type="checkbox" val="1" />
-                <label data-bind-todo='{"dblclick":"edit", "text":"title"}'><# $title #></label>
+                <label data-bind-todo='{"dblclick":"edit"}'>$(title)</label>
                 <button class="destroy" data-bind-todo='{"click":"remove"}'></button>
             </div>
-            <input class="edit" type="text" name="<# $uuid #>[title]" data-bind-todo='{"change":"stopEditing","focusout":"stopEditing","keyup":"stopEditing"}' value="<# $title #>" />
+            <input class="edit" type="text" name="<# $uuid #>[title]" data-bind-todo='{"change":"stopEditing","focusout":"stopEditing","keyup":"stopEditing"}' value="$(title)" />
         </li>
     </script>
 
@@ -81,20 +81,21 @@
         </section>
         
         <footer id="footer">
-            <span id="todo-count" data-bind='{"html":"todoListItemsLabel"}'>0</span>
+            <span id="todo-count"><strong>$(todoList.active)</strong> $(todoList.items) left</span>
             <ul id="filters">
                 <li>
-                    <a id="all" href="#/all" class="tab">All (<span data-bind='{"text":"todoList.todos.length"}'>0</span>)</a>
+                    <a id="all" href="#/all" class="tab">All ($(todoList.todos.length))</a>
                 </li>
                 <li>
-                    <a id="active" href="#/active" class="tab">Active (<span data-bind='{"text":"todoList.active"}'>0</span>)</a>
+                    <a id="active" href="#/active" class="tab">Active ($(todoList.active))</a>
                 </li>
                 <li>
-                    <a id="completed" href="#/completed" class="tab">Completed (<span data-bind='{"text":"todoList.completed"}'>0</span>)</a>
+                    <a id="completed" href="#/completed" class="tab">Completed ($(todoList.completed))</a>
                 </li>
             </ul>
-            <button id="clear-completed" style="display: none;" data-bind='{"show":"todoList.completed", "click":"removeCompleted"}'>
-                Clear completed (<span data-bind='{"text":"todoList.completed"}'></span>)
+            <button id="clear-completed" style="display: none;" 
+                data-bind='{"show":"todoList.completed", "click":"removeCompleted"}'>
+                Clear completed ($(todoList.completed))
             </button>
         </footer>
     </section>

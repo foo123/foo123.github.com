@@ -293,9 +293,8 @@
                 
                 // custom getter observable for itemsLabel
                 ,getters: {
-                    todoListItemsLabel: function( ) { 
-                        var numactive = this.$data.todoList.active; 
-                        return sprintf('<strong>%d</strong> %s left', numactive, pluralise( 'item', numactive ));
+                    'todoList.items': function( ) { 
+                        return pluralise( 'item', this.$data.todoList.active );
                     }
                 }
                 

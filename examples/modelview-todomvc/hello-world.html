@@ -97,63 +97,65 @@
             <h1>ModelView.js Hello World!</h1>
         </header>
         
-        <div id="html-snippet">
-        <div id="screen">
-            Hello <span data-bind='{"text":"msg"}'></span> &nbsp;&nbsp;(updated live on <i>change</i>)
-            <br /><br />
-            <input type="text" name="model[msg]" size="50" value="" />
-            <button class="button" data-bind='{"text":"alert_msg","click":"alert_msg"}'></button>
-        </div>
-        </div>
+<div id="html-snippet">
+<div id="screen">
+    Hello $(msg) &nbsp;&nbsp;(updated live on <i>change</i>)
+    <br /><br />
+    <input type="text" name="model[msg]" size="50" value="" />
+    <button class="button" title="$(msg)" data-bind='{"click":"alert_msg"}'>Hello</button>
+</div>
+</div>
     
-        <script id="js-snippet">
-        !function( window, require, undef ) {
-            // use requireJS
-            require(['jQuery', 'ModelView'], 
-                function( $, ModelView ) {
-                "use strict";
-                // jQuery is a dependency
-                $('#screen').modelview({
-                    
-                    id: 'view',
-                    
-                    autobind: true,
-                    bindAttribute: 'data-bind',
-                    events: [ 'change', 'click' ],
-                    
-                    model: {
-                        id: 'model',
-                        
-                        data: {
-                            // model data here ..
-                            msg: 'World!',
-                            alert_msg: 'Alert Message'
-                        },
-                        
-                        types: {
-                            // model data type-casters (if any) here ..
-                            msg: ModelView.Type.Cast.STR
-                        },
-                        
-                        validators: {
-                            // model data validators (if any) here ..
-                            msg: ModelView.Validation.Validate.NOT_EMPTY
-                        }
-                    },
-                    
-                    actions: {
-                        // custom view actions (if any) here ..
-                        alert_msg: function( evt, $el, bindData ) {
-                            alert( this.model().get('msg') );
-                        }
-                    }
+<script id="js-snippet">
+!function( window, require, undef ) {
+    // use requireJS
+    require(['jQuery', 'ModelView'], 
+        function( $, ModelView ) {
+        "use strict";
+        // jQuery is a dependency
+        $('#screen').modelview({
+            
+            id: 'view',
+            
+            autobind: true,
+            bindAttribute: 'data-bind',
+            inlineTplFormat: '$(__KEY__)',
+            events: [ 'change', 'click' ],
+            
+            model: {
+                id: 'model',
+                
+                data: {
+                    // model data here ..
+                    msg: 'World!'
+                },
+                
+                types: {
+                    // model data type-casters (if any) here ..
+                    msg: ModelView.Type.Cast.STR
+                },
+                
+                validators: {
+                    // model data validators (if any) here ..
+                    msg: ModelView.Validation.Validate.NOT_EMPTY
+                }
+            },
+            
+            actions: {
+                // custom view actions (if any) here ..
+                alert_msg: function( evt, $el, bindData ) {
+                    alert( this.model().get('msg') );
+                    // this also works
+                    //alert( this.$model.get('msg') );
+                }
+            }
 
-                });
-                // sync model to view
-                $('#screen').modelview('sync');
-            });
-        }(window, require);
-        </script>
+        });
+        // sync model to view
+        $('#screen').modelview('sync');
+    });
+}(window, require);
+</script>
         
         <br /><br /><br />
         
