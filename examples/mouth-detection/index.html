@@ -11,134 +11,134 @@
 <!--[if gt IE 8]><!-->
 <html lang="en" class="no-ie">
 <!--<![endif]-->
-    <head>
-        <title>Mouth detection with OpenCV cascades in JavaScript</title>
-        
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-        <meta name="description" content="Mouth detection with OpenCV cascades in JavaScript" />
-        
-        
-        <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-        
-    <link rel="stylesheet" type="text/css" href="../common/css/datgui.min.css" />
-    <style type="text/css">
-        .button {
-            -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
-            -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
-            box-shadow:inset 0px 1px 0px 0px #f5978e;
-            background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
-            background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
-            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
-            background-color:#f24537;
-            -webkit-border-top-left-radius:20px;
-            -moz-border-radius-topleft:20px;
-            border-top-left-radius:20px;
-            -webkit-border-top-right-radius:20px;
-            -moz-border-radius-topright:20px;
-            border-top-right-radius:20px;
-            -webkit-border-bottom-right-radius:20px;
-            -moz-border-radius-bottomright:20px;
-            border-bottom-right-radius:20px;
-            -webkit-border-bottom-left-radius:20px;
-            -moz-border-radius-bottomleft:20px;
-            border-bottom-left-radius:20px;
-            text-indent:0;
-            border:1px solid #d02718;
-            display:inline-block;
-            color:#ffffff;
-            font-family:Arial;
-            font-size:15px;
-            font-weight:bold;
-            font-style:normal;
-            height:50px;
-            line-height:50px;
-            width:200px;
-            text-decoration:none;
-            text-align:center;
-            text-shadow:1px 1px 0px #810e05;
-        }
-        .button:hover {
-            background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
-            background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
-            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
-            background-color:#c62d1f;
-        }.button:active {
-            position:relative;
-            top:1px;
-        }        
-        .button {
-            margin: 3px 2px;
-            cursor:pointer;
-            position:relative;
-            height: 40px;
-            line-height: 40px;
-            width:160px;
-            font-size:12px;
-        }
-        .guidat {
-            float:left;
-        }
-        .guidat-controller.number {
-          border-left: 5px solid #c83022;
-        }
-
-        .guidat-controller.string {
-          border-left: 5px solid #c83022;
-        }
-
-        .guidat-controller.string input {
-          border: 0;
-          color: #c83022;
-          margin-right: 2px;
-          width: 148px;
-        }
-
-        .guidat-controller.boolean {
-          border-left: 5px solid #c83022;
-        }
-
-        .guidat-controller.function {
-          border-left: 5px solid #c83022;
-        }
-
-        .guidat-controller.number input[type=text] {
-          width: 35px;
-          margin-left: 5px;
-          margin-right: 2px;
-          color: #efefef;
-        }
-        .guidat-controller .guidat-slider-bg .guidat-slider-fg:hover,
-        .guidat-controller.active .guidat-slider-bg .guidat-slider-fg {
-          background-color: #c83022;
-        }
-        .guidat-slider-fg {
-          background-color: #c83022;
-        }
-        #forkongithub a{background:#c83022;color:#fff;}
-    </style>
-
-        
+<head>
+    <title>Mouth detection with OpenCV cascades in JavaScript</title>
     
-        
-        <script type="text/javascript" src="../common/js/require.js"></script>
-        <script type="text/javascript" src="../common/js/require-config.js"></script>
-        
-        
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="Mouth detection with OpenCV cascades in JavaScript" />
     
-    </head>
     
-    <body>
-        <span id="forkongithub"><a href="https://github.com/foo123/HAAR.js">Spoon me on GitHub</a></span>
-        
-        
+    <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+    
+<link rel="stylesheet" type="text/css" href="../common/css/datgui.min.css" />
+<style type="text/css">
+.button {
+    -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
+    box-shadow:inset 0px 1px 0px 0px #f5978e;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
+    background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
+    background-color:#f24537;
+    -webkit-border-top-left-radius:20px;
+    -moz-border-radius-topleft:20px;
+    border-top-left-radius:20px;
+    -webkit-border-top-right-radius:20px;
+    -moz-border-radius-topright:20px;
+    border-top-right-radius:20px;
+    -webkit-border-bottom-right-radius:20px;
+    -moz-border-radius-bottomright:20px;
+    border-bottom-right-radius:20px;
+    -webkit-border-bottom-left-radius:20px;
+    -moz-border-radius-bottomleft:20px;
+    border-bottom-left-radius:20px;
+    text-indent:0;
+    border:1px solid #d02718;
+    display:inline-block;
+    color:#ffffff;
+    font-family:Arial;
+    font-size:15px;
+    font-weight:bold;
+    font-style:normal;
+    height:50px;
+    line-height:50px;
+    width:200px;
+    text-decoration:none;
+    text-align:center;
+    text-shadow:1px 1px 0px #810e05;
+}
+.button:hover {
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
+    background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
+    background-color:#c62d1f;
+}.button:active {
+    position:relative;
+    top:1px;
+}        
+.button {
+    margin: 3px 2px;
+    cursor:pointer;
+    position:relative;
+    height: 40px;
+    line-height: 40px;
+    width:160px;
+    font-size:12px;
+}
+.guidat {
+    float:left;
+}
+.guidat-controller.number {
+  border-left: 5px solid #c83022;
+}
+
+.guidat-controller.string {
+  border-left: 5px solid #c83022;
+}
+
+.guidat-controller.string input {
+  border: 0;
+  color: #c83022;
+  margin-right: 2px;
+  width: 148px;
+}
+
+.guidat-controller.boolean {
+  border-left: 5px solid #c83022;
+}
+
+.guidat-controller.function {
+  border-left: 5px solid #c83022;
+}
+
+.guidat-controller.number input[type=text] {
+  width: 35px;
+  margin-left: 5px;
+  margin-right: 2px;
+  color: #efefef;
+}
+.guidat-controller .guidat-slider-bg .guidat-slider-fg:hover,
+.guidat-controller.active .guidat-slider-bg .guidat-slider-fg {
+  background-color: #c83022;
+}
+.guidat-slider-fg {
+  background-color: #c83022;
+}
+#forkongithub a{background:#c83022;color:#fff;}
+</style>
+
+    
+
+    
+    <script type="text/javascript" src="../common/js/require.js"></script>
+    <script type="text/javascript" src="../common/js/require-config.js"></script>
+    
+    
+
+</head>
+
+<body>
+    <span id="forkongithub"><a href="https://github.com/foo123/HAAR.js">Spoon me on GitHub</a></span>
+    
+    
 <header id="header">
     <h1>Mouth Detection with OpenCV haar cascades in JavaScript</h1>
 </header>
 
-        
-        
+    
+    
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-3">
         <div id="wait" style="display:none"><img src="../common/assets/ajax-loader.gif" /></div>
@@ -172,7 +172,7 @@
             <span style="font-size:12px; font-style:oblique;">( Enable console to see the time statistics for each operation )</span>
             <br /><br />
             
-            <span data-bind='{"html":"mode"}'></span>
+            <span>$(mode)</span>
         </div>
         
         <br />
@@ -183,21 +183,21 @@
     </div>
 </div>
 
+    
+    
+    <footer id="footer">
+        <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
         
         
-        <footer id="footer">
-            <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
-            
-            
-            <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
-            <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
-            <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
-            <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
-        </footer>
-        <br /><br />
-        
-        
-        
+        <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
+        <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
+        <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
+        <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
+    </footer>
+    <br /><br />
+    
+    
+    
 <script>//<![CDATA[
 require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcascade_mcs_mouth'], 
     function($, ModelView, DAT, HAAR, Parallel, haarcascade_mcs_mouth) {
@@ -347,5 +347,5 @@ require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcasc
 });
 //]]></script>
 
-    </body>
+</body>
 </html>

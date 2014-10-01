@@ -11,204 +11,204 @@
 <!--[if gt IE 8]><!-->
 <html lang="en" class="no-ie">
 <!--<![endif]-->
-    <head>
-        <title>Regex Composer</title>
-        
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-        <meta name="description" content="Regex Composer" />
-        
-        
-        <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-        
-    <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
-    <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
-    <link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
-    <style type="text/css">
-        #code {
-            position:relative;
-            padding:10px;
-            width: 90%;
-            height: 450px;
-        }
-        
-        #regex {
-            position:relative;
-            display:inline-block;
-            width:80%;
-        }
-        
-        .button {
-            -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
-            -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
-            box-shadow:inset 0px 1px 0px 0px #ffffff;
-            background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
-            background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
-            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
-            background-color:#ededed;
-            -webkit-border-top-left-radius:20px;
-            -moz-border-radius-topleft:20px;
-            border-top-left-radius:20px;
-            -webkit-border-top-right-radius:20px;
-            -moz-border-radius-topright:20px;
-            border-top-right-radius:20px;
-            -webkit-border-bottom-right-radius:20px;
-            -moz-border-radius-bottomright:20px;
-            border-bottom-right-radius:20px;
-            -webkit-border-bottom-left-radius:20px;
-            -moz-border-radius-bottomleft:20px;
-            border-bottom-left-radius:20px;
-            text-indent:0;
-            border:1px solid #dcdcdc;
-            display:inline-block;
-            color:#777777;
-            font-family:Arial;
-            font-size:15px;
-            font-weight:bold;
-            font-style:normal;
-            height:50px;
-            line-height:50px;
-            width:86px;
-            text-decoration:none;
-            text-align:center;
-            text-shadow:1px 1px 0px #ffffff;
-        }
-        .button:hover {
-            background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
-            background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
-            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
-            background-color:#dfdfdf;
-        }.button:active {
-            position:relative;
-            top:1px;
-        }
-        .button {
-            width: 90px;
-            height: 30px;
-            line-height: 30px;
-            cursor: pointer;
-            position: relative;
-        }
-        
-        /* Define Accordion box */
-        .accordion { 
-            overflow: hidden; 
-            margin: 10px auto; 
-            color: #efefef; 
-            background: #414141; 
-            padding: 10px; 
-        }
-
-        /* General Accordion */
-        
-        /* set style of closed slide */
-        .accordion section { 
-            overflow: hidden; 
-            cursor: pointer; 
-            color: #333; 
-            background: #333; 
-            margin: 3px; 
-            max-height: 40px; 
-        }
-        .accordion section:hover { 
-            background: #444;
-        }
-        .accordion section h2 a {
-            padding: 8px 10px;
-            display: block; 
-            font-size: 16px; 
-            font-weight: normal;
-            color: #eee; 
-            text-decoration: none; 
-        }
-        
-        /* Set style of open slide */
-        .accordion section:target { 
-            background: #efefef; 
-            padding: 10px; 
-            max-height: 600px; 
-            -webkit-transition: max-height 0.2s ease-out; 
-            -moz-transition: max-height 0.2s ease-out; 
-            -ms-transition: max-height 0.2s ease-out; 
-            -o-transition: max-height 0.2s ease-out; 
-            transition: max-height 0.2s ease-out; 
-        }
-        .accordion section:target:hover { 
-            background: #efefef; 
-        }
-        .accordion section:target h2 {
-            width: 100%;
-        }
-        .accordion section:target h2 a { 
-            color: #333; 
-            padding: 0;
-        }
-
-        /* End General Accordion */
-
-        /* Vertical Accordion */
-        .accordion.vertical section { 
-            width: 100%; 
-            -webkit-transition: max-height 0.2s ease-out; 
-            -moz-transition: max-height 0.2s ease-out; 
-            -ms-transition: max-height 0.2s ease-out; 
-            -o-transition: max-height 0.2s ease-out; 
-            transition: max-height 0.2s ease-out; 
-        }
-        .accordion.vertical section h2 { 
-            position: relative; 
-            left: 0; 
-            top: -15px; 
-        }        
-    </style>
-
-        
+<head>
+    <title>Regex Composer</title>
     
-        
-        <script type="text/javascript" src="../common/js/require.js"></script>
-        <script type="text/javascript" src="../common/js/require-config.js"></script>
-        
-    <script src="../common/js/codemirror/codemirror.min.js"></script>
-    <script src="../common/js/codemirror/mode/javascript.js"></script>
-    <script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
-    <script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
-    <script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
-    <script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="Regex Composer" />
+    
+    
+    <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+    
+<link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
+<link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
+<link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
+<style type="text/css">
+#code {
+    position:relative;
+    padding:10px;
+    width: 90%;
+    height: 450px;
+}
 
-        
-    
-    </head>
-    
-    <body>
-        <span id="forkongithub"><a href="https://github.com/foo123/regex-analyzer">Play on GitHub</a></span>
-        
-        
-    <header id="header">
-        <h1>Regex Composer</h1>
-        <i>An intuitive Regex Composer for JavaScript and node</i>
-    </header>
-    
-    <br /><br />
+#regex {
+    position:relative;
+    display:inline-block;
+    width:80%;
+}
 
-        
-        
+.button {
+    -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    box-shadow:inset 0px 1px 0px 0px #ffffff;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+    background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+    background-color:#ededed;
+    -webkit-border-top-left-radius:20px;
+    -moz-border-radius-topleft:20px;
+    border-top-left-radius:20px;
+    -webkit-border-top-right-radius:20px;
+    -moz-border-radius-topright:20px;
+    border-top-right-radius:20px;
+    -webkit-border-bottom-right-radius:20px;
+    -moz-border-radius-bottomright:20px;
+    border-bottom-right-radius:20px;
+    -webkit-border-bottom-left-radius:20px;
+    -moz-border-radius-bottomleft:20px;
+    border-bottom-left-radius:20px;
+    text-indent:0;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    color:#777777;
+    font-family:Arial;
+    font-size:15px;
+    font-weight:bold;
+    font-style:normal;
+    height:50px;
+    line-height:50px;
+    width:86px;
+    text-decoration:none;
+    text-align:center;
+    text-shadow:1px 1px 0px #ffffff;
+}
+.button:hover {
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+    background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+    background-color:#dfdfdf;
+}.button:active {
+    position:relative;
+    top:1px;
+}
+.button {
+    width: 90px;
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+    position: relative;
+}
+
+/* Define Accordion box */
+.accordion { 
+    overflow: hidden; 
+    margin: 10px auto; 
+    color: #efefef; 
+    background: #414141; 
+    padding: 10px; 
+}
+
+/* General Accordion */
+
+/* set style of closed slide */
+.accordion section { 
+    overflow: hidden; 
+    cursor: pointer; 
+    color: #333; 
+    background: #333; 
+    margin: 3px; 
+    max-height: 40px; 
+}
+.accordion section:hover { 
+    background: #444;
+}
+.accordion section h2 a {
+    padding: 8px 10px;
+    display: block; 
+    font-size: 16px; 
+    font-weight: normal;
+    color: #eee; 
+    text-decoration: none; 
+}
+
+/* Set style of open slide */
+.accordion section:target { 
+    background: #efefef; 
+    padding: 10px; 
+    max-height: 600px; 
+    -webkit-transition: max-height 0.2s ease-out; 
+    -moz-transition: max-height 0.2s ease-out; 
+    -ms-transition: max-height 0.2s ease-out; 
+    -o-transition: max-height 0.2s ease-out; 
+    transition: max-height 0.2s ease-out; 
+}
+.accordion section:target:hover { 
+    background: #efefef; 
+}
+.accordion section:target h2 {
+    width: 100%;
+}
+.accordion section:target h2 a { 
+    color: #333; 
+    padding: 0;
+}
+
+/* End General Accordion */
+
+/* Vertical Accordion */
+.accordion.vertical section { 
+    width: 100%; 
+    -webkit-transition: max-height 0.2s ease-out; 
+    -moz-transition: max-height 0.2s ease-out; 
+    -ms-transition: max-height 0.2s ease-out; 
+    -o-transition: max-height 0.2s ease-out; 
+    transition: max-height 0.2s ease-out; 
+}
+.accordion.vertical section h2 { 
+    position: relative; 
+    left: 0; 
+    top: -15px; 
+}        
+</style>
+
+    
+
+    
+    <script type="text/javascript" src="../common/js/require.js"></script>
+    <script type="text/javascript" src="../common/js/require-config.js"></script>
+    
+<script src="../common/js/codemirror/codemirror.min.js"></script>
+<script src="../common/js/codemirror/mode/javascript.js"></script>
+<script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
+<script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
+<script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
+<script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
+
+    
+
+</head>
+
+<body>
+    <span id="forkongithub"><a href="https://github.com/foo123/regex-analyzer">Play on GitHub</a></span>
+    
+    
+<header id="header">
+    <h1>Regex Composer</h1>
+    <i>An intuitive Regex Composer for JavaScript and node</i>
+</header>
+
+<br /><br />
+
+    
+    
 <div id="screen" class="fluid col-1-1">
-        <div class="fluid col-1-1">
-        
-            <strong>Composed Regular Expression:</strong>
-            &nbsp;&nbsp;<input type="button" class="button" id="compose" data-bind='{"click":"compose"}' value="Compose" />
-            <br /><br />
-            <input type="text" size=120 id="regex" name="model[regex]" value="" />
-        </div>
-        
+    <div class="fluid col-1-1">
+    
+        <strong>Composed Regular Expression:</strong>
+        &nbsp;&nbsp;<input type="button" class="button" id="compose" data-bind='{"click":"compose"}' value="Compose" />
         <br /><br />
+        <input type="text" size=120 id="regex" name="model[regex]" value="" />
+    </div>
         
-        <div class="fluid col-1-1 clearfloat">
-            
-            <div class="fluid col-3-5">
-                <strong>Code:</strong><br /><br />
-                <textarea id="code">
+    <br /><br />
+    
+    <div class="fluid col-1-1 clearfloat">
+        
+        <div class="fluid col-3-5">
+            <strong>Code:</strong><br /><br />
+<textarea id="code">
 new RegExComposer()
 
     .startOfLine()
@@ -235,251 +235,250 @@ new RegExComposer()
     .endOfLine()
 
     .compose('i');
-                </textarea>
-            </div>
-            <div class="fluid col-2-5 right">
-                <strong>Doc:</strong><br /><br />
-                <div class="fluid col-1-1 accordion vertical">
-                <section id="start-of-input" class="fluid col-1-1 float-left">
-                    <h2><a href="#start-of-input">startOfInput</a></h2>
-                    <p>
-                        <strong>&quot;^&quot;</strong> Matches beginning of input. If the multiline flag is set to true, also matches immediately after a line break character.
-                        <br /><br />
-                        For example, <code>/^A/</code> does not match the 'A' in "an A", but does match the 'A' in "An E".
-                        <br /><br />
-                        The <strong>&quot;^&quot;</strong> has a different meaning when it appears as the first character in a character set pattern.
-                        <br /><br />
-                        Example: <code>composer.startOfInput();</code>
-                    </p>
-                </section>
-                <section id="end-of-input" class="fluid col-1-1 float-left">
-                    <h2><a href="#end-of-input">endOfInput</a></h2>
-                    <p>
-                        <strong>&quot;$&quot;</strong> Matches end of input. If the multiline flag is set to true, also matches immediately before a line break character.
-                        <br /><br />
-                        For example, <code>/t$/</code> does not match the 't' in "eater", but does match it in "eat".
-                        Example: <code>composer.endOfInput();</code>
-                    </p>
-                </section>
-                <section id="any" class="fluid col-1-1 float-left">
-                    <h2><a href="#any">any</a></h2>
-                    <p>
-                        <strong>&quot;.&quot;</strong> (The decimal point) matches any single character except the newline character.
-                        <br /><br />
-                        For example, <code>/.n/</code> matches 'an' and 'on' in "nay, an apple is on the tree", but not 'nay'.
-                        <br /><br />
-                        Example: <code>composer.any();</code>
-                    </p>
-                </section>
-                <section id="space" class="fluid col-1-1 float-left">
-                    <h2><a href="#space">space</a></h2>
-                    <p>
-                        <strong>&quot;\s&quot;</strong> Matches any space character.
-                        <br /><br />
-                        Example: <code>composer.space();</code>
-                        <br /><br />
-                        <strong>&quot;\S&quot;</strong> Matches any non-space character.
-                        <br /><br />
-                        Example: <code>composer.space(false);</code>
-                    </p>
-                </section>
-                <section id="digit" class="fluid col-1-1 float-left">
-                    <h2><a href="#digit">digit</a></h2>
-                    <p>
-                        <strong>&quot;\d&quot;</strong> Matches any single digit character.
-                        <br /><br />
-                        Example: <code>composer.digit();</code>
-                        <br /><br />
-                        <strong>&quot;\D&quot;</strong> Matches any single non-digit character.
-                        <br /><br />
-                        Example: <code>composer.digit(false);</code>
-                    </p>
-                </section>
-                <section id="word" class="fluid col-1-1 float-left">
-                    <h2><a href="#word">word</a></h2>
-                    <p>
-                        <strong>&quot;\w&quot;</strong> Matches any single word character.
-                        <br /><br />
-                        Example: <code>composer.word();</code>
-                        <br /><br />
-                        <strong>&quot;\W&quot;</strong> Matches any single non-word character.
-                        <br /><br />
-                        Example: <code>composer.word(false);</code>
-                    </p>
-                </section>
-                <section id="match" class="fluid col-1-1 float-left">
-                    <h2><a href="#match">match</a></h2>
-                    <p>
-                        Matches a literal string.
-                        <br /><br />
-                        Example: <code>composer.match("**aabb**");</code>
-                    </p>
-                </section>
-                <section id="zero-or-more" class="fluid col-1-1 float-left">
-                    <h2><a href="#zero-or-more">zeroOrMore</a></h2>
-                    <p>
-                        <strong>&quot;*&quot;</strong> Matches the preceding character 0 or more times.
-                        <br /><br />
-                        For example, <code>/bo*/</code> matches 'boooo' in "A ghost booooed" and 'b' in "A bird warbled", but nothing in "A goat grunted".
-                        <br /><br />
-                        Example: <code>composer.zeroOrMore();</code> (greedy)
-                        <br /><br />
-                        Example: <code>composer.zeroOrMore(false);</code> (non-greedy)
-                    </p>
-                </section>
-                <section id="one-or-more" class="fluid col-1-1 float-left">
-                    <h2><a href="#one-or-more">oneOrMore</a></h2>
-                    <p>
-                        <strong>&quot;+&quot;</strong> Matches the preceding character 1 or more times. Equivalent to {1,}.
-                        <br /><br />
-                        For example, /a+/ matches the 'a' in "candy" and all the a's in "caaaaaaandy".
-                        <br /><br />
-                        Example: <code>composer.oneOrMore();</code> (greedy)
-                        <br /><br />
-                        Example: <code>composer.oneOrMore(false);</code> (non-greedy)
-                    </p>
-                </section>
-                <section id="zero-or-one" class="fluid col-1-1 float-left">
-                    <h2><a href="#zero-or-one">zeroOrOne</a></h2>
-                    <p>
-                        <strong>&quot;?&quot;</strong> Matches the preceding character 0 or 1 time. Equivalent to {0,1}.
-                        <br /><br />
-                        For example, <code>/e?le?/</code> matches the 'el' in "angel" and the 'le' in "angle" and also the 'l' in "oslo".
-                        <br /><br />
-                        If used immediately after any of the quantifiers <code>*, +, ?, or {}</code>, makes the quantifier non-greedy (matching the fewest possible characters), as opposed to the default, which is greedy (matching as many characters as possible). For example, applying <code>/\d+/</code> to "123abc" matches "123". But applying <code>/\d+?/</code> to that same string matches only the "1".
-                        <br /><br />
-                        Also used in lookahead assertions, as described in the <code>x(?=y)</code> and <code>x(?!y)</code> below.
-                        <br /><br />
-                        Example: <code>composer.zeroOrOne();</code> (greedy)
-                        <br /><br />
-                        Example: <code>composer.zeroOrOne(false);</code> (non-greedy)
-                    </p>
-                </section>
-                <section id="repeat" class="fluid col-1-1 float-left">
-                    <h2><a href="#repeat">repeat</a></h2>
-                    <p>
-                        <strong>&quot;{n}&quot;</strong> Matches exactly n occurrences of the preceding character. N must be a positive integer.
-                        <br /><br />
-                        For example, <code>/a{2}/</code> doesn't match the 'a' in "candy," but it does match all of the a's in "caandy," and the first two a's in "caaandy."
-                        <br /><br />
-                        <strong>&quot;{n, m}&quot;</strong> Where n and m are positive integers. Matches at least n and at most m occurrences of the preceding character. When m is zero, it can be omitted.
-                        <br /><br />
-                        For example, <code>/a{1,3}/</code> matches nothing in "cndy", the 'a' in "candy," the first two a's in "caandy," and the first three a's in "caaaaaaandy" Notice that when matching "caaaaaaandy", the match is "aaa", even though the original string had more a's in it.
-                        <br /><br />
-                        Example: <code>composer.repeat(min, max);</code> (greedy)
-                        <br /><br />
-                        Example: <code>composer.repeat(min, max, false);</code> (non-greedy)
-                    </p>
-                </section>
-                <section id="group" class="fluid col-1-1 float-left">
-                    <h2><a href="#group">group</a></h2>
-                    <p>
-                        <strong>&quot;(x)&quot;</strong> Matches 'x' and remembers the match, as the following example shows. The parentheses are called capturing parentheses.
-                        <br /><br />
-                        The '(foo)' and '(bar)' in the pattern <code>/(foo) (bar) \1 \2/</code> match and remember the first two words in the string "foo bar foo bar". The <code>\1 and \2</code> in the pattern match the string's last two words. Note that <code>\1, \2, \n</code> are is used in the matching part of the regex. In the replacement part of a regex the syntax <code>$1, $2, $n</code> must be used, e.g.: <code>'bar foo'.replace( /(...) (...)/, '$2 $1' )</code>.
-                        <br /><br />
-                        Example: <code>composer.group();</code> (start of group)
-                        <br /><br />
-                        Example: <code>composer.end();</code> (end of group)
-                    </p>
-                </section>
-                <section id="non-capturing-group" class="fluid col-1-1 float-left">
-                    <h2><a href="#non-capturing-group">nonCapturingGroup</a></h2>
-                    <p>
-                        <strong>&quot;(?:x)&quot;</strong> Matches 'x' but does not remember the match. The parentheses are called non-capturing parentheses, and let you define subexpressions for regular expression operators to work with. Consider the sample expression <code>/(?:foo){1,2}/</code>. Without the non-capturing parentheses, the {1,2} characters would apply only to the last 'o' in 'foo'. With the capturing parentheses, the {1,2} applies to the entire word 'foo'.
-                        <br /><br />
-                        Example: <code>composer.nonCapturingGroup();</code> (start of group)
-                        <br /><br />
-                        Example: <code>composer.end();</code> (end of group)
-                    </p>
-                </section>
-                <section id="lookahead-group" class="fluid col-1-1 float-left">
-                    <h2><a href="#lookahead-group">lookAheadGroup</a></h2>
-                    <p>
-                        <strong>&quot;x(?=y)&quot;</strong> Matches 'x' only if 'x' is followed by 'y'. This is called a lookahead.
-                        <br /><br />
-                        For example, <code>/Jack(?=Sprat)/</code> matches 'Jack' only if it is followed by 'Sprat'. <code>/Jack(?=Sprat|Frost)/</code> matches 'Jack' only if it is followed by 'Sprat' or 'Frost'. However, neither 'Sprat' nor 'Frost' is part of the match results.
-                        <br /><br />
-                        <strong>&quot;x(?!y)&quot;</strong> Matches 'x' only if 'x' is not followed by 'y'. This is called a negated lookahead.
-                        <br /><br />
-                        For example, <code>/\d+(?!\.)/</code> matches a number only if it is not followed by a decimal point. The regular expression <code>/\d+(?!\.)/.exec("3.141")</code> matches '141' but not '3.141'.
-                        <br /><br />
-                        Example: <code>composer.lookAheadGroup();</code> (start of group)
-                        <br /><br />
-                        Example: <code>composer.end();</code> (end of group)
-                    </p>
-                </section>
-                <section id="alternate-group" class="fluid col-1-1 float-left">
-                    <h2><a href="#alternate-group">alternate / either</a></h2>
-                    <p>
-                        <strong>&quot;(x|y)&quot;</strong> Matches either 'x' or 'y' (as a group).
-                        <br /><br />
-                        For example, <code>/(green|red)/</code> matches 'green' in "green apple" and 'red' in "red apple."
-                        <br /><br />
-                        Example: <code>composer.either();</code> (start of group)
-                        <br /><br />
-                        Example: <code>composer.end();</code> (end of group)
-                    </p>
-                </section>
-                <section id="character-set" class="fluid col-1-1 float-left">
-                    <h2><a href="#character-set">characterGroup</a></h2>
-                    <p>
-                        <strong>&quot;[xyz]&quot;</strong> Character set. This pattern type matches any one of the characters in the brackets, including escape sequences. Special characters like the dot(.) and asterisk (*) are not special inside a character set, so they don't need to be escaped. You can specify a range of characters by using a hyphen, as the following examples illustrate.
-                        <br /><br />
-                        The pattern <code>[a-d]</code>, which performs the same match as [abcd], matches the 'b' in "brisket" and the 'c' in "city". The patterns <code>/[a-z.]+/</code> and <code>/[\w.]+/</code> match the entire string "test.i.ng".
-                        <br /><br />
-                        <strong>&quot;[^xyz]&quot;</strong> A negated or complemented character set. That is, it matches anything that is not enclosed in the brackets. You can specify a range of characters by using a hyphen. Everything that works in the normal character set also works here.
-                        <br /><br />
-                        For example, <code>[^abc]</code> is the same as <code>[^a-c]</code>. They initially match 'r' in "brisket" and 'h' in "chop."
-                        <br /><br />
-                        Example: <code>composer.characterGroup();</code> (start of group)
-                        <br /><br />
-                        Example: <code>composer.end();</code> (end of group)
-                    </p>
-                </section>
-                <section id="characters" class="fluid col-1-1 float-left">
-                    <h2><a href="#characters">characters</a></h2>
-                    <p>
-                        <strong>x, y, z</strong> Specify a set of characters to be matched in a character group.
-                        <br /><br />
-                        Example: <code>composer.characters("x", "y", "z");</code>
-                    </p>
-                </section>
-                <section id="range" class="fluid col-1-1 float-left">
-                    <h2><a href="#range">range</a></h2>
-                    <p>
-                        <strong>&quot;x&quot;, &quot;z&quot;</strong> Specify a range of characters to be matched in a character group. Results in <code>[x-z]</code>
-                        <br /><br />
-                        Example: <code>composer.range("x", "z");</code>
-                    </p>
-                </section>
-                </div>
+</textarea>
+        </div>
+        <div class="fluid col-2-5 right">
+            <strong>Doc:</strong><br /><br />
+            <div class="fluid col-1-1 accordion vertical">
+            <section id="start-of-input" class="fluid col-1-1 float-left">
+                <h2><a href="#start-of-input">startOfInput</a></h2>
+                <p>
+                    <strong>&quot;^&quot;</strong> Matches beginning of input. If the multiline flag is set to true, also matches immediately after a line break character.
+                    <br /><br />
+                    For example, <code>/^A/</code> does not match the 'A' in "an A", but does match the 'A' in "An E".
+                    <br /><br />
+                    The <strong>&quot;^&quot;</strong> has a different meaning when it appears as the first character in a character set pattern.
+                    <br /><br />
+                    Example: <code>composer.startOfInput();</code>
+                </p>
+            </section>
+            <section id="end-of-input" class="fluid col-1-1 float-left">
+                <h2><a href="#end-of-input">endOfInput</a></h2>
+                <p>
+                    <strong>&quot;$&quot;</strong> Matches end of input. If the multiline flag is set to true, also matches immediately before a line break character.
+                    <br /><br />
+                    For example, <code>/t$/</code> does not match the 't' in "eater", but does match it in "eat".
+                    Example: <code>composer.endOfInput();</code>
+                </p>
+            </section>
+            <section id="any" class="fluid col-1-1 float-left">
+                <h2><a href="#any">any</a></h2>
+                <p>
+                    <strong>&quot;.&quot;</strong> (The decimal point) matches any single character except the newline character.
+                    <br /><br />
+                    For example, <code>/.n/</code> matches 'an' and 'on' in "nay, an apple is on the tree", but not 'nay'.
+                    <br /><br />
+                    Example: <code>composer.any();</code>
+                </p>
+            </section>
+            <section id="space" class="fluid col-1-1 float-left">
+                <h2><a href="#space">space</a></h2>
+                <p>
+                    <strong>&quot;\s&quot;</strong> Matches any space character.
+                    <br /><br />
+                    Example: <code>composer.space();</code>
+                    <br /><br />
+                    <strong>&quot;\S&quot;</strong> Matches any non-space character.
+                    <br /><br />
+                    Example: <code>composer.space(false);</code>
+                </p>
+            </section>
+            <section id="digit" class="fluid col-1-1 float-left">
+                <h2><a href="#digit">digit</a></h2>
+                <p>
+                    <strong>&quot;\d&quot;</strong> Matches any single digit character.
+                    <br /><br />
+                    Example: <code>composer.digit();</code>
+                    <br /><br />
+                    <strong>&quot;\D&quot;</strong> Matches any single non-digit character.
+                    <br /><br />
+                    Example: <code>composer.digit(false);</code>
+                </p>
+            </section>
+            <section id="word" class="fluid col-1-1 float-left">
+                <h2><a href="#word">word</a></h2>
+                <p>
+                    <strong>&quot;\w&quot;</strong> Matches any single word character.
+                    <br /><br />
+                    Example: <code>composer.word();</code>
+                    <br /><br />
+                    <strong>&quot;\W&quot;</strong> Matches any single non-word character.
+                    <br /><br />
+                    Example: <code>composer.word(false);</code>
+                </p>
+            </section>
+            <section id="match" class="fluid col-1-1 float-left">
+                <h2><a href="#match">match</a></h2>
+                <p>
+                    Matches a literal string.
+                    <br /><br />
+                    Example: <code>composer.match("**aabb**");</code>
+                </p>
+            </section>
+            <section id="zero-or-more" class="fluid col-1-1 float-left">
+                <h2><a href="#zero-or-more">zeroOrMore</a></h2>
+                <p>
+                    <strong>&quot;*&quot;</strong> Matches the preceding character 0 or more times.
+                    <br /><br />
+                    For example, <code>/bo*/</code> matches 'boooo' in "A ghost booooed" and 'b' in "A bird warbled", but nothing in "A goat grunted".
+                    <br /><br />
+                    Example: <code>composer.zeroOrMore();</code> (greedy)
+                    <br /><br />
+                    Example: <code>composer.zeroOrMore(false);</code> (non-greedy)
+                </p>
+            </section>
+            <section id="one-or-more" class="fluid col-1-1 float-left">
+                <h2><a href="#one-or-more">oneOrMore</a></h2>
+                <p>
+                    <strong>&quot;+&quot;</strong> Matches the preceding character 1 or more times. Equivalent to {1,}.
+                    <br /><br />
+                    For example, /a+/ matches the 'a' in "candy" and all the a's in "caaaaaaandy".
+                    <br /><br />
+                    Example: <code>composer.oneOrMore();</code> (greedy)
+                    <br /><br />
+                    Example: <code>composer.oneOrMore(false);</code> (non-greedy)
+                </p>
+            </section>
+            <section id="zero-or-one" class="fluid col-1-1 float-left">
+                <h2><a href="#zero-or-one">zeroOrOne</a></h2>
+                <p>
+                    <strong>&quot;?&quot;</strong> Matches the preceding character 0 or 1 time. Equivalent to {0,1}.
+                    <br /><br />
+                    For example, <code>/e?le?/</code> matches the 'el' in "angel" and the 'le' in "angle" and also the 'l' in "oslo".
+                    <br /><br />
+                    If used immediately after any of the quantifiers <code>*, +, ?, or {}</code>, makes the quantifier non-greedy (matching the fewest possible characters), as opposed to the default, which is greedy (matching as many characters as possible). For example, applying <code>/\d+/</code> to "123abc" matches "123". But applying <code>/\d+?/</code> to that same string matches only the "1".
+                    <br /><br />
+                    Also used in lookahead assertions, as described in the <code>x(?=y)</code> and <code>x(?!y)</code> below.
+                    <br /><br />
+                    Example: <code>composer.zeroOrOne();</code> (greedy)
+                    <br /><br />
+                    Example: <code>composer.zeroOrOne(false);</code> (non-greedy)
+                </p>
+            </section>
+            <section id="repeat" class="fluid col-1-1 float-left">
+                <h2><a href="#repeat">repeat</a></h2>
+                <p>
+                    <strong>&quot;{n}&quot;</strong> Matches exactly n occurrences of the preceding character. N must be a positive integer.
+                    <br /><br />
+                    For example, <code>/a{2}/</code> doesn't match the 'a' in "candy," but it does match all of the a's in "caandy," and the first two a's in "caaandy."
+                    <br /><br />
+                    <strong>&quot;{n, m}&quot;</strong> Where n and m are positive integers. Matches at least n and at most m occurrences of the preceding character. When m is zero, it can be omitted.
+                    <br /><br />
+                    For example, <code>/a{1,3}/</code> matches nothing in "cndy", the 'a' in "candy," the first two a's in "caandy," and the first three a's in "caaaaaaandy" Notice that when matching "caaaaaaandy", the match is "aaa", even though the original string had more a's in it.
+                    <br /><br />
+                    Example: <code>composer.repeat(min, max);</code> (greedy)
+                    <br /><br />
+                    Example: <code>composer.repeat(min, max, false);</code> (non-greedy)
+                </p>
+            </section>
+            <section id="group" class="fluid col-1-1 float-left">
+                <h2><a href="#group">group</a></h2>
+                <p>
+                    <strong>&quot;(x)&quot;</strong> Matches 'x' and remembers the match, as the following example shows. The parentheses are called capturing parentheses.
+                    <br /><br />
+                    The '(foo)' and '(bar)' in the pattern <code>/(foo) (bar) \1 \2/</code> match and remember the first two words in the string "foo bar foo bar". The <code>\1 and \2</code> in the pattern match the string's last two words. Note that <code>\1, \2, \n</code> are is used in the matching part of the regex. In the replacement part of a regex the syntax <code>$1, $2, $n</code> must be used, e.g.: <code>'bar foo'.replace( /(...) (...)/, '$2 $1' )</code>.
+                    <br /><br />
+                    Example: <code>composer.group();</code> (start of group)
+                    <br /><br />
+                    Example: <code>composer.end();</code> (end of group)
+                </p>
+            </section>
+            <section id="non-capturing-group" class="fluid col-1-1 float-left">
+                <h2><a href="#non-capturing-group">nonCapturingGroup</a></h2>
+                <p>
+                    <strong>&quot;(?:x)&quot;</strong> Matches 'x' but does not remember the match. The parentheses are called non-capturing parentheses, and let you define subexpressions for regular expression operators to work with. Consider the sample expression <code>/(?:foo){1,2}/</code>. Without the non-capturing parentheses, the {1,2} characters would apply only to the last 'o' in 'foo'. With the capturing parentheses, the {1,2} applies to the entire word 'foo'.
+                    <br /><br />
+                    Example: <code>composer.nonCapturingGroup();</code> (start of group)
+                    <br /><br />
+                    Example: <code>composer.end();</code> (end of group)
+                </p>
+            </section>
+            <section id="lookahead-group" class="fluid col-1-1 float-left">
+                <h2><a href="#lookahead-group">lookAheadGroup</a></h2>
+                <p>
+                    <strong>&quot;x(?=y)&quot;</strong> Matches 'x' only if 'x' is followed by 'y'. This is called a lookahead.
+                    <br /><br />
+                    For example, <code>/Jack(?=Sprat)/</code> matches 'Jack' only if it is followed by 'Sprat'. <code>/Jack(?=Sprat|Frost)/</code> matches 'Jack' only if it is followed by 'Sprat' or 'Frost'. However, neither 'Sprat' nor 'Frost' is part of the match results.
+                    <br /><br />
+                    <strong>&quot;x(?!y)&quot;</strong> Matches 'x' only if 'x' is not followed by 'y'. This is called a negated lookahead.
+                    <br /><br />
+                    For example, <code>/\d+(?!\.)/</code> matches a number only if it is not followed by a decimal point. The regular expression <code>/\d+(?!\.)/.exec("3.141")</code> matches '141' but not '3.141'.
+                    <br /><br />
+                    Example: <code>composer.lookAheadGroup();</code> (start of group)
+                    <br /><br />
+                    Example: <code>composer.end();</code> (end of group)
+                </p>
+            </section>
+            <section id="alternate-group" class="fluid col-1-1 float-left">
+                <h2><a href="#alternate-group">alternate / either</a></h2>
+                <p>
+                    <strong>&quot;(x|y)&quot;</strong> Matches either 'x' or 'y' (as a group).
+                    <br /><br />
+                    For example, <code>/(green|red)/</code> matches 'green' in "green apple" and 'red' in "red apple."
+                    <br /><br />
+                    Example: <code>composer.either();</code> (start of group)
+                    <br /><br />
+                    Example: <code>composer.end();</code> (end of group)
+                </p>
+            </section>
+            <section id="character-set" class="fluid col-1-1 float-left">
+                <h2><a href="#character-set">characterGroup</a></h2>
+                <p>
+                    <strong>&quot;[xyz]&quot;</strong> Character set. This pattern type matches any one of the characters in the brackets, including escape sequences. Special characters like the dot(.) and asterisk (*) are not special inside a character set, so they don't need to be escaped. You can specify a range of characters by using a hyphen, as the following examples illustrate.
+                    <br /><br />
+                    The pattern <code>[a-d]</code>, which performs the same match as [abcd], matches the 'b' in "brisket" and the 'c' in "city". The patterns <code>/[a-z.]+/</code> and <code>/[\w.]+/</code> match the entire string "test.i.ng".
+                    <br /><br />
+                    <strong>&quot;[^xyz]&quot;</strong> A negated or complemented character set. That is, it matches anything that is not enclosed in the brackets. You can specify a range of characters by using a hyphen. Everything that works in the normal character set also works here.
+                    <br /><br />
+                    For example, <code>[^abc]</code> is the same as <code>[^a-c]</code>. They initially match 'r' in "brisket" and 'h' in "chop."
+                    <br /><br />
+                    Example: <code>composer.characterGroup();</code> (start of group)
+                    <br /><br />
+                    Example: <code>composer.end();</code> (end of group)
+                </p>
+            </section>
+            <section id="characters" class="fluid col-1-1 float-left">
+                <h2><a href="#characters">characters</a></h2>
+                <p>
+                    <strong>x, y, z</strong> Specify a set of characters to be matched in a character group.
+                    <br /><br />
+                    Example: <code>composer.characters("x", "y", "z");</code>
+                </p>
+            </section>
+            <section id="range" class="fluid col-1-1 float-left">
+                <h2><a href="#range">range</a></h2>
+                <p>
+                    <strong>&quot;x&quot;, &quot;z&quot;</strong> Specify a range of characters to be matched in a character group. Results in <code>[x-z]</code>
+                    <br /><br />
+                    Example: <code>composer.range("x", "z");</code>
+                </p>
+            </section>
             </div>
         </div>
+    </div>
 </div>
 
+    
+    
+    <footer id="footer">
+        <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
         
         
-        <footer id="footer">
-            <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
-            
-            
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 <div class="showcase">Regular Expressions Documentation by <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank">MDN</a></div>
 
-            <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
-            <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
-            <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
-            <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
-        </footer>
-        <br /><br />
-        
-        
-        
+        <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
+        <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
+        <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
+        <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
+    </footer>
+    <br /><br />
+    
+    
+    
 <script>//<![CDATA[
 require(['jQuery', 'ModelView', 'RegExComposer'],
     function($, ModelView, RegExComposer) {
-    
     var model, view, $screen = $('#screen'),
         codeEditor = document.getElementById('code'),
         width = codeEditor.clientWidth, height = codeEditor.clientHeight
@@ -544,5 +543,5 @@ require(['jQuery', 'ModelView', 'RegExComposer'],
 });    
 //]]></script>
 
-    </body>
+</body>
 </html>

@@ -11,110 +11,110 @@
 <!--[if gt IE 8]><!-->
 <html lang="en" class="no-ie">
 <!--<![endif]-->
-    <head>
-        <title>Contemplate Light-weight Template Engine</title>
-        
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-        <meta name="description" content="Contemplate Light-weight Template Engine" />
-        
-        
-        <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-        
-    <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
-    <link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
-    <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
-    <link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
-    <style type="text/css">
-        .container {
-            position:relative;
-            background-color:#343434;
-            color:#aaa;
-            border:3px solid #444;
-            padding:0px;
-            margin:10px 5px;
-            font-size:12px;
-        }
-        
-        .container .heading {
-            position: relative;
-            padding:0px;
-            margin:0x;
-            font-size:12px !important;
-            min-height: 40px;
-        }
-        
-        .container .editor {
-            position:relative;
-            padding:0px;
-            margin:0px;
-            border:none;
-            width:100%;
-            min-height:400px;
-        }
-        
-        #tplContainer .cm-s-lesser-dark.CodeMirror {font-size:11px;}
-        
-        #dataContainer .cm-s-lesser-dark.CodeMirror {font-size:11px;}
-        
-        .button {
-            -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
-            -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
-            box-shadow:inset 0px 1px 0px 0px #ffffff;
-            background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
-            background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
-            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
-            background-color:#ededed;
-            -webkit-border-top-left-radius:20px;
-            -moz-border-radius-topleft:20px;
-            border-top-left-radius:20px;
-            -webkit-border-top-right-radius:20px;
-            -moz-border-radius-topright:20px;
-            border-top-right-radius:20px;
-            -webkit-border-bottom-right-radius:20px;
-            -moz-border-radius-bottomright:20px;
-            border-bottom-right-radius:20px;
-            -webkit-border-bottom-left-radius:20px;
-            -moz-border-radius-bottomleft:20px;
-            border-bottom-left-radius:20px;
-            text-indent:0;
-            border:1px solid #dcdcdc;
-            display:inline-block;
-            color:#777777;
-            font-family:Arial;
-            font-size:11px;
-            font-weight:bold;
-            font-style:normal;
-            height:50px;
-            line-height:50px;
-            width:86px;
-            text-decoration:none;
-            text-align:center;
-            text-shadow:1px 1px 0px #ffffff;
-        }
-        .button:hover {
-            background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
-            background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
-            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
-            background-color:#dfdfdf;
-        }.button:active {
-            position:relative;
-            top:1px;
-        }
-        .button {
-            width:90px;
-            height:30px;
-            line-height:30px;
-            cursor:pointer;
-            position:relative;
-        }
-        .button:active, .button:focus { outline: none; }
-    </style>
-
-        
+<head>
+    <title>Contemplate Light-weight Template Engine</title>
     
-        
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="Contemplate Light-weight Template Engine" />
+    
+    
+    <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+    
+<link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
+<link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
+<link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
+<link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
+<style type="text/css">
+.container {
+    position:relative;
+    background-color:#343434;
+    color:#aaa;
+    border:3px solid #444;
+    padding:0px;
+    margin:10px 5px;
+    font-size:12px;
+}
+
+.container .heading {
+    position: relative;
+    padding:0px;
+    margin:0x;
+    font-size:12px !important;
+    min-height: 40px;
+}
+
+.container .editor {
+    position:relative;
+    padding:0px;
+    margin:0px;
+    border:none;
+    width:100%;
+    min-height:400px;
+}
+
+#tplContainer .cm-s-lesser-dark.CodeMirror {font-size:11px;}
+
+#dataContainer .cm-s-lesser-dark.CodeMirror {font-size:11px;}
+
+.button {
+    -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    box-shadow:inset 0px 1px 0px 0px #ffffff;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+    background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+    background-color:#ededed;
+    -webkit-border-top-left-radius:20px;
+    -moz-border-radius-topleft:20px;
+    border-top-left-radius:20px;
+    -webkit-border-top-right-radius:20px;
+    -moz-border-radius-topright:20px;
+    border-top-right-radius:20px;
+    -webkit-border-bottom-right-radius:20px;
+    -moz-border-radius-bottomright:20px;
+    border-bottom-right-radius:20px;
+    -webkit-border-bottom-left-radius:20px;
+    -moz-border-radius-bottomleft:20px;
+    border-bottom-left-radius:20px;
+    text-indent:0;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    color:#777777;
+    font-family:Arial;
+    font-size:11px;
+    font-weight:bold;
+    font-style:normal;
+    height:50px;
+    line-height:50px;
+    width:86px;
+    text-decoration:none;
+    text-align:center;
+    text-shadow:1px 1px 0px #ffffff;
+}
+.button:hover {
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+    background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+    background-color:#dfdfdf;
+}.button:active {
+    position:relative;
+    top:1px;
+}
+.button {
+    width:90px;
+    height:30px;
+    line-height:30px;
+    cursor:pointer;
+    position:relative;
+}
+.button:active, .button:focus { outline: none; }
+</style>
+
+    
+
+    
 <script src="../common/js/jquery.js"></script>
 <script src="../common/js/Contemplate.min.js"></script>
 <script src="../common/js/modelview.min.js"></script>
@@ -133,28 +133,28 @@
 <script src="../common/js/codemirror/grammar/json.js"></script>
 <script src="../common/js/codemirror/grammar/contemplate.js"></script>
 
-    
-    </head>
-    
-    <body>
-        <span id="forkongithub"><a href="https://github.com/foo123/Contemplate">Cook me on GitHub</a></span>
-        
-        
-    <header id="header">
-        <h1>Contemplate</h1>
-        <i>A light-weight Template Engine for PHP, Python, client-side JavaScript and Node.js</i>
-    </header>
-    <br /><br />
 
-        
-        
+</head>
+
+<body>
+    <span id="forkongithub"><a href="https://github.com/foo123/Contemplate">Cook me on GitHub</a></span>
+    
+    
+<header id="header">
+    <h1>Contemplate</h1>
+    <i>A light-weight Template Engine for PHP, Python, client-side JavaScript and Node.js</i>
+</header>
+<br /><br />
+
+    
+    
 <div id="screen" class="fluid col-1-1">
-        <div class="fluid col-1-1">
-        
-            <div id="tplContainer" class="fluid col-5-10 container">
-                <div class="heading"><strong>Template Markup (Contemplate):</strong></div>
-                
-                <textarea id="tpl" class="editor">
+    <div class="fluid col-1-1">
+
+        <div id="tplContainer" class="fluid col-5-10 container">
+            <div class="heading"><strong>Template Markup (Contemplate):</strong></div>
+            
+            <textarea id="tpl" class="editor">
 <div class="class">
     Number of Items: <% %count($data) %><hr />
     <% %for($data as $i=>$d) %>
@@ -170,137 +170,137 @@
     <br />
     user[ Email ] = <strong><% $user["email"] %></strong>
 </div>
-                </textarea>
-            </div>
+            </textarea>
+        </div>
             
-            <div id="dataContainer" class="fluid col-4-10 container">
-                <div class="heading"><strong>Data (JSON format):</strong></div>
-                            
-                <textarea id="data" class="editor">
+        <div id="dataContainer" class="fluid col-4-10 container">
+            <div class="heading"><strong>Data (JSON format):</strong></div>
+                        
+            <textarea id="data" class="editor">
 {
     "data": [1, 2, 3, 4, 5, 6], 
     "user": {"name":"foo", "email":"foo@fooland.net", "id":"f00" }
 }
-                </textarea>
+            </textarea>
                 
+        </div>
+            
+    </div>
+        
+    <div class="fluid col-1-1">
+    
+        <div class="fluid col-9-10 container">
+            
+            <div class="heading"><strong>Output:</strong> &nbsp;&nbsp; <input class="button" type="button" id="render" value="Render" data-bind='{"click":"render"}' />&nbsp;&nbsp;<i>(Enable console to see any errors)</i>
             </div>
             
-        </div>
-        
-        <div class="fluid col-1-1">
-        
-            <div class="fluid col-9-10 container">
-                
-                <div class="heading"><strong>Output:</strong> &nbsp;&nbsp; <input class="button" type="button" id="render" value="Render" data-bind='{"click":"render"}' />&nbsp;&nbsp;<i>(Enable console to see any errors)</i>
-                </div>
-                
-                <div id="output" style="min-height:200px; font-size:12px; background:#262626;">
-                    <br />
-                </div>
-            
+            <div id="output" style="min-height:200px; font-size:12px; background:#262626;">
+                <br />
             </div>
-            
+        
         </div>
+        
+    </div>
 </div>
 
+    
+    
+    <footer id="footer">
+        <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
         
         
-        <footer id="footer">
-            <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
-            
-            
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 <div class="showcase">Contemplate Grammar highlight mode by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
 
-            <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
-            <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
-            <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
-            <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
-        </footer>
-        <br /><br />
-        
-        
-        
-<script  id="tpl_tmp" type="text/x-contemplate"></script>
-<script>//<![CDATA[
-   // on DOM Ready
-    jQuery(function($){
+        <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
+        <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
+        <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
+        <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
+    </footer>
+    <br /><br />
     
-        var $w = $(window), $screen = $('#screen'), model, view,
-            tpl = $('#tpl'), tpl_tmp = $('#tpl_tmp'),  
-            data = $('#data'), output = $('#output'),  render = $('#render'), 
-            tplEditor, dataEditor, width, height, json_mode,
-            log = (console && console.log) ? function(s){console.log(s);} : function(){},
-            init = true;
-        ;
-        
-        json_mode = CodeMirrorGrammar.getMode(json_grammar);
-        CodeMirror.defineMode('json', json_mode);
-        json_mode.supportGrammarAnnotations = true;
-        CodeMirror.registerHelper("lint", 'json', json_mode().validator);                
-        
-        // if codemirror activated, enable syntax highlight
-        tplEditor = CodeMirror.fromTextArea(tpl[0], {
-            mode: "application/x-contemplate",
-            lineWrapping: true,
-            lineNumbers : true,
-            indentUnit: 4,
-            indentWithTabs: false,
-            theme: 'lesser-dark'
-        });
-        
-        dataEditor = CodeMirror.fromTextArea(data[0], {
-            mode: 'json',
-            lineWrapping: true,
-            lineNumbers : true,
-            indentUnit: 4,
-            indentWithTabs: false,
-            // enable syntax validation
-            lint: true,
-            foldGutter: true,
-            gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-            theme: 'lesser-dark'
-        });
-        
-        $screen.modelview({
-            autobind: true
-            ,bindAttribute: 'data-bind'
-            
-            ,model: {
-                id: 'model'
-                ,data: {  }
-            }
-            ,actions: { 
-                render: function(evt, $el, data) {
-                    var data;
-                    /*
-                    if ( c != pc ) // template has changed
-                    {
-                        tpl_tmp.html(c);
-                        refresh = true;
-                        //console.log('template changed');
-                    }
-                    */
-                    Contemplate.add({'tpl': [ tplEditor.getValue() ]});
-                    try{
-                        data = JSON.parse( dataEditor.getValue() );
-                        output.html( Contemplate.tpl('tpl', data, {refresh: true, separators: "<% %>"}) );
-                    }catch(e) {log(e)};
-                }
-            }
-        });
-        
-        $w.resize(function(){
-            width = tpl.width(); height = tpl.height();
-            tplEditor.setSize(width, height);
-            width = data.width(); height = data.height();
-            dataEditor.setSize(width, height);
-        });
-        
-        $w.trigger('resize');
-        render.trigger('click');
+    
+    
+<script id="tpl_tmp" type="text/x-contemplate"></script>
+<script>//<![CDATA[
+// on DOM Ready
+jQuery(function($){
+
+    var $w = $(window), $screen = $('#screen'), model, view,
+        tpl = $('#tpl'), tpl_tmp = $('#tpl_tmp'),  
+        data = $('#data'), output = $('#output'),  render = $('#render'), 
+        tplEditor, dataEditor, width, height, json_mode,
+        log = (console && console.log) ? function(s){console.log(s);} : function(){},
+        init = true;
+    ;
+    
+    json_mode = CodeMirrorGrammar.getMode(json_grammar);
+    CodeMirror.defineMode('json', json_mode);
+    json_mode.supportGrammarAnnotations = true;
+    CodeMirror.registerHelper("lint", 'json', json_mode().validator);                
+    
+    // if codemirror activated, enable syntax highlight
+    tplEditor = CodeMirror.fromTextArea(tpl[0], {
+        mode: "application/x-contemplate",
+        lineWrapping: true,
+        lineNumbers : true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        theme: 'lesser-dark'
     });
+    
+    dataEditor = CodeMirror.fromTextArea(data[0], {
+        mode: 'json',
+        lineWrapping: true,
+        lineNumbers : true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        // enable syntax validation
+        lint: true,
+        foldGutter: true,
+        gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+        theme: 'lesser-dark'
+    });
+    
+    $screen.modelview({
+        autobind: true
+        ,bindAttribute: 'data-bind'
+        
+        ,model: {
+            id: 'model'
+            ,data: {  }
+        }
+        ,actions: { 
+            render: function(evt, $el, data) {
+                var data;
+                /*
+                if ( c != pc ) // template has changed
+                {
+                    tpl_tmp.html(c);
+                    refresh = true;
+                    //console.log('template changed');
+                }
+                */
+                Contemplate.add({'tpl': [ tplEditor.getValue() ]});
+                try{
+                    data = JSON.parse( dataEditor.getValue() );
+                    output.html( Contemplate.tpl('tpl', data, {refresh: true, separators: "<% %>"}) );
+                }catch(e) {log(e)};
+            }
+        }
+    });
+    
+    $w.resize(function(){
+        width = tpl.width(); height = tpl.height();
+        tplEditor.setSize(width, height);
+        width = data.width(); height = data.height();
+        dataEditor.setSize(width, height);
+    });
+    
+    $w.trigger('resize');
+    render.trigger('click');
+});
 //]]></script>
 
-    </body>
+</body>
 </html>

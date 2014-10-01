@@ -11,122 +11,122 @@
 <!--[if gt IE 8]><!-->
 <html lang="en" class="no-ie">
 <!--<![endif]-->
-    <head>
-        <title>Online CSS Minifier</title>
-        
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-        <meta name="description" content="Online CSS Minifier" />
-        
-        
-        <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-        
+<head>
+    <title>Online CSS Minifier</title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="Online CSS Minifier" />
+    
+    
+    <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+    
 <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
 <link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
 <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
 <link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
 <style type="text/css">
-    .container {
-        position:relative;
-        background-color:#343434;
-        color:#aaa;
-        border:3px solid #444;
-        padding:0px;
-        margin:10px 5px;
-        font-size:12px;
-    }
-    
-    .container .heading {
-        position: relative;
-        padding:0px;
-        margin:0x;
-        font-size:12px !important;
-        min-height: 40px;
-    }
-    
-    .container .editor {
-        position:relative;
-        padding:0px;
-        margin:0px;
-        border:none;
-        width:100%;
-        min-height:400px;
-    }
-    
-    #codeContainer .cm-s-lesser-dark.CodeMirror {font-size:11px;}
-    
-    #outputContainer .cm-s-lesser-dark.CodeMirror {font-size:11px;}
-    
-    .button {
-        -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
-        -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
-        box-shadow:inset 0px 1px 0px 0px #ffffff;
-        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
-        background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
-        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
-        background-color:#ededed;
-        -webkit-border-top-left-radius:20px;
-        -moz-border-radius-topleft:20px;
-        border-top-left-radius:20px;
-        -webkit-border-top-right-radius:20px;
-        -moz-border-radius-topright:20px;
-        border-top-right-radius:20px;
-        -webkit-border-bottom-right-radius:20px;
-        -moz-border-radius-bottomright:20px;
-        border-bottom-right-radius:20px;
-        -webkit-border-bottom-left-radius:20px;
-        -moz-border-radius-bottomleft:20px;
-        border-bottom-left-radius:20px;
-        text-indent:0;
-        border:1px solid #dcdcdc;
-        display:inline-block;
-        color:#777777;
-        font-family:Arial;
-        font-size:11px;
-        font-weight:bold;
-        font-style:normal;
-        height:50px;
-        line-height:50px;
-        width:86px;
-        text-decoration:none;
-        text-align:center;
-        text-shadow:1px 1px 0px #ffffff;
-    }
-    .button:hover {
-        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
-        background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
-        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
-        background-color:#dfdfdf;
-    }.button:active {
-        position:relative;
-        top:1px;
-    }
-    .button {
-        width:90px;
-        height:30px;
-        line-height:30px;
-        cursor:pointer;
-        position:relative;
-    }
-    .button:active, .button:focus { outline: none; }
-    label
-    {
-        display: inline-block;
-        cursor: pointer;
-        margin-right: 10px;
-        margin-bottom: 10px;
-    }
-    label > input
-    {
-        display: inline-block;
-        margin-right: 10px;
-    }
+.container {
+    position:relative;
+    background-color:#343434;
+    color:#aaa;
+    border:3px solid #444;
+    padding:0px;
+    margin:10px 5px;
+    font-size:12px;
+}
+
+.container .heading {
+    position: relative;
+    padding:0px;
+    margin:0x;
+    font-size:12px !important;
+    min-height: 40px;
+}
+
+.container .editor {
+    position:relative;
+    padding:0px;
+    margin:0px;
+    border:none;
+    width:100%;
+    min-height:400px;
+}
+
+#codeContainer .cm-s-lesser-dark.CodeMirror {font-size:11px;}
+
+#outputContainer .cm-s-lesser-dark.CodeMirror {font-size:11px;}
+
+.button {
+    -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    box-shadow:inset 0px 1px 0px 0px #ffffff;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+    background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+    background-color:#ededed;
+    -webkit-border-top-left-radius:20px;
+    -moz-border-radius-topleft:20px;
+    border-top-left-radius:20px;
+    -webkit-border-top-right-radius:20px;
+    -moz-border-radius-topright:20px;
+    border-top-right-radius:20px;
+    -webkit-border-bottom-right-radius:20px;
+    -moz-border-radius-bottomright:20px;
+    border-bottom-right-radius:20px;
+    -webkit-border-bottom-left-radius:20px;
+    -moz-border-radius-bottomleft:20px;
+    border-bottom-left-radius:20px;
+    text-indent:0;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    color:#777777;
+    font-family:Arial;
+    font-size:11px;
+    font-weight:bold;
+    font-style:normal;
+    height:50px;
+    line-height:50px;
+    width:86px;
+    text-decoration:none;
+    text-align:center;
+    text-shadow:1px 1px 0px #ffffff;
+}
+.button:hover {
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+    background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+    background-color:#dfdfdf;
+}.button:active {
+    position:relative;
+    top:1px;
+}
+.button {
+    width:90px;
+    height:30px;
+    line-height:30px;
+    cursor:pointer;
+    position:relative;
+}
+.button:active, .button:focus { outline: none; }
+label
+{
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+label > input
+{
+    display: inline-block;
+    margin-right: 10px;
+}
 </style>
 
-        
     
-        
+
+    
 <script src="../common/js/jquery.js"></script>
 <script src="../common/js/modelview.min.js"></script>
 <script src="../common/js/codemirror/codemirror.min.js"></script>
@@ -140,45 +140,45 @@
 <script src="../common/js/cssmin.js"></script>
 <script src="../common/js/beautify-css.js"></script>
 
+
+</head>
+
+<body>
+    <span id="forkongithub"><a href="https://github.com/foo123/scripts/tree/master/buildtools">this is on GitHub</a></span>
     
-    </head>
     
-    <body>
-        <span id="forkongithub"><a href="https://github.com/foo123/scripts/tree/master/buildtools">this is on GitHub</a></span>
-        
-        
 <header id="header">
     <h1>CSS Minifier</h1>
     <i>Online CSS Processor and Minifier</i>
 </header>
 <br /><br />
 
-        
-        
+    
+    
 <div id="screen" class="fluid col-1-1">
-        <div class="fluid col-1-1">
-            <strong>Options</strong><br /><br />
-            <label><input id="minify" name="model[minify]" type="checkbox" /> Minify</label>
-            <label><input id="beautify" name="model[beautify]" type="checkbox" /> Beautify</label>
-            <label><input id="comments" name="model[comments]" type="checkbox" checked /> Remove Comments</label>
-            <label><input id="prefixes" name="model[prefixes]" type="checkbox" checked /> Add Vendor Prefixes</label>
-            <label><input id="polyfills" name="model[polyfills]" type="checkbox" checked /> Apply Fallback Polyfills</label>
-            <label><input id="hsl2rgb" name="model[hsl2rgb]" type="checkbox" checked /> Convert HSL(A) to RGB(A)</label>
-            <label><input id="rgb2hex" name="model[rgb2hex]" type="checkbox" checked /> Convert RGB to HEX</label>
-            <br />
-            <label><input id="images" type="checkbox" disabled /> Embed Images (server only)</label>
-            <label><input id="fonts" type="checkbox" disabled /> Embed Fonts (server only)</label>
-            <label><input id="imports" type="checkbox" disabled /> Embed Imports (server only)</label>
-            <br />
-            <label><input id="line-wrap" name="model[wrap]" data-bind='{"change":"lineWrap"}' type="checkbox" checked /> Line Wrapping</label>
-            <br />
-        </div>
+    <div class="fluid col-1-1">
+        <strong>Options</strong><br /><br />
+        <label><input id="minify" name="model[minify]" type="checkbox" /> Minify</label>
+        <label><input id="beautify" name="model[beautify]" type="checkbox" /> Beautify</label>
+        <label><input id="comments" name="model[comments]" type="checkbox" checked /> Remove Comments</label>
+        <label><input id="prefixes" name="model[prefixes]" type="checkbox" checked /> Add Vendor Prefixes</label>
+        <label><input id="polyfills" name="model[polyfills]" type="checkbox" checked /> Apply Fallback Polyfills</label>
+        <label><input id="hsl2rgb" name="model[hsl2rgb]" type="checkbox" checked /> Convert HSL(A) to RGB(A)</label>
+        <label><input id="rgb2hex" name="model[rgb2hex]" type="checkbox" checked /> Convert RGB to HEX</label>
+        <br />
+        <label><input id="images" type="checkbox" disabled /> Embed Images (server only)</label>
+        <label><input id="fonts" type="checkbox" disabled /> Embed Fonts (server only)</label>
+        <label><input id="imports" type="checkbox" disabled /> Embed Imports (server only)</label>
+        <br />
+        <label><input id="line-wrap" name="model[wrap]" data-bind='{"change":"lineWrap"}' type="checkbox" checked /> Line Wrapping</label>
+        <br />
+    </div>
         
-        <div class="fluid col-1-1">
-        
-            <div id="codeContainer" class="fluid col-5-10 container">
-                <div class="heading"><strong>CSS to be processed:</strong>&nbsp;&nbsp;<button id="apply" class="button" data-bind='{"click":"process"}'>Process</button></div>
-                
+    <div class="fluid col-1-1">
+    
+        <div id="codeContainer" class="fluid col-5-10 container">
+            <div class="heading"><strong>CSS to be processed:</strong>&nbsp;&nbsp;<button id="apply" class="button" data-bind='{"click":"process"}'>Process</button></div>
+            
 <textarea id="code" class="editor">
 /* sample css here */
 body
@@ -208,157 +208,155 @@ div
     100% { opacity: 1; }
 }
 </textarea>
-            </div>
-            
-            <div id="outputContainer" class="fluid col-4-10 container">
-                <div class="heading"><strong>Output:</strong></div>
-                            
-<textarea id="output" class="editor">
-</textarea>
-                
-            </div>
-            
         </div>
+        
+        <div id="outputContainer" class="fluid col-4-10 container">
+            <div class="heading"><strong>Output:</strong></div>
+                            
+<textarea id="output" class="editor"></textarea>
+                
+        </div>
+        
+    </div>
 </div>
 
+    
+    
+    <footer id="footer">
+        <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
         
         
-        <footer id="footer">
-            <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
-            
-            
 <div class="showcase">For an alternative approach to a vendor-aware CSS without prefixes see <a href="http://leaverou.github.io/prefixfree/" target="_blank">prefixfree</a></div>
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 <div class="showcase">CSS Codemirror Grammar by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
 
-            <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
-            <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
-            <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
-            <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
-        </footer>
-        <br /><br />
-        
-        
-        
-<script>//<![CDATA[
-   
-   // on DOM Ready
-    jQuery(function($){
+        <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
+        <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
+        <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
+        <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
+    </footer>
+    <br /><br />
     
-        var $w = $(window), $screen = $('#screen'), model, view,
-            code = $('#code'), output = $('#output'), apply = $('#apply'),
-            cssmin = new CSSMin.Processor(),
-            cssbeautifier = new CSSBeautifier(),
-            codeEditor, outputEditor, width, height, css_mode,
-            log = (console && console.log) ? function(s){console.log(s);} : function(){}
-        ;
-        
-        css_mode = CodeMirrorGrammar.getMode(css_grammar);
-        css_mode.supportGrammarAnnotations = true;
-        CodeMirror.defineMode('css', css_mode);
-        CodeMirror.registerHelper("lint", 'css', css_mode().validator);                
-        
-        // if codemirror activated, enable syntax highlight
-        codeEditor = CodeMirror.fromTextArea(code[0], {
-            mode: "css",
-            lineNumbers: true,
-            lineWrapping: true,
-            indentUnit: 4,
-            indentWithTabs: false,
-            // enable syntax validation
-            lint: true,
-            foldGutter: true,
-            gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-            theme: 'lesser-dark'
-        });
-        
-        outputEditor = CodeMirror.fromTextArea(output[0], {
-            mode: "css",
-            lineNumbers: true,
-            lineWrapping: true,
-            indentUnit: 4,
-            indentWithTabs: false,
-            // enable syntax validation
-            lint: true,
-            foldGutter: true,
-            gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-            theme: 'lesser-dark'
-        });
-        
-        $screen.modelview({
-            autobind: true
-            ,bindAttribute: 'data-bind'
-            
-            ,model: {
-                id: 'model'
-                ,data: { 
-                    minify: false
-                    ,beautify: false
-                    ,comments: true
-                    ,prefixes: true
-                    ,polyfills: true
-                    ,hsl2rgb: true
-                    ,rgb2hex: true
-                    ,wrap: true
-                }
-                ,types: { 
-                    minify: $.ModelView.Type.Cast.BOOLEAN
-                    ,beautify: $.ModelView.Type.Cast.BOOLEAN
-                    ,comments: $.ModelView.Type.Cast.BOOLEAN
-                    ,prefixes: $.ModelView.Type.Cast.BOOLEAN
-                    ,polyfills: $.ModelView.Type.Cast.BOOLEAN
-                    ,hsl2rgb: $.ModelView.Type.Cast.BOOLEAN
-                    ,rgb2hex: $.ModelView.Type.Cast.BOOLEAN
-                    ,wrap: $.ModelView.Type.Cast.BOOLEAN
-                }
-            }
-            ,actions: { 
-                process: function(evt, $el, data) {
-                    var css = codeEditor.getValue(), res, beau = model.get('beautify');
-                    cssbeautifier.skipComments = 0;
-                    cssmin.removeComments = model.get('comments');
-                    cssmin.doMinify = !beau && model.get('minify');
-                    cssmin.vendorPrefixes = model.get('prefixes');
-                    cssmin.applyPolyfills = model.get('polyfills');
-                    cssmin.convertHSLA2RGBA = model.get('hsl2rgb');
-                    cssmin.convertRGB2HEX = model.get('rgb2hex');
-                    res = cssmin.process(css);
-                    if ( beau )
-                    {
-                        res = cssbeautifier.beautify( res );
-                    }
-                    outputEditor.setValue( res );
-                },
-                
-                lineWrap: function(evt, $el, data) {
-                    if ( model.get('wrap') )
-                    {
-                        codeEditor.setOption('lineWrapping', true);
-                        outputEditor.setOption('lineWrapping', true);
-                    }
-                    else
-                    {
-                        codeEditor.setOption('lineWrapping', false);
-                        outputEditor.setOption('lineWrapping', false);
-                    }
-                }
-            }
-        });
-        
-        $w.resize(function(){
-            width = code.width(); height = code.height();
-            codeEditor.setSize(width, height);
-            width = output.width(); height = output.height();
-            outputEditor.setSize(width, height);
-        });
-        
-        $w.trigger('resize');
-        view = $screen.modelview( 'view' );
-        model = view.model( );
-        $screen.modelview( 'sync' );
-        apply.click( );
+    
+    
+<script>//<![CDATA[
+// on DOM Ready
+jQuery(function($){
+
+    var $w = $(window), $screen = $('#screen'), model, view,
+        code = $('#code'), output = $('#output'), apply = $('#apply'),
+        cssmin = new CSSMin.Processor(),
+        cssbeautifier = new CSSBeautifier(),
+        codeEditor, outputEditor, width, height, css_mode,
+        log = (console && console.log) ? function(s){console.log(s);} : function(){}
+    ;
+    
+    css_mode = CodeMirrorGrammar.getMode(css_grammar);
+    css_mode.supportGrammarAnnotations = true;
+    CodeMirror.defineMode('css', css_mode);
+    CodeMirror.registerHelper("lint", 'css', css_mode().validator);                
+    
+    // if codemirror activated, enable syntax highlight
+    codeEditor = CodeMirror.fromTextArea(code[0], {
+        mode: "css",
+        lineNumbers: true,
+        lineWrapping: true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        // enable syntax validation
+        lint: true,
+        foldGutter: true,
+        gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+        theme: 'lesser-dark'
     });
+    
+    outputEditor = CodeMirror.fromTextArea(output[0], {
+        mode: "css",
+        lineNumbers: true,
+        lineWrapping: true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        // enable syntax validation
+        lint: true,
+        foldGutter: true,
+        gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+        theme: 'lesser-dark'
+    });
+    
+    $screen.modelview({
+        autobind: true
+        ,bindAttribute: 'data-bind'
+        
+        ,model: {
+            id: 'model'
+            ,data: { 
+                minify: false
+                ,beautify: false
+                ,comments: true
+                ,prefixes: true
+                ,polyfills: true
+                ,hsl2rgb: true
+                ,rgb2hex: true
+                ,wrap: true
+            }
+            ,types: { 
+                minify: $.ModelView.Type.Cast.BOOLEAN
+                ,beautify: $.ModelView.Type.Cast.BOOLEAN
+                ,comments: $.ModelView.Type.Cast.BOOLEAN
+                ,prefixes: $.ModelView.Type.Cast.BOOLEAN
+                ,polyfills: $.ModelView.Type.Cast.BOOLEAN
+                ,hsl2rgb: $.ModelView.Type.Cast.BOOLEAN
+                ,rgb2hex: $.ModelView.Type.Cast.BOOLEAN
+                ,wrap: $.ModelView.Type.Cast.BOOLEAN
+            }
+        }
+        ,actions: { 
+            process: function(evt, $el, data) {
+                var css = codeEditor.getValue(), res, beau = model.get('beautify');
+                cssbeautifier.skipComments = 0;
+                cssmin.removeComments = model.get('comments');
+                cssmin.doMinify = !beau && model.get('minify');
+                cssmin.vendorPrefixes = model.get('prefixes');
+                cssmin.applyPolyfills = model.get('polyfills');
+                cssmin.convertHSLA2RGBA = model.get('hsl2rgb');
+                cssmin.convertRGB2HEX = model.get('rgb2hex');
+                res = cssmin.process(css);
+                if ( beau )
+                {
+                    res = cssbeautifier.beautify( res );
+                }
+                outputEditor.setValue( res );
+            },
+            
+            lineWrap: function(evt, $el, data) {
+                if ( model.get('wrap') )
+                {
+                    codeEditor.setOption('lineWrapping', true);
+                    outputEditor.setOption('lineWrapping', true);
+                }
+                else
+                {
+                    codeEditor.setOption('lineWrapping', false);
+                    outputEditor.setOption('lineWrapping', false);
+                }
+            }
+        }
+    });
+    
+    $w.resize(function(){
+        width = code.width(); height = code.height();
+        codeEditor.setSize(width, height);
+        width = output.width(); height = output.height();
+        outputEditor.setSize(width, height);
+    });
+    
+    $w.trigger('resize');
+    view = $screen.modelview( 'view' );
+    model = view.model( );
+    $screen.modelview( 'sync' );
+    apply.click( );
+});
 //]]></script>
 
-    </body>
+</body>
 </html>

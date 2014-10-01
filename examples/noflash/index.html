@@ -11,183 +11,182 @@
 <!--[if gt IE 8]><!-->
 <html lang="en" class="no-ie">
 <!--<![endif]-->
-    <head>
-        <title>NoFlash jQuery Slideshow Plugin</title>
-        
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-        <meta name="description" content="NoFlash jQuery Slideshow Plugin" />
-        
-        
-        <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-        
+<head>
+    <title>NoFlash jQuery Slideshow Plugin</title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="NoFlash jQuery Slideshow Plugin" />
+    
+    
+    <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+    
 <link href="./noflash.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
-    body {
-        background-color:#121212;
-        color:#aaa;
-        font-size:12px;
-    }
-    
-    div, a {
-        position:relative;
-    }
-    
-    .block {
-        position:relative;
-        display:inline-block;
-        margin: 10px;
-    }
-    .button {
-        -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
-        -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
-        box-shadow:inset 0px 1px 0px 0px #f5978e;
-        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
-        background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
-        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
-        background-color:#f24537;
-        -webkit-border-top-left-radius:20px;
-        -moz-border-radius-topleft:20px;
-        border-top-left-radius:20px;
-        -webkit-border-top-right-radius:20px;
-        -moz-border-radius-topright:20px;
-        border-top-right-radius:20px;
-        -webkit-border-bottom-right-radius:20px;
-        -moz-border-radius-bottomright:20px;
-        border-bottom-right-radius:20px;
-        -webkit-border-bottom-left-radius:20px;
-        -moz-border-radius-bottomleft:20px;
-        border-bottom-left-radius:20px;
-        text-indent:0;
-        border:1px solid #d02718;
-        display:inline-block;
-        color:#ffffff;
-        font-family:Arial;
-        font-size:15px;
-        font-weight:bold;
-        font-style:normal;
-        height:50px;
-        line-height:50px;
-        width:200px;
-        text-decoration:none;
-        text-align:center;
-        text-shadow:1px 1px 0px #810e05;
-    }
-    .button:hover {
-        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
-        background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
-        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
-        background-color:#c62d1f;
-    }.button:active {
-        position:relative;
-        top:1px;
-    }
-    .button {
-        margin: 3px 2px;
-        position:relative;
-        cursor:pointer;
-    }
-    #forkongithub a{background:#c83022;color:#fff;}
+body {
+    background-color:#121212;
+    color:#aaa;
+    font-size:12px;
+}
+
+div, a {
+    position:relative;
+}
+
+.block {
+    position:relative;
+    display:inline-block;
+    margin: 10px;
+}
+.button {
+    -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
+    box-shadow:inset 0px 1px 0px 0px #f5978e;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
+    background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
+    background-color:#f24537;
+    -webkit-border-top-left-radius:20px;
+    -moz-border-radius-topleft:20px;
+    border-top-left-radius:20px;
+    -webkit-border-top-right-radius:20px;
+    -moz-border-radius-topright:20px;
+    border-top-right-radius:20px;
+    -webkit-border-bottom-right-radius:20px;
+    -moz-border-radius-bottomright:20px;
+    border-bottom-right-radius:20px;
+    -webkit-border-bottom-left-radius:20px;
+    -moz-border-radius-bottomleft:20px;
+    border-bottom-left-radius:20px;
+    text-indent:0;
+    border:1px solid #d02718;
+    display:inline-block;
+    color:#ffffff;
+    font-family:Arial;
+    font-size:15px;
+    font-weight:bold;
+    font-style:normal;
+    height:50px;
+    line-height:50px;
+    width:200px;
+    text-decoration:none;
+    text-align:center;
+    text-shadow:1px 1px 0px #810e05;
+}
+.button:hover {
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
+    background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
+    background-color:#c62d1f;
+}.button:active {
+    position:relative;
+    top:1px;
+}
+.button {
+    margin: 3px 2px;
+    position:relative;
+    cursor:pointer;
+}
+#forkongithub a{background:#c83022;color:#fff;}
 </style>
 
-        
     
-        
+
+    
 <script type="text/javascript" src="../common/js/jquery.js"></script>
 <script type="text/javascript" src="../common/js/jquery.animation.easing.min.js"></script>
 <script type="text/javascript" src="./jquery.noflash.min.js"></script>
 
+
+</head>
+
+<body>
+    <span id="forkongithub"><a href="https://github.com/foo123/jquery-plugins">See me on GitHub</a></span>
     
-    </head>
     
-    <body>
-        <span id="forkongithub"><a href="https://github.com/foo123/jquery-plugins">See me on GitHub</a></span>
-        
-        
 <header id="header">
     <h1>NoFlash jQuery Slideshow Plugin</h1>
 </header>
 
-        
-        
-    <div class="block" style="width:700px;height:438px;">
-        <div id="noflash">
-            <div class="transition=fade-tiles rows=4 columns=8 easing=linear duration=2 overlap=0.9 ordering=random delay=4">
-                <img src="../common/assets/d2.jpg" alt="Image 1" title="Image 1"/>
-                <span>Caption for Image 1</span>
-            </div>
-            <div class="transition=random delay=4">
-                <img src="../common/assets/d4.jpg" />
-                <span>This transition is random</span>
-            </div>
-            <div class="transition=grow-fade-tiles-horizontal rows=1 columns=8 easing=linear duration=2 overlap=0.9 ordering=left-right delay=4">
-                <img src="../common/assets/d2.jpg" />
-                <span>Caption for Image 3</span>
-            </div>
-            <div class="transition=fade-tiles rows=6 columns=8 easing=linear duration=2 overlap=0.9 ordering=spiral-top-left delay=4">
-                <img src="../common/assets/d3.jpg" />
-                <span>Caption for Image 4</span>
-            </div>
-            <div class="transition=flip-tiles-vertical rows=4 columns=4 easing=backEaseOut duration=3 overlap=0.9 ordering=spiral-top-left delay=4">
-                <img src="../common/assets/d6.jpg" />
-                <span>Cross-Browser pseudo-3D flip tiles</span>
-            </div>
-            <div class="transition=grow-tiles rows=6 columns=8 easing=linear duration=2 overlap=0.91 ordering=rows-first delay=4">
-                <img src="../common/assets/d5.jpg" />
-                <span>Caption for Image 5</span>
-            </div>
-            <div class="transition=grow-tiles-horizontal rows=1 columns=8 easing=linear duration=2 overlap=0.91 ordering=random delay=4">
-                <img src="../common/assets/d1.jpg" />
-                <span>Caption for Image 6 with <a href="#">link</a></span>
-            </div>
-            <div class="transition=grow-tiles-vertical rows=8 columns=1 easing=linear duration=2 overlap=0.91 ordering=random delay=4">
-                <img src="../common/assets/d2.jpg" />
-                <span>Caption for Image 7</span>
-            </div>
-            <div class="transition=move-tiles-vertical-up-down rows=1 columns=8 easing=quintEaseOut duration=3 overlap=0.9 ordering=columns-first delay=4">
-                <img src="../common/assets/d3.jpg" />
-                <span>Caption for Image 8</span>
-            </div>
-            <div class="transition=move-tiles-vertical-up rows=1 columns=8 easing=quintEaseOut duration=3 overlap=0.9 ordering=columns-first delay=4">
-                <img src="../common/assets/d4.jpg" />
-                <span>Caption for Image 9</span>
-            </div>
-            <div class="transition=move-tiles-horizontal-left-right rows=5 columns=1 easing=backEaseOut duration=2 overlap=0.7 ordering=rows-first delay=4">
-                <img src="../common/assets/d6.jpg" />
-            </div>
-            <div class="transition=move-tiles-horizontal-right rows=6 columns=1 easing=backEaseOut duration=2 overlap=0.8 ordering=rows-first delay=4">
-                <img src="../common/assets/d1.jpg" />
-                <span>Caption for Image 11</span>
-            </div>
-            <div class="transition=iris-reverse rows=1 columns=1 easing=quintEaseOut duration=2 overlap=0.8 ordering=rows-first delay=4">
-                <img src="../common/assets/d2.jpg" />
-                <span>Caption for Image 12</span>
-            </div>
-            <div class="transition=rotate-tiles-reverse rows=6 columns=6 easing=quintEaseOut duration=2.5 overlap=1 ordering=columns-first delay=4">
-                <img src="../common/assets/d5.jpg" />
-                <span>Caption for Image 13</span>
-            </div>
+    
+    
+<div class="block" style="width:700px;height:438px;">
+    <div id="noflash">
+        <div class="transition=fade-tiles rows=4 columns=8 easing=linear duration=2 overlap=0.9 ordering=random delay=4">
+            <img src="../common/assets/d2.jpg" alt="Image 1" title="Image 1"/>
+            <span>Caption for Image 1</span>
+        </div>
+        <div class="transition=random delay=4">
+            <img src="../common/assets/d4.jpg" />
+            <span>This transition is random</span>
+        </div>
+        <div class="transition=grow-fade-tiles-horizontal rows=1 columns=8 easing=linear duration=2 overlap=0.9 ordering=left-right delay=4">
+            <img src="../common/assets/d2.jpg" />
+            <span>Caption for Image 3</span>
+        </div>
+        <div class="transition=fade-tiles rows=6 columns=8 easing=linear duration=2 overlap=0.9 ordering=spiral-top-left delay=4">
+            <img src="../common/assets/d3.jpg" />
+            <span>Caption for Image 4</span>
+        </div>
+        <div class="transition=flip-tiles-vertical rows=4 columns=4 easing=backEaseOut duration=3 overlap=0.9 ordering=spiral-top-left delay=4">
+            <img src="../common/assets/d6.jpg" />
+            <span>Cross-Browser pseudo-3D flip tiles</span>
+        </div>
+        <div class="transition=grow-tiles rows=6 columns=8 easing=linear duration=2 overlap=0.91 ordering=rows-first delay=4">
+            <img src="../common/assets/d5.jpg" />
+            <span>Caption for Image 5</span>
+        </div>
+        <div class="transition=grow-tiles-horizontal rows=1 columns=8 easing=linear duration=2 overlap=0.91 ordering=random delay=4">
+            <img src="../common/assets/d1.jpg" />
+            <span>Caption for Image 6 with <a href="#">link</a></span>
+        </div>
+        <div class="transition=grow-tiles-vertical rows=8 columns=1 easing=linear duration=2 overlap=0.91 ordering=random delay=4">
+            <img src="../common/assets/d2.jpg" />
+            <span>Caption for Image 7</span>
+        </div>
+        <div class="transition=move-tiles-vertical-up-down rows=1 columns=8 easing=quintEaseOut duration=3 overlap=0.9 ordering=columns-first delay=4">
+            <img src="../common/assets/d3.jpg" />
+            <span>Caption for Image 8</span>
+        </div>
+        <div class="transition=move-tiles-vertical-up rows=1 columns=8 easing=quintEaseOut duration=3 overlap=0.9 ordering=columns-first delay=4">
+            <img src="../common/assets/d4.jpg" />
+            <span>Caption for Image 9</span>
+        </div>
+        <div class="transition=move-tiles-horizontal-left-right rows=5 columns=1 easing=backEaseOut duration=2 overlap=0.7 ordering=rows-first delay=4">
+            <img src="../common/assets/d6.jpg" />
+        </div>
+        <div class="transition=move-tiles-horizontal-right rows=6 columns=1 easing=backEaseOut duration=2 overlap=0.8 ordering=rows-first delay=4">
+            <img src="../common/assets/d1.jpg" />
+            <span>Caption for Image 11</span>
+        </div>
+        <div class="transition=iris-reverse rows=1 columns=1 easing=quintEaseOut duration=2 overlap=0.8 ordering=rows-first delay=4">
+            <img src="../common/assets/d2.jpg" />
+            <span>Caption for Image 12</span>
+        </div>
+        <div class="transition=rotate-tiles-reverse rows=6 columns=6 easing=quintEaseOut duration=2.5 overlap=1 ordering=columns-first delay=4">
+            <img src="../common/assets/d5.jpg" />
+            <span>Caption for Image 13</span>
         </div>
     </div>
-    <br />
-    <p>
-        <span style="font-size:12px;font-style:oblique;">Hint:  View the Page Source Code</span>
-    </p>
+</div>
+<br />
+<p>
+    <span style="font-size:12px;font-style:oblique;">Hint:  View the Page Source Code</span>
+</p>
 
+    
+    
+    <footer id="footer">
+        <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
         
         
-        <footer id="footer">
-            <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
-            
-            
-        </footer>
-        <br /><br />
-        
-        
-        
+    </footer>
+    <br /><br />
+    
+    
+    
 <script>//<![CDATA[
-
 jQuery("#noflash").noflash({
         rows:1,
         columns:1,
@@ -211,8 +210,7 @@ jQuery("#noflash").noflash({
             {src:"../img/d6.jpg",transition:"random",delay:5,duration:2,rows:5,columns:1,caption:"random Added through Options"}
         ]*/
 });
-
 //]]></script>
 
-    </body>
+</body>
 </html>

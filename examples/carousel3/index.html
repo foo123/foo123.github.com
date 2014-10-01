@@ -11,39 +11,39 @@
 <!--[if gt IE 8]><!-->
 <html lang="en" class="no-ie">
 <!--<![endif]-->
-    <head>
-        <title>Carousel with HTML5 canvas and Three.js, Tween.js</title>
-        
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-        <meta name="description" content="Carousel with HTML5 canvas and Three.js, Tween.js" />
-        
-        
-        <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-        
+<head>
+    <title>Carousel with HTML5 canvas and Three.js, Tween.js</title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="Carousel with HTML5 canvas and Three.js, Tween.js" />
+    
+    
+    <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+    
 <style type="text/css">
-    body {
-        font-family: Monospace;
-        background-color: #000;
-        color:#aaa;
-        margin: 0px;
-        overflow: hidden;
-        padding:0;
-        position:relative;
-        height:100%;
-    }
-    #footer {
-        z-index: 100;
-        position:absolute;
-        right: 10px;
-        bottom: 50px;
-    }
+body {
+    font-family: Monospace;
+    background-color: #000;
+    color:#aaa;
+    margin: 0px;
+    overflow: hidden;
+    padding:0;
+    position:relative;
+    height:100%;
+}
+#footer {
+    z-index: 100;
+    position:absolute;
+    right: 10px;
+    bottom: 50px;
+}
 </style>
 
-        
     
-        
+
+    
 <script src="../common/js/three.min.js"></script>
 <script src='../common/js/THREEx.WindowResize.js'></script>
 <script src="../common/js/Tween.js"></script>
@@ -51,13 +51,13 @@
 <script src="./Carousel.js"></script>
 <script src="./CarouselApplication.js"></script>
 
+
+</head>
+
+<body>
+    <span id="forkongithub"><a href="https://github.com/foo123/Carousel3">Fork me on GitHub</a></span>
     
-    </head>
     
-    <body>
-        <span id="forkongithub"><a href="https://github.com/foo123/Carousel3">Fork me on GitHub</a></span>
-        
-        
 <aside id="aside" style="position:absolute;font-size:12px;z-index:100;width:200px;">
     <ul>
         <li>Drag Mouse left-right to rotate Carousel</li>
@@ -66,33 +66,31 @@
     </ul>
 </aside>
 
-        
-        
+    
+    
 <div id="container" class="fluid col-1-1" style="cursor:pointer"></div>
 
-        
-        
-        <footer id="footer">
-            <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
-            
-            
-        </footer>
-        <br /><br />
-        
-        
-        
-<script type="text/javascript">//<![CDATA[
     
-    CarouselApplication.init([
-        {url:'../common/assets/d1.jpg', caption:'d1.jpg', width:150, height:100},
-        {url:'../common/assets/d2.jpg', caption:'d2.jpg', width:150, height:100},
-        {url:'../common/assets/d3.jpg', caption:'d3.jpg', width:150, height:100},
-        {url:'../common/assets/d4.jpg', caption:'d4.jpg', width:150, height:100},
-        {url:'../common/assets/d5.jpg', caption:'d5.jpg', width:150, height:100},
-        {url:'../common/assets/d6.jpg', caption:'d6.jpg', width:150, height:100}
-    ]);
-
+    
+    <footer id="footer">
+        <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
+        
+        
+    </footer>
+    <br /><br />
+    
+    
+    
+<script type="text/javascript">//<![CDATA[
+CarouselApplication.init([
+    {url:'../common/assets/d1.jpg', caption:'d1.jpg', width:150, height:100},
+    {url:'../common/assets/d2.jpg', caption:'d2.jpg', width:150, height:100},
+    {url:'../common/assets/d3.jpg', caption:'d3.jpg', width:150, height:100},
+    {url:'../common/assets/d4.jpg', caption:'d4.jpg', width:150, height:100},
+    {url:'../common/assets/d5.jpg', caption:'d5.jpg', width:150, height:100},
+    {url:'../common/assets/d6.jpg', caption:'d6.jpg', width:150, height:100}
+]);
 //]]></script>
 
-    </body>
+</body>
 </html>
