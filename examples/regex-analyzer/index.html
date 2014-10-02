@@ -115,7 +115,7 @@
     
 <header id="header">
     <h1>Regex Analyzer</h1>
-    <i>A simple Regex Analyzer for JavaScript and Node.js</i>
+    <i>A simple Regular Expression Analyzer for PHP, Python, Node/JS</i>
 </header>
 
 <br /><br />
@@ -128,8 +128,9 @@
         <strong>Regular Expression:</strong>
         &nbsp;&nbsp;<input type="button" class="button" id="analyze" data-bind='{"click":"analyze"}' value="Analyze" />
         &nbsp;&nbsp;<input type="button" class="button" id="peek" data-bind='{"click":"peek"}' value="Peek" />
+        &nbsp;&nbsp;<input type="button" class="button" id="generate" data-bind='{"click":"generate"}' value="Sample" />
         <br /><br />
-        <input type="text" size=120 id="regex" name="model[regex]" value="/[abc\d]+/gi" />
+        <input type="text" size=120 id="regex" name="model[regex]" value="" />
     </div>
     
     <br /><br />
@@ -166,7 +167,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
     
     var undef=undefined, $window = $(window), $screen = $('#screen'), output = document.getElementById('output'),
         appTask, appModel, appView, appRouter, analyzer = new RegExAnalyzer(), code,
-        width = output.clientWidth, height = output.clientHeight
+        width = output.clientWidth, height = output.clientHeight,
+        toJSON = JSON.stringify
     ;
     
     code = CodeMirror.fromTextArea(output, {
@@ -185,15 +187,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
         analyze: function( ) {
             var input = appModel.get('regex'), output;
             
-            analyzer.setRegex( input ).analyze( );
+            analyzer.regex( input ).analyze( );
             
             output = [
                 "Input: " + input
-                ,"Regular Expression: " + analyzer.regex
+                ,"Regular Expression: " + analyzer.$regex
                 ,"Regular Expression Flags: "
-                ,JSON.stringify( analyzer.flags )
+                ,toJSON( analyzer.$flags )
                 ,"Regular Expression Parts: "
-                ,JSON.stringify(analyzer.parts, null, 4)
+                ,toJSON(analyzer.$parts, null, 4)
             ].join( "\n\n" );
             
             code.setValue( output );
@@ -202,19 +204,37 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
         peek: function( ) {
             var input = appModel.get('regex'), output, peekChars;
             
-            peekChars = analyzer.setRegex( input ).analyze( ).getPeekChars( );
+            peekChars = analyzer.regex( input ).getPeekChars( );
             
-            //console.log(peekChars);
             output = [
                 "Input: " + input
-                ,"Regular Expression: " + analyzer.regex
+                ,"Regular Expression: " + analyzer.$regex
                 ,"Regular Expression Flags: "
-                ,JSON.stringify(analyzer.flags)
+                ,JSON.stringify(analyzer.$flags)
                 ,["Regular Expression Peek Characters: "
                 ,"// Experimental Feature, not all characters are expanded, eg. special characters (like .) appear as special"
                 ,"// Peek Characters are the start characters of a hypothetical input string"
                 ,"// which can generate a (further) possible match of the regular expression"].join("\n")
-                ,JSON.stringify(peekChars, null, 4)
+                ,toJSON(peekChars, null, 4)
+            ].join( "\n\n" );
+            
+            code.setValue( output );
+        },
+        
+        generate: function( ) {
+            var input = appModel.get('regex'), output, sample;
+            
+            sample = analyzer.regex( input ).generateSample( );
+            
+            output = [
+                "Input: " + input
+                ,"Regular Expression: " + analyzer.$regex
+                ,"Regular Expression Flags: "
+                ,JSON.stringify(analyzer.$flags)
+                ,["Regular Expression Sample Matching String: "
+                ,"// Experimental Feature"
+                ,"// Generates a random string which is supposed to match the regular expression"].join("\n")
+                ,sample
             ].join( "\n\n" );
             
             code.setValue( output );
@@ -238,7 +258,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
         ,model: {
             id: 'model'
             ,data: { 
-                regex: "/[abc\d]+/gi"
+                regex: "/[abc]+/gi"
             }
             ,types: { 
                 regex: $MV.Type.Cast.STR
@@ -256,6 +276,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
             peek: function(evt, $el, data) {
                 location.hash = '#' + appRouter.glue({
                     action: 'peek',
+                    regex: appModel.get( 'regex' ),
+                    t: new Date( ).getTime( )
+                });
+            },
+            
+            generate: function(evt, $el, data) {
+                location.hash = '#' + appRouter.glue({
+                    action: 'generate',
                     regex: appModel.get( 'regex' ),
                     t: new Date( ).getTime( )
                 });

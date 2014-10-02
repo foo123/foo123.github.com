@@ -186,7 +186,7 @@
     
 <header id="header">
     <h1>Regex Composer</h1>
-    <i>An intuitive Regex Composer for JavaScript and node</i>
+    <i>An intuitive Regular Expression Composer for PHP, Python, Node/JS</i>
 </header>
 
 <br /><br />
@@ -209,32 +209,32 @@
         <div class="fluid col-3-5">
             <strong>Code:</strong><br /><br />
 <textarea id="code">
-new RegExComposer()
+new RegExComposer( )
 
-    .startOfLine()
+    .startOfLine( )
 
-    .either()
+    .either( )
 
-        .characterGroup(false)
-            .characters('a', 'b', 'c', '.')
-            .range('d', 'f')
-        .end()
+        .characterGroup( false )
+            .characters( 'a', 'b', 'c', '.' )
+            .range( 'd', 'f' )
+        .end( )
 
-        .match('**aabb**')
+        .match( '**aabb**' )
 
-        .any()
+        .any( )
 
-        .space()
+        .space( )
 
-        .digit(false).oneOrMore()
+        .digit( false ).oneOrMore( )
 
-    .end()
+    .end( )
 
-    .zeroOrMore(false)
+    .zeroOrMore( false )
 
-    .endOfLine()
+    .endOfLine( )
 
-    .compose('i');
+    .compose( 'i' );
 </textarea>
         </div>
         <div class="fluid col-2-5 right">
