@@ -388,7 +388,7 @@ require(['jQuery', 'ModelView'],
    // on DOM Ready
     jQuery(function($){
     
-        var $w = $(window), $screen = $('#screen'), model, view,
+        var $w = $(window), $screen = $('#screen'), 
             code = $('#code'), grammar = $('#grammar'), apply = $('#apply'), 
             lang = "customLang", i = 0, json_mode,
             codeEditor, grammarEditor, width, height,
@@ -442,7 +442,7 @@ require(['jQuery', 'ModelView'],
             }
             ,actions: { 
                 apply: function(evt, $el, data) {
-                    var gramm, lines, len, i, line, gramm_mode;
+                    var model=this.$model, gramm, lines, len, i, line, gramm_mode;
                     lines = grammarEditor.getValue().split("\n");
                     len = lines.length;
                     gramm = [];
@@ -484,9 +484,6 @@ require(['jQuery', 'ModelView'],
         });
         
         $w.trigger('resize');
-        view = $screen.modelview( 'view' );
-        model = view.model( );
-        $screen.modelview( 'sync' );
         //apply.trigger('click');
     });
 });

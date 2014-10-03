@@ -182,8 +182,6 @@
                 ,model: todo
             });
             
-            $todo.modelview( 'sync' );
-            
             if ( !!completed )
             {
                 todo.set( 'completed', true );
@@ -309,7 +307,7 @@
             
             ,actions: {
                 addTodo: function(evt, $el, data){
-                    var title = $el.val( ), $todoModelView, todoList;
+                    var Model = this.$model, title = $el.val( ), $todoModelView, todoList;
                     
                     if ( title && $.trim( title ).length )
                     {
@@ -331,7 +329,7 @@
                 }
                 
                 ,allCompleted: function(evt, $el, data){
-                    var todoList, notcompleted, visible, completed, isChecked;
+                    var Model = this.$model, todoList, notcompleted, visible, completed, isChecked;
                     
                     isChecked = $el.is( ':checked' );
                     
@@ -391,7 +389,7 @@
                 }
                 
                 ,removeCompleted: function(evt, $el, data){
-                    var i, todoList, l;
+                    var Model = this.$model, i, todoList, l;
                     
                     todoList = Model.get( 'todoList' );
                     
@@ -438,7 +436,7 @@
         });
         
         // synchronize UI/View/Model
-        $screen.modelview( 'sync' );
+        //$screen.modelview( 'sync' );
         updateModelFromStorage( STORAGE_KEY );
         
         if ( location.hash )

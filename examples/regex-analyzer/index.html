@@ -184,7 +184,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
     code.setSize( width, height );
         
     appTask = {
-        analyze: function( ) {
+        analyze: function( appModel ) {
             var input = appModel.get('regex'), output;
             
             analyzer.regex( input ).analyze( );
@@ -195,13 +195,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
                 ,"Regular Expression Flags: "
                 ,toJSON( analyzer.$flags )
                 ,"Regular Expression Parts: "
-                ,toJSON(analyzer.$parts, null, 4)
+                ,toJSON( analyzer.$parts, null, 4 )
             ].join( "\n\n" );
             
             code.setValue( output );
         },
         
-        peek: function( ) {
+        peek: function( appModel ) {
             var input = appModel.get('regex'), output, peekChars;
             
             peekChars = analyzer.regex( input ).getPeekChars( );
@@ -210,7 +210,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
                 "Input: " + input
                 ,"Regular Expression: " + analyzer.$regex
                 ,"Regular Expression Flags: "
-                ,JSON.stringify(analyzer.$flags)
+                ,toJSON( analyzer.$flags )
                 ,["Regular Expression Peek Characters: "
                 ,"// Experimental Feature, not all characters are expanded, eg. special characters (like .) appear as special"
                 ,"// Peek Characters are the start characters of a hypothetical input string"
@@ -221,7 +221,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
             code.setValue( output );
         },
         
-        generate: function( ) {
+        generate: function( appModel ) {
             var input = appModel.get('regex'), output, sample;
             
             sample = analyzer.regex( input ).generateSample( );
@@ -230,7 +230,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
                 "Input: " + input
                 ,"Regular Expression: " + analyzer.$regex
                 ,"Regular Expression Flags: "
-                ,JSON.stringify(analyzer.$flags)
+                ,toJSON( analyzer.$flags )
                 ,["Regular Expression Sample Matching String: "
                 ,"// Experimental Feature"
                 ,"// Generates a random string which is supposed to match the regular expression"].join("\n")
@@ -246,8 +246,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
         params = params && params.hash ? appRouter.unglue( params.hash ) : null;
         if ( params && params.action && appTask[params.action] )
         {
+            var appModel = $screen.modelview( 'model' );
             if ( params.regex ) appModel.set('regex', params.regex, 1);
-            appTask[ params.action ]( );
+            appTask[ params.action ]( appModel );
         }
     });
     
@@ -266,33 +267,33 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
         }
         ,actions: { 
             analyze: function(evt, $el, data) {
+                var model=this.$model;
                 location.hash = '#' + appRouter.glue({
                     action: 'analyze',
-                    regex: appModel.get( 'regex' ),
+                    regex: model.get( 'regex' ),
                     t: new Date( ).getTime( )
                 });
             },
             
             peek: function(evt, $el, data) {
+                var model=this.$model;
                 location.hash = '#' + appRouter.glue({
                     action: 'peek',
-                    regex: appModel.get( 'regex' ),
+                    regex: model.get( 'regex' ),
                     t: new Date( ).getTime( )
                 });
             },
             
             generate: function(evt, $el, data) {
+                var model=this.$model;
                 location.hash = '#' + appRouter.glue({
                     action: 'generate',
-                    regex: appModel.get( 'regex' ),
+                    regex: model.get( 'regex' ),
                     t: new Date( ).getTime( )
                 });
             }
         }
     });
-    appView = $screen.modelview( 'view' );
-    appModel = appView.model( );
-    $screen.modelview( 'sync' );
         
     $window
         .on('resize', function( evt ) {

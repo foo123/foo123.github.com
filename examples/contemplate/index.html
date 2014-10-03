@@ -226,7 +226,7 @@
 // on DOM Ready
 jQuery(function($){
 
-    var $w = $(window), $screen = $('#screen'), model, view,
+    var $w = $(window), $screen = $('#screen'),
         tpl = $('#tpl'), tpl_tmp = $('#tpl_tmp'),  
         data = $('#data'), output = $('#output'),  render = $('#render'), 
         tplEditor, dataEditor, width, height, json_mode,
@@ -272,7 +272,7 @@ jQuery(function($){
         }
         ,actions: { 
             render: function(evt, $el, data) {
-                var data;
+                var model=this.$model, data;
                 /*
                 if ( c != pc ) // template has changed
                 {

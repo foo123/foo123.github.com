@@ -207,7 +207,7 @@ require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcasc
         endTime = (window.console && window.console.timeEnd) ? function(s) { window.console.timeEnd(s); } : function() {},
         Log = (window.console && window.console.log) ? function(s) { window.console.log(s); } : function() {},
         
-        model, view, $screen = $('#screen'),
+        $screen = $('#screen'),
         wait = $('#wait'), rundetect = $('#rundetect'), 
         controlsContainer = $('#controls')[ 0 ],
         baseUrl = location.href.split( '?' )[ 0 ],
@@ -305,9 +305,6 @@ require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcasc
             }
         }
     });
-    view = $screen.modelview( 'view' );
-    model = view.model( );
-    $screen.modelview( 'sync' );
     
     //Check File API support
     if ( window.File && window.FileList && window.FileReader )

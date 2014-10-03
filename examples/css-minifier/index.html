@@ -243,7 +243,7 @@ div
 // on DOM Ready
 jQuery(function($){
 
-    var $w = $(window), $screen = $('#screen'), model, view,
+    var $w = $(window), $screen = $('#screen'), 
         code = $('#code'), output = $('#output'), apply = $('#apply'),
         cssmin = new CSSMin.Processor(),
         cssbeautifier = new CSSBeautifier(),
@@ -312,7 +312,7 @@ jQuery(function($){
         }
         ,actions: { 
             process: function(evt, $el, data) {
-                var css = codeEditor.getValue(), res, beau = model.get('beautify');
+                var model=this.$model, css = codeEditor.getValue(), res, beau = model.get('beautify');
                 cssbeautifier.skipComments = 0;
                 cssmin.removeComments = model.get('comments');
                 cssmin.doMinify = !beau && model.get('minify');
@@ -329,6 +329,7 @@ jQuery(function($){
             },
             
             lineWrap: function(evt, $el, data) {
+                var model=this.$model;
                 if ( model.get('wrap') )
                 {
                     codeEditor.setOption('lineWrapping', true);
@@ -351,9 +352,6 @@ jQuery(function($){
     });
     
     $w.trigger('resize');
-    view = $screen.modelview( 'view' );
-    model = view.model( );
-    $screen.modelview( 'sync' );
     apply.click( );
 });
 //]]></script>

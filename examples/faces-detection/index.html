@@ -156,7 +156,7 @@ require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcasc
         endTime = (window.console && window.console.timeEnd) ? function(s) { window.console.timeEnd(s); } : function() {},
         Log = (window.console && window.console.log) ? function(s) { window.console.log(s); } : function() {},
         
-        model, view, $screen = $('#screen'),
+        $screen = $('#screen'),
         wait = $('#wait'),
         baseUrl = location.href.split( '?' )[ 0 ],
         useParallel = (/[?&]parallel\b/.test(location.href)) ? Parallel : false,
@@ -238,9 +238,6 @@ require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcasc
             }
         }
     });
-    view = $screen.modelview( 'view' );
-    model = view.model( );
-    $screen.modelview( 'sync' );
     
     wait.show( );
     DetectFeature( defaultImage );

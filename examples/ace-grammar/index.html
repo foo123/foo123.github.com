@@ -381,7 +381,7 @@ require(['jQuery', 'ModelView'],
    // on DOM Ready
     jQuery(function($){
     
-        var $w = $(window), $screen = $('#screen'), model, view,
+        var $w = $(window), $screen = $('#screen'), 
             code = $('#code'), grammar = $('#grammar'), apply = $('#apply'), 
             _mode = "customMode", json_mode, commands, options,
             Editor, codeEditor, grammarEditor, width, height,
@@ -480,41 +480,6 @@ require(['jQuery', 'ModelView'],
         };
         ace.config.defineOptions(Editor.prototype, "editor", options);
 
-        $screen.modelview({
-            autobind: true
-            ,bindAttribute: 'data-bind'
-            
-            ,model: {
-                id: 'model'
-                ,data: { 
-                    annotate: false
-                }
-                ,types: { 
-                    annotate: $.ModelView.Type.Cast.BOOLEAN
-                }
-            }
-            ,actions: { 
-                apply: function(evt, $el, data) {
-                    var gramm, lines, len, i, line, gramm_mode;
-                    lines = grammarEditor.getValue().split("\n");
-                    len = lines.length;
-                    gramm = [];
-                    for (i=0; i<len; i++)
-                    {
-                        // remove comments
-                        line = lines[i].replace(/^\s+/, '');
-                        if ('//' == line.substr(0, 2)) continue;
-                        gramm.push( lines[i] );
-                    }
-                    gramm = JSON.parse(gramm.join("\n"));
-                    gramm_mode = AceGrammar.getMode( gramm );
-                    if ( model.get('annotate') )
-                        gramm_mode.supportGrammarAnnotations = true;
-                    codeEditor.getSession().setMode( gramm_mode );
-                }
-            }
-        });
-        
         ace.config.loadModule("ace/ext/language_tools", function() {
             
             codeEditor = ace.edit('aceCode');
@@ -536,9 +501,41 @@ require(['jQuery', 'ModelView'],
             grammarEditor.getSession().setMode( json_mode );
             grammarEditor.setTheme("ace/theme/twilight");
             
-            view = $screen.modelview( 'view' );
-            model = view.model( );
-            $screen.modelview( 'sync' );
+            $screen.modelview({
+                autobind: true
+                ,bindAttribute: 'data-bind'
+                
+                ,model: {
+                    id: 'model'
+                    ,data: { 
+                        annotate: false
+                    }
+                    ,types: { 
+                        annotate: $.ModelView.Type.Cast.BOOLEAN
+                    }
+                }
+                ,actions: { 
+                    apply: function(evt, $el, data) {
+                        var model=this.$model, gramm, lines, len, i, line, gramm_mode;
+                        lines = grammarEditor.getValue().split("\n");
+                        len = lines.length;
+                        gramm = [];
+                        for (i=0; i<len; i++)
+                        {
+                            // remove comments
+                            line = lines[i].replace(/^\s+/, '');
+                            if ('//' == line.substr(0, 2)) continue;
+                            gramm.push( lines[i] );
+                        }
+                        gramm = JSON.parse(gramm.join("\n"));
+                        gramm_mode = AceGrammar.getMode( gramm );
+                        if ( model.get('annotate') )
+                            gramm_mode.supportGrammarAnnotations = true;
+                        codeEditor.getSession().setMode( gramm_mode );
+                    }
+                }
+            });
+            
             //apply.trigger('click');
         });
     });

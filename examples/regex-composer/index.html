@@ -215,12 +215,12 @@ new RegExComposer( )
 
     .either( )
 
-        .characterGroup( false )
-            .characters( 'a', 'b', 'c', '.' )
+        .charGroup( false )
+            .chars( 'a', 'b', 'c', '.' )
             .range( 'd', 'f' )
         .end( )
 
-        .match( '**aabb**' )
+        .literal( '**aabb**', true )
 
         .any( )
 
@@ -241,7 +241,7 @@ new RegExComposer( )
             <strong>Doc:</strong><br /><br />
             <div class="fluid col-1-1 accordion vertical">
             <section id="start-of-input" class="fluid col-1-1 float-left">
-                <h2><a href="#start-of-input">startOfInput</a></h2>
+                <h2><a href="#start-of-input">startOfInput / startOfLine</a></h2>
                 <p>
                     <strong>&quot;^&quot;</strong> Matches beginning of input. If the multiline flag is set to true, also matches immediately after a line break character.
                     <br /><br />
@@ -253,7 +253,7 @@ new RegExComposer( )
                 </p>
             </section>
             <section id="end-of-input" class="fluid col-1-1 float-left">
-                <h2><a href="#end-of-input">endOfInput</a></h2>
+                <h2><a href="#end-of-input">endOfInput / endOfLine</a></h2>
                 <p>
                     <strong>&quot;$&quot;</strong> Matches end of input. If the multiline flag is set to true, also matches immediately before a line break character.
                     <br /><br />
@@ -307,12 +307,14 @@ new RegExComposer( )
                     Example: <code>composer.word(false);</code>
                 </p>
             </section>
-            <section id="match" class="fluid col-1-1 float-left">
-                <h2><a href="#match">match</a></h2>
+            <section id="literal" class="fluid col-1-1 float-left">
+                <h2><a href="#literal">literal / match</a></h2>
                 <p>
                     Matches a literal string.
                     <br /><br />
-                    Example: <code>composer.match("**aabb**");</code>
+                    Example: <code>composer.literal("**aabb**", wrapInParenthesis=false);</code>
+                    <br /><br />
+                    Example: <code>composer.match("**aabb**", wrapInParenthesis=false);</code>
                 </p>
             </section>
             <section id="zero-or-more" class="fluid col-1-1 float-left">
@@ -372,7 +374,7 @@ new RegExComposer( )
                 </p>
             </section>
             <section id="group" class="fluid col-1-1 float-left">
-                <h2><a href="#group">group</a></h2>
+                <h2><a href="#group">group / subGroup / subgroup</a></h2>
                 <p>
                     <strong>&quot;(x)&quot;</strong> Matches 'x' and remembers the match, as the following example shows. The parentheses are called capturing parentheses.
                     <br /><br />
@@ -384,17 +386,17 @@ new RegExComposer( )
                 </p>
             </section>
             <section id="non-capturing-group" class="fluid col-1-1 float-left">
-                <h2><a href="#non-capturing-group">nonCapturingGroup</a></h2>
+                <h2><a href="#non-capturing-group">nonCaptureGroup / nonCaptureSubGroup</a></h2>
                 <p>
                     <strong>&quot;(?:x)&quot;</strong> Matches 'x' but does not remember the match. The parentheses are called non-capturing parentheses, and let you define subexpressions for regular expression operators to work with. Consider the sample expression <code>/(?:foo){1,2}/</code>. Without the non-capturing parentheses, the {1,2} characters would apply only to the last 'o' in 'foo'. With the capturing parentheses, the {1,2} applies to the entire word 'foo'.
                     <br /><br />
-                    Example: <code>composer.nonCapturingGroup();</code> (start of group)
+                    Example: <code>composer.nonCaptureGroup();</code> (start of group)
                     <br /><br />
                     Example: <code>composer.end();</code> (end of group)
                 </p>
             </section>
             <section id="lookahead-group" class="fluid col-1-1 float-left">
-                <h2><a href="#lookahead-group">lookAheadGroup</a></h2>
+                <h2><a href="#lookahead-group">lookAheadGroup / lookAheadSubGroup</a></h2>
                 <p>
                     <strong>&quot;x(?=y)&quot;</strong> Matches 'x' only if 'x' is followed by 'y'. This is called a lookahead.
                     <br /><br />
@@ -422,7 +424,7 @@ new RegExComposer( )
                 </p>
             </section>
             <section id="character-set" class="fluid col-1-1 float-left">
-                <h2><a href="#character-set">characterGroup</a></h2>
+                <h2><a href="#character-set">characterGroup / charGroup</a></h2>
                 <p>
                     <strong>&quot;[xyz]&quot;</strong> Character set. This pattern type matches any one of the characters in the brackets, including escape sequences. Special characters like the dot(.) and asterisk (*) are not special inside a character set, so they don't need to be escaped. You can specify a range of characters by using a hyphen, as the following examples illustrate.
                     <br /><br />
@@ -438,7 +440,7 @@ new RegExComposer( )
                 </p>
             </section>
             <section id="characters" class="fluid col-1-1 float-left">
-                <h2><a href="#characters">characters</a></h2>
+                <h2><a href="#characters">characters / chars</a></h2>
                 <p>
                     <strong>x, y, z</strong> Specify a set of characters to be matched in a character group.
                     <br /><br />
@@ -479,7 +481,7 @@ new RegExComposer( )
 <script>//<![CDATA[
 require(['jQuery', 'ModelView', 'RegExComposer'],
     function($, ModelView, RegExComposer) {
-    var model, view, $screen = $('#screen'),
+    var $screen = $('#screen'),
         codeEditor = document.getElementById('code'),
         width = codeEditor.clientWidth, height = codeEditor.clientHeight
     ;
@@ -511,12 +513,12 @@ require(['jQuery', 'ModelView', 'RegExComposer'],
         }
         ,actions: { 
             compose: function(evt, $el, data) {
-                var regex, e;
+                var regex, e, model = this.$model;
                 
                 try{
-                    regex = eval("(function(){return "+code.getValue()+";}())");
+                    regex = new Function("RegExComposer", "'use strict'; return "+code.getValue( )+";")( RegExComposer );
                 } catch (e) { 
-                    regex = "Error Occured"; 
+                    regex = "Error Occured!"; 
                 }
                 model.set('regex', regex, true);
             }
@@ -536,10 +538,6 @@ require(['jQuery', 'ModelView', 'RegExComposer'],
         code.setSize(width, height);
         
     }, false);
-    
-    view = $screen.modelview( 'view' );
-    model = view.model( );
-    $screen.modelview( 'sync' );
 });    
 //]]></script>
 
