@@ -194,7 +194,7 @@ function modelViewjQuery( ModelView, $ )
 var baseUrl = location.href.split( /[?#]/g )[ 0 ],
     notUsesjQuery = (/[?&]standalone\b/.test(location.href)),
     i, title, type, snippet, textarea, editor, entry,
-    container, container2, snippetsContainer = document.getElementById( 'snippets' );
+    container, container2, snippetsContainer = document.getElementById( 'snippets' ),
     snippets = [
         'html-snippet',
         notUsesjQuery ? 'js-snippet-without-jquery' : 'js-snippet-with-jquery'
