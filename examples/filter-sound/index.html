@@ -1,361 +1,361 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
-        <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-        <style type="text/css">
-            body {
-                background-color:#000;
-                color:#aaa;
-                cursor:arrow;
-            }
-            #container {
-                position:relative;
-                margin:0;
-                padding:0;
-                z-index:0;
-            }
-            #audio-container {
-                position:relative;
-                z-index:1000;
-            }
-            .button {
-                -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
-                -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
-                box-shadow:inset 0px 1px 0px 0px #f5978e;
-                background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
-                background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
-                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
-                background-color:#f24537;
-                -webkit-border-top-left-radius:20px;
-                -moz-border-radius-topleft:20px;
-                border-top-left-radius:20px;
-                -webkit-border-top-right-radius:20px;
-                -moz-border-radius-topright:20px;
-                border-top-right-radius:20px;
-                -webkit-border-bottom-right-radius:20px;
-                -moz-border-radius-bottomright:20px;
-                border-bottom-right-radius:20px;
-                -webkit-border-bottom-left-radius:20px;
-                -moz-border-radius-bottomleft:20px;
-                border-bottom-left-radius:20px;
-                text-indent:0;
-                border:1px solid #d02718;
-                display:inline-block;
-                color:#ffffff;
-                font-family:Arial;
-                font-size:15px;
-                font-weight:bold;
-                font-style:normal;
-                height:50px;
-                line-height:50px;
-                width:2000px;
-                text-decoration:none;
-                text-align:center;
-                text-shadow:1px 1px 0px #810e05;
-            }
-            .button:hover {
-                background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
-                background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
-                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
-                background-color:#c62d1f;
-            }.button:active {
-                position:relative;
-                top:1px;
-            }
-            .button {
-                width:120px;
-                height:40px;
-                line-height:40px;
-                cursor:pointer;
-                position:relative;
-            }
-            #forkongithub a{background:#c83022;color:#fff;}
-        </style>
-        <script src="../common/js/require.js"></script>
-        <script src="../common/js/require-config.js"></script>
-        <!--<script src="./filter.trioptic.js"></script>-->
-        
-        <title>Sound visualization with Filter.js</title>
-        
-    </head>
+    <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+    <style type="text/css">
+        body {
+            background-color:#000;
+            color:#aaa;
+            cursor:arrow;
+        }
+        #container {
+            position:relative;
+            margin:0;
+            padding:0;
+            z-index:0;
+        }
+        #audio-container {
+            position:relative;
+            z-index:1000;
+        }
+        .button {
+            -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
+            -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
+            box-shadow:inset 0px 1px 0px 0px #f5978e;
+            background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
+            background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
+            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
+            background-color:#f24537;
+            -webkit-border-top-left-radius:20px;
+            -moz-border-radius-topleft:20px;
+            border-top-left-radius:20px;
+            -webkit-border-top-right-radius:20px;
+            -moz-border-radius-topright:20px;
+            border-top-right-radius:20px;
+            -webkit-border-bottom-right-radius:20px;
+            -moz-border-radius-bottomright:20px;
+            border-bottom-right-radius:20px;
+            -webkit-border-bottom-left-radius:20px;
+            -moz-border-radius-bottomleft:20px;
+            border-bottom-left-radius:20px;
+            text-indent:0;
+            border:1px solid #d02718;
+            display:inline-block;
+            color:#ffffff;
+            font-family:Arial;
+            font-size:15px;
+            font-weight:bold;
+            font-style:normal;
+            height:50px;
+            line-height:50px;
+            width:2000px;
+            text-decoration:none;
+            text-align:center;
+            text-shadow:1px 1px 0px #810e05;
+        }
+        .button:hover {
+            background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
+            background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
+            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
+            background-color:#c62d1f;
+        }.button:active {
+            position:relative;
+            top:1px;
+        }
+        .button {
+            width:120px;
+            height:40px;
+            line-height:40px;
+            cursor:pointer;
+            position:relative;
+        }
+        #forkongithub a{background:#c83022;color:#fff;}
+    </style>
+    <script src="../common/js/require.js"></script>
+    <script src="../common/js/require-config.js"></script>
+    <!--<script src="./filter.trioptic.js"></script>-->
     
-    <body>
-        <span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
-        
-        <header id="header">
-            <h1>Sound Visualization with Filter.js</h1>
-        </header>
-        
-        <strong>A JS version of  <a href="http://lf8.org/simple2.swf" target="_blank">Trioptic visualization</a> 
-        (<a href="http://www.leebrimelow.com/as3-sound-spectrum-contest-results/" target="_blank">reference</a>) using Filter.js<strong>
+    <title>Sound visualization with Filter.js</title>
+    
+</head>
+
+<body>
+    <span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
+    
+    <header id="header">
+        <h1>Sound Visualization with Filter.js</h1>
+    </header>
+    
+    <strong>A JS version of  <a href="http://lf8.org/simple2.swf" target="_blank">Trioptic visualization</a> 
+    (<a href="http://www.leebrimelow.com/as3-sound-spectrum-contest-results/" target="_blank">reference</a>) using Filter.js<strong>
+    <br />
+    
+    <div class="fluid col-1-1 text-left" style="margin-top: 10px; padding-left: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
+    
+    <div id="audio-container">
         <br />
         
-        <div class="fluid col-1-1 text-left" style="margin-top: 10px; padding-left: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
+        <audio id="audio" controls="true">
+            <source src="../common/assets/trioptic.ogg" type="audio/ogg">
+            <source src="../common/assets/trioptic.mp3" type="audio/mpeg; codecs='mp3'">
+            <!--<source src="../common/assets/circlesquare-trancenation.ogg" type="audio/ogg">
+            <source src="../common/assets/circlesquare-trancenation.mp3" type="audio/mpeg; codecs='mp3'">-->
+            Audio is not supported
+        </audio>
         
-        <div id="audio-container">
-            <br />
-            
-            <audio id="audio" controls="true">
-                <source src="../common/assets/trioptic.ogg" type="audio/ogg">
-                <source src="../common/assets/trioptic.mp3" type="audio/mpeg; codecs='mp3'">
-                <!--<source src="../common/assets/circlesquare-trancenation.ogg" type="audio/ogg">
-                <source src="../common/assets/circlesquare-trancenation.mp3" type="audio/mpeg; codecs='mp3'">-->
-                Audio is not supported
-            </audio>
-            
-            <span id="loading" style="display:inline-block; margin-left:20px">Loading Audio ... </span>
-            
-            <a href="#" id="parallel" class="button">Parallel</a>
-            <a href="#" id="synchronous" class="button">Synchronous</a>
-            
-            <br />
-            <div id="statsContainer"></div>
-            
-        </div>
+        <span id="loading" style="display:inline-block; margin-left:20px">Loading Audio ... </span>
         
-        <div id="container" class="fluid col-1-1"></div>
+        <a href="#" id="synchronous" class="button">Synchronous</a>
+        <a href="#" id="parallel" class="button">Parallel</a>
         
-        <script>//<![CDATA[
+        <br />
+        <div id="statsContainer"></div>
         
-       /**
-         * Provides requestAnimationFrame in a cross browser way.
-         * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-         */
+    </div>
+    
+    <div id="container" class="fluid col-1-1"></div>
+    
+    <script>//<![CDATA[
+    
+   /**
+     * Provides requestAnimationFrame in a cross browser way.
+     * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+     */
 
-        if ( !window.requestAnimationFrame ) {
+    if ( !window.requestAnimationFrame ) {
 
-            window.requestAnimationFrame = ( function() {
+        window.requestAnimationFrame = ( function() {
 
-                return window.webkitRequestAnimationFrame ||
-                window.mozRequestAnimationFrame ||
-                window.oRequestAnimationFrame ||
-                window.msRequestAnimationFrame ||
-                function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
+            return window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.oRequestAnimationFrame ||
+            window.msRequestAnimationFrame ||
+            function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
 
-                    window.setTimeout( callback, 1000 / 60 );
+                window.setTimeout( callback, 1000 / 60 );
 
-                };
+            };
 
-            } )();
+        } )();
 
-        }
-            
-        require.config({
-            paths: {
-                FilterBundle: "filter.bundle",
-                FilterTrioptic: "../../filter-sound/filter.trioptic"
-            },
-            bundles: {
-                FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_PLUGINS"]
-            },
-            shim: {
-                FilterTrioptic: {
-                    deps: ["FILTER"],
-                    exports: "FILTER.TriopticSimpleFilter",
-                    init: function( $F ) {
-                        var link = document.createElement('a');
-                        link.href = "./filter.trioptic.js";
-                        $F.TriopticSimpleFilter.prototype.path = $F.getPath({uri: link.protocol + "//" + link.host + link.pathname + link.search + link.hash});
-                        return $F.TriopticSimpleFilter;
-                    }
+    }
+        
+    require.config({
+        paths: {
+            FilterBundle: "filter.bundle",
+            FilterTrioptic: "../../filter-sound/filter.trioptic"
+        },
+        bundles: {
+            FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_PLUGINS"]
+        },
+        shim: {
+            FilterTrioptic: {
+                deps: ["FILTER"],
+                exports: "FILTER.TriopticSimpleFilter",
+                init: function( $F ) {
+                    var link = document.createElement('a');
+                    link.href = "./filter.trioptic.js";
+                    $F.TriopticSimpleFilter.prototype.path = $F.getPath({uri: link.protocol + "//" + link.host + link.pathname + link.search + link.hash});
+                    return $F.TriopticSimpleFilter;
                 }
             }
-        });
-        require(['Classy', 'Asynchronous', 'FILTER', 'FILTER_PLUGINS', 'Dancer', 'utils', 'Stats'/*, 'domReady!'*/], 
-            function( $_1, $_2, $_3, $F, Dancer, U, Stats ) {
+        }
+    });
+    require(['Classy', 'Asynchronous', 'FILTER', 'FILTER_PLUGINS', 'Dancer', 'utils', 'Stats'/*, 'domReady!'*/], 
+        function( $_1, $_2, $_3, $F, Dancer, U, Stats ) {
+        
+        var useParallelFilters = $F.Browser.supportsWorker && /(&|\?)parallel\b/i.test( location.href )
+            ,baseUrl = location.href.split(/#|\?/)[ 0 ]
+            ,audio, container, statsContainer
             
-            var useParallelFilters = $F.Browser.supportsWorker && /(&|\?)parallel\b/i.test( location.href )
-                ,baseUrl = location.href.split(/#|\?/)[ 0 ]
-                ,audio, container, statsContainer
-                
-                ,AUDIO_FILE = '../common/assets/trioptic'
-                ,flashSWF = '../common/js/soundmanager2.swf'
-                ,flashJS  = '../common/js/soundmanager2.js'
-                
-                ,visualization, upscaledVisualization, dancer
-                ,trioptic, displace, blur, triopticVisualizer
-                ,z=0, renderInterval=60  
+            ,AUDIO_FILE = '../common/assets/trioptic'
+            ,flashSWF = '../common/js/soundmanager2.swf'
+            ,flashJS  = '../common/js/soundmanager2.js'
+            
+            ,visualization, upscaledVisualization, dancer
+            ,trioptic, displace, blur, triopticVisualizer
+            ,z=0, renderInterval=60  
 
-                ,w = window.innerWidth,  h = window.innerHeight
-                ,windowHalfX = w / 2,  windowHalfY = h / 2
-                // upscale
-                ,upscaleX = 1.7, upscaleY = 1.7, invupscaleX = 1.0/upscaleX, invupscaleY = 1.0/upscaleY
-                // downscale
-                ,_width = ~~(Math.min(900, w)*invupscaleX), _height = ~~(Math.min(400, h)*invupscaleY)
+            ,w = window.innerWidth,  h = window.innerHeight
+            ,windowHalfX = w / 2,  windowHalfY = h / 2
+            // upscale
+            ,upscaleX = 1.7, upscaleY = 1.7, invupscaleX = 1.0/upscaleX, invupscaleY = 1.0/upscaleY
+            // downscale
+            ,_width = ~~(Math.min(900, w)*invupscaleX), _height = ~~(Math.min(400, h)*invupscaleY)
+        ;
+        
+        U.Get('parallel').Event( 'click', function( ) {
+            location.href = baseUrl + '?parallel=1';
+        });
+        U.Get('synchronous').Event( 'click', function( ) {
+            location.href = baseUrl + '?synchronous=1';
+        });
+        
+        window.FILTER = $F; // global for external plugin
+        require(['FilterTrioptic'], init);
+        return;
+        
+        function prepareAudio( ) 
+        {
+            /*
+            * Dancer.js magic
+            */
+            Dancer.setOptions({ flashSWF: flashSWF, flashJS: flashJS });
+
+            dancer = new Dancer( );
+
+            //dancer.load({ src: AUDIO_FILE, codecs: [ 'ogg', 'mp3' ]});
+            dancer.load( audio );
+            
+            Dancer.isSupported( ) || audioLoaded( );
+            !dancer.isLoaded( ) ? dancer.bind( 'loaded', audioLoaded ) : audioLoaded( );
+        }
+        
+      /*
+       * Loading
+       */
+        function audioLoaded( ) 
+        {
+            var
+                loading = U.Get( 'loading' ),
+                anchor  = U.GetTag('A'),
+                supported = Dancer.isSupported(),
+                p
+            ;
+
+            anchor
+                .Style('className', 'button', 1)
+                .Add( U.Text( supported ? 'Play!' : 'Close' ) )
+                .Attribute( 'href', '#' )
             ;
             
-            U.Get('parallel').Event( 'click', function( ) {
-                location.href = baseUrl + '?parallel=1';
+            loading
+                .Html('')
+                .AddEl( anchor )
+            ;
+
+            if ( !supported ) 
+            {
+                p = U.GetTag('P')
+                    .Add( U.Text( 'Your browser does not currently support either Web Audio API or Audio Data API. The audio may play, but the visualizers will not move to the music; check out the latest Chrome or Firefox browsers!' ) )
+                ;
+                loading.AddEl( p );
+            }
+
+            anchor.Event( 'click', function () {
+                loading.Style('display', 'none');
+                dancer.play(); 
+                animate();
             });
-            U.Get('synchronous').Event( 'click', function( ) {
-                location.href = baseUrl + '?synchronous=1';
+            /*audio.addEventListener( 'ended', function () {
+                console.log('Audio stopped');
+            });*/
+        }
+        
+        function prepareFilters( ) 
+        {
+             // prepare visualization image
+            //visualization = new $F.Image().fill('rgb(0,0,0)', 0, 0, _width, _height);
+            //container.Add( visualization.domElement );
+             // prepare down-scaled visualization image
+            visualization = $F.Image( ).fill('rgb(0,0,0)', 0, 0, _width, _height);
+            // up-scaled final rendered visualization image
+            upscaledVisualization = $F.ScaledImage( upscaleX, upscaleY );
+            container.Add( upscaledVisualization.domElement );
+            
+            
+            // prepare filters
+            trioptic = new $F.TriopticSimpleFilter( );
+            
+            displace = new $F.DisplacementMapFilter( );
+            displace.startX = 0;  
+            displace.startY = 0;
+            displace.componentX = $F.CHANNEL.BLUE;  
+            displace.componentY = $F.CHANNEL.GREEN;
+            
+            blur = new $F.ConvolutionMatrixFilter( ).boxBlur( 3 );
+            
+            triopticVisualizer = new $F.CompositeFilter([ trioptic, displace, blur ]).stable( true );
+            
+            if ( useParallelFilters )
+            {
+                // use parallel worker filters, along with the custom Trioptic filter
+                triopticVisualizer.worker( ).scripts( trioptic.path.file );
+            }
+        }
+
+        function animate( ) 
+        {
+            if ( !dancer.isPlaying( ) ) 
+            { 
+                z = 0; 
+                return; 
+            }
+            
+            stats.begin( );
+            
+            var spec = 6 * dancer.getFrequency( 0, 1 ), 
+                w = visualization.width, 
+                s = w * spec * spec * spec * 0.3333
+            ;
+            
+            // set the various filters parameters
+            trioptic.spectrum = s;
+            
+            displace.setMap( visualization );
+            displace.scaleX = z * s * 0.1;  
+            displace.scaleY = z + 3;
+            
+            // apply the visualization
+            triopticVisualizer.apply( visualization, visualization, function( ) {
+                // up-scale it for rendering
+                upscaledVisualization.setImage( visualization.canvasElement );
+                
+                stats.end( );
+                
+                // update any param needed
+                z += 0.02;
+                //z += 0.1;
+                
+                requestAnimationFrame( animate );
+                //setTimeout(animate, renderInterval);
             });
-            
-            window.FILTER = $F; // global for external plugin
-            require(['FilterTrioptic'], init);
-            return;
-            
-            function prepareAudio( ) 
+        }
+
+        function init( ) 
+        {
+            if ( useParallelFilters && !$F.Browser.supportsWorker )
             {
-                /*
-                * Dancer.js magic
-                */
-                Dancer.setOptions({ flashSWF: flashSWF, flashJS: flashJS });
-
-                dancer = new Dancer( );
-
-                //dancer.load({ src: AUDIO_FILE, codecs: [ 'ogg', 'mp3' ]});
-                dancer.load( audio );
-                
-                Dancer.isSupported( ) || audioLoaded( );
-                !dancer.isLoaded( ) ? dancer.bind( 'loaded', audioLoaded ) : audioLoaded( );
+                alert('Browser does not support workers');
             }
             
-          /*
-           * Loading
-           */
-            function audioLoaded( ) 
-            {
-                var
-                    loading = U.Get( 'loading' ),
-                    anchor  = U.GetTag('A'),
-                    supported = Dancer.isSupported(),
-                    p
-                ;
-
-                anchor
-                    .Style('className', 'button', 1)
-                    .Add( U.Text( supported ? 'Play!' : 'Close' ) )
-                    .Attribute( 'href', '#' )
-                ;
-                
-                loading
-                    .Html('')
-                    .AddEl( anchor )
-                ;
-
-                if ( !supported ) 
-                {
-                    p = U.GetTag('P')
-                        .Add( U.Text( 'Your browser does not currently support either Web Audio API or Audio Data API. The audio may play, but the visualizers will not move to the music; check out the latest Chrome or Firefox browsers!' ) )
-                    ;
-                    loading.AddEl( p );
-                }
-
-                anchor.Event( 'click', function () {
-                    loading.Style('display', 'none');
-                    dancer.play(); 
-                    animate();
-                });
-                /*audio.addEventListener( 'ended', function () {
-                    console.log('Audio stopped');
-                });*/
-            }
+            window.onunload = function( ) { 
+                if ( triopticVisualizer ) triopticVisualizer.dispose( true );
+                trioptic = null;
+                displace = null;
+                blur = null;
+                triopticVisualizer = null;
+            };
             
-            function prepareFilters( ) 
-            {
-                 // prepare visualization image
-                //visualization = new $F.Image().fill('rgb(0,0,0)', 0, 0, _width, _height);
-                //container.Add( visualization.domElement );
-                 // prepare down-scaled visualization image
-                visualization = $F.Image( ).fill('rgb(0,0,0)', 0, 0, _width, _height);
-                // up-scaled final rendered visualization image
-                upscaledVisualization = $F.ScaledImage( upscaleX, upscaleY );
-                container.Add( upscaledVisualization.domElement );
-                
-                
-                // prepare filters
-                trioptic = new $F.TriopticSimpleFilter( );
-                
-                displace = new $F.DisplacementMapFilter( );
-                displace.startX = 0;  
-                displace.startY = 0;
-                displace.componentX = $F.CHANNEL.BLUE;  
-                displace.componentY = $F.CHANNEL.GREEN;
-                
-                blur = new $F.ConvolutionMatrixFilter( ).boxBlur( 3 );
-                
-                triopticVisualizer = new $F.CompositeFilter([ trioptic, displace, blur ]).stable( true );
-                
-                if ( useParallelFilters )
-                {
-                    // use parallel worker filters, along with the custom Trioptic filter
-                    triopticVisualizer.worker( ).scripts( trioptic.path.file );
-                }
-            }
+            container = U.Get('container'); 
+            statsContainer = U.Get('statsContainer');
+            audio = U.ID('audio');
 
-            function animate( ) 
-            {
-                if ( !dancer.isPlaying( ) ) 
-                { 
-                    z = 0; 
-                    return; 
-                }
-                
-                stats.begin( );
-                
-                var spec = 6 * dancer.getFrequency( 0, 1 ), 
-                    w = visualization.width, 
-                    s = w * spec * spec * spec * 0.3333
-                ;
-                
-                // set the various filters parameters
-                trioptic.spectrum = s;
-                
-                displace.setMap( visualization );
-                displace.scaleX = z * s * 0.1;  
-                displace.scaleY = z + 3;
-                
-                // apply the visualization
-                triopticVisualizer.apply( visualization, visualization, function( ) {
-                    // up-scale it for rendering
-                    upscaledVisualization.setImage( visualization.canvasElement );
-                    
-                    stats.end( );
-                    
-                    // update any param needed
-                    z += 0.02;
-                    //z += 0.1;
-                    
-                    requestAnimationFrame( animate );
-                    //setTimeout(animate, renderInterval);
-                });
-            }
-
-            function init( ) 
-            {
-                if ( useParallelFilters && !$F.Browser.supportsWorker )
-                {
-                    alert('Browser does not support workers');
-                }
-                
-                window.onunload = function( ) { 
-                    if ( triopticVisualizer ) triopticVisualizer.dispose( true );
-                    trioptic = null;
-                    displace = null;
-                    blur = null;
-                    triopticVisualizer = null;
-                };
-                
-                container = U.Get('container'); 
-                statsContainer = U.Get('statsContainer');
-                audio = U.ID('audio');
-
-                stats = new Stats( );
-                stats.setMode( 1 );
-                statsContainer.Add( stats.domElement );
-                
-                prepareFilters( );
-                prepareAudio( );
-            }
+            stats = new Stats( );
+            stats.setMode( 1 );
+            statsContainer.Add( stats.domElement );
             
-            //init( );
-            
-         });   
-        //]]></script>
-    </body>
+            prepareFilters( );
+            prepareAudio( );
+        }
+        
+        //init( );
+        
+     });   
+    //]]></script>
+</body>
 </html>

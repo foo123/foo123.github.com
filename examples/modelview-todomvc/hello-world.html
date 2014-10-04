@@ -97,7 +97,7 @@
             <h1>ModelView.js Hello World!</h1>
         </header>
         
-<div id="html-snippet" data-title="HTML Code" data-type="htmlmixed">
+<div id="html-snippet" data-snippet="HTML Code" data-snippet-type="htmlmixed">
 <div id="screen">
     Hello $(msg) &nbsp;&nbsp;(updated live on <i>change</i>)
     <br /><br />
@@ -112,7 +112,7 @@
 <button class="button" onclick="useWithjQuery()" style="width:200px">Use with jQuery</button>
 </p>
 
-<script id="js-snippet-without-jquery" data-title="JS Code (without jQuery)" data-type="javascript">
+<script id="js-snippet-without-jquery" data-snippet="JS Code (without jQuery)" data-snippet-type="javascript">
 function modelView( ModelView ) 
 {
     "use strict";
@@ -125,8 +125,7 @@ function modelView( ModelView )
         { msg: ModelView.Type.Cast.STR },
         // model data validators (if any) here ..
         { msg: ModelView.Validation.Validate.NOT_EMPTY }
-        ),
-        {bind: 'data-bind'}
+        )
     )
     .action('alert_msg', function( evt, el, bindData ) {
         alert( this.$model.get('msg') );
@@ -135,13 +134,14 @@ function modelView( ModelView )
         // or even this, if you want the raw data without any processing
         //alert( this.$model.$data.msg );
     })
+    .attribute( 'bind', 'data-bind' )
     .autobind( true )
     .bind( [ 'change', 'click' ], document.getElementById('screen') )
     .sync( )
     ;
 }
 </script>
-<script id="js-snippet-with-jquery" data-title="JS Code (as jQuery plugin/widget)" data-type="javascript">
+<script id="js-snippet-with-jquery" data-snippet="JS Code (as jQuery plugin/widget)" data-snippet-type="javascript">
 function modelViewjQuery( ModelView, $ ) 
 {
     "use strict";
@@ -153,6 +153,7 @@ function modelViewjQuery( ModelView, $ )
         id: 'view',
         
         autobind: true,
+        autoSync: true,
         bindAttribute: 'data-bind',
         inlineTplFormat: '$(__KEY__)',
         events: [ 'change', 'click' ],
@@ -210,14 +211,14 @@ require(['ModelView', 'jQuery'], notUsesjQuery ? modelView : modelViewjQuery);
 for (i=0; i<snippets.length; i++)
 {
     entry = document.getElementById( snippets[ i ] );
-    type = entry.getAttribute('data-type');
+    type = entry.getAttribute('data-snippet-type');
     container = document.createElement('div');
     container.className = 'fluid col-1-' + snippets.length;
     container2 = document.createElement('div');
     container2.className = 'fluid col-9-10';
     container2.style.margin = '10px 5px';
     title = document.createElement('h4');
-    title.innerHTML = entry.getAttribute('data-title') + ': <br />';
+    title.innerHTML = entry.getAttribute('data-snippet') + ': <br />';
     textarea = document.createElement('textarea');
     textarea.className = 'fluid col-1-1';
     container2.appendChild( title );
