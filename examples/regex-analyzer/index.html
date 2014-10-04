@@ -171,6 +171,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
         toJSON = JSON.stringify
     ;
     
+    $MV.jquery( $ );
+    
     code = CodeMirror.fromTextArea(output, {
         mode: "application/json",
         lineWrapping: true,
@@ -234,7 +236,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
                 ,["Regular Expression Sample Matching String: "
                 ,"// Experimental Feature"
                 ,"// Generates a random string which is supposed to match the regular expression"].join("\n")
-                ,sample
+                ,sample + ' (' + (analyzer.getRegex().test(sample) ? 'MATCHES' : 'FAILED') + ')'
             ].join( "\n\n" );
             
             code.setValue( output );

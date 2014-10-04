@@ -234,6 +234,8 @@ jQuery(function($){
         init = true;
     ;
     
+    ModelView.jquery( $ );
+    
     json_mode = CodeMirrorGrammar.getMode(json_grammar);
     CodeMirror.defineMode('json', json_mode);
     json_mode.supportGrammarAnnotations = true;

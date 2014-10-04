@@ -4,6 +4,8 @@
         function( $, Storage, Contemplate, Dromeo, ModelView ) {
         "use strict";
 
+        if ( ModelView.jquery ) ModelView.jquery( $ );
+        
         // Contemplate Templates
         Contemplate.add({
             "todo-tpl": "#todo-tpl"
@@ -36,7 +38,7 @@
             
             ,do_edit: function(evt, $el, data) {
                 var todo = this.$model,
-                    $todo = this.$dom
+                    $todo = $(this.$dom)
                 ;
                 if ( !todo.get('editing') )
                 {
@@ -47,8 +49,9 @@
             }
             
             ,do_stopEditing: function(evt, $el, data) {
+                $el = $($el);
                 var todo = this.$model,
-                    $todo = this.$dom,
+                    $todo = $(this.$dom),
                     title, todoList
                 ;
                 
@@ -88,8 +91,9 @@
             }
             
             ,do_complete: function(evt, $el, data) {
+                $el = $($el);
                 var todo = this.$model,
-                    $todo = this.$dom, 
+                    $todo = $(this.$dom), 
                     completeIt = $el.is( ':checked' ), 
                     completed = todo.get( 'completed' ),
                     todoList
@@ -124,8 +128,9 @@
             }
             
             ,do_remove: function(evt, $el, data) {
+                $el = $($el);
                 var todo = this.$model,
-                    $todo = this.$dom, 
+                    $todo = $(this.$dom), 
                     todoList
                 ;
                 
@@ -307,6 +312,7 @@
             
             ,actions: {
                 addTodo: function(evt, $el, data){
+                    $el = $($el);
                     var Model = this.$model, title = $el.val( ), $todoModelView, todoList;
                     
                     if ( title && $.trim( title ).length )
@@ -329,6 +335,7 @@
                 }
                 
                 ,allCompleted: function(evt, $el, data){
+                    $el = $($el);
                     var Model = this.$model, todoList, notcompleted, visible, completed, isChecked;
                     
                     isChecked = $el.is( ':checked' );
@@ -389,6 +396,7 @@
                 }
                 
                 ,removeCompleted: function(evt, $el, data){
+                    $el = $($el);
                     var Model = this.$model, i, todoList, l;
                     
                     todoList = Model.get( 'todoList' );

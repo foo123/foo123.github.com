@@ -486,6 +486,8 @@ require(['jQuery', 'ModelView', 'RegExComposer'],
         width = codeEditor.clientWidth, height = codeEditor.clientHeight
     ;
     
+    ModelView.jquery( $ );
+    
     code = CodeMirror.fromTextArea(codeEditor, {
         mode: "javascript",
         lineWrapping: true,

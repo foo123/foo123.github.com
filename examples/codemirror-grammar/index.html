@@ -395,6 +395,8 @@ require(['jQuery', 'ModelView'],
             log = (console && console.log) ? function(s){console.log(s);} : function(){}
         ;
         
+        ModelView.jquery( $ );
+    
         json_mode = CodeMirrorGrammar.getMode( json_grammar );
         CodeMirror.defineMode( 'json', json_mode );
         json_mode.supportGrammarAnnotations = true;
@@ -437,7 +439,7 @@ require(['jQuery', 'ModelView'],
                     annotate: false
                 }
                 ,types: { 
-                    annotate: $.ModelView.Type.Cast.BOOLEAN
+                    annotate: $.ModelView.Type.Cast.BOOL
                 }
             }
             ,actions: { 

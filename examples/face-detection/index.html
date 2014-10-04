@@ -218,6 +218,8 @@ require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcasc
         defaultImage = '../common/assets/model1.jpg',  customImageSrc = null
     ;
 
+    ModelView.jquery( $ );
+    
     function DetectFeature( src )
     {
         image = new Image();

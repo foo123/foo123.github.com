@@ -388,6 +388,8 @@ require(['jQuery', 'ModelView'],
             log = (console && console.log) ? function(s){console.log(s);} : function(){}
         ;
         
+        ModelView.jquery( $ );
+    
         Editor = ace.require("ace/editor").Editor;
         json_mode = AceGrammar.getMode(json_grammar);
         json_mode.supportGrammarAnnotations = true;
@@ -511,7 +513,7 @@ require(['jQuery', 'ModelView'],
                         annotate: false
                     }
                     ,types: { 
-                        annotate: $.ModelView.Type.Cast.BOOLEAN
+                        annotate: $.ModelView.Type.Cast.BOOL
                     }
                 }
                 ,actions: { 

@@ -97,7 +97,7 @@
             <h1>ModelView.js Hello World!</h1>
         </header>
         
-<div id="html-snippet">
+<div id="html-snippet" data-title="HTML Code" data-type="htmlmixed">
 <div id="screen">
     Hello $(msg) &nbsp;&nbsp;(updated live on <i>change</i>)
     <br /><br />
@@ -105,89 +105,142 @@
     <button class="button" title="$(msg)" data-bind='{"click":"alert_msg"}'>Hello</button>
 </div>
 </div>
+
+<br />
+<p>    
+<button class="button" onclick="useWithoutjQuery()" style="width:200px">Use Standalone</button>
+<button class="button" onclick="useWithjQuery()" style="width:200px">Use with jQuery</button>
+</p>
+
+<script id="js-snippet-without-jquery" data-title="JS Code (without jQuery)" data-type="javascript">
+function modelView( ModelView ) 
+{
+    "use strict";
+
+    new ModelView.View('view', 
+        new ModelView.Model('model', 
+        // model data here ..
+        { msg: 'World!' },
+        // model data type-casters (if any) here ..
+        { msg: ModelView.Type.Cast.STR },
+        // model data validators (if any) here ..
+        { msg: ModelView.Validation.Validate.NOT_EMPTY }
+        ),
+        {bind: 'data-bind'}
+    )
+    .action('alert_msg', function( evt, el, bindData ) {
+        alert( this.$model.get('msg') );
+        // this also works
+        //alert( this.model().get('msg') );
+        // or even this, if you want the raw data without any processing
+        //alert( this.$model.$data.msg );
+    })
+    .autobind( true )
+    .bind( [ 'change', 'click' ], document.getElementById('screen') )
+    .sync( )
+    ;
+}
+</script>
+<script id="js-snippet-with-jquery" data-title="JS Code (as jQuery plugin/widget)" data-type="javascript">
+function modelViewjQuery( ModelView, $ ) 
+{
+    "use strict";
+
+    // make sure the modelview jQuery plugin is added if not already
+    if ( ModelView.jquery ) ModelView.jquery( $ );
     
-<script id="js-snippet">
-!function( window, require, undef ) {
-    // use requireJS
-    require(['jQuery', 'ModelView'], 
-        function( $, ModelView ) {
-        "use strict";
-        // jQuery is a dependency
-        $('#screen').modelview({
+    $('#screen').modelview({
+        id: 'view',
+        
+        autobind: true,
+        bindAttribute: 'data-bind',
+        inlineTplFormat: '$(__KEY__)',
+        events: [ 'change', 'click' ],
+        
+        model: {
+            id: 'model',
             
-            id: 'view',
-            
-            autobind: true,
-            bindAttribute: 'data-bind',
-            inlineTplFormat: '$(__KEY__)',
-            events: [ 'change', 'click' ],
-            
-            model: {
-                id: 'model',
-                
-                data: {
-                    // model data here ..
-                    msg: 'World!'
-                },
-                
-                types: {
-                    // model data type-casters (if any) here ..
-                    msg: ModelView.Type.Cast.STR
-                },
-                
-                validators: {
-                    // model data validators (if any) here ..
-                    msg: ModelView.Validation.Validate.NOT_EMPTY
-                }
+            data: {
+                // model data here ..
+                msg: 'World!'
             },
             
-            actions: {
-                // custom view actions (if any) here ..
-                alert_msg: function( evt, $el, bindData ) {
-                    alert( this.model().get('msg') );
-                    // this also works
-                    //alert( this.$model.get('msg') );
-                }
+            types: {
+                // model data type-casters (if any) here ..
+                msg: ModelView.Type.Cast.STR
+            },
+            
+            validators: {
+                // model data validators (if any) here ..
+                msg: ModelView.Validation.Validate.NOT_EMPTY
             }
-
-        });
+        },
+        
+        actions: {
+            // custom view actions (if any) here ..
+            alert_msg: function( evt, el, bindData ) {
+                alert( this.$model.get('msg') );
+                // this also works
+                //alert( this.model().get('msg') );
+                // or even this, if you want the raw data without any processing
+                //alert( this.$model.$data.msg );
+            }
+        }
     });
-}(window, require);
+}
 </script>
-        
-        <br /><br /><br />
-        
-        <script>
-            var snippets = [
-                ['HTML Code', 'html-snippet', 'htmlmixed'],
-                ['JS Code', 'js-snippet', 'javascript']
-            ];
-            var i, title, snippet, textarea, editor, entry;
-            for (i=0; i<snippets.length; i++)
-            {
-                entry = snippets[ i ];
-                
-                title = document.createElement('h4');
-                title.innerHTML = entry[ 0 ] + ': <br />';
-                textarea = document.createElement('textarea');
-                document.body.appendChild( title );  document.body.appendChild( textarea );
-                
-                snippet = document.getElementById( entry[ 1 ] ).innerHTML;
-                //if ( /^html/i.test(entry[ 2 ]) ) snippet = snippet.split('<').join('&lt;');
-                if ( /^(html|xml)/i.test(entry[ 2 ]) ) snippet = snippet.split('"').join("'").split('&quot;').join('"');
-                
-                editor = CodeMirror.fromTextArea(textarea, {
-                    mode: entry[ 2 ],
-                    //value: snippet,
-                    readOnly: true,
-                    lineWrapping: true,
-                    lineNumbers : true,
-                    indentUnit: 4,
-                    indentWithTabs: false,
-                    theme: 'lesser-dark'
-                });
-                editor.setValue( snippet );
-            }
-        </script>
-    </body>
+<div id="snippets" class="fluid col-1-1" style="margin:10px 0px 50px 0px"></div>
+<script>
+var baseUrl = location.href.split( /[?#]/g )[ 0 ],
+    notUsesjQuery = (/[?&]standalone\b/.test(location.href)),
+    i, title, type, snippet, textarea, editor, entry,
+    container, container2, snippetsContainer = document.getElementById( 'snippets' );
+    snippets = [
+        'html-snippet',
+        notUsesjQuery ? 'js-snippet-without-jquery' : 'js-snippet-with-jquery'
+    ]
+;
+
+function useWithjQuery( ) { location.href = baseUrl + '?jquery=1'; }
+function useWithoutjQuery( ) { location.href = baseUrl + '?standalone=1'; }
+
+// use requireJS
+require(['ModelView', 'jQuery'], notUsesjQuery ? modelView : modelViewjQuery);
+
+for (i=0; i<snippets.length; i++)
+{
+    entry = document.getElementById( snippets[ i ] );
+    type = entry.getAttribute('data-type');
+    container = document.createElement('div');
+    container.className = 'fluid col-1-' + snippets.length;
+    container2 = document.createElement('div');
+    container2.className = 'fluid col-9-10';
+    container2.style.margin = '10px 5px';
+    title = document.createElement('h4');
+    title.innerHTML = entry.getAttribute('data-title') + ': <br />';
+    textarea = document.createElement('textarea');
+    textarea.className = 'fluid col-1-1';
+    container2.appendChild( title );
+    container2.appendChild( textarea );
+    container.appendChild( container2 );
+    snippetsContainer.appendChild( container ); 
+
+    snippet = entry.innerHTML;
+    //if ( /^html/i.test(type) ) snippet = snippet.split('<').join('&lt;');
+    if ( /^(html|xml)/i.test(type) ) snippet = snippet.split('"').join("'").split('&quot;').join('"');
+
+    editor = CodeMirror.fromTextArea(textarea, {
+        mode: type,
+        //value: snippet,
+        readOnly: true,
+        lineWrapping: false,
+        lineNumbers : true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        theme: 'lesser-dark'
+    });
+    editor.setValue( snippet );
+}
+</script>
+</body>
 </html>

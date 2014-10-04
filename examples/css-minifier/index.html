@@ -251,6 +251,8 @@ jQuery(function($){
         log = (console && console.log) ? function(s){console.log(s);} : function(){}
     ;
     
+    ModelView.jquery( $ );
+    
     css_mode = CodeMirrorGrammar.getMode(css_grammar);
     css_mode.supportGrammarAnnotations = true;
     CodeMirror.defineMode('css', css_mode);
@@ -300,14 +302,14 @@ jQuery(function($){
                 ,wrap: true
             }
             ,types: { 
-                minify: $.ModelView.Type.Cast.BOOLEAN
-                ,beautify: $.ModelView.Type.Cast.BOOLEAN
-                ,comments: $.ModelView.Type.Cast.BOOLEAN
-                ,prefixes: $.ModelView.Type.Cast.BOOLEAN
-                ,polyfills: $.ModelView.Type.Cast.BOOLEAN
-                ,hsl2rgb: $.ModelView.Type.Cast.BOOLEAN
-                ,rgb2hex: $.ModelView.Type.Cast.BOOLEAN
-                ,wrap: $.ModelView.Type.Cast.BOOLEAN
+                minify: $.ModelView.Type.Cast.BOOL
+                ,beautify: $.ModelView.Type.Cast.BOOL
+                ,comments: $.ModelView.Type.Cast.BOOL
+                ,prefixes: $.ModelView.Type.Cast.BOOL
+                ,polyfills: $.ModelView.Type.Cast.BOOL
+                ,hsl2rgb: $.ModelView.Type.Cast.BOOL
+                ,rgb2hex: $.ModelView.Type.Cast.BOOL
+                ,wrap: $.ModelView.Type.Cast.BOOL
             }
         }
         ,actions: { 
