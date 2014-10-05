@@ -78,6 +78,9 @@
         position:relative;
         cursor:pointer;
     }
+    .code-snippet > .CodeMirror {
+        font-size:12px;
+    }
     </style>
 
     <script type="text/javascript" src="../common/js/require.js"></script>
@@ -94,10 +97,10 @@
         <span id="forkongithub"><a href="https://github.com/foo123/modelview.js">View me on GitHub</a></span>
         
         <header id="header">
-            <h1>ModelView.js Hello World!</h1>
+            <h1>ModelView.js Hello Earth!</h1>
         </header>
         
-<div id="html-snippet" data-snippet="HTML Code" data-snippet-type="htmlmixed">
+<div id="html-snippet" data-snippet="HTML Code" data-snippet-type="htmlmixed" data-snippet-escape="1">
 <div id="screen">
     Hello $(msg) &nbsp;&nbsp;(updated live on <i>change</i>)
     <br /><br />
@@ -112,7 +115,7 @@
 <button class="button" onclick="useWithjQuery()" style="width:200px">Use with jQuery</button>
 </p>
 
-<script id="js-snippet-without-jquery" data-snippet="JS Code (without jQuery)" data-snippet-type="javascript">
+<script id="js-snippet-without-jquery" type="text/javascript" data-snippet="JS Code (standalone)" data-snippet-type="javascript">
 function modelView( ModelView ) 
 {
     "use strict";
@@ -120,7 +123,7 @@ function modelView( ModelView )
     new ModelView.View('view', 
         new ModelView.Model('model', 
         // model data here ..
-        { msg: 'World!' },
+        { msg: 'Earth!' },
         // model data type-casters (if any) here ..
         { msg: ModelView.Type.Cast.STR },
         // model data validators (if any) here ..
@@ -141,7 +144,7 @@ function modelView( ModelView )
     ;
 }
 </script>
-<script id="js-snippet-with-jquery" data-snippet="JS Code (as jQuery plugin/widget)" data-snippet-type="javascript">
+<script id="js-snippet-with-jquery" type="text/javascript" data-snippet="JS Code (as jQuery plugin/widget)" data-snippet-type="javascript">
 function modelViewjQuery( ModelView, $ ) 
 {
     "use strict";
@@ -163,7 +166,7 @@ function modelViewjQuery( ModelView, $ )
             
             data: {
                 // model data here ..
-                msg: 'World!'
+                msg: 'Earth!'
             },
             
             types: {
@@ -193,55 +196,22 @@ function modelViewjQuery( ModelView, $ )
 <div id="snippets" class="fluid col-1-1" style="margin:10px 0px 50px 0px"></div>
 <script>
 var baseUrl = location.href.split( /[?#]/g )[ 0 ],
-    notUsesjQuery = (/[?&]standalone\b/.test(location.href)),
-    i, title, type, snippet, textarea, editor, entry,
-    container, container2, snippetsContainer = document.getElementById( 'snippets' ),
-    snippets = [
-        'html-snippet',
-        notUsesjQuery ? 'js-snippet-without-jquery' : 'js-snippet-with-jquery'
-    ]
+    notUsesjQuery = (/[?&]standalone\b/.test(location.href))
 ;
-
 function useWithjQuery( ) { location.href = baseUrl + '?jquery=1'; }
 function useWithoutjQuery( ) { location.href = baseUrl + '?standalone=1'; }
 
 // use requireJS
-require(['ModelView', 'jQuery'], notUsesjQuery ? modelView : modelViewjQuery);
-
-for (i=0; i<snippets.length; i++)
-{
-    entry = document.getElementById( snippets[ i ] );
-    type = entry.getAttribute('data-snippet-type');
-    container = document.createElement('div');
-    container.className = 'fluid col-1-' + snippets.length;
-    container2 = document.createElement('div');
-    container2.className = 'fluid col-9-10';
-    container2.style.margin = '10px 5px';
-    title = document.createElement('h4');
-    title.innerHTML = entry.getAttribute('data-snippet') + ': <br />';
-    textarea = document.createElement('textarea');
-    textarea.className = 'fluid col-1-1';
-    container2.appendChild( title );
-    container2.appendChild( textarea );
-    container.appendChild( container2 );
-    snippetsContainer.appendChild( container ); 
-
-    snippet = entry.innerHTML;
-    //if ( /^html/i.test(type) ) snippet = snippet.split('<').join('&lt;');
-    if ( /^(html|xml)/i.test(type) ) snippet = snippet.split('"').join("'").split('&quot;').join('"');
-
-    editor = CodeMirror.fromTextArea(textarea, {
-        mode: type,
-        //value: snippet,
-        readOnly: true,
-        lineWrapping: false,
-        lineNumbers : true,
-        indentUnit: 4,
-        indentWithTabs: false,
-        theme: 'lesser-dark'
-    });
-    editor.setValue( snippet );
-}
+require(['Snippets', 'ModelView', 'jQuery'], 
+function( Snippets,   ModelView,    $ ) {
+    Snippets(
+        ['html-snippet', notUsesjQuery ? 'js-snippet-without-jquery' : 'js-snippet-with-jquery'], 
+        'snippets', 
+        CodeMirror
+    );
+    if ( notUsesjQuery ) modelView( ModelView ); 
+    else modelViewjQuery( ModelView, $ );
+});
 </script>
 </body>
 </html>

@@ -5,6 +5,7 @@
         
         ,paths: {
             Storage: "Storage"
+            ,Snippets: "snippets"
             ,AreaSelect: "areaselect.min"
             ,utils: "utils.min"
             ,jQuery: "jquery"
