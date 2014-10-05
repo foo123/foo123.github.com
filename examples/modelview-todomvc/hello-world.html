@@ -106,6 +106,8 @@
     <br /><br />
     <input type="text" name="model[msg]" size="50" value="" />
     <button class="button" title="$(msg)" data-bind='{"click":"alert_msg"}'>Hello</button>
+    <button class="button" data-bind='{"set":{"key":"msg","value":"You"}}'>Hello You</button>
+    <button class="button" data-bind='{"click":"hello_world"}'>Hello World</button>
 </div>
 </div>
 
@@ -136,6 +138,9 @@ function modelView( ModelView )
         //alert( this.model().get('msg') );
         // or even this, if you want the raw data without any processing
         //alert( this.$model.$data.msg );
+    })
+    .action('hello_world', function( evt, el, bindData ) {
+        this.$model.set('msg', "World", true);
     })
     .attribute( 'bind', 'data-bind' )
     .autobind( true )
@@ -188,6 +193,9 @@ function modelViewjQuery( ModelView, $ )
                 //alert( this.model().get('msg') );
                 // or even this, if you want the raw data without any processing
                 //alert( this.$model.$data.msg );
+            },
+            hello_world: function( evt, el, bindData ) {
+                this.$model.set('msg', "World", true);
             }
         }
     });
