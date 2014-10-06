@@ -81,21 +81,21 @@
     </section>
     
     <footer id="footer">
-        <span id="todo-count"><strong>$(todoList.active)</strong> $(todoList.items) left</span>
+        <span id="todo-count"><strong>$(todos.todoList.active)</strong> $(todos.todoList.items) left</span>
         <ul id="filters">
             <li>
-                <a id="all" href="#/all" class="tab">All ($(todoList.todos.length))</a>
+                <a id="all" href="#/all" class="tab">All ($(todos.todoList.todos.length))</a>
             </li>
             <li>
-                <a id="active" href="#/active" class="tab">Active ($(todoList.active))</a>
+                <a id="active" href="#/active" class="tab">Active ($(todos.todoList.active))</a>
             </li>
             <li>
-                <a id="completed" href="#/completed" class="tab">Completed ($(todoList.completed))</a>
+                <a id="completed" href="#/completed" class="tab">Completed ($(todos.todoList.completed))</a>
             </li>
         </ul>
         <button id="clear-completed" style="display: none;" 
             data-bind='{"show":"todoList.completed", "click":"removeCompleted"}'>
-            Clear completed ($(todoList.completed))
+            Clear completed ($(todos.todoList.completed))
         </button>
     </footer>
 </section>

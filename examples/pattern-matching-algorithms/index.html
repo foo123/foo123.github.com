@@ -126,6 +126,11 @@ body {
 .algo_info i {
     font-size: 12px;
 }
+#console.processing > #loader { display: inline-block; }
+#console.processing > #result { display: none; }
+#console:not(.processing) > #loader { display: none; }
+#console:not(.processing) > #result { display: block; }
+
 #forkongithub a{background:#aa0000;color:#fff;text-decoration:none;font-family:arial, sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:0.9rem;line-height:1.4rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#aa0000;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;z-index:100;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:absolute;display:block;z-index:100;top:0;right:0;width:200px;overflow:hidden;height:200px;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}
 </style>
 
@@ -135,27 +140,6 @@ body {
     <script type="text/javascript" src="../common/js/require.js"></script>
     <script type="text/javascript" src="../common/js/require-config.js"></script>
     
-<script type="text/x-contemplate" id="algorithm-info">
-<# #>
-<strong>Selected Algorithm: <# $algo #></strong>
-<br /><br />
-<strong>Reference Link:</strong> <a href="<# $reflink #>" target="_blank"><# $reflink #></a>
-<br /><br />
-<strong>Summary:</strong> <i><# $desc #></i></div>
-<br /><br />
-</script>
-<script type="text/x-contemplate" id="test-results">
-<# #>
-Pattern: /<i style="white-space:pre"><# $pattern #></i>/<br />
-Text: <p style="white-space:pre;font-style:italic"><# $text #></p><br />
-<# %if ( $matched ) #>
-    <span style="color:green;font-weight:bold;font-size:20px;">&#10003;&nbsp;&nbsp;</span><strong>Pattern matched at position <# $pos #></strong>
-<# %else() #>
-    <span style="color:red;font-weight:bold;font-size:20px;">&#10060;&nbsp;&nbsp;</span><strong>Pattern NOT matched</strong>
-<# %endif() #>
-<br /><br />
-</script>
-
     
 
 </head>
@@ -173,51 +157,61 @@ Text: <p style="white-space:pre;font-style:italic"><# $text #></p><br />
     
     
 <section id="panel" class="fluid col-1-1" style="padding: 20px;">
-    <div id="controls" class="fluid col-1-4">
-        <strong>Select Match Algorithm: </strong><br />
-        <div class="cont">
-            <select name="model[match_algorithm]">
-                <optgroup label="Single Pattern:">
-                    <option value="BuiltinMatcher">Builtin Matcher</option>
-                    <option value="NaiveMatcher">Naive Matcher</option>
-                    <option value="RabinKarpMatcher">Rabin-Karp Matcher</option>
-                    <option value="FSAMatcher">FSA Matcher</option>
-                    <option value="KnuthMorrisPrattMatcher">Knuth-Morris-Pratt Matcher</option>
-                    <option value="BoyerMooreMatcher">Boyer-Moore Matcher</option>
-                </optgroup>
-                <optgroup label="Multiple Patterns:"></optgroup>
-            </select>
-        </div> 
-        
-        <strong>Select Match Pattern: </strong><br />
-        <div class="cont">
-            <input name="model[pattern]" type="text" size="12"/>
-        </div> 
-        
-        <strong>Select Text: </strong><br />
-        <div class="cont">
-            <textarea name="model[text]" rows="4" cols="13"></textarea>
-        </div> 
-        
-        <strong>Alphabet: </strong><br />
-        <div class="cont">
-           &quot;&nbsp;0123456789
-           ABCDEFQHIJKLMNOPQRSTUVWXYZ
-           abcdefqhijklmnopqrstuvwxyz&quot;
-        </div> 
-        
-        <input id="test" type="button" class="button" 
-            value="Run Test" data-bind='{"click":"test"}' />
-        <br /><br />
-    </div>
+<div id="controls" class="fluid col-1-4">
+    <strong>Select Match Algorithm: </strong><br />
+    <div class="cont"><select name="model[algorithm][selected]">
+        <optgroup label="Single Pattern:">
+            <option value="BuiltinMatcher">Builtin Matcher</option>
+            <option value="NaiveMatcher">Naive Matcher</option>
+            <option value="RabinKarpMatcher">Rabin-Karp Matcher</option>
+            <option value="FSAMatcher">FSA Matcher</option>
+            <option value="KnuthMorrisPrattMatcher">Knuth-Morris-Pratt Matcher</option>
+            <option value="BoyerMooreMatcher">Boyer-Moore Matcher</option>
+        </optgroup>
+        <optgroup label="Multiple Patterns:"></optgroup>
+    </select></div> 
     
-    <div class="fluid col-2-3">
-        <strong>Console: </strong> <br />
-        <div id="console" class="fluid col-1-1">
-            <div class="algo_info" data-bind='{"html":"algorithmInfo"}'></div>
-            <div id="result" data-bind='{"html":"testResults"}'></div>
+    <strong>Select Match Pattern: </strong><br />
+    <div class="cont"><input name="model[algorithm][pattern]" type="text" size="12"/></div> 
+    
+    <strong>Select Text: </strong><br />
+    <div class="cont"><textarea name="model[algorithm][text]" rows="4" cols="13"></textarea></div> 
+    
+    <strong>Alphabet: </strong><br />
+    <div class="cont">&quot;&nbsp;0123456789ABCDEFQHIJKLMNOPQRSTUVWXYZabcdefqhijklmnopqrstuvwxyz&quot;</div> 
+    
+    <input id="test" type="button" class="button" 
+        value="Run Test" data-bind='{"click":"test"}' />
+    <br /><br />
+</div>
+
+<div class="fluid col-2-3">
+    <strong>Console: </strong> <br />
+    <div id="console" class="fluid col-1-1">
+        <div class="algo_info">
+            <strong>Selected Algorithm: $(algorithm.name)</strong>
+            <br /><br />
+            <strong>Reference Link:</strong> <a href="$(algorithm.reflink)" target="_blank">$(algorithm.reflink)</a>
+            <br /><br />
+            <strong>Summary:</strong> <i data-bind='{"html":"algorithm.desc"}'></i>
+            <br /><br />
+        </div>
+        <div id="loader" class="loader"></div>
+        <div id="result">
+            Pattern: /<i style="white-space:pre">$(algorithm.pattern)</i>/<br />
+            Text: <p style="white-space:pre;font-style:italic">$(algorithm.text)</p><br />
+            <span data-bind='{"show":"result.matched"}'>
+                <span style="color:green;font-weight:bold;font-size:20px;">&#10003;&nbsp;&nbsp;</span>
+                <strong>Pattern matched at position $(result.pos)</strong>
+            </span>
+            <span data-bind='{"hide":"result.matched"}'>
+                <span style="color:red;font-weight:bold;font-size:20px;">&#10060;&nbsp;&nbsp;</span>
+                <strong>Pattern NOT matched</strong>
+            </span>
+            <br /><br />
         </div>
     </div>
+</div>
 </section>
 <br />
 
@@ -243,35 +237,32 @@ require(['jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Pattern'],
     function( $, $T, $R, $MV, $P ) {
     "use strict";
     
-    var undef=undefined, $window = $(window), $panel = $('#panel'), 
+    var undef=undefined, $window = $(window), $panel = $('#panel'), $console = $('#console'),
         appRouter, appView, appModel
     ;
         
     $MV.jquery( $ );
     
-    function doTest( )
+    function doTest( model )
     {
         //
         // get selected match algorithm
         //
-        var model = appModel,
-            selectedAlgorithm, matcher,  reflink, desc,
+        var selectedAlgorithm, matcher,  reflink, desc,
             pattern, text, result
         ;
         
-        pattern = model.get('pattern');
-        text = model.get('text');
-        selectedAlgorithm = model.get('match_algorithm');
+        pattern = model.get('algorithm.pattern');
+        text = model.get('algorithm.text');
+        selectedAlgorithm = model.get('algorithm.selected');
         
         matcher = new $P[ selectedAlgorithm ]( pattern );
         
-        model.set('algorithmInfo', $T.tpl('algorithm-info', {
-            'algo': selectedAlgorithm,
-            'reflink': matcher.reference || '#',
-            'desc': matcher.description || ''
-        }), true);
+        $console.addClass('processing');
+        model.set('algorithm.name', selectedAlgorithm, 1);
+        model.set('algorithm.reflink', matcher.reference || '#', 1);
+        model.set('algorithm.desc', matcher.description || '', 1);
         
-        model.set('testResults', '<div class="loader"></div>', true);
         setTimeout(function( ) {
             result = matcher.match( text );
             matcher.dispose( );
@@ -280,65 +271,67 @@ require(['jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Pattern'],
                 //
                 // show results
                 //
-                model.set('testResults', $T.tpl('test-results', {
-                        matched: ( -1 < result ),
-                        pos: result,
-                        pattern: pattern,
-                        text: text
-                    }), true);
+                model.set('result', {matched: ( -1 < result ), pos: result}, 1);
+                $console.removeClass('processing');
             }, 100);
         }, 100);
     }
-    
-    // templates defined in the dom
-    $T.add({
-        'algorithm-info' : '#algorithm-info',
-        'test-results' : '#test-results'
-    });
     
     $panel.modelview({
         
         id: 'PatternMatchingAlgorithmsPanel',
         
+        livebind: '$(__KEY__)',
         autobind: true,
         events: ['change', 'click'],
+        autoSync: false,
         
         model: {
             id: 'model',
             
             data: {
-                match_algorithm: 'BuiltinMatcher',
-                pattern: 'rain',
-                text: 'The rain in Spain stays mainly in the plain',
-                algorithmInfo: '',
-                testResults: ''
+                algorithm: {
+                    selected: 'BuiltinMatcher',
+                    pattern: 'rain',
+                    text: 'The rain in Spain stays mainly in the plain',
+                    name: '',
+                    reflink: '#',
+                    desc: ''
+                },
+                result: {matched: false, pos: -1}
             },
             
             types: {
-                match_algorithm: $MV.Type.Cast.STR,
-                pattern: $MV.Type.Cast.STR,
-                text: $MV.Type.Cast.STR
-            },
+                algorithm: {
+                    selected: $MV.Type.Cast.STR,
+                    name: $MV.Type.Cast.STR,
+                    reflink: $MV.Type.Cast.STR,
+                    desc: $MV.Type.Cast.STR,
+                    pattern: $MV.Type.Cast.STR,
+                    text: $MV.Type.Cast.STR
+                }
+            }/*,
             
-            validators: {  }
+            validators: {  }*/
         },
         
         actions: {
             test: function( evt, $el, data ) {
+                var model = this.$model, algoInfo = model.get('algorithm');
                 location.hash = '#' + appRouter.glue({
                     action: 'test',
-                    match_algorithm: appModel.get('match_algorithm'),
-                    pattern: appModel.get('pattern'),
-                    text: appModel.get('text'),
+                    match_algorithm: algoInfo.selected,
+                    pattern: algoInfo.pattern,
+                    text: algoInfo.text,
                     r: new Date().getTime()
                 });
-                //doTest( );
+                //doTest( model );
             }
         }
     });
     
     appView = $panel.modelview('view');
-    appModel = appView.model( );
+    appModel = appView.$model;
     appRouter = new $R( );
     $panel.modelview('sync');
     
@@ -347,12 +340,12 @@ require(['jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Pattern'],
         if ( params && params.action && 'test' === params.action )
         {
             if ( undef !== params.match_algorithm )
-                appModel.set('match_algorithm', params.match_algorithm, 1 );
+                appModel.set( 'algorithm.selected', params.match_algorithm, 1 );
             if ( undef !== params.pattern )
-                appModel.set('pattern', params.pattern, 1 );
+                appModel.set( 'algorithm.pattern', params.pattern, 1 );
             if ( undef !== params.text )
-                appModel.set('text', params.text, 1 );
-            doTest( );
+                appModel.set( 'algorithm.text', params.text, 1 );
+            doTest( appModel );
         }
     });
     $window.on('hashchange', function( evt ) {

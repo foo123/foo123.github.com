@@ -40,10 +40,10 @@
                 var todo = this.$model,
                     $todo = $(this.$dom)
                 ;
-                if ( !todo.get('editing') )
+                if ( !todo.$data.editing )
                 {
                     $todo.addClass( 'editing' );
-                    todo.set('editing', true);
+                    todo.$data.editing = true;
                     setTimeout(function(){ $todo.find('.edit').focus( ); }, 10);
                 }
             }
@@ -55,7 +55,7 @@
                     title, todoList
                 ;
                 
-                if ( todo.get('editing') )
+                if ( todo.$data.editing )
                 {
                     if ( evt.which && KEY_ENTER !== evt.which ) return;
                     
@@ -81,7 +81,7 @@
                     {
                         // update
                         todo.set('title', title, true);
-                        todo.set('editing', false);
+                        todo.$data.editing = false;
                         $todo.removeClass( 'editing' );
                     }
                     
@@ -178,6 +178,7 @@
                 
                 ,id: uuid
             
+                ,livebind: '$(__KEY__)'
                 ,autobind: true
                 ,bindAttribute: 'data-bind-todo'
                 ,events: [ 'change', 'dblclick', 'click', /*'blur',*/ 'focusout', 'keyup' ]
@@ -273,6 +274,7 @@
         
             id: 'todosview'
             
+            ,livebind: '$(__MODEL__.__KEY__)'
             ,autobind: false
             ,bindAttribute: 'data-bind'
             ,events: [ 'change', 'click', 'blur'/*, 'focusout'*/ ]
@@ -418,8 +420,7 @@
             }
         });
         
-        View = $screen.modelview( 'view' );
-        Model = View.model( );
+        View = $screen.modelview( 'view' ); Model = View.$model;
         Router = new Dromeo( );
         
         // Dromeo router for location.hash changes
