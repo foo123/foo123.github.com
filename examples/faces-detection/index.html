@@ -221,7 +221,8 @@ require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcasc
     }
 
     $screen.modelview({
-        autobind: true
+        livebind: '$(__KEY__)'
+        ,autobind: true
         ,bindAttribute: 'data-bind'
         
         ,model: {
