@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="jQuery UI ModelView Widgets" />
+    <link rel="stylesheet" href="./widgets/colorpicker/colorpicker.widget.css" />
+    <script src="../common/js/jquery.js"></script>
+    <script src="../common/js/jquery-ui-1.10.4.custom.min.js"></script>
+    <script src="../common/js/modelview.min.js"></script>
+    <script src="./widgets/colorpicker/colorpicker.widget.js"></script>
+    <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+    <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
+    <link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
+    <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
+    <link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
+    <script type="text/javascript" src="../common/js/require.js"></script>
+    <script type="text/javascript" src="../common/js/require-config.js"></script>
+    <script src="../common/js/codemirror/codemirror.min.js"></script>
+    <script src="../common/js/codemirror/mode/xml.js"></script>
+    <script src="../common/js/codemirror/mode/javascript.js"></script>
+    <script src="../common/js/codemirror/mode/css.js"></script>
+    <script src="../common/js/codemirror/mode/htmlmixed.js"></script>
+    <script src="../common/js/snippets.js"></script>
+    <style type="text/css">
+    #forkongithub a{background:#aa0000;color:#fff;text-decoration:none;font-family:arial, sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:0.9rem;line-height:1.4rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#aa0000;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;z-index:100;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:absolute;display:block;z-index:100;top:0;right:0;width:200px;overflow:hidden;height:200px;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}
+    .button {
+        -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
+        -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
+        box-shadow:inset 0px 1px 0px 0px #f5978e;
+        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
+        background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
+        background-color:#f24537;
+        -webkit-border-top-left-radius:20px;
+        -moz-border-radius-topleft:20px;
+        border-top-left-radius:20px;
+        -webkit-border-top-right-radius:20px;
+        -moz-border-radius-topright:20px;
+        border-top-right-radius:20px;
+        -webkit-border-bottom-right-radius:20px;
+        -moz-border-radius-bottomright:20px;
+        border-bottom-right-radius:20px;
+        -webkit-border-bottom-left-radius:20px;
+        -moz-border-radius-bottomleft:20px;
+        border-bottom-left-radius:20px;
+        text-indent:0;
+        border:1px solid #d02718;
+        display:inline-block;
+        color:#ffffff;
+        font-family:Arial;
+        font-size:15px;
+        font-weight:bold;
+        font-style:normal;
+        height:50px;
+        line-height:50px;
+        width:2000px;
+        text-decoration:none;
+        text-align:center;
+        text-shadow:1px 1px 0px #810e05;
+    }
+    .button:hover {
+        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
+        background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
+        background-color:#c62d1f;
+    }.button:active {
+        position:relative;
+        top:1px;
+    }
+    .button {
+        width:120px;
+        height:40px;
+        line-height:40px;
+        position:relative;
+        cursor:pointer;
+    }
+    .code-snippet > .CodeMirror {
+        font-size:12px;
+    }
+    </style>
+<title>jQuery UI ModelView Widgets</title>
+</head>
+<body>
+    <span id="forkongithub"><a href="https://github.com/foo123/modelview-widgets">View me on GitHub</a></span>
+    <header id="header">
+        <h1>jQuery UI ModelView Widgets</h1>
+    </header>
+    
+<div id="html-snippet" data-snippet="HTML Code" data-snippet-type="htmlmixed" data-snippet-escape="1">
+<h3>ColorPicker(s) synchronised</h3>
+<div id="clr1" class="colorpicker"></div>
+<div id="clr2" class="colorpicker ui-colorpicker-transition-fade"></div>
+<div id="clr3" class="colorpicker ui-colorpicker-light ui-colorpicker-transition-slide"></div>
+</div>
+<script id="js-snippet" type="text/javascript" data-snippet="JS Code" data-snippet-type="javascript">
+jQuery(function($){
+    $('.colorpicker').ColorPicker({ opacity: 1 });
+    // sync some colorpickers (any circular loop/references are handled automaticaly by ModelView.Model)
+    // clr3.color -> notifies -> clr2.color
+    $('#clr3').ColorPicker('model').sync($('#clr2').ColorPicker('model'), {'color':'color'});
+    // clr2.color -> notifies -> clr3.color
+    $('#clr2').ColorPicker('model').sync($('#clr3').ColorPicker('model'), {'color':'color'});
+});
+</script>
+<div id="snippets" class="fluid col-1-1" style="margin:10px 0px 50px 0px"></div>
+<script>Snippets(['html-snippet', 'js-snippet'], 'snippets', CodeMirror);</script>
+</body>
+</html>
