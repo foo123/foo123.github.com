@@ -1,10 +1,13 @@
 /**
 *
-* Color picker jQueryUI ModelView widget
+* Color Picker jQueryUI ModelView Widget
+*
+* @url: https://github.com/foo123/modelview-widgets
+* @dependencies: jQuery, jQueryUI (widget), ModelViewWidget
 *
 * adapted from: http://www.eyecon.ro/colorpicker/
-*      Color picker by Stefan Petre www.eyecon.ro (MIT and GPL)
-* 
+*      Color Picker by Stefan Petre www.eyecon.ro (MIT and GPL)
+*
 */
 !function($, undef) {
 
@@ -61,8 +64,8 @@
     }
     function HexToRGB( hex ) 
     {
-        hex = parseInt( '#' === hex.charAt(0) ? hex.slice(1) : hex, 16 );
-        return [hex >> 16, (hex & 0x00FF00) >> 8, (hex & 0x0000FF)];
+        hex = parseInt( hex, 16 );
+        return [((hex >> 16) & 255), ((hex >> 8) & 255), (hex & 255)];
     }
     function RGBToHSB( rgb ) 
     {
@@ -138,13 +141,13 @@
     {
         return '\
         <div id="'+id+'" class="ui-colorpicker">\
-        <div class="ui-colorpicker_satur_bright" '+bind+'=\'{"mousedown":"downSelector"}\'><div></div></div>\
-        <div class="ui-colorpicker_hue" '+bind+'=\'{"mousedown":"downHue"}\'><div></div></div>\
+        <button class="ui-colorpicker_satur_bright" '+bind+'=\'{"mousedown":"downSelector"}\'><div></div></button>\
+        <button class="ui-colorpicker_hue" '+bind+'=\'{"mousedown":"downHue"}\'><div></div></button>\
         <div class="ui-colorpicker_new_color ui-colorpicker_transparent">\
-        <div class="ui-colorpicker_color" style="background-color:$('+model+'.css.color.current);" '+bind+'=\'{"click":"setColor"}\'></div>\
+        <button class="ui-colorpicker_color" style="background-color:$('+model+'.css.color.current);" '+bind+'=\'{"click":"setColor"}\'></button>\
         </div>\
         <div class="ui-colorpicker_current_color ui-colorpicker_transparent">\
-        <div class="ui-colorpicker_color" style="background-color:$('+model+'.css.color);" '+bind+'=\'{"click":"restoreColor"}\'></div>\
+        <button class="ui-colorpicker_color" style="background-color:$('+model+'.css.color);" '+bind+'=\'{"click":"restoreColor"}\'></button>\
         </div>\
         <div class="ui-colorpicker_field" data-field="hex">\
         <input name="'+model+'[hex]" type="text" maxlength="6" size="6" value=""/>\
@@ -174,7 +177,7 @@
         <input name="'+model+'[hsb][2]" type="text" maxlength="3" size="3" value=""/><span '+bind+'=\'{"mousedown":"downIncrement"}\'></span>\
         <div class="ui-colorpicker_field_back"></div>\
         </div>\
-        <div class="ui-colorpicker_submit" '+bind+'=\'{"click":"setColor"}\'></div>\
+        <button class="ui-colorpicker_submit" '+bind+'=\'{"click":"setColor"}\'></button>\
         </div>\
         ';
     }
@@ -188,6 +191,7 @@
             onShow: dummy,
             onBeforeShow: dummy,
             onHide: dummy,
+            onSetColor: dummy,
             color: 'ff0000',
             opacity: 1.0,
             livePreview: true
@@ -204,7 +208,7 @@
             var self = this, el = self.element, 
                 prevColor, ID, modelID, bindAttr, 
                 $ui, hue, satur_bright_indic, hue_indic,
-                show, hide, widget,
+                show, hide, hideOnEscKey, widget,
                 bindIncrement = 0, moveIncrement, upIncrement,
                 bindHue = 0, moveHue, upHue,
                 bindSelector = 0, moveSelector, upSelector
@@ -344,7 +348,7 @@
                             if ( color )
                             {
                                 if ( 'string' === typeof color ) 
-                                    model.set('hex', color, pub);
+                                    model.set('hex', '#' === color.charAt(0) ? color.slice(1) : color, pub);
                                 else if ( color.h !== undef && color.s !== undef && color.b !== undef ) 
                                     model.set('hsb', [color.h, color.s, color.b], pub);
                                 else if ( color.r !== undef && color.g !== undef && color.b !== undef ) 
@@ -421,26 +425,27 @@
                     setColor: function( ev, el ) {
                         this.$model.set('color', this.$model.$data.rgb, 1);
                         if ( hide ) hide( true );
+                        widget.options.onSetColor( widget.element );
                     }
                     ,restoreColor: function( ev, el ) {
                         this.$model.set('color', prevColor, 1);
                     }
                     ,downIncrement: function( ev, el ) {
-                        var wrapper = $(el.parentNode).addClass('ui-colorpicker_slider'), 
-                            type = wrapper.attr('data-field'),
-                            field = wrapper.find('input').focus( ),
-                            current = {
-                                el: wrapper,
-                                type: type,
-                                key: type.slice(0, 3),
-                                max: type === 'hsb.0' ? 360 : (type.indexOf('hsb') === 0 ? 100 : 255),
-                                y: ev.pageY,
-                                field: field,
-                                val: parseInt(field.val(), 10)
-                            }
-                        ;
                         if ( !bindIncrement )
                         {
+                            var wrapper = $(el.parentNode).addClass('ui-colorpicker_slider'), 
+                                type = wrapper.attr('data-field'),
+                                field = wrapper.find('input').focus( ),
+                                current = {
+                                    el: wrapper,
+                                    type: type,
+                                    key: type.slice(0, 3),
+                                    max: type === 'hsb.0' ? 360 : (type.indexOf('hsb') === 0 ? 100 : 255),
+                                    y: ev.pageY,
+                                    field: field,
+                                    val: parseInt(field.val(), 10)
+                                }
+                            ;
                             bindIncrement = 1;
                             $(document)
                                 .bind('mouseup', current, upIncrement)
@@ -449,11 +454,11 @@
                         }
                     }
                     ,downHue: function( ev, el ) {
-                        var current = {
-                            y: $(el).offset().top
-                        };
                         if ( !bindHue )
                         {
+                            var current = {
+                                y: $(el).offset().top
+                            };
                             bindHue = 1;
                             $(document)
                                 .bind('mouseup', current, upHue)
@@ -462,11 +467,11 @@
                         }
                     }
                     ,downSelector: function( ev, el ) {
-                        var current = {
-                            pos: $(el).offset()
-                        };
                         if ( !bindSelector )
                         {
+                            var current = {
+                                pos: $(el).offset()
+                            };
                             bindSelector = 1;
                             $(document)
                                 .bind('mouseup', current, upSelector)
@@ -484,6 +489,10 @@
             } 
             else 
             {
+                hideOnEscKey = function( ev ) {
+                    // ESC key pressed
+                    if ( 27 === ev.keyCode ) hide( true );
+                };
                 hide = function hide( ev ) {
                     if ( $ui.hasClass('ui-colorpicker-visible') && 
                         ( true === ev || 
@@ -492,7 +501,7 @@
                         ) 
                     {
                         if ( false !== widget.options.onHide($ui) ) $ui.removeClass('ui-colorpicker-visible');
-                        $(document).unbind('mousedown', hide);
+                        $(document).unbind('keyup', hideOnEscKey).unbind('mousedown', hide);
                     }
                 };
                 show = function show( ev ) {
@@ -506,7 +515,7 @@
                         if ( left + 356 > viewPort.l + viewPort.w ) left -= 356;
                         $ui.css({left: left+'px', top: top+'px'});
                         if ( false !== widget.options.onShow($ui) ) $ui.addClass('ui-colorpicker-visible');
-                        $(document).bind('mousedown', hide);
+                        $(document).bind('keyup', hideOnEscKey).bind('mousedown', hide);
                     }
                     return false;
                 };

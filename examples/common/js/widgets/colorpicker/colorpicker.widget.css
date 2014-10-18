@@ -1,3 +1,14 @@
+/**
+*
+* Color Picker jQueryUI ModelView Widget
+*
+* @url: https://github.com/foo123/modelview-widgets
+* @dependencies: jQuery, jQueryUI (widget), ModelViewWidget
+*
+* adapted from: http://www.eyecon.ro/colorpicker/
+*      Color Picker by Stefan Petre www.eyecon.ro (MIT and GPL)
+*
+*/
 /* color selector */
 .ui-colorselector {
     position: relative;
@@ -79,40 +90,45 @@
 }
 .ui-colorpicker.ui-colorpicker-visible {
     display: block;
-    box-shadow: 1px 1px 2px 5px rgba(0,0,0,.3) !important;
+    box-shadow: 0px 0px 7px 2px rgba(0,0,0,.3) !important;
 }
 .ui-colorpicker.ui-colorpicker-flat {
     position: relative;
     max-height: 176px; opacity: 1;
     display: block !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -ms-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
 }
-.ui-colorpicker:not(.ui-colorpicker-flat).ui-colorpicker-transition-fade {
+.ui-colorpicker.ui-colorpicker-transition-fade {
     display: block; max-height: 0; opacity: 0;
-    box-shadow: 1px 1px 0px 0px rgba(0,0,0,.3);
-    -webkit-transition: opacity 0.15s ease-out 0s, max-height 0.1s linear 0.2s;
-    -moz-transition: opacity 0.15s ease-out 0s, max-height 0.1s linear 0.2s;
-    -ms-transition: opacity 0.15s ease-out 0s, max-height 0.1s linear 0.2s;
-    -o-transition: opacity 0.15s ease-out 0s, max-height 0.1s linear 0.2s;
-    transition: opacity 0.15s ease-out 0s, max-height 0.1s linear 0.2s;
+    box-shadow: 0px 0px 0px 0px rgba(0,0,0,.3);
+    -webkit-transition: opacity 0.15s ease-out 0s, max-height 0s linear 0.2s;
+    -moz-transition: opacity 0.15s ease-out 0s, max-height 0s linear 0.2s;
+    -ms-transition: opacity 0.15s ease-out 0s, max-height 0s linear 0.2s;
+    -o-transition: opacity 0.15s ease-out 0s, max-height 0s linear 0.2s;
+    transition: opacity 0.15s ease-out 0s, max-height 0s linear 0.2s;
 }
-.ui-colorpicker:not(.ui-colorpicker-flat).ui-colorpicker-visible.ui-colorpicker-transition-fade {
+.ui-colorpicker.ui-colorpicker-visible.ui-colorpicker-transition-fade {
     max-height: 176px; opacity: 1;
-    -webkit-transition: max-height 0.1s linear 0s, opacity 0.15s ease-out 0.15s;
-    -moz-transition: max-height 0.1s linear 0s, opacity 0.15s ease-out 0.15s;
-    -ms-transition: max-height 0.1s linear 0s, opacity 0.15s ease-out 0.15s;
-    -o-transition: max-height 0.1s linear 0s, opacity 0.15s ease-out 0.15s;
-    transition: max-height 0.1s linear 0s, opacity 0.15s ease-out 0.15s;
+    -webkit-transition: max-height 0s linear 0s, opacity 0.15s ease-out 0.05s;
+    -moz-transition: max-height 0s linear 0s, opacity 0.15s ease-out 0.05s;
+    -ms-transition: max-height 0s linear 0s, opacity 0.15s ease-out 0.05s;
+    -o-transition: max-height 0s linear 0s, opacity 0.15s ease-out 0.05s;
+    transition: max-height 0s linear 0s, opacity 0.15s ease-out 0.05s;
 }
-.ui-colorpicker:not(.ui-colorpicker-flat).ui-colorpicker-transition-slide {
+.ui-colorpicker.ui-colorpicker-transition-slide {
     display: block; max-height: 0; opacity: 1;
-    box-shadow: 1px 1px 0px 0px rgba(0,0,0,.3);
+    box-shadow: 0px 0px 0px 0px rgba(0,0,0,.3);
     -webkit-transition: max-height 0.15s ease;
     -moz-transition: max-height 0.15s ease;
     -ms-transition: max-height 0.15s ease;
     -o-transition: max-height 0.15s ease;
     transition: max-height 0.15s ease;
 }
-.ui-colorpicker:not(.ui-colorpicker-flat).ui-colorpicker-visible.ui-colorpicker-transition-slide {
+.ui-colorpicker.ui-colorpicker-visible.ui-colorpicker-transition-slide {
     max-height: 176px;
     -webkit-transition: max-height 0.15s ease;
     -moz-transition: max-height 0.15s ease;
@@ -215,12 +231,14 @@
     display: block;
     padding: 0; margin: 0;
     top: 0; left: 0;
-    bottom: 0; right: 0;
+    width: 100%; height: 100%;
+    /*bottom: 0; right: 0;*/
     z-index: 2;
     background-image: none;
     background-repeat: no-repeat;
     background-position: 0 0;
     background-color: #f00;
+    cursor: pointer;
 }
 .ui-colorpicker_new_color {
     position: absolute;
@@ -259,6 +277,17 @@
     padding: 0;
     height: 11px;
     z-index: 2;
+}
+.ui-colorpicker button:active,
+.ui-colorpicker button:hover,
+.ui-colorpicker button:focus,
+.ui-colorpicker input:active,
+.ui-colorpicker input:hover,
+.ui-colorpicker input:focus,
+.ui-colorpicker button,
+.ui-colorpicker input {
+    border: none !important;
+    outline: 0 !important;
 }
 .ui-colorpicker_field {
     position: absolute; display: block;
