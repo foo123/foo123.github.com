@@ -12,7 +12,7 @@
 !function($, undef) {
 
     var Min = Math.min, Max = Math.max, Round = Math.round, 
-        extend = $.extend, __id = 0;
+        extend = $.extend, COMMAS = /\s*,\s*/g, __id = 0;
     
     function getViewport( ) 
     {
@@ -135,6 +135,20 @@
         if ( 1 === hex[1].length ) hex[1] = '0' + hex[1];
         if ( 1 === hex[2].length ) hex[2] = '0' + hex[2];
         return hex.join('');
+    }
+    function toInteger( v ) { return parseInt(v, 10); }
+    function parseHSL( hsl )
+    {
+        return hsl.slice( 4, -1 ).split( COMMAS ).map( toInteger );
+    }
+    function parseRGB( rgb )
+    {
+        return rgb.slice( 4, -1 ).split( COMMAS ).map( toInteger );
+    }
+    function parseRGBA( rgba )
+    {
+        rgba = rgba.slice( 5, -1 ).split( COMMAS );
+        return [ rgba.slice( 0, 3 ).map( toInteger ), rgba[3] ];
     }
     
     function tpl( id, model, bind ) 
@@ -339,7 +353,41 @@
                             if ( pub ) 
                             {
                                 model.notify('css.color');
-                                widget.element.css('background-color', model.get('css.color'));
+                                widget.element[0].style.backgroundColor = model.get('css.color');
+                            }
+                            return true;
+                        }
+                        ,'css.color': function( k, color, pub ) {
+                            var model = this, pre4, c;
+                            if ( color && color.substring )
+                            {
+                                pre4 = color.slice( 0, 4 );
+                                if ( 'rgba' === pre4 ) 
+                                {
+                                    c = parseRGBA( color );
+                                    model.set('opacity', c[1]).set('rgb', c[0]);
+                                }
+                                else if ( 'rgb(' === pre4 ) 
+                                {
+                                    c = parseRGB(color);
+                                    model.set('rgb', c);
+                                }
+                                else if ( 'hsl(' === pre4 ) 
+                                {
+                                    c = parseHSL(color);
+                                    model.set('hsb', c);
+                                }
+                                else
+                                {
+                                    c = color;
+                                    model.set('hex', '#' === c.charAt(0) ? c.slice(1) : c);
+                                }
+                                prevColor = model.$data.rgb.slice( );
+                                if ( pub ) 
+                                {
+                                    model.notify(['hsb', 'rgb', 'hex', 'color']);
+                                    widget.element[0].style.backgroundColor = model.get('css.color');
+                                }
                             }
                             return true;
                         }
@@ -347,19 +395,19 @@
                             var model = this;
                             if ( color )
                             {
-                                if ( 'string' === typeof color ) 
-                                    model.set('hex', '#' === color.charAt(0) ? color.slice(1) : color, pub);
+                                if ( color.substring ) 
+                                    model.set('hex', '#' === color.charAt(0) ? color.slice(1) : color);
                                 else if ( color.h !== undef && color.s !== undef && color.b !== undef ) 
-                                    model.set('hsb', [color.h, color.s, color.b], pub);
+                                    model.set('hsb', [color.h, color.s, color.b]);
                                 else if ( color.r !== undef && color.g !== undef && color.b !== undef ) 
-                                    model.set('rgb', [color.r, color.g, color.b], pub);
+                                    model.set('rgb', [color.r, color.g, color.b]);
                                 else
-                                    model.set('rgb', [color[0]||0, color[1]||0, color[2]||0], pub);
+                                    model.set('rgb', [color[0]||0, color[1]||0, color[2]||0]);
                                 prevColor = model.$data.rgb.slice( );
                                 if ( pub ) 
                                 {
-                                    model.notify('css.color');
-                                    widget.element.css('background-color', model.get('css.color'));
+                                    model.notify(['hsb', 'rgb', 'hex', 'css.color']);
+                                    widget.element[0].style.backgroundColor = model.get('css.color');
                                 }
                             }
                             return true;
@@ -532,15 +580,24 @@
             if ( el.hasClass('ui-colorpicker-transition-slide') ) $ui.addClass('ui-colorpicker-transition-slide');
         },
         
-        color: function( col, opacity ) {
-            var argslen = arguments.length;
+        color: function( col ) {
+            var self = this, argslen = arguments.length;
             if ( argslen ) 
             {
-                this.$view.$model.set('color', col, 1);
-                if ( argslen > 1 ) this.$view.$model.set('opacity', opacity, 1);
-                return this.element;
+                self.$view.$model.set('color', col, 1);
+                return self.element;
             }
-            return this.$view.$model.get('css.color');
+            return self.$view.$model.get('css.color');
+        },
+        
+        opacity: function( opacity ) {
+            var self = this, argslen = arguments.length;
+            if ( argslen ) 
+            {
+                self.$view.$model.set('opacity', opacity, 1);
+                return self.element;
+            }
+            return self.$view.$model.get('opacity');
         }
     });
 
