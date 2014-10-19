@@ -15,21 +15,30 @@
     z-index: 1; display: inline-block;
     vertical-align: bottom;
     cursor: pointer;
-    width: 18px; height: 18px;
+    width: 24px; height: 24px;
     background-image: url(images/colorpicker_transparent.jpg);
     background-repeat: repeat;
     background-position: 0 0;
     background-color: #fff;
-    border: 2px solid rgba(127, 127, 127, .5);
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     -ms-border-radius: 4px;
     -o-border-radius: 4px;
-    border-radius: 4px;
-    margin: 2px 4px;
+    border: none; border-radius: 4px;
+    padding: 0; margin: 2px 4px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
 }
 .ui-colorselector:before {
     position: absolute; display: block;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
     content: " ";
     padding: 0; margin: 0;
     top: 0; left: 0;
@@ -37,11 +46,13 @@
     z-index: 2;
     background-image: none;
     background-color: inherit;
+    border: 2px solid rgba(127, 127, 127, .5);
+    border-radius: inherit;
 }
 .ui-colorselector:after {
     position: absolute; display: block; z-index: 3;
-    width: 6px; height: 6px;
-    text-align: center;  line-height: 6px; font-size: 6px;
+    width: 8px; height: 8px;
+    text-align: center;  line-height: 8px; font-size: 8px;
     background: none;
     bottom: 0; right: 0;
     background-color: rgba(127, 127, 127, .5);
@@ -58,6 +69,10 @@
 .ui-colorselector:active,
 .ui-colorselector:hover {
     outline: 0 !important;
+}
+.ui-colorselector:focus:before,
+.ui-colorselector:active:before,
+.ui-colorselector:hover:before {
     border-color: rgba(255, 255, 255, .5);
 }
 .ui-colorselector:focus:after,
