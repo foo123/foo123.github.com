@@ -152,7 +152,7 @@
     <div class="fluid col-1-1">
 
         <div id="tplContainer" class="fluid col-5-10 container">
-            <div class="heading"><strong>Template Markup (Contemplate):</strong></div>
+            <div class="heading"><strong>Template Markup (Contemplate $(contemplate_version)):</strong></div>
             
             <textarea id="tpl" class="editor">
 <div class="class">
@@ -266,11 +266,14 @@ jQuery(function($){
     
     $screen.modelview({
         autobind: true
+        ,livebind: '$(__KEY__)'
         ,bindAttribute: 'data-bind'
         
         ,model: {
             id: 'model'
-            ,data: {  }
+            ,data: {  
+                contemplate_version: Contemplate.VERSION
+            }
         }
         ,actions: { 
             render: function(evt, $el, data) {
