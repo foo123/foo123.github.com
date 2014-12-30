@@ -161,12 +161,12 @@
     
     
 <script type="text/javascript">//<![CDATA[
-require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
-    function( $, $R, $MV, RegExAnalyzer ) {
+require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
+    function( $, $R, $MV, RegexAnalyzer ) {
     "use strict";
     
     var undef=undefined, $window = $(window), $screen = $('#screen'), output = document.getElementById('output'),
-        appTask, appModel, appView, appRouter, analyzer = new RegExAnalyzer(), code,
+        appTask, appModel, appView, appRouter, analyzer = new RegexAnalyzer(), code,
         width = output.clientWidth, height = output.clientHeight,
         toJSON = JSON.stringify
     ;
@@ -193,11 +193,11 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
             
             output = [
                 "Input: " + input
-                ,"Regular Expression: " + analyzer.$regex
+                ,"Regular Expression: " + analyzer._regex
                 ,"Regular Expression Flags: "
-                ,toJSON( analyzer.$flags )
+                ,toJSON( analyzer._flags )
                 ,"Regular Expression Parts: "
-                ,toJSON( analyzer.$parts, null, 4 )
+                ,toJSON( analyzer._parts, null, 4 )
             ].join( "\n\n" );
             
             code.setValue( output );
@@ -206,13 +206,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
         peek: function( appModel ) {
             var input = appModel.get('regex'), output, peekChars;
             
-            peekChars = analyzer.regex( input ).getPeekChars( );
+            peekChars = analyzer.regex( input ).peek( );
             
             output = [
                 "Input: " + input
-                ,"Regular Expression: " + analyzer.$regex
+                ,"Regular Expression: " + analyzer._regex
                 ,"Regular Expression Flags: "
-                ,toJSON( analyzer.$flags )
+                ,toJSON( analyzer._flags )
                 ,["Regular Expression Peek Characters: "
                 ,"// Experimental Feature, not all characters are expanded, eg. special characters (like .) appear as special"
                 ,"// Peek Characters are the start characters of a hypothetical input string"
@@ -226,13 +226,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegExAnalyzer'],
         generate: function( appModel ) {
             var input = appModel.get('regex'), output, sample;
             
-            sample = analyzer.regex( input ).generateSample( );
+            sample = analyzer.regex( input ).sample( );
             
             output = [
                 "Input: " + input
-                ,"Regular Expression: " + analyzer.$regex
+                ,"Regular Expression: " + analyzer._regex
                 ,"Regular Expression Flags: "
-                ,toJSON( analyzer.$flags )
+                ,toJSON( analyzer._flags )
                 ,["Regular Expression Sample Matching String: "
                 ,"// Experimental Feature"
                 ,"// Generates a random string which is supposed to match the regular expression"].join("\n")

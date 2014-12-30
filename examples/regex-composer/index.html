@@ -209,7 +209,7 @@
         <div class="fluid col-3-5">
             <strong>Code:</strong><br /><br />
 <textarea id="code">
-new RegExComposer( )
+new RegexComposer( )
 
     .startOfLine( )
 
@@ -479,8 +479,8 @@ new RegExComposer( )
     
     
 <script>//<![CDATA[
-require(['jQuery', 'ModelView', 'RegExComposer'],
-    function($, ModelView, RegExComposer) {
+require(['jQuery', 'ModelView', 'RegexComposer'],
+    function($, ModelView, RegexComposer) {
     var $screen = $('#screen'),
         codeEditor = document.getElementById('code'),
         width = codeEditor.clientWidth, height = codeEditor.clientHeight
@@ -518,7 +518,7 @@ require(['jQuery', 'ModelView', 'RegExComposer'],
                 var regex, e, model = this.$model;
                 
                 try{
-                    regex = new Function("RegExComposer", "'use strict'; return "+code.getValue( )+";")( RegExComposer );
+                    regex = new Function("RegexComposer", "'use strict'; return "+code.getValue( )+";")( RegexComposer );
                 } catch (e) { 
                     regex = "Error Occured!"; 
                 }
