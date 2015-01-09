@@ -197,7 +197,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
                 ,"Regular Expression Flags: "
                 ,toJSON( analyzer._flags )
                 ,"Regular Expression Parts: "
-                ,toJSON( analyzer._parts, null, 4 )
+                ,toJSON( analyzer._parts.toObject(), null, 4 )
             ].join( "\n\n" );
             
             code.setValue( output );
