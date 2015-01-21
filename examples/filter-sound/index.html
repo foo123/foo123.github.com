@@ -165,8 +165,8 @@
             }
         }
     });
-    require(['Classy', 'Asynchronous', 'FILTER', 'FILTER_PLUGINS', 'Dancer', 'utils', 'Stats'/*, 'domReady!'*/], 
-        function( $_1, $_2, $_3, $F, Dancer, U, Stats ) {
+    require(['jQuery', 'Classy', 'Asynchronous', 'FILTER', 'FILTER_PLUGINS', 'Dancer', 'Stats'], 
+        function( $, $_1, $_2, $_3, $F, Dancer, Stats ) {
         
         var useParallelFilters = $F.Browser.supportsWorker && /(&|\?)parallel\b/i.test( location.href )
             ,baseUrl = location.href.split(/#|\?/)[ 0 ]
@@ -188,10 +188,10 @@
             ,_width = ~~(Math.min(900, w)*invupscaleX), _height = ~~(Math.min(400, h)*invupscaleY)
         ;
         
-        U.Get('parallel').Event( 'click', function( ) {
+        $('#parallel').on( 'click', function( ) {
             location.href = baseUrl + '?parallel=1';
         });
-        U.Get('synchronous').Event( 'click', function( ) {
+        $('#synchronous').on( 'click', function( ) {
             location.href = baseUrl + '?synchronous=1';
         });
         
@@ -213,6 +213,7 @@
             
             Dancer.isSupported( ) || audioLoaded( );
             !dancer.isLoaded( ) ? dancer.bind( 'loaded', audioLoaded ) : audioLoaded( );
+            //audio.addEventListener('play', audioLoaded, false);
         }
         
       /*
@@ -221,33 +222,22 @@
         function audioLoaded( ) 
         {
             var
-                loading = U.Get( 'loading' ),
-                anchor  = U.GetTag('A'),
-                supported = Dancer.isSupported(),
-                p
+                loading = $( '#loading' ),
+                anchor  = $('<a href="#" class="button" />'),
+                supported = Dancer.isSupported()
             ;
 
-            anchor
-                .Style('className', 'button', 1)
-                .Add( U.Text( supported ? 'Play!' : 'Close' ) )
-                .Attribute( 'href', '#' )
-            ;
+            anchor.text(supported ? 'Play!' : 'Close');
             
-            loading
-                .Html('')
-                .AddEl( anchor )
-            ;
+            loading.empty().append( anchor );
 
             if ( !supported ) 
             {
-                p = U.GetTag('P')
-                    .Add( U.Text( 'Your browser does not currently support either Web Audio API or Audio Data API. The audio may play, but the visualizers will not move to the music; check out the latest Chrome or Firefox browsers!' ) )
-                ;
-                loading.AddEl( p );
+                loading.append( $('<p>Your browser does not currently support either Web Audio API or Audio Data API. The audio may play, but the visualizers will not move to the music; check out the latest Chrome or Firefox browsers!</p>') );
             }
 
-            anchor.Event( 'click', function () {
-                loading.Style('display', 'none');
+            anchor.on( 'click', function () {
+                loading.hide();
                 dancer.play(); 
                 animate();
             });
@@ -260,12 +250,12 @@
         {
              // prepare visualization image
             //visualization = new $F.Image().fill('rgb(0,0,0)', 0, 0, _width, _height);
-            //container.Add( visualization.domElement );
+            //container.append( visualization.domElement );
              // prepare down-scaled visualization image
-            visualization = $F.Image( ).fill('rgb(0,0,0)', 0, 0, _width, _height);
+            visualization = $F.Image( ).restorable(false).fill('rgb(0,0,0)', 0, 0, _width, _height);
             // up-scaled final rendered visualization image
-            upscaledVisualization = $F.ScaledImage( upscaleX, upscaleY );
-            container.Add( upscaledVisualization.domElement );
+            upscaledVisualization = $F.ScaledImage( upscaleX, upscaleY ).restorable(false);
+            container.append( upscaledVisualization.domElement );
             
             
             // prepare filters
@@ -313,7 +303,7 @@
             // apply the visualization
             triopticVisualizer.apply( visualization, visualization, function( ) {
                 // up-scale it for rendering
-                upscaledVisualization.setImage( visualization.canvasElement );
+                upscaledVisualization.setImage( visualization.domElement );
                 
                 stats.end( );
                 
@@ -341,13 +331,13 @@
                 triopticVisualizer = null;
             };
             
-            container = U.Get('container'); 
-            statsContainer = U.Get('statsContainer');
-            audio = U.ID('audio');
+            container = $('#container'); 
+            statsContainer = $('#statsContainer');
+            audio = $('#audio')[0];
 
             stats = new Stats( );
             stats.setMode( 1 );
-            statsContainer.Add( stats.domElement );
+            statsContainer.append( stats.domElement );
             
             prepareFilters( );
             prepareAudio( );
