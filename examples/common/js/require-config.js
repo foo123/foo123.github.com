@@ -20,6 +20,7 @@
             ,ModelView: "modelview.min"
             ,Dromeo: "Dromeo.min"
             ,PublishSubscribe: "PublishSubscribe.min"
+            ,Xpresion: "Xpresion.min"
             ,HAAR: "haar-detector.min"
             //,HAARjs: "haar-detector.min"
             ,cascades: "../cascades"
