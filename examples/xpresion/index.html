@@ -213,7 +213,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
             var input = appModel.get('expr');
             
             oEditor.setValue([
-                "Debug Inbformation"
+                "Debug Information"
                 ,"Input Expression: " + input
                 ,"Debug Output: "
                 ,Xpresion(input).debug(fromJSON(vEditor.getValue()))
@@ -224,7 +224,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
             var input = appModel.get('expr');
             
             oEditor.setValue([
-                "Evaluatation"
+                "Evaluation"
                 ,"Input Expression: " + input
                 ,"Result: " + Xpresion(input).evaluate(fromJSON(vEditor.getValue()))
             ].join( "\n\n" ));
