@@ -1,0 +1,311 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie lt-ie9">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" class="no-ie">
+<!--<![endif]-->
+<head>
+    <title>Xpresion Expression Parser Engine</title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="Xpresion Expression Parser Engine" />
+    
+    
+    <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+    
+<link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
+<link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
+<link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
+<style type="text/css">
+#output,#vars {
+    position:relative;
+    padding:10px;
+    width: 90%;
+    height: 450px;
+}
+
+#expr {
+    position:relative;
+    display:inline-block;
+    width:80%;
+}
+
+.button {
+    -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    box-shadow:inset 0px 1px 0px 0px #ffffff;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+    background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+    background-color:#ededed;
+    -webkit-border-top-left-radius:20px;
+    -moz-border-radius-topleft:20px;
+    border-top-left-radius:20px;
+    -webkit-border-top-right-radius:20px;
+    -moz-border-radius-topright:20px;
+    border-top-right-radius:20px;
+    -webkit-border-bottom-right-radius:20px;
+    -moz-border-radius-bottomright:20px;
+    border-bottom-right-radius:20px;
+    -webkit-border-bottom-left-radius:20px;
+    -moz-border-radius-bottomleft:20px;
+    border-bottom-left-radius:20px;
+    text-indent:0;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    color:#777777;
+    font-family:Arial;
+    font-size:15px;
+    font-weight:bold;
+    font-style:normal;
+    height:50px;
+    line-height:50px;
+    width:86px;
+    text-decoration:none;
+    text-align:center;
+    text-shadow:1px 1px 0px #ffffff;
+}
+.button:hover {
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+    background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+    background-color:#dfdfdf;
+}.button:active {
+    position:relative;
+    top:1px;
+}
+.button {
+    width:90px;
+    height:30px;
+    line-height:30px;
+    cursor:pointer;
+    position:relative;
+}
+</style>
+
+    
+
+    
+    <script type="text/javascript" src="../common/js/require.js"></script>
+    <script type="text/javascript" src="../common/js/require-config.js"></script>
+    
+<script src="../common/js/codemirror/codemirror.min.js"></script>
+<script src="../common/js/codemirror/mode/javascript.js"></script>
+<script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
+<script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
+<script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
+<script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
+
+    
+
+</head>
+
+<body>
+    <span id="forkongithub"><a href="https://github.com/foo123/Xpresion">Xpresed on GitHub</a></span>
+    
+    
+<header id="header">
+    <h1>Xpresion</h1>
+    <i>A simple and flexible Expression Parser Engine for PHP, Python, Node/JS</i>
+</header>
+
+<br /><br />
+
+    
+    
+<div id="screen" class="fluid col-1-1">
+    <div class="fluid col-1-1">
+    
+        <strong>Expression:</strong>
+        &nbsp;&nbsp;<input type="button" class="button" id="debug" data-bind='{"click":"debug"}' value="Debug" />
+        &nbsp;&nbsp;<input type="button" class="button" id="evaluate" data-bind='{"click":"evaluate"}' value="Evaluate" />
+        &nbsp;&nbsp;<a class="button" id="help" href="https://github.com/foo123/Xpresion" target="_blank">Help</a>
+        <br /><br />
+        <input type="text" size=120 id="expr" name="model[expr]" value="" />
+    </div>
+    
+    <br /><br />
+    
+    <div class="fluid col-2-5">
+    
+        <strong>Output:</strong><br /><br />
+        <textarea id="output"></textarea>
+        
+    </div>
+    <div class="fluid col-2-5">
+    
+        <strong>Variables (JSON):</strong><br /><br />
+        <textarea id="vars">{"v":3}</textarea>
+        
+    </div>
+</div>
+
+    
+    
+    <footer id="footer">
+        <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
+        
+        
+<div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
+
+        <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
+        <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
+        <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
+        <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
+    </footer>
+    <br /><br />
+    
+    
+    
+<script type="text/javascript">//<![CDATA[
+require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
+    function( $, $R, $MV, Xpresion ) {
+    "use strict";
+    
+    Xpresion.defaultConfiguration( );
+    
+    var undef=undefined, $window = $(window), $screen = $('#screen'), 
+        output = document.getElementById('output'),
+        vars = document.getElementById('vars'),
+        oEditor, vEditor,
+        appTask, appModel, appView, appRouter, 
+        width = output.clientWidth, height = output.clientHeight,
+        toJSON = JSON.stringify, fromJSON = JSON.parse
+    ;
+    
+    $MV.jquery( $ );
+    
+    oEditor = CodeMirror.fromTextArea(output, {
+        mode: "application/json",
+        lineWrapping: true,
+        lineNumbers : true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        theme: 'lesser-dark',
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+    });
+    oEditor.setSize( width, height );
+        
+    vEditor = CodeMirror.fromTextArea(vars, {
+        mode: "application/json",
+        lineWrapping: true,
+        lineNumbers : true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        theme: 'lesser-dark',
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+    });
+    vEditor.setSize( width, height );
+        
+    appTask = {
+        debug: function( appModel ) {
+            var input = appModel.get('expr');
+            
+            oEditor.setValue([
+                "Debug Inbformation"
+                ,"Input Expression: " + input
+                ,"Debug Output: "
+                ,Xpresion(input).debug(fromJSON(vEditor.getValue()))
+            ].join( "\n\n" ));
+        },
+        
+        evaluate: function( appModel ) {
+            var input = appModel.get('expr');
+            
+            oEditor.setValue([
+                "Evaluatation"
+                ,"Input Expression: " + input
+                ,"Result: " + Xpresion(input).evaluate(fromJSON(vEditor.getValue()))
+            ].join( "\n\n" ));
+        }
+    };
+    
+    appRouter = new $R( );
+    appRouter.on('#{%ALL%:hash}', function( route, params ){
+        params = params && params.hash ? appRouter.unglue( params.hash ) : null;
+        if ( params && params.action && appTask[params.action] )
+        {
+            var appModel = $screen.modelview( 'model' );
+            if ( params.expr ) appModel.set('expr', params.expr, 1);
+            appTask[ params.action ]( appModel );
+        }
+    });
+    
+    $screen.modelview({
+        autobind: true
+        ,bindAttribute: 'data-bind'
+        
+        ,model: {
+            id: 'model'
+            ,data: { 
+                expr: "1+2+$v"
+            }
+            ,types: { 
+                expr: $MV.Type.Cast.STR
+            }
+        }
+        ,actions: { 
+            debug: function(evt, $el, data) {
+                var model=this.$model;
+                location.hash = '#' + appRouter.glue({
+                    action: 'debug',
+                    expr: model.get( 'expr' ),
+                    t: new Date( ).getTime( )
+                });
+            },
+            
+            evaluate: function(evt, $el, data) {
+                var model=this.$model;
+                location.hash = '#' + appRouter.glue({
+                    action: 'evaluate',
+                    expr: model.get( 'expr' ),
+                    t: new Date( ).getTime( )
+                });
+            }
+        }
+    });
+        
+    $window
+        .on('resize', function( evt ) {
+            var v = output.style.visibility,
+                d = output.style.display,
+                v2 = vars.style.visibility,
+                d2 = vars.style.display
+            ;
+            vars.style.visibility = 'hidden';
+            vars.style.display = 'block';
+            width = vars.clientWidth; 
+            height = vars.clientHeight;
+            vars.style.display = d2;
+            vars.style.visibility = v2;
+            vEditor.setSize( width, height );
+            
+            output.style.visibility = 'hidden';
+            output.style.display = 'block';
+            width = output.clientWidth; 
+            height = output.clientHeight;
+            output.style.display = d;
+            output.style.visibility = v;
+            oEditor.setSize( width, height );
+        })
+        .on('hashchange', function( evt ) {
+            appRouter.route( location.hash );
+        })
+        .trigger( 'hashchange' )
+    ;
+});
+//]]></script>
+
+</body>
+</html>
