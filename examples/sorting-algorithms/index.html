@@ -161,7 +161,7 @@ body {
     <strong>Select Sorting Algorithm: </strong><br />
     <div class="cont"><select name="model[algorithm][selected]">
         <optgroup label="Comparison-based:">
-            <option value="BuiltinSort">BuiltinSort</option>
+            <option value="BuiltinSort" selected="selected">BuiltinSort</option>
             <option value="BubbleSort">BubbleSort</option>
             <option value="CocktailSort">CocktailSort</option>
             <option value="ShellSort">ShellSort</option>
@@ -188,7 +188,7 @@ body {
     
     <strong>Select Data Size: </strong><br />
     <div class="cont"><select name="model[algorithm][data_size]">
-        <option value="5">5</option>
+        <option value="5" selected="selected">5</option>
         <option value="10">10</option>
         <option value="20">20</option>
         <option value="50">50</option>
@@ -208,7 +208,7 @@ body {
     <strong>Select Data Type: </strong><br />
     <div class="cont"><select name="model[algorithm][data_type]">
         <optgroup label="Integers:">
-            <option value="range">Integer Range [0, N-1]</option>
+            <option value="range" selected="selected">Integer Range [0, N-1]</option>
             <option value="integer-duplicates">Groups of Integer Duplicates</option>
             <option value="integer-equidistant">Equidistant Integers</option>
             <option value="integer-uniform">Uniform Integers</option>
@@ -229,7 +229,7 @@ body {
     <div class="cont"><select name="model[algorithm][pre_sort_state]">
         <option value="sorted">Sorted</option>
         <option value="reverse-sorted">Reverse Sorted</option>
-        <option value="shuffled">Shuffled</option>
+        <option value="shuffled" selected="selected">Shuffled</option>
     </select></div>                                
     
     <input id="test" type="button" class="button" 
@@ -535,7 +535,7 @@ require([/*'Benchmark',*/ 'jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Sort'
         livebind: '$(__KEY__)',
         autobind: true,
         events: ['change', 'click'],
-        autoSync: false,
+        autoSync: true,
         
         model: {
             id: 'model',
@@ -595,16 +595,16 @@ require([/*'Benchmark',*/ 'jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Sort'
                     pre_sort_state: algoInfo.pre_sort_state,
                     r: new Date( ).getTime( )
                 });
-                //doTest( model );
+                doTest( model );
             }
         }
     });
     appView = $panel.modelview('view');
     appModel = appView.$model;
     appRouter = new $R( );
-    $panel.modelview('sync');
+    //$panel.modelview('sync');
     
-    appRouter.on('#{%ALL%:hash}', function( route, params ) {
+    appRouter.one('#{%ALL%:hash}', function( route, params ) {
         params = params && params.hash ? appRouter.unglue( params.hash ) : null;
         if ( params && params.action && 'test' === params.action )
         {
@@ -620,7 +620,7 @@ require([/*'Benchmark',*/ 'jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Sort'
         }
     });
     
-    $window.on('hashchange', function( evt ) {
+    $window.one('hashchange', function( evt ) {
         appRouter.route( location.hash );
     }).trigger( 'hashchange' );
     

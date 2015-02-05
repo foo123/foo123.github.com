@@ -244,7 +244,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
     };
     
     appRouter = new $R( );
-    appRouter.on('#{%ALL%:hash}', function( route, params ){
+    appRouter.one('#{%ALL%:hash}', function( route, params ){
         params = params && params.hash ? appRouter.unglue( params.hash ) : null;
         if ( params && params.action && appTask[params.action] )
         {
@@ -275,6 +275,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
                     regex: model.get( 'regex' ),
                     t: new Date( ).getTime( )
                 });
+                appTask.analyze( model );
             },
             
             peek: function(evt, $el, data) {
@@ -284,6 +285,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
                     regex: model.get( 'regex' ),
                     t: new Date( ).getTime( )
                 });
+                appTask.peek( model );
             },
             
             generate: function(evt, $el, data) {
@@ -293,6 +295,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
                     regex: model.get( 'regex' ),
                     t: new Date( ).getTime( )
                 });
+                appTask.generate( model );
             }
         }
     });
@@ -310,7 +313,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
             output.style.visibility = v;
             code.setSize( width, height );
         })
-        .on('hashchange', function( evt ) {
+        .one('hashchange', function( evt ) {
             appRouter.route( location.hash );
         })
         .trigger( 'hashchange' )

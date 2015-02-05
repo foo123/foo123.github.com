@@ -232,7 +232,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
     };
     
     appRouter = new $R( );
-    appRouter.on('#{%ALL%:hash}', function( route, params ){
+    appRouter.one('#{%ALL%:hash}', function( route, params ){
         params = params && params.hash ? appRouter.unglue( params.hash ) : null;
         if ( params && params.action && appTask[params.action] )
         {
@@ -263,6 +263,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
                     expr: model.get( 'expr' ),
                     t: new Date( ).getTime( )
                 });
+                appTask.debug( model );
             },
             
             evaluate: function(evt, $el, data) {
@@ -272,6 +273,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
                     expr: model.get( 'expr' ),
                     t: new Date( ).getTime( )
                 });
+                appTask.evaluate( model );
             }
         }
     });
@@ -299,7 +301,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
             output.style.visibility = v;
             oEditor.setSize( width, height );
         })
-        .on('hashchange', function( evt ) {
+        .one('hashchange', function( evt ) {
             appRouter.route( location.hash );
         })
         .trigger( 'hashchange' )

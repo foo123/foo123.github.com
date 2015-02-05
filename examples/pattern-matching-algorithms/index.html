@@ -161,7 +161,7 @@ body {
     <strong>Select Match Algorithm: </strong><br />
     <div class="cont"><select name="model[algorithm][selected]">
         <optgroup label="Single Pattern:">
-            <option value="BuiltinMatcher">Builtin Matcher</option>
+            <option value="BuiltinMatcher" selected="selected">Builtin Matcher</option>
             <option value="NaiveMatcher">Naive Matcher</option>
             <option value="RabinKarpMatcher">Rabin-Karp Matcher</option>
             <option value="FSAMatcher">FSA Matcher</option>
@@ -172,7 +172,7 @@ body {
     </select></div> 
     
     <strong>Select Match Pattern: </strong><br />
-    <div class="cont"><input name="model[algorithm][pattern]" type="text" size="12"/></div> 
+    <div class="cont"><input name="model[algorithm][pattern]" type="text" size="12" value=""/></div> 
     
     <strong>Select Text: </strong><br />
     <div class="cont"><textarea name="model[algorithm][text]" rows="4" cols="13"></textarea></div> 
@@ -284,7 +284,7 @@ require(['jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Pattern'],
         livebind: '$(__KEY__)',
         autobind: true,
         events: ['change', 'click'],
-        autoSync: false,
+        autoSync: true,
         
         model: {
             id: 'model',
@@ -325,7 +325,7 @@ require(['jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Pattern'],
                     text: algoInfo.text,
                     r: new Date().getTime()
                 });
-                //doTest( model );
+                doTest( model );
             }
         }
     });
@@ -333,9 +333,9 @@ require(['jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Pattern'],
     appView = $panel.modelview('view');
     appModel = appView.$model;
     appRouter = new $R( );
-    $panel.modelview('sync');
+    //$panel.modelview('sync');
     
-    appRouter.on('#{%ALL%:hash}', function( route, params ) {
+    appRouter.one('#{%ALL%:hash}', function( route, params ) {
         params = params && params.hash ? appRouter.unglue( params.hash ) : null;
         if ( params && params.action && 'test' === params.action )
         {
@@ -348,7 +348,7 @@ require(['jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Pattern'],
             doTest( appModel );
         }
     });
-    $window.on('hashchange', function( evt ) {
+    $window.one('hashchange', function( evt ) {
         appRouter.route( location.hash );
     }).trigger( 'hashchange' );
     
