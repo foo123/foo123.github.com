@@ -133,6 +133,9 @@ function modelView( ModelView )
         // model data validators (if any) here ..
         .validators({ msg: ModelView.Validation.Validate.NOT_EMPTY })
     )
+    .shortcuts({
+        'alt+h': 'alert_msg'
+    })
     .actions({
         // custom view actions (if any) here ..
         alert_msg: function( evt, el, bindData ) {
@@ -187,6 +190,10 @@ function modelViewjQuery( ModelView, $ )
                 // model data validators (if any) here ..
                 msg: ModelView.Validation.Validate.NOT_EMPTY
             }
+        },
+        
+        shortcuts: {
+            'alt+h': 'alert_msg'
         },
         
         actions: {
