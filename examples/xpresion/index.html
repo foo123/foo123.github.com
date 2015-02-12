@@ -179,7 +179,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
         oEditor, vEditor,
         appTask, appModel, appView, appRouter, 
         width = output.clientWidth, height = output.clientHeight,
-        toJSON = JSON.stringify, fromJSON = JSON.parse
+        toJSON = JSON.stringify, fromJSON = JSON.parse,
+        expr = null
     ;
     
     $MV.jquery( $ );
@@ -211,22 +212,24 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
     appTask = {
         debug: function( appModel ) {
             var input = appModel.get('expr');
+            if ( !expr || expr.source !== input ) expr = Xpresion(input);
             
             oEditor.setValue([
                 "Debug Information"
                 ,"Input Expression: " + input
                 ,"Debug Output: "
-                ,Xpresion(input).debug(fromJSON(vEditor.getValue()))
+                ,expr.debug(fromJSON(vEditor.getValue()))
             ].join( "\n\n" ));
         },
         
         evaluate: function( appModel ) {
             var input = appModel.get('expr');
+            if ( !expr || expr.source !== input ) expr = Xpresion(input);
             
             oEditor.setValue([
                 "Evaluation"
                 ,"Input Expression: " + input
-                ,"Result: " + Xpresion(input).evaluate(fromJSON(vEditor.getValue()))
+                ,"Result: " + expr.evaluate(fromJSON(vEditor.getValue()))
             ].join( "\n\n" ));
         }
     };
