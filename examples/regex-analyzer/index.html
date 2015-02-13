@@ -272,8 +272,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
                 var model=this.$model;
                 location.hash = '#' + appRouter.glue({
                     action: 'analyze',
-                    regex: model.get( 'regex' ),
-                    t: new Date( ).getTime( )
+                    regex: model.get( 'regex' )
                 });
                 appTask.analyze( model );
             },
@@ -282,8 +281,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
                 var model=this.$model;
                 location.hash = '#' + appRouter.glue({
                     action: 'peek',
-                    regex: model.get( 'regex' ),
-                    t: new Date( ).getTime( )
+                    regex: model.get( 'regex' )
                 });
                 appTask.peek( model );
             },
@@ -292,8 +290,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
                 var model=this.$model;
                 location.hash = '#' + appRouter.glue({
                     action: 'generate',
-                    regex: model.get( 'regex' ),
-                    t: new Date( ).getTime( )
+                    regex: model.get( 'regex' )
                 });
                 appTask.generate( model );
             }

@@ -263,8 +263,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
                 var model=this.$model;
                 location.hash = '#' + appRouter.glue({
                     action: 'debug',
-                    expr: model.get( 'expr' ),
-                    t: new Date( ).getTime( )
+                    expr: model.get( 'expr' )
                 });
                 appTask.debug( model );
             },
@@ -273,8 +272,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
                 var model=this.$model;
                 location.hash = '#' + appRouter.glue({
                     action: 'evaluate',
-                    expr: model.get( 'expr' ),
-                    t: new Date( ).getTime( )
+                    expr: model.get( 'expr' )
                 });
                 appTask.evaluate( model );
             }
