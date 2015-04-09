@@ -12,7 +12,7 @@
 <html lang="en" class="no-ie">
 <!--<![endif]-->
 <head>
-    <title>Sudoku (TO BE UPLOADED)</title>
+    <title>Sudoku (IN PROGRESS)</title>
     
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
@@ -100,37 +100,15 @@ body {
     cursor:pointer;
     position:relative;
 }
-#console {
-    border: 1px solid #aaa;
-    background:#efefef; 
-    color:#121212; 
-    min-height:300px;
-    padding:20px;
-}
 .loader {
     display: inline-block;
     width:20px;
     height:20px;
     background: transparent url(../common/assets/ajax-loader.gif) 0 0 no-repeat;
 }
-.cont {
-    margin-top: 8px;
-    margin-bottom: 20px;
+table td{
+ padding-bottom:10px;
 }
-.algo_info strong {
-    font-size: 14px;
-}
-.algo_info a {
-    font-size: 12px;
-}
-.algo_info i {
-    font-size: 12px;
-}
-#console.processing > #loader { display: inline-block; }
-#console.processing > #result { display: none; }
-#console:not(.processing) > #loader { display: none; }
-#console:not(.processing) > #result { display: block; }
-
 #forkongithub a{background:#aa0000;color:#fff;text-decoration:none;font-family:arial, sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:0.9rem;line-height:1.4rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#aa0000;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;z-index:100;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:absolute;display:block;z-index:100;top:0;right:0;width:200px;overflow:hidden;height:200px;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}
 </style>
 
@@ -141,6 +119,8 @@ body {
     <script type="text/javascript" src="../common/js/require-config.js"></script>-->
     <script type="text/javascript" src="./jquery.js"></script>
     <script type="text/javascript" src="./jqueryui.js"></script>
+    <script type="text/javascript" src="../common/js/Contemplate.min.js"></script>
+    <script type="text/javascript" src="../common/js/modelview.min.js"></script>
     <script type="text/javascript" src="./sudoku.bundle.js"></script>
     <!--<script type="text/javascript" src="./display-sudoku.js"></script>-->
     <link rel="stylesheet" type="text/css" href="./sudoku.min.css" />
@@ -155,7 +135,8 @@ body {
     
     
 <header id="header" class="fluid col-1-1">
-    <h1>Sudoku Game, Builder and Solver in pure JavaScript  (TO BE UPLOADED)</h1>
+    <h1>Sudoku Game, Builder and Solver in pure JavaScript (IN PROGRESS)</h1>
+    <i>A new Sudoku of desired difficulty is generated on-the-fly, by custom algorithm</i>
 </header>
 
 <br />
@@ -163,6 +144,35 @@ body {
     
     
 <section id="panel" class="fluid col-1-1" style="padding: 20px;">
+<div class="fluid col-1-4">
+    <table class="fluid col-1-1"><tbody>
+    <tr>
+    <td><button class="button" data-bind='{"click":"play_game"}'>Play</button></td>
+    <td><button class="button" data-bind='{"click":"new_game"}'>New</button></td>
+    </tr>
+    <tr>
+    <td><strong>Type:</strong></td>
+    <td><select name="model[type]">
+    <option value="9" selected>9x9 Sudoku</option>
+    <option value="6">6x6 Sudoku</option>
+    <option value="4">4x4 Sudoku</option>
+    </select></td>
+    </tr>
+    <tr>
+    <td><strong>Difficulty:</strong></td>
+    <td><select name="model[difficulty]">
+    <option value="1">Very Easy</option>
+    <option value="2">Easy</option>
+    <option value="3" selected>Medium</option>
+    <option value="4">Hard</option>
+    <option value="5">Very Hard</option>
+    </select></td>
+    </tr>
+    </tbody></table>
+</div>
+<div class="fluid col-3-4">
+<div id="grid" style="position:relative;background:white;width:80%;height:500px"></div>
+</div>
 </section>
 <br />
 
@@ -172,7 +182,7 @@ body {
         <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
         
         
-<div class="showcase">DOM abstraction by <a href="http://jquery.com/" target="_blank">jQuery</a></div>
+<div class="showcase">DOM abstraction by <a href="http://jquery.com/" target="_blank">jQuery/jQueryUI</a></div>
 
         <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
         <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
@@ -181,10 +191,41 @@ body {
     </footer>
     <br /><br />
     
-    
-    
 <script type="text/javascript">//<![CDATA[
+!function($, Contemplate, ModelView, Sudoku) {
+ModelView.jquery($);
+// on DOM ready
+$(function(){
+    var $panel = $('#panel'), model, view;
+    $panel.modelview({
+        id: 'view',
+        events: ['change','click'],
+        autobind: true,
+        autoSync: true,
+        model: {
+            id: 'model',
+            data: {
+                difficulty: 3,
+                type: 9
+            },
+            types: {
+                difficulty: ModelView.Type.Cast.INT,
+                type: ModelView.Type.Cast.INT
+            }
+        },
+        actions: {
+            play_game: function(){
+                alert('Play');
+            },
+            new_game: function(){
+                alert('New');
+            }
+        }
+    });
+    view = $panel.modelview('view');
+    model = view.model();
+});
+}(jQuery, Contemplate, ModelView, Sudoku);
 //]]></script>
-
 </body>
 </html>
