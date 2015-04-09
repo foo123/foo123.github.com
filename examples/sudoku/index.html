@@ -100,6 +100,12 @@ body {
     cursor:pointer;
     position:relative;
 }
+.button.puzzle-control {
+    width: auto;
+    font-size: 11px;
+    padding: 8px 18px;
+    line-height:18px;
+}
 .loader {
     display: inline-block;
     width:20px;
@@ -119,12 +125,11 @@ table td{
     <script type="text/javascript" src="../common/js/require-config.js"></script>-->
     <script type="text/javascript" src="./jquery.js"></script>
     <script type="text/javascript" src="./jqueryui.js"></script>
-    <script type="text/javascript" src="../common/js/Contemplate.min.js"></script>
+    <!--<script type="text/javascript" src="../common/js/Contemplate.min.js"></script>-->
     <script type="text/javascript" src="../common/js/modelview.min.js"></script>
     <script type="text/javascript" src="./sudoku.bundle.js"></script>
-    <!--<script type="text/javascript" src="./display-sudoku.js"></script>-->
-    <link rel="stylesheet" type="text/css" href="./sudoku.min.css" />
-    <link rel="stylesheet" type="text/css" href="./display-sudoku.css" />
+    <link rel="stylesheet" type="text/css" href="./sudoku.css" />
+    <!--<link rel="stylesheet" type="text/css" href="./display-sudoku.css" />-->
     
     
 
@@ -136,7 +141,7 @@ table td{
     
 <header id="header" class="fluid col-1-1">
     <h1>Sudoku Game, Builder and Solver in pure JavaScript (IN PROGRESS)</h1>
-    <i>A new Sudoku of desired difficulty is generated on-the-fly, by custom algorithm</i>
+    <i>A new Sudoku of desired difficulty is generated on-the-fly, by custom algorithm (with Web Workers)</i>
 </header>
 
 <br />
@@ -168,10 +173,35 @@ table td{
     <option value="5">Very Hard</option>
     </select></td>
     </tr>
+    <tr>
+    <td><strong>Symmetry:</strong></td>
+    <td><select name="model[symmetry]">
+    <option value="0">None</option>
+    <option value="1">Horizontal</option>
+    <option value="2">Vertical</option>
+    <option value="3">Diagonal</option>
+    <option value="4" selected>Random</option>
+    </select></td>
+    </tr>
     </tbody></table>
 </div>
-<div class="fluid col-3-4">
-<div id="grid" style="position:relative;background:white;width:80%;height:500px"></div>
+<div class="fluid col-3-4 text-center">
+<div id="controls" class="fluid col-1-1">
+<div class="fluid col-3-4" style="margin-bottom:10px;">
+<button class="button puzzle-control puzzle-clear-all">Clear All</button>
+<button class="button puzzle-control puzzle-clear-errors">Clear Errors</button>
+<button class="button puzzle-control puzzle-highlight-errors">Highlight Errors</button>
+<button class="button puzzle-control puzzle-clear-highlighted">Clear Highlighted</button>
+</div>
+<div class="fluid col-3-4" style="margin-bottom:10px;">
+<button class="button puzzle-control puzzle-notes">Notes</button>
+<button class="button puzzle-control puzzle-all-notes">All Notes</button>
+<button class="button puzzle-control puzzle-clear-notes">Clear Notes</button>
+<button class="button puzzle-control puzzle-reveal-symbol">Reveal Symbol</button>
+<button class="button puzzle-control puzzle-reveal-solution">Solve</button>
+</div>
+</div>
+<div id="grid" class="fluid col-3-4" style="padding-top:10px;"></div>
 </div>
 </section>
 <br />
@@ -192,11 +222,207 @@ table td{
     <br /><br />
     
 <script type="text/javascript">//<![CDATA[
-!function($, Contemplate, ModelView, Sudoku) {
+!function($, /*Contemplate,*/ ModelView, Sudoku) {
 ModelView.jquery($);
+var first_time = true, 
+    rnd = Math.random, ceil = Math.ceil, min = Math.min,
+    getRandomDuration = function(m, M) { return ceil( (M-m)*rnd() + m ); }
+;
+
+function sudoku_puzzle(dims) {
+    var sudoku = Sudoku.Factory.getGrid('SUDOKU');
+    sudoku.build( dims ).setDichromia(true)/*.enableUserMode(true)*/;
+    return sudoku;
+};
+function sudoku_compile(on_finish, sudoku, d, difficulty, symmetry) {
+    var compiler = Sudoku.Factory.getCompiler( sudoku );
+        sudoku.setAlphabet(Sudoku.range(d,{start:1}).join(''));
+        compiler.liveUpdate = false;
+        compiler
+            .one('complete', function(evt){
+                compiler.setSolution( );
+                on_finish(sudoku, compiler);
+                compiler.dispose();
+                compiler = null;
+            })
+            .compile(
+                true, /* worker */
+                difficulty,
+                symmetry
+            )
+        ;
+    return sudoku;
+};
+var DisplayPuzzle = window.DisplayPuzzle = function( $dom, $controls, tpl, sol ) {
+    var self = this;
+    self.puzzle = null;
+    self.scaling = 1.0;
+    self.msg = 'Found Solution!';
+    self.display( $dom, tpl, sol, $controls );
+};
+DisplayPuzzle.prototype = {
+    
+    constructor: DisplayPuzzle,
+    
+    puzzle: null,
+    timer: null,
+    $dom: null,
+    scaling: 0,
+    $controls: null,
+    msg: '',
+    toggleHighlighted: false,
+    
+    dispose: function( ) {
+        var self = this;
+        self.stop();
+        if ( self.puzzle ) self.puzzle.dispose();
+        self.puzzle = null;
+        self.$dom = null;
+        self.$controls = null;
+        return self;
+    },
+    
+    stop: function( ) {
+        var self = this;
+        if ( self.timer )
+        {
+            clearTimeout( self.timer );
+            self.timer = null;
+        }
+        return self;
+    },
+    
+    display: function( $dom, tpl, sol, $controls ) {
+        var self = this, puzzle = null, isSudoku = false;
+        if ( $dom && $dom.length && tpl && sol )
+        {
+            // @not use JSON.parse here, since template is already in literal object form
+            puzzle = Sudoku.Factory.importTpl( tpl ) || null;
+            if ( puzzle )
+            {
+                // setTimeout, 200
+                puzzle.one( 'import', function( ) {
+                    $dom.append( puzzle.grid );
+                    puzzle.setRawGrid( sol ); 
+                    puzzle.enableUserMode( true );
+                    self.bindControls( $controls ).checkIsSolved( );
+                });
+                
+            }
+            else
+            {
+                log('ERROR: Sudoku Template could not be imported!');
+            }
+        }
+        self.$dom = $dom;
+        self.puzzle = puzzle;
+        return self;
+    },
+    
+    bindControls: function( $controls ) {
+        var self = this, puzzle, notesEnabled = false, allNotesEnabled = false;
+        self.$controls = $controls || null;
+        if ( self.puzzle && $controls && $controls.length )
+        {
+            puzzle = self.puzzle;
+            
+            puzzle.on( 'input', function( ) {
+                //self.updateProgressBar( );
+            });
+            $controls.on('click', '.puzzle-control', function( evt ){ 
+                var $control = $(evt.target);
+                
+                /*if ( $control.is('.puzzle-zoom-in') )
+                {
+                    self.scaling += .1;
+                    puzzle.scale( self.scaling );
+                }
+                else if ( $control.is('.puzzle-zoom-out') )
+                {
+                    self.scaling -= .1;
+                    puzzle.scale( self.scaling );
+                }
+                else*/ if ( $control.is('.puzzle-clear-all') )
+                {
+                    puzzle.clearCells( true );
+                    //self.updateProgressBar( );
+                }
+                else if ( $control.is('.puzzle-clear-highlighted') )
+                {
+                    puzzle.clearHighlighted( );
+                    //self.updateProgressBar( );
+                }
+                else if ( $control.is('.puzzle-highlight-errors') )
+                {
+                    self.toggleHighlighted = !self.toggleHighlighted;
+                    puzzle.highlightErrors( self.toggleHighlighted );
+                }
+                else if ( $control.is('.puzzle-clear-errors') )
+                {
+                    puzzle.clearErrors( );
+                    //self.updateProgressBar( );
+                }
+                else if ( $control.is('.puzzle-reveal-solution') )
+                {
+                    puzzle.revealSolution( );
+                    //self.updateProgressBar( );
+                }
+                else if ( $control.is('.puzzle-reveal-word') )
+                {
+                    puzzle.revealCells( puzzle.getHighlighted( ) );
+                    //self.updateProgressBar( );
+                }
+                else if ( $control.is('.puzzle-reveal-letter,.puzzle-reveal-symbol,.puzzle-reveal-cell') )
+                {
+                    puzzle.revealCell( );
+                    //self.updateProgressBar( );
+                }
+                else if ( $control.is('.puzzle-notes') )
+                {
+                    notesEnabled = !notesEnabled;
+                    puzzle.enableNotes( notesEnabled );
+                    if ( notesEnabled && allNotesEnabled ) allNotesEnabled = false;
+                }
+                else if ( $control.is('.puzzle-all-notes') )
+                {
+                    allNotesEnabled = !allNotesEnabled;
+                    puzzle.enableAllNotes( allNotesEnabled );
+                    if ( allNotesEnabled && notesEnabled ) notesEnabled = false;
+                }
+                else if ( $control.is('.puzzle-clear-notes') )
+                {
+                    puzzle.clearNotes( );
+                }
+            });
+            //self.updateProgressBar( );
+        }
+        return self;
+    },
+    
+    checkIsSolved: function( ) {
+        var self = this, testSolution, pzl = self.puzzle;
+        if ( pzl )
+        {
+            testSolution = function( ) {
+                if ( pzl.checkIsSolved( ) )
+                {
+                    self.stop( );
+                    setTimeout(function( ){ alert( self.msg ); }, 10 );
+                }
+                else
+                {
+                    // aloha
+                    self.timer = setTimeout( testSolution, getRandomDuration(900, 1200) );
+                }
+            };
+            self.timer = setTimeout( testSolution, getRandomDuration(900, 1200) );
+        }
+        return self;
+    }
+};
 // on DOM ready
 $(function(){
-    var $panel = $('#panel'), model, view;
+    var $panel = $('#panel'), model, view, puzzle = null;
     $panel.modelview({
         id: 'view',
         events: ['change','click'],
@@ -205,27 +431,46 @@ $(function(){
         model: {
             id: 'model',
             data: {
+                type: 9,
                 difficulty: 3,
-                type: 9
+                symmetry: 4
             },
             types: {
+                type: ModelView.Type.Cast.INT,
                 difficulty: ModelView.Type.Cast.INT,
-                type: ModelView.Type.Cast.INT
+                symmetry: ModelView.Type.Cast.INT
             }
         },
         actions: {
-            play_game: function(){
+            play_game: function( ){
                 alert('Play');
             },
-            new_game: function(){
-                alert('New');
+            new_game: function( ){
+                var model = this.$model, d = model.get('type'), dims;
+                if (puzzle) 
+                {
+                    puzzle.dispose();
+                    puzzle = null;
+                }
+                if ( 4 === d )
+                {
+                    dims = {rows:4, columns:4, subRows:2, subColumns:2, cellSize:70};
+                }
+                else if ( 6 === d )
+                {
+                    dims = {rows:6, columns:6, subRows:2, subColumns:3, cellSize:70};
+                }
+                else //if ( 9 === d )
+                {
+                    dims = {rows:9, columns:9, subRows:3, subColumns:3, cellSize:70};
+                }
+                puzzle = sudoku_puzzle(dims/*, difficulty*/);
+                $('#grid').empty().append(puzzle.grid);
             }
         }
     });
-    view = $panel.modelview('view');
-    model = view.model();
 });
-}(jQuery, Contemplate, ModelView, Sudoku);
+}(jQuery, /*Contemplate,*/ ModelView, Sudoku);
 //]]></script>
 </body>
 </html>
