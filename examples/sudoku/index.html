@@ -1,0 +1,190 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie lt-ie9">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" class="no-ie">
+<!--<![endif]-->
+<head>
+    <title>Sudoku (TO BE UPLOADED)</title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="Sudoku Game, Builder and Solver" />
+    
+    
+    <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+    
+<style type="text/css">
+body {
+    background-color:#121212;
+    color:#aaa;
+    position:relative;
+}
+.showcase {
+    margin:5px 2px;
+    color:white;
+    font-style:italic;
+    font-size:0.8em;
+}
+.showcase a{
+    color:#f90b13;
+    display:inline-block;
+    margin-bottom:1px;
+    text-decoration:none;
+    border-bottom:1px dotted #f90b13;
+}
+.showcase a:hover, 
+.showcase a:active, 
+.showcase a:visited{
+    text-decoration:none;
+}
+#footer {
+    margin-top: 20px;
+}
+.button {
+    -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    box-shadow:inset 0px 1px 0px 0px #ffffff;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+    background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+    background-color:#ededed;
+    -webkit-border-top-left-radius:20px;
+    -moz-border-radius-topleft:20px;
+    border-top-left-radius:20px;
+    -webkit-border-top-right-radius:20px;
+    -moz-border-radius-topright:20px;
+    border-top-right-radius:20px;
+    -webkit-border-bottom-right-radius:20px;
+    -moz-border-radius-bottomright:20px;
+    border-bottom-right-radius:20px;
+    -webkit-border-bottom-left-radius:20px;
+    -moz-border-radius-bottomleft:20px;
+    border-bottom-left-radius:20px;
+    text-indent:0;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    color:#777777;
+    font-family:Arial;
+    font-size:15px;
+    font-weight:bold;
+    font-style:normal;
+    height:50px;
+    line-height:50px;
+    width:86px;
+    text-decoration:none;
+    text-align:center;
+    text-shadow:1px 1px 0px #ffffff;
+}
+.button:hover {
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+    background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+    background-color:#dfdfdf;
+}.button:active {
+    position:relative;
+    top:1px;
+}
+.button {
+    width:90px;
+    height:30px;
+    line-height:30px;
+    cursor:pointer;
+    position:relative;
+}
+#console {
+    border: 1px solid #aaa;
+    background:#efefef; 
+    color:#121212; 
+    min-height:300px;
+    padding:20px;
+}
+.loader {
+    display: inline-block;
+    width:20px;
+    height:20px;
+    background: transparent url(../common/assets/ajax-loader.gif) 0 0 no-repeat;
+}
+.cont {
+    margin-top: 8px;
+    margin-bottom: 20px;
+}
+.algo_info strong {
+    font-size: 14px;
+}
+.algo_info a {
+    font-size: 12px;
+}
+.algo_info i {
+    font-size: 12px;
+}
+#console.processing > #loader { display: inline-block; }
+#console.processing > #result { display: none; }
+#console:not(.processing) > #loader { display: none; }
+#console:not(.processing) > #result { display: block; }
+
+#forkongithub a{background:#aa0000;color:#fff;text-decoration:none;font-family:arial, sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:0.9rem;line-height:1.4rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#aa0000;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;z-index:100;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:absolute;display:block;z-index:100;top:0;right:0;width:200px;overflow:hidden;height:200px;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}
+</style>
+
+    
+
+    
+    <!--<script type="text/javascript" src="../common/js/require.js"></script>
+    <script type="text/javascript" src="../common/js/require-config.js"></script>-->
+    <script type="text/javascript" src="./jquery.js"></script>
+    <script type="text/javascript" src="./jqueryui.js"></script>
+    <script type="text/javascript" src="./sudoku.bundle.js"></script>
+    <!--<script type="text/javascript" src="./display-sudoku.js"></script>-->
+    <link rel="stylesheet" type="text/css" href="./sudoku.min.css" />
+    <link rel="stylesheet" type="text/css" href="./display-sudoku.css" />
+    
+    
+
+</head>
+
+<body>
+    <span id="forkongithub"><a href="https://github.com/foo123/sudoku.js">PLay with me on GitHub</a></span>
+    
+    
+<header id="header" class="fluid col-1-1">
+    <h1>Sudoku Game, Builder and Solver in pure JavaScript  (TO BE UPLOADED)</h1>
+</header>
+
+<br />
+
+    
+    
+<section id="panel" class="fluid col-1-1" style="padding: 20px;">
+</section>
+<br />
+
+    
+    
+    <footer id="footer">
+        <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net" class="donate">hire me for a job</a></div>
+        
+        
+<div class="showcase">DOM abstraction by <a href="http://jquery.com/" target="_blank">jQuery</a></div>
+
+        <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
+        <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
+        <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
+        <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
+    </footer>
+    <br /><br />
+    
+    
+    
+<script type="text/javascript">//<![CDATA[
+//]]></script>
+
+</body>
+</html>

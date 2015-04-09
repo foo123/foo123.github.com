@@ -9,6 +9,7 @@
             ,AreaSelect: "areaselect.min"
             ,utils: "utils.min"
             ,jQuery: "jquery"
+            ,jQueryUI: "jquery-ui-1.10.4.custom.min"
             ,lodash: "lodash.min"
             ,platform: "platform.min"
             ,Benchmark: "benchmark.min"
