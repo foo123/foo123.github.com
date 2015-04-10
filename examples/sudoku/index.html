@@ -282,7 +282,7 @@ table td
 <!--<script type="text/javascript" src="../common/js/require.js"></script>
 <script type="text/javascript" src="../common/js/require-config.js"></script>-->
 <script type="text/javascript" src="./jquery.js"></script>
-<script type="text/javascript" src="./jqueryui.js"></script>
+<!--<script type="text/javascript" src="./jqueryui.js"></script>-->
 <!--<script type="text/javascript" src="../common/js/Contemplate.min.js"></script>-->
 <script type="text/javascript" src="../common/js/modelview.min.js"></script>
 <script type="text/javascript" src="./sudoku.bundle.js"></script>
@@ -296,7 +296,8 @@ table td
     
 <header id="header" class="fluid col-1-1">
     <h1>Sudoku Game, Builder and Solver in pure JavaScript</h1>
-    <i>A new Sudoku of desired difficulty is generated on-the-fly, by custom algorithm (with Web Workers)</i>
+    <i>a scaled-down version of CrossWord.js, professional Crossword Builder in JavaScript, by same author</i><br />
+    <i>A new Sudoku of desired difficulty and symmetry is generated on-the-fly, by <a href="http://stackoverflow.com/a/28699821/3591273" target="_blank">custom algorithm</a> (with Web Workers)</i>
 </header>
 
 <br />
@@ -382,13 +383,13 @@ var puzzle = null, renderer = null, _id = 0,
     getRandomDuration = function(m, M) { return ceil( (M-m)*rnd() + m ); }
 ;
 
-var DisplayPuzzle = window.DisplayPuzzle = function( $dom, $controls, tpl, sol ) {
+var DisplayPuzzle = window.DisplayPuzzle = function( puzzle, sol, $dom, $controls ) {
     var self = this;
     self.id = 'sudoku_' + (++_id);
-    self.puzzle = null;
+    self.puzzle = puzzle;
     self.scaling = 1.0;
     self.msg = 'Found Solution!';
-    self.display( $dom, tpl, sol, $controls );
+    self.display( sol, $dom, $controls );
 };
 DisplayPuzzle.prototype = {
     
@@ -426,30 +427,16 @@ DisplayPuzzle.prototype = {
         return self;
     },
     
-    display: function( $dom, tpl, sol, $controls ) {
-        var self = this, puzzle = null;
-        if ( $dom && $dom.length && tpl && sol )
+    display: function( sol, $dom, $controls ) {
+        var self = this, puzzle = self.puzzle;
+        if ( $dom && $dom.length && sol )
         {
             // @not use JSON.parse here, since template is already in literal object form
-            puzzle = Sudoku.Factory.importTpl( tpl ) || null;
-            if ( puzzle )
-            {
-                // setTimeout, 200
-                puzzle.one( 'import', function( ) {
-                    $dom.append( puzzle.grid );
-                    puzzle.setRawGrid( sol ); 
-                    puzzle.enableUserMode( true );
-                    self.bindControls( $controls ).checkIsSolved( );
-                });
-                
-            }
-            else
-            {
-                alert('ERROR: Sudoku Template could not be imported!');
-            }
+            $dom.append( puzzle.grid );
+            puzzle.setRawGrid( sol ).enableUserMode( true ); 
+            self.bindControls( $controls ).checkIsSolved( );
         }
         self.$dom = $dom;
-        self.puzzle = puzzle;
         return self;
     },
     
@@ -575,7 +562,7 @@ function compile_sudoku( on_complete, sudoku, dimension, difficulty, symmetry )
             compiler.dispose( ); compiler = null;
         })
         .compile(
-            true, /* worker */
+            true, /* in web worker */
             difficulty,
             symmetry
         )
@@ -585,7 +572,7 @@ function compile_sudoku( on_complete, sudoku, dimension, difficulty, symmetry )
 function display_sudoku( sudoku, $grid, $controls )
 {
     $grid.empty( ); /*$controls.show( );*/
-    var renderer = new DisplayPuzzle( $grid, $controls, sudoku.exportTpl(), sudoku.getRawGrid() );
+    var renderer = new DisplayPuzzle( sudoku, sudoku.getRawGrid(), $grid, $controls );
     return renderer;
 }
 
