@@ -8,4 +8,6 @@ __foo__ : _An term used for unimportant variables in programming when the progra
 __foo123__ : _A lame workaround when the name foo is already taken._
 
 
+**foo123**, the agent with *license to code*
+
 *Cause until the philosophy, which holds one race superior and another inferior, is finally, and permanently, discredited and abandoned..*

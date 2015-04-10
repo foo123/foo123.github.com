@@ -128,8 +128,7 @@ table td{
     <!--<script type="text/javascript" src="../common/js/Contemplate.min.js"></script>-->
     <script type="text/javascript" src="../common/js/modelview.min.js"></script>
     <script type="text/javascript" src="./sudoku.bundle.js"></script>
-    <link rel="stylesheet" type="text/css" href="./sudoku.css" />
-    <!--<link rel="stylesheet" type="text/css" href="./display-sudoku.css" />-->
+    <link rel="stylesheet" type="text/css" href="./sudoku.min.css" />
     
     
 
@@ -225,6 +224,7 @@ table td{
 !function($, /*Contemplate,*/ ModelView, Sudoku) {
 ModelView.jquery($);
 var first_time = true, 
+    puzzle = null,
     rnd = Math.random, ceil = Math.ceil, min = Math.min,
     getRandomDuration = function(m, M) { return ceil( (M-m)*rnd() + m ); }
 ;
@@ -234,23 +234,24 @@ function sudoku_puzzle(dims) {
     sudoku.build( dims ).setDichromia(true)/*.enableUserMode(true)*/;
     return sudoku;
 };
-function sudoku_compile(on_finish, sudoku, d, difficulty, symmetry) {
+function sudoku_compile(on_finish, sudoku, dim, difficulty, symmetry) {
     var compiler = Sudoku.Factory.getCompiler( sudoku );
-        sudoku.setAlphabet(Sudoku.range(d,{start:1}).join(''));
-        compiler.liveUpdate = false;
-        compiler
-            .one('complete', function(evt){
-                compiler.setSolution( );
-                on_finish(sudoku, compiler);
-                compiler.dispose();
-                compiler = null;
-            })
-            .compile(
-                true, /* worker */
-                difficulty,
-                symmetry
-            )
-        ;
+    sudoku.setAlphabet(Sudoku.range(dim,{start:1}).join(''));
+    compiler.stop( );
+    compiler.liveUpdate = false;
+    compiler
+        .one('complete', function(evt){
+            compiler.setSolution( );
+            on_finish(sudoku, compiler);
+            compiler.dispose();
+            compiler = null;
+        })
+        .compile(
+            true, /* worker */
+            difficulty,
+            symmetry
+        )
+    ;
     return sudoku;
 };
 var DisplayPuzzle = window.DisplayPuzzle = function( $dom, $controls, tpl, sol ) {
@@ -422,7 +423,7 @@ DisplayPuzzle.prototype = {
 };
 // on DOM ready
 $(function(){
-    var $panel = $('#panel'), model, view, puzzle = null;
+    var $panel = $('#panel'), model, view;
     $panel.modelview({
         id: 'view',
         events: ['change','click'],
@@ -447,7 +448,7 @@ $(function(){
             },
             new_game: function( ){
                 var model = this.$model, d = model.get('type'), dims;
-                if (puzzle) 
+                if ( puzzle ) 
                 {
                     puzzle.dispose();
                     puzzle = null;
@@ -464,8 +465,9 @@ $(function(){
                 {
                     dims = {rows:9, columns:9, subRows:3, subColumns:3, cellSize:70};
                 }
-                puzzle = sudoku_puzzle(dims/*, difficulty*/);
+                puzzle = sudoku_puzzle( dims );
                 $('#grid').empty().append(puzzle.grid);
+                sudoku_compile(function(){alert('ready');}, puzzle, d, model.get('difficulty'), model.get('symmetry'));
             }
         }
     });
