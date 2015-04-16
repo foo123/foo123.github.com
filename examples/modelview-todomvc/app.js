@@ -304,7 +304,7 @@
                 }
                 
                 ,types: {
-                    displayMode: TypeCast.LCASE.AFTER( TypeCast.TRIM )
+                    displayMode: TypeCast.COMPOSITE( TypeCast.LCASE, TypeCast.TRIM )
                 }
                 
                 ,validators: {
