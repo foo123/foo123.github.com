@@ -153,6 +153,7 @@ function modelView( ModelView )
     .attribute( 'bind', 'data-bind' ) // default
     .livebind( '$(__MODEL__.__KEY__)' )
     .autobind( true )
+    .isomorphic( false ) // default
     .bind( [ 'change', 'click' ], document.getElementById('screen') )
     .sync( )
     ;
@@ -171,6 +172,7 @@ function modelViewjQuery( ModelView, $ )
         events: [ 'change', 'click' ], // default
         livebind: '$(__MODEL__.__KEY__)',
         autobind: true,
+        isomorphic: false, // default
         autoSync: true, // default
         
         model: {
