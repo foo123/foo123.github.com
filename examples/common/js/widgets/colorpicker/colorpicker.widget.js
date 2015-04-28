@@ -10,9 +10,10 @@
 *
 */
 !function($, undef) {
-
+    "use strict";
     var Min = Math.min, Max = Math.max, Round = Math.round, 
-        extend = $.extend, COMMAS = /\s*,\s*/g, __id = 0;
+        extend = $.extend, COMMAS = /\s*,\s*/g, __id = 0,
+        ModelView = $.ModelView, TypeCast = ModelView.Type.Cast, Validate = ModelView.Validation.Validate;
     
     function getViewport( ) 
     {
@@ -304,6 +305,7 @@
                 ,bindAttribute: bindAttr
                 ,livebind: '$(__MODEL__.__KEY__)'
                 ,autobind: true
+                ,isomorphic: false
                 ,bindbubble: true
                 ,events: ['change', 'blur', 'focus', 'mousedown', 'click']
                 ,model: {
@@ -315,15 +317,15 @@
                         ,hex: '000000'
                     }
                     ,types: {
-                        'opacity': $.ModelView.Type.Cast.CLAMP(0.0, 1.0).AFTER( $.ModelView.Type.Cast.FLOAT )
-                        ,'hsb.0': $.ModelView.Type.Cast.CLAMP(0, 360).AFTER( $.ModelView.Type.Cast.INT )
-                        ,'hsb.1': $.ModelView.Type.Cast.CLAMP(0, 100).AFTER( $.ModelView.Type.Cast.INT )
-                        ,'hsb.2': $.ModelView.Type.Cast.CLAMP(0, 100).AFTER( $.ModelView.Type.Cast.INT )
-                        ,'rgb.*': $.ModelView.Type.Cast.CLAMP(0, 255).AFTER( $.ModelView.Type.Cast.INT )
-                        ,'hex': $.ModelView.Type.Cast.TRIM
+                        'opacity': TypeCast.COMPOSITE(TypeCast.CLAMP(0.0, 1.0), TypeCast.FLOAT)
+                        ,'hsb.0': TypeCast.COMPOSITE(TypeCast.CLAMP(0, 360), TypeCast.INT)
+                        ,'hsb.1': TypeCast.COMPOSITE(TypeCast.CLAMP(0, 100), TypeCast.INT)
+                        ,'hsb.2': TypeCast.COMPOSITE(TypeCast.CLAMP(0, 100), TypeCast.INT)
+                        ,'rgb.*': TypeCast.COMPOSITE(TypeCast.CLAMP(0, 255), TypeCast.INT)
+                        ,'hex': TypeCast.TRIM
                     }
                     ,validators: {
-                        'hex': $.ModelView.Validation.Validate.MATCH(/^[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]$/i)
+                        'hex': Validate.MATCH(/^[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]$/i)
                     }
                     ,getters: {
                         color: function( ) {
@@ -355,7 +357,6 @@
                                 model.notify('css.color');
                                 widget.element[0].style.backgroundColor = model.get('css.color');
                             }
-                            return true;
                         }
                         ,'css.color': function( k, color, pub ) {
                             var model = this, pre4, c;
@@ -389,7 +390,6 @@
                                     widget.element[0].style.backgroundColor = model.get('css.color');
                                 }
                             }
-                            return true;
                         }
                         ,color: function( k, color, pub ) {
                             var model = this;
@@ -410,7 +410,6 @@
                                     widget.element[0].style.backgroundColor = model.get('css.color');
                                 }
                             }
-                            return true;
                         }
                         ,hsb: function( k, v, pub ) {
                             var model = this, $data = model.$data, hsb;
@@ -425,7 +424,6 @@
                             {
                                 model.notify(['rgb', 'hex', 'css.color.current']);
                             }
-                            return true;
                         }
                         ,'hsb.*': function( k, v, pub ) {
                             this.$data.hsb[parseInt(k.slice(4), 10)] = v;
@@ -445,7 +443,6 @@
                             {
                                 model.notify(['hsb', 'hex', 'css.color.current']);
                             }
-                            return true;
                         }
                         ,'rgb.*': function( k, v, pub ) {
                             this.$data.rgb[parseInt(k.slice(4), 10)] = v;
@@ -465,7 +462,6 @@
                             {
                                 model.notify(['hsb', 'rgb', 'css.color.current']);
                             }
-                            return true;
                         }
                     }
                 }
