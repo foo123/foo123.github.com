@@ -416,19 +416,19 @@
         function init()
         {
             if ($F.Browser.isChrome)
-                icon = $F.ImageLoader().load("../common/assets/chrome.png", function(){
+                icon = $F.HTMLImageLoader.load("../common/assets/chrome.png", function(){
                     blend.setImage( icon );
                 }).restorable(false);
             else if ($F.Browser.isOpera)
-                icon = $F.ImageLoader().load("../common/assets/opera.png", function(){
+                icon = $F.HTMLImageLoader.load("../common/assets/opera.png", function(){
                     blend.setImage( icon );
                 }).restorable(false);
             else if ($F.Browser.isIE)
-                icon = $F.ImageLoader().load("../common/assets/ie.png", function(){
+                icon = $F.HTMLImageLoader.load("../common/assets/ie.png", function(){
                     blend.setImage( icon );
                 }).restorable(false);
             else
-                icon = $F.ImageLoader().load("../common/assets/firefox.png", function(){
+                icon = $F.HTMLImageLoader.load("../common/assets/firefox.png", function(){
                     blend.setImage( icon );
                 }).restorable(false);
             blendSelect.style.display = "none";

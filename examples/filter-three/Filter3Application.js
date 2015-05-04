@@ -102,7 +102,7 @@ var self={
         for (var i=0; i<8;i++)
         {
             // set closure callback
-            image[i] = $F.ImageLoader().load(document.getElementById('Che').src, callback(i));
+            image[i] = $F.HTMLImageLoader.load(document.getElementById('Che').src, callback(i));
             texture[i] = new THREE.Texture(image[i].domElement);
         }
 

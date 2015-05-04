@@ -166,6 +166,7 @@
         
         var baseUrl = location.href.split(/#|\?/)[ 0 ]
             ,che = '../common/assets/che.jpg'
+            ,yinyang = '../common/assets/yin_yang_blank.png'
             ,aside = $('#aside')
             ,applyBt = $('#applyBt')
             ,restoreBt = $('#restoreBt')
@@ -177,7 +178,7 @@
             ,displacemap = $F.Image( )
             
              // images
-            ,im1 = $F.ImageLoader().load(che, function( ) {
+            ,im1 = $F.HTMLImageLoader.load(che, function( ) {
                 // create a displace map image
                 displacemap.createImageData(im1.width, im1.height);
                 displacemap.octx.fillStyle="rgb(128,128,128)";
@@ -191,20 +192,35 @@
                 displacemap.octx.arc(displacemap.width/2,displacemap.height/2,displacemap.width/2,0,Math.PI*2,true);
                 displacemap.octx.fill();
                 displacemap.store();
+                /*
+                im2 = im1.clone();
+                im3 = im1.clone();
+                im4 = im1.clone();
+                im5 = im1.clone();
+                im6 = im1.clone();
+                im7 = im1.clone();
+                im8 = im1.clone();
+                im9 = im1.clone();
+                im10 = im1.clone();
+                im11 = im1.clone();
+                im12 = im1.clone();
+                im13 = im1.clone();
+                im14 = im1.clone();*/
             })
-            ,im2 = $F.ImageLoader().load( che )
-            ,im3 = $F.ImageLoader().load( che )
-            ,im4 = $F.ImageLoader().load( che )
-            ,im5 = $F.ImageLoader().load( che )
-            ,im6 = $F.ImageLoader().load( che )
-            ,im7 = $F.ImageLoader().load( che )
-            ,im8 = $F.ImageLoader().load( che )
-            ,im9 = $F.ImageLoader().load( che )
-            ,im10 = $F.ImageLoader().load( che )
-            ,im11 = $F.ImageLoader().load( che )
-            ,im12 = $F.ImageLoader().load( che )
-            ,im13 = $F.ImageLoader().load( che )
-            ,im14 = $F.ImageLoader().load( che )
+            ,im2 = $F.HTMLImageLoader.load( che )
+            ,im3 = $F.HTMLImageLoader.load( che )
+            ,im4 = $F.HTMLImageLoader.load( che )
+            ,im5 = $F.HTMLImageLoader.load( che )
+            ,im6 = $F.HTMLImageLoader.load( che )
+            ,im7 = $F.HTMLImageLoader.load( che )
+            ,im8 = $F.HTMLImageLoader.load( che )
+            ,im9 = $F.HTMLImageLoader.load( che )
+            ,im10 = $F.HTMLImageLoader.load( che )
+            ,im11 = $F.HTMLImageLoader.load( che )
+            ,im12 = $F.HTMLImageLoader.load( che )
+            ,im13 = $F.HTMLImageLoader.load( che )
+            ,im14 = $F.HTMLImageLoader.load( che )
+            //,im15 = $F.HTMLImageLoader.load( yinyang )
             
              // filters
             //,redChannel = new $F.ColorMatrixFilter( ).worker( runInThread ).redChannel( )
@@ -264,6 +280,7 @@
             ,emboss = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).emboss( )
             ,grsb = new $F.CompositeFilter([gray, sobel/*, binary*/]).worker( runInThread )
             ,displace = new $F.DisplacementMapFilter( /*displacemap*/ ).worker( runInThread )
+            //,floodFill = new $F.FloodFillFilter( 36, 94, [255,0,0] ).worker( runInThread )
             //,bokeh = new $F.BokehFilter(80, 90, 60, 10).worker( runInThread )
         ;
         
@@ -296,6 +313,8 @@
         .append(span('11.')).append(im11.domElement)
         .append(span('12.')).append(im12.domElement)
         .append(span('13.')).append(im13.domElement)
+        /*.append(br())
+        .append(span('15.')).append(im15.domElement)*/
         ;
         
         aside.append("<div><ol><li>Original Image</li><li>Red Channel</li><li>Green Channel</li><li>Blue Channel</li><li>Red Colorized applied to Selection</li><li>Grayscale and Contrast</li><li>Quick Sepia</li><li>Posterize</li><li>Pixelate (Plugin)</li><li>Emboss</li><li>Geometric Twirl Map</li><li>Displace Map</li><li>Grayscale, Sobel Gradient Magnitude (Composite)</li><li>Histogram Equalization (Plugin)</li></ol>M: Displace Map</div>");
@@ -336,6 +355,7 @@
             im13.apply( grsb, closeThread );
             //im13.apply( glow, closeThread );
             im14.apply( equalize, closeThread );
+            //im15.apply( floodFill, closeThread );
             return false;
         }
         
@@ -354,6 +374,7 @@
             im12.restore( );
             im13.restore( );
             im14.restore( );
+            //im15.restore( );
             return false;
         }
         
