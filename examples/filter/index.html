@@ -220,7 +220,9 @@
             ,im12 = $F.HTMLImageLoader.load( che )
             ,im13 = $F.HTMLImageLoader.load( che )
             ,im14 = $F.HTMLImageLoader.load( che )
-            //,im15 = $F.HTMLImageLoader.load( yinyang )
+            ,im15 = $F.HTMLImageLoader.load( che )
+            ,im16 = $F.HTMLImageLoader.load( che )
+            ,im17 = $F.HTMLImageLoader.load( yinyang )
             
              // filters
             //,redChannel = new $F.ColorMatrixFilter( ).worker( runInThread ).redChannel( )
@@ -270,17 +272,23 @@
             //,skinExtractor = new $F.CompositeFilter([hsv, redChannel, invert, gray, thresh]).worker( runInThread ) // extract skin region
             //,laplace = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).laplace( 7 )
             ,twirl = new $F.GeometricMapFilter( ).worker( runInThread ).twirl( Math.PI/2, 120, 0.33, 0.27 )
+            //,shift = new $F.GeometricMapFilter( ).worker( runInThread ).shift(-50)
             //,rotate = new $F.GeometricMapFilter( ).worker( runInThread ).rotateCCW( )
             //,blur = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).boxBlur( 3 )
             //,gauss = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).fastGauss( 3 )//gaussBlur(3)
             //,vertical = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).verticalBlur( 21 )
             //,diagonal = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).directionalBlur( 45, 9 )
             ,sobel = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).sobel( 3 )
+            ,canny = new $F.CannyEdgesFilter( 1, 7 ).worker( runInThread )
             //,glow = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).glow( )
             ,emboss = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).emboss( )
             ,grsb = new $F.CompositeFilter([gray, sobel/*, binary*/]).worker( runInThread )
             ,displace = new $F.DisplacementMapFilter( /*displacemap*/ ).worker( runInThread )
-            //,floodFill = new $F.FloodFillFilter( 36, 94, [255,0,0] ).worker( runInThread )
+            ,floodFill = new $F.CompositeFilter([
+                new $F.FloodFillFilter(25/* x0 */,75/* y0 */,[255,0,0]/* fill color */,0.8/* tolerance */),
+                new $F.FloodFillFilter(125/* x0 */,75/* y0 */,[0,0,255]/* fill color */,0.8/* tolerance */)
+            ]).worker( runInThread )
+            ,simplexNoise = new $F.PerlinNoiseFilter(50,50,0,0,0).worker( runInThread )
             //,bokeh = new $F.BokehFilter(80, 90, 60, 10).worker( runInThread )
         ;
         
@@ -313,11 +321,13 @@
         .append(span('11.')).append(im11.domElement)
         .append(span('12.')).append(im12.domElement)
         .append(span('13.')).append(im13.domElement)
-        /*.append(br())
-        .append(span('15.')).append(im15.domElement)*/
+        .append(br())
+        .append(span('15.')).append(im15.domElement)
+        .append(span('16.')).append(im16.domElement)
+        .append(span('17.')).append(im17.domElement)
         ;
         
-        aside.append("<div><ol><li>Original Image</li><li>Red Channel</li><li>Green Channel</li><li>Blue Channel</li><li>Red Colorized applied to Selection</li><li>Grayscale and Contrast</li><li>Quick Sepia</li><li>Posterize</li><li>Pixelate (Plugin)</li><li>Emboss</li><li>Geometric Twirl Map</li><li>Displace Map</li><li>Grayscale, Sobel Gradient Magnitude (Composite)</li><li>Histogram Equalization (Plugin)</li></ol>M: Displace Map</div>");
+        aside.append("<div><ol><li>Original Image</li><li>Red Channel</li><li>Green Channel</li><li>Blue Channel</li><li>Red Colorized applied to Selection</li><li>Grayscale and Contrast</li><li>Quick Sepia</li><li>Posterize</li><li>Pixelate (Plugin)</li><li>Emboss</li><li>Geometric Twirl Map</li><li>Displace Map</li><li>Grayscale, Sobel Gradient Magnitude (Composite)</li><li>Histogram Equalization (Plugin)</li><li>Perlin Noise (Plugin)</li><li>Canny Edges (Plugin)</li><li>Flood Fill (Plugin)</li></ol>M: Displace Map</div>");
             
         function apply(evt)
         {
@@ -355,7 +365,9 @@
             im13.apply( grsb, closeThread );
             //im13.apply( glow, closeThread );
             im14.apply( equalize, closeThread );
-            //im15.apply( floodFill, closeThread );
+            im15.apply( simplexNoise, closeThread );
+            im16.apply( canny, closeThread );
+            im17.apply( floodFill, closeThread );
             return false;
         }
         
@@ -374,7 +386,9 @@
             im12.restore( );
             im13.restore( );
             im14.restore( );
-            //im15.restore( );
+            im15.restore( );
+            im16.restore( );
+            im17.restore( );
             return false;
         }
         

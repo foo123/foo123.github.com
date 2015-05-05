@@ -175,6 +175,7 @@
                     <option value='#'>TwirlMap</option>
                     <option value='#'>SphereMap</option>
                     <option value='#'>RippleMap</option>
+                    <option value='#'>DisplaceMap with PerlinNoise</option>
                 </optgroup>
                 <optgroup label="Plugins and Composites">
                     <option value='#'>Pixelate 5%</option>
@@ -186,6 +187,7 @@
                     <option value='#'>HSV Color Space</option>
                     <option value='#'>Hue only as grayscale Image</option>
                     <option value='#'>Extract range of Hues, Open Morphological</option>
+                    <option value='#'>Canny Edges Extractor</option>
                     <option value='#'>YCbCr Color Space</option>
                     <option value='#'>Equalize Histogram</option>
                     <option value='#'>Alpha Mask</option>
@@ -287,6 +289,7 @@
             
             // images
             displacemap = $F.Image().restorable(false).fill("rgb(128,128,128)", 0, 0, 320, 240),
+            perlinNoise = null,
             alphamask = $F.Image().restorable(false).fill("rgb(0,0,0)", 0, 0, 200, 200),
             //downscaleVideo = $F.ScaledImage(0.5, 0.5),
             //upscaleVideo = $F.ScaledImage(2, 2),
@@ -358,6 +361,9 @@
             ycbcr = new $F.ColorMatrixFilter().RGB2YCbCr(),
             //ycbcr = new $F.YCbCrConverterFilter(),
             bokeh = new $F.BokehFilter(0.5, 0.5, 100, 10),
+            canny = new $F.CannyEdgesFilter(1.5, 5.5),
+            shift = new $F.GeometricMapFilter().shift(-3, 0),
+            perlinDisplaceFilter = new $F.DisplacementMapFilter(),
             
             // filter selection list
             videoFilters = [
@@ -390,6 +396,7 @@
                 twirlFilter,
                 sphereFilter,
                 rippleFilter,
+                perlinDisplaceFilter,
                 pixelate5,
                 pixelate10,
                 pixelate15,
@@ -399,6 +406,7 @@
                 hsv,
                 hueOnly,
                 hueExtractor,
+                canny,
                 ycbcr,
                 equ,
                 alphaMask,
@@ -450,6 +458,10 @@
             displaceFilter.startX=0; displaceFilter.startY=0;
             displaceFilter.scaleX=120; displaceFilter.scaleY=120; 
             displaceFilter.componentX=$F.CHANNEL.RED; displaceFilter.componentY=$F.CHANNEL.GREEN;
+            
+            perlinDisplaceFilter.startX=0; perlinDisplaceFilter.startY=0;
+            perlinDisplaceFilter.scaleX=120; perlinDisplaceFilter.scaleY=120; 
+            perlinDisplaceFilter.componentX=$F.CHANNEL.RED; perlinDisplaceFilter.componentY=$F.CHANNEL.GREEN;
             
             // create alpha mask image
             // create radial gradient
@@ -599,6 +611,22 @@
                 displaceFilter.startY += dy/vh;
                 if (displaceFilter.startX<-0.5 || displaceFilter.startX>0.5) dx = -dx;
                 if (displaceFilter.startY<-0.5 || displaceFilter.startY>0.5) dy = -dy;
+            }
+            else if (perlinDisplaceFilter===currentFilter)
+            {
+                if ( !perlinNoise )
+                {
+                    perlinNoise = $F.Image()
+                        .restorable(false)
+                        .fill("rgb(128,128,128)", 0, 0, vw, vh)
+                        .apply(new $F.PerlinNoiseFilter(100,80));
+                }
+                else
+                {
+                    // animate the perlinNoise image
+                    perlinNoise.apply( shift );
+                }
+                perlinDisplaceFilter.setMap( perlinNoise );
             }
             else if (twirlFilter===currentFilter)
             {
