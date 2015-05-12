@@ -25,7 +25,6 @@
             ,PublishSubscribe: "PublishSubscribe.min"
             ,Xpresion: "Xpresion.min"
             ,HAAR: "haar-detector.min"
-            //,HAARjs: "haar-detector.min"
             ,cascades: "../cascades"
             ,FILTER: "filter.min"
             ,FILTER_PLUGINS: "filter.plugins.min"
@@ -34,7 +33,6 @@
             ,Sort: "sort.min"
             ,Pattern: "pattern.min"
             ,NEngine: "NEngine.min"
-            //,codemirror: "codemirror"
             ,CodeMirror: "codemirror/codemirror.min"
             ,CodeMirrorGrammar: "codemirror_grammar.min"
             ,ACE: "ace/ace"
@@ -53,9 +51,6 @@
         }
         /*,bundles: {
             FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_PLUGINS"]
-            ,CodeMirrorGrammarBundle: ["Classy", "RegExAnalyzer", "CodeMirrorGrammar"]
-            ,AceGrammarBundle: ["Classy", "RegExAnalyzer", "AceGrammar"]
-            ,PrismGrammarBundle: ["Classy", "RegExAnalyzer", "PrismGrammar"]
         }*/        
         ,shim: {
             Storage: { exports: 'Storage' }
