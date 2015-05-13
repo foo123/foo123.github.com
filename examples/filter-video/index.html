@@ -184,6 +184,7 @@
                     <option value='#'>Triangular Pixelate 5%</option>
                     <option value='#'>Triangular Pixelate 10%</option>
                     <option value='#'>Triangular Pixelate 15%</option>
+                    <option value='#'>Halftoned/Dithered</option>
                     <option value='#'>HSV Color Space</option>
                     <option value='#'>Hue only as grayscale Image</option>
                     <option value='#'>Extract range of Hues, Open Morphological</option>
@@ -351,6 +352,10 @@
             trianglepixelate5 = new $F.TriangularPixelateFilter(5),
             trianglepixelate10 = new $F.TriangularPixelateFilter(10),
             trianglepixelate15 = new $F.TriangularPixelateFilter(15),
+            halftoned = new $F.CompositeFilter([
+                gray,
+                new $F.HalftoneFilter().threshold(0.4).size(1).grayscale(true)
+            ]),
             alphaMask = new $F.AlphaMaskFilter(/*alphamask*/null, 0.5, 0.5),
             blend = new $F.BlendFilter(/*icon*/),
             swapChannel = new $F.ColorMatrixFilter().swapChannels($F.CHANNEL.BLUE, $F.CHANNEL.ALPHA),
@@ -363,6 +368,9 @@
             bokeh = new $F.BokehFilter(0.5, 0.5, 100, 10),
             canny = new $F.CannyEdgesFilter(1.5, 5.5),
             shift = new $F.GeometricMapFilter().shift(-3, 0),
+            //seamless = new $F.SeamlessTileFilter(),
+            //seamlessPerlin = new $F.CompositeFilter([new $F.PerlinNoiseFilter(100,80), new $F.SeamlessTileFilter()]),
+            seamlessPerlin = new $F.PerlinNoiseFilter(100,80).simplex().octaves(1).seamless(true),
             perlinDisplaceFilter = new $F.DisplacementMapFilter(),
             
             // filter selection list
@@ -403,6 +411,7 @@
                 trianglepixelate5,
                 trianglepixelate10,
                 trianglepixelate15,
+                halftoned,
                 hsv,
                 hueOnly,
                 hueExtractor,
@@ -619,7 +628,7 @@
                     perlinNoise = $F.Image()
                         .restorable(false)
                         .fill("rgb(128,128,128)", 0, 0, vw, vh)
-                        .apply(new $F.PerlinNoiseFilter(100,80));
+                        .apply(seamlessPerlin);
                 }
                 else
                 {

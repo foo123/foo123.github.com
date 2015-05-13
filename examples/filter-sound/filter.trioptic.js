@@ -1,5 +1,5 @@
 !function($F){
-
+"use strict";
 /**
 *
 * Trioptic Sound FX as a FILTER.js plugin
@@ -8,7 +8,7 @@
 
 // upscale
 var upscaleX = 1.7, upscaleY = 1.7, invupscaleX = 1.0/upscaleX, invupscaleY = 1.0/upscaleY;
-$F.TriopticSimpleFilter = $F.Create({
+$F.Create({
     name: "TriopticSimpleFilter"
     
     // parameters
@@ -38,7 +38,7 @@ $F.TriopticSimpleFilter = $F.Create({
                 Sin = Math.sin, 
                 toRad = $F.CONSTANTS.toRad,
                 toCol = $F.Color.Color2RGBA
-                ;
+            ;
                 
             i = 0;
             while ( i < l )
@@ -68,7 +68,7 @@ $F.TriopticSimpleFilter = $F.Create({
                     if (s>=0 && s<w && iupy<h)
                     {
                         off = (s + iw)<<2; 
-                        im[off] = rgba.r; im[off+1] = rgba.g; im[off+2] = rgba.b;
+                        im[off] = rgba[0]; im[off+1] = rgba[1]; im[off+2] = rgba[2];
                     }
                     
                     j = 0; jw=0;
@@ -79,7 +79,7 @@ $F.TriopticSimpleFilter = $F.Create({
                         if (x>=0 && x<w && y<h)
                         {
                             off = (~~(x + y*ws))<<2;
-                            im[off] = rgba.r; im[off+1] = rgba.g; im[off+2] = rgba.b;
+                            im[off] = rgba[0]; im[off+1] = rgba[1]; im[off+2] = rgba[2];
                         }
                         j++; jw+=wr;
                     }
@@ -91,4 +91,4 @@ $F.TriopticSimpleFilter = $F.Create({
             }
     })( )
 });
- }(FILTER);   
+}(FILTER);   

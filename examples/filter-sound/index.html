@@ -292,7 +292,7 @@
                 w = visualization.width, 
                 s = w * spec * spec * spec * 0.3333
             ;
-            
+
             // set the various filters parameters
             trioptic.spectrum = s;
             
@@ -303,7 +303,7 @@
             // apply the visualization
             triopticVisualizer.apply( visualization, visualization, function( ) {
                 // up-scale it for rendering
-                upscaledVisualization.setImage( visualization.domElement );
+                upscaledVisualization.image( visualization.domElement );
                 
                 stats.end( );
                 

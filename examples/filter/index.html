@@ -117,6 +117,7 @@
     </style>
     <script src="../common/js/require.js"></script>
     <script src="../common/js/require-config.js"></script>
+    <!--<script src="../common/cascades/haarcascade_frontalface_alt.js"></script>-->
 </head>
 <body>
     <span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
@@ -150,7 +151,7 @@
             FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_PLUGINS"]
         }
     });
-    require(['jQuery', 'Classy', 'Asynchronous', 'FILTER', 'FILTER_PLUGINS'], function( $, $_1, $_2, $_3, $F ) {
+    require(['cascades/haarcascade_frontalface_alt', 'jQuery', 'Classy', 'Asynchronous', 'FILTER', 'FILTER_PLUGINS'], function( haarcascade_frontalface_alt, $, $_1, $_2, $F ) {
         
         // utils
         function br() { return $('<br />'); }
@@ -167,6 +168,8 @@
         var baseUrl = location.href.split(/#|\?/)[ 0 ]
             ,che = '../common/assets/che.jpg'
             ,yinyang = '../common/assets/yin_yang_blank.png'
+            ,yinyang_tga = '../common/assets/yin_yang_blank.tga'
+            ,yinyang_gif = '../common/assets/yin_yang_blank.gif'
             ,aside = $('#aside')
             ,applyBt = $('#applyBt')
             ,restoreBt = $('#restoreBt')
@@ -192,20 +195,8 @@
                 displacemap.octx.arc(displacemap.width/2,displacemap.height/2,displacemap.width/2,0,Math.PI*2,true);
                 displacemap.octx.fill();
                 displacemap.store();
-                /*
-                im2 = im1.clone();
-                im3 = im1.clone();
-                im4 = im1.clone();
-                im5 = im1.clone();
-                im6 = im1.clone();
-                im7 = im1.clone();
-                im8 = im1.clone();
-                im9 = im1.clone();
-                im10 = im1.clone();
-                im11 = im1.clone();
-                im12 = im1.clone();
-                im13 = im1.clone();
-                im14 = im1.clone();*/
+                
+                im15.fill('rgb(200,200,200)', 0, 0, im1.width, im1.height);
             })
             ,im2 = $F.HTMLImageLoader.load( che )
             ,im3 = $F.HTMLImageLoader.load( che )
@@ -220,9 +211,13 @@
             ,im12 = $F.HTMLImageLoader.load( che )
             ,im13 = $F.HTMLImageLoader.load( che )
             ,im14 = $F.HTMLImageLoader.load( che )
-            ,im15 = $F.HTMLImageLoader.load( che )
-            ,im16 = $F.HTMLImageLoader.load( che )
-            ,im17 = $F.HTMLImageLoader.load( yinyang )
+            ,im15 = $F.Image()
+            ,im16 = $F.HTMLImageLoader.load( yinyang )
+            //,im16 = $F.TGALoader.load( yinyang_tga )
+            //,im16 = $F.GIFLoader.load( yinyang_gif )
+            ,im17 = $F.HTMLImageLoader.load( che )
+            ,im18 = $F.HTMLImageLoader.load( che )
+            ,im19 = $F.HTMLImageLoader.load( che )
             
              // filters
             //,redChannel = new $F.ColorMatrixFilter( ).worker( runInThread ).redChannel( )
@@ -264,7 +259,7 @@
             //,median = new $F.StatisticalFilter( ).worker( runInThread ).median( 5 )
             //,maximum = new $F.StatisticalFilter( ).worker( runInThread ).maximum( 15 )
             ,pixelate = new $F.PixelateFilter( 10 ).worker( runInThread )
-            //,pixelate = new $F.TriangularPixelateFilter( 10 ).worker( runInThread )
+            //,tripixelate = new $F.TriangularPixelateFilter( 10 ).worker( runInThread )
             //,pixelate = new $F.HexagonalPixelateFilter( 20 ).worker( runInThread )
             //,hueExtractor = new $F.HueExtractorFilter([10, 36]).worker( runInThread ) // extract hues corresponding to skin color
             //,thresh = new $F.TableLookupFilter( ).worker( runInThread ).threshold( 0.94 )
@@ -272,14 +267,13 @@
             //,skinExtractor = new $F.CompositeFilter([hsv, redChannel, invert, gray, thresh]).worker( runInThread ) // extract skin region
             //,laplace = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).laplace( 7 )
             ,twirl = new $F.GeometricMapFilter( ).worker( runInThread ).twirl( Math.PI/2, 120, 0.33, 0.27 )
-            //,shift = new $F.GeometricMapFilter( ).worker( runInThread ).shift(-50)
+            ,shift = new $F.GeometricMapFilter( ).worker( runInThread ).shift(-50)
             //,rotate = new $F.GeometricMapFilter( ).worker( runInThread ).rotateCCW( )
             //,blur = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).boxBlur( 3 )
             //,gauss = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).fastGauss( 3 )//gaussBlur(3)
             //,vertical = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).verticalBlur( 21 )
             //,diagonal = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).directionalBlur( 45, 9 )
             ,sobel = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).sobel( 3 )
-            ,canny = new $F.CannyEdgesFilter( 1, 7 ).worker( runInThread )
             //,glow = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).glow( )
             ,emboss = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).emboss( )
             ,grsb = new $F.CompositeFilter([gray, sobel/*, binary*/]).worker( runInThread )
@@ -288,8 +282,33 @@
                 new $F.FloodFillFilter(25/* x0 */,75/* y0 */,[255,0,0]/* fill color */,0.8/* tolerance */),
                 new $F.FloodFillFilter(125/* x0 */,75/* y0 */,[0,0,255]/* fill color */,0.8/* tolerance */)
             ]).worker( runInThread )
-            ,simplexNoise = new $F.PerlinNoiseFilter(50,50,0,0,0).worker( runInThread )
+            ,seamless = new $F.SeamlessTileFilter().worker( runInThread )
+            /*,halfTone = new $F.CompositeFilter([
+                gray,
+                new $F.HalftoneFilter().threshold(0.4).size(1).grayscale(true)
+            ]).worker( runInThread )*/
+            //,halfTone = new $F.HalftoneFilter().size(1).threshold(0.4).grayscale(false).worker( runInThread )
+            //,seamless = new $F.RGBSplitFilter(.1,.2,.5).worker( runInThread )
+            /*,simplexNoise = new $F.CompositeFilter([
+                new $F.PerlinNoiseFilter(80,50).simplex().octaves(4, [[0,0],[10,10], [20,10], [10,20]]).seamless(true)
+                //seamless,
+                //,shift
+            ]).worker( runInThread )*/
+            ,simplexNoise = new $F.PerlinNoiseFilter(80,50).simplex().octaves(4, [[0,0],[10,10], [20,10], [10,20]]).seamless(true).worker( runInThread )
             //,bokeh = new $F.BokehFilter(80, 90, 60, 10).worker( runInThread )
+            ,canny = new $F.CannyEdgesFilter( 1, 7 ).worker( runInThread )
+            ,faceDetector = new $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt)/*.params()*/.worker( runInThread )
+            ,drawDetectedFeatures = function( detector, image ) {
+                var ctx = image.octx, objects = detector.objects;
+                // draw any features found
+                ctx.strokeStyle = "rgba(75,221,17,1)"; 
+                ctx.lineWidth = 2;
+                for (i=0; i<objects.length; i++)
+                {
+                    rect = objects[i];
+                    ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                }
+            }
         ;
         
         $('#parallel').on( 'click', function( ) {
@@ -308,6 +327,9 @@
         .append(br())
         .append(span('14.')).append(im14.domElement)
         .append(span('M:')).append(displacemap.domElement)
+        .append(br())
+        .append(span('15.')).append(im15.domElement)
+        .append(span('16.')).append(im16.domElement)
         ;
         filters
         .append(span('5.')).append(im5.domElement)
@@ -322,12 +344,13 @@
         .append(span('12.')).append(im12.domElement)
         .append(span('13.')).append(im13.domElement)
         .append(br())
-        .append(span('15.')).append(im15.domElement)
-        .append(span('16.')).append(im16.domElement)
         .append(span('17.')).append(im17.domElement)
+        .append(span('18.')).append(im18.domElement)
+        .append(span('19.')).append(im19.domElement)
+        //.append(span('21.')).append(im21.domElement)
         ;
         
-        aside.append("<div><ol><li>Original Image</li><li>Red Channel</li><li>Green Channel</li><li>Blue Channel</li><li>Red Colorized applied to Selection</li><li>Grayscale and Contrast</li><li>Quick Sepia</li><li>Posterize</li><li>Pixelate (Plugin)</li><li>Emboss</li><li>Geometric Twirl Map</li><li>Displace Map</li><li>Grayscale, Sobel Gradient Magnitude (Composite)</li><li>Histogram Equalization (Plugin)</li><li>Perlin Noise (Plugin)</li><li>Canny Edges (Plugin)</li><li>Flood Fill (Plugin)</li></ol>M: Displace Map</div>");
+        aside.append("<div><ol><li>Original Image</li><li>Red Channel</li><li>Green Channel</li><li>Blue Channel</li><li>Red Colorized applied to Selection</li><li>Grayscale and Contrast</li><li>Quick Sepia</li><li>Posterize</li><li>Pixelate (Plugin)</li><li>Emboss</li><li>Geometric Twirl Map</li><li>Displace Map</li><li>Grayscale, Sobel Gradient Magnitude (Composite)</li><li>Histogram Equalization (Plugin)</li><li>Perlin Noise (Plugin)</li><li>Flood Fill (Plugin)</li><li>Seamless Tile (Plugin)</li><li>Canny Edges (Plugin)</li><li>HAAR Detector for Face  (Plugin)</li></ol>M: Displace Map</div>");
             
         function apply(evt)
         {
@@ -366,8 +389,22 @@
             //im13.apply( glow, closeThread );
             im14.apply( equalize, closeThread );
             im15.apply( simplexNoise, closeThread );
-            im16.apply( canny, closeThread );
-            im17.apply( floodFill, closeThread );
+            im16.apply( floodFill, closeThread );
+            im17.apply( seamless, closeThread );
+            im18.apply( canny, closeThread );
+            //im19.apply( halfTone, closeThread );
+            im19.apply(faceDetector, function(){
+                closeThread.call(this);
+                drawDetectedFeatures( this, im19 );
+            });
+            
+            /*var arry = new $F.Array8U([0,255,255,0,127,127]);
+            console.log(arry);
+            var fourier = $F.Math.fft1d(arry, 6);
+            console.log(fourier);
+            var arry2 = new $F.Array8U($F.Math.fft1d(fourier, 6, -1));
+            console.log(arry2);*/
+            
             return false;
         }
         
@@ -389,6 +426,8 @@
             im15.restore( );
             im16.restore( );
             im17.restore( );
+            im18.restore( );
+            im19.restore( );
             return false;
         }
         
