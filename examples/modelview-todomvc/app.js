@@ -19,7 +19,7 @@
             $todoList = $( '#todo-list' ), $toggleAll = $( '#toggle-all' ),
             // pre-parse it
             todoTpl = Contemplate.tpl( 'todo-tpl' ),
-            sprintf = Contemplate.sprintf, pluralise = Contemplate.pluralise,
+            sprintf = Contemplate.sprintf, pluralise = Contemplate.plural,
             Model, View, Router, TodoView, 
             TypeCast = ModelView.Type.Cast, Validate = ModelView.Validation.Validate,
             STORAGE_KEY = "modelview_todomvc",
