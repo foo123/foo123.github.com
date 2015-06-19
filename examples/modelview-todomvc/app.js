@@ -424,7 +424,8 @@
         Router = new Dromeo( );
         
         // Dromeo router for location.hash changes
-        Router.on('#/{%ALPHA%:displayMode}', function( route, params ) {
+        Router.on({route:'#/{%ALPHA%:displayMode}', handler:function( params ) {
+            params = params.data;
             if ( params )
             {
                 var displayMode = params.displayMode, $el = $('#'+displayMode);
@@ -439,7 +440,7 @@
                 
                 $todoList.toggleCompleted( );
             }
-        });
+        }});
         $window.on('hashchange', function( evt ) {
             Router.route( location.hash );
         });

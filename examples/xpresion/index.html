@@ -235,15 +235,16 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
     };
     
     appRouter = new $R( );
-    appRouter.one('#{%ALL%:hash}', function( route, params ){
+    appRouter.one({route:'#{%ALL%:hash}', handler:function( params ){
+        params = params.data;
         params = params && params.hash ? appRouter.unglue( params.hash ) : null;
-        if ( params && params.action && appTask[params.action] )
+        if ( params && params.action && appTask.hasOwnProperty(params.action) )
         {
             var appModel = $screen.modelview( 'model' );
             if ( params.expr ) appModel.set('expr', params.expr, 1);
             appTask[ params.action ]( appModel );
         }
-    });
+    }});
     
     $screen.modelview({
         autobind: true

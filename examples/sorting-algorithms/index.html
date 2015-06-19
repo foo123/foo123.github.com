@@ -607,7 +607,8 @@ require([/*'Benchmark',*/ 'jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Sort'
     appRouter = new $R( );
     //$panel.modelview('sync');
     
-    appRouter.one('#{%ALL%:hash}', function( route, params ) {
+    appRouter.one({route:'#{%ALL%:hash}', handler:function( params ) {
+        params = params.data;
         params = params && params.hash ? appRouter.unglue( params.hash ) : null;
         if ( params && params.action && 'test' === params.action )
         {
@@ -621,7 +622,7 @@ require([/*'Benchmark',*/ 'jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Sort'
                 appModel.set( 'algorithm.pre_sort_state', params.pre_sort_state, 1 );
             doTest( appModel );
         }
-    });
+    }});
     
     $window.one('hashchange', function( evt ) {
         appRouter.route( location.hash );
