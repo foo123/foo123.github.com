@@ -28,6 +28,7 @@
             ,cascades: "../cascades"
             ,FILTER: "filter.min"
             ,FILTER_PLUGINS: "filter.plugins.min"
+            ,FILTER_CODECS: "filter.codecs.min"
             //,FilterBundle: "filter.bundle"
             ,MOD3: "mod3.min"
             ,Sort: "sort.min"

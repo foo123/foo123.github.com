@@ -150,7 +150,7 @@
             FilterTrioptic: "../../filter-sound/filter.trioptic"
         },
         bundles: {
-            FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_PLUGINS"]
+            FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_CODECS", "FILTER_PLUGINS"]
         },
         shim: {
             FilterTrioptic: {
@@ -165,8 +165,8 @@
             }
         }
     });
-    require(['jQuery', 'Classy', 'Asynchronous', 'FILTER', 'FILTER_PLUGINS', 'Dancer', 'Stats'], 
-        function( $, $_1, $_2, $_3, $F, Dancer, Stats ) {
+    require(['jQuery', 'Classy', 'Asynchronous', 'FILTER', 'FILTER_CODECS', 'FILTER_PLUGINS', 'Dancer', 'Stats'], 
+        function( $, $_1, $_2, $_3, $_4, $F, Dancer, Stats ) {
         
         var useParallelFilters = $F.Browser.supportsWorker && /(&|\?)parallel\b/i.test( location.href )
             ,baseUrl = location.href.split(/#|\?/)[ 0 ]

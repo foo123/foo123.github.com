@@ -272,11 +272,11 @@
             FilterBundle: "filter.bundle"
         },
         bundles: {
-            FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_PLUGINS"]
+            FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_CODECS", "FILTER_PLUGINS"]
         }
     });
-    require(['Classy', 'Asynchronous', 'FILTER', 'FILTER_PLUGINS', 'AreaSelect', 'Stats'/*, 'domReady!'*/], 
-        function( $_1, $_2, $_3, $F, AreaSelect, Stats ) {
+    require(['Classy', 'Asynchronous', 'FILTER', 'FILTER_CODECS', 'FILTER_PLUGINS', 'AreaSelect', 'Stats'/*, 'domReady!'*/], 
+        function( $_1, $_2, $_3, $_4, $F, AreaSelect, Stats ) {
         var 
             icon,
             filterSelect = getEl('filterSelect'), 
