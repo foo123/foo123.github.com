@@ -206,7 +206,7 @@
             {
                 var storeModelParams = function( ) {
                     // should handle sub-models correctly as single json output
-                    Storage.set( key, Model.toJSON( ), false );
+                    Storage.set( key, Model.serialize( ) );
                     setTimeout( storeModelParams, interval );
                 };
                 setTimeout( storeModelParams, interval );
@@ -329,7 +329,7 @@
                         
                         $el.val( '' );
                         
-                        //console.log(Model.toJSON( ));
+                        //console.log(Model.serialize( ));
                         
                         Model.notify( 'todoList' );
                         $todoList.toggleCompleted( );
