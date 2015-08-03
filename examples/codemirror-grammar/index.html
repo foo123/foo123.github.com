@@ -400,7 +400,7 @@ require(['jQuery', 'ModelView'],
         json_mode = CodeMirrorGrammar.getMode( json_grammar );
         CodeMirror.defineMode( 'json', json_mode );
         json_mode.supportGrammarAnnotations = true;
-        CodeMirror.registerHelper( "lint", 'json', json_mode( ).validator );
+        CodeMirror.registerHelper( "lint", 'json', json_mode.validator );
         
         // if codemirror activated, enable syntax highlight
         codeEditor = CodeMirror.fromTextArea(code[0], {
@@ -465,7 +465,7 @@ require(['jQuery', 'ModelView'],
                     if ( model.get('annotate') )
                     {
                         gramm_mode.supportGrammarAnnotations = true;
-                        CodeMirror.registerHelper("lint", lang, gramm_mode().validator);
+                        CodeMirror.registerHelper("lint", lang, gramm_mode.validator);
                         codeEditor.setOption("lint", true);
                     }
                     else

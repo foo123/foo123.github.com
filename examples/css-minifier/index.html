@@ -256,7 +256,7 @@ jQuery(function($){
     css_mode = CodeMirrorGrammar.getMode(css_grammar);
     css_mode.supportGrammarAnnotations = true;
     CodeMirror.defineMode('css', css_mode);
-    CodeMirror.registerHelper("lint", 'css', css_mode().validator);                
+    CodeMirror.registerHelper("lint", 'css', css_mode.validator);                
     
     // if codemirror activated, enable syntax highlight
     codeEditor = CodeMirror.fromTextArea(code[0], {

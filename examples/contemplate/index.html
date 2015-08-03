@@ -239,7 +239,7 @@ jQuery(function($){
     json_mode = CodeMirrorGrammar.getMode(json_grammar);
     CodeMirror.defineMode('json', json_mode);
     json_mode.supportGrammarAnnotations = true;
-    CodeMirror.registerHelper("lint", 'json', json_mode().validator);                
+    CodeMirror.registerHelper("lint", 'json', json_mode.validator);                
     
     // if codemirror activated, enable syntax highlight
     tplEditor = CodeMirror.fromTextArea(tpl[0], {

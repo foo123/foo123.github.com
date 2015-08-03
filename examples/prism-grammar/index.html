@@ -501,7 +501,7 @@ require(['jQuery', 'ModelView'],
         json_mode = CodeMirrorGrammar.getMode( json_grammar );
         CodeMirror.defineMode( 'json', json_mode );
         json_mode.supportGrammarAnnotations = true;
-        CodeMirror.registerHelper( "lint", 'json', json_mode( ).validator );
+        CodeMirror.registerHelper( "lint", 'json', json_mode.validator );
         
         // if codemirror activated, enable syntax highlight
         codeEditor = CodeMirror.fromTextArea(code[0], {
@@ -559,11 +559,11 @@ require(['jQuery', 'ModelView'],
                     codeEditor.setOption("lint", false);
                     codeEditor.setOption("mode", lang);*/
                     
-                    if ( mode ) mode.unhook();
+                    if ( mode ) mode.unhook( );
                     mode = PrismGrammar.getMode( gramm );
-                    output.html(codeEditor.getValue());
-                    mode.hook(Prism, 'markup');
-                    Prism.highlightElement(output[0]);
+                    output.html( codeEditor.getValue( ) );
+                    mode.hook( Prism, 'markup' );
+                    Prism.highlightElement( output[0] );
                 }
             }
         });
