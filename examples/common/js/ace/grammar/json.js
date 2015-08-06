@@ -42,8 +42,6 @@ var json_grammar = {
             // integers
             // hex
             "RegExp::/0x[0-9a-fA-F]+L?/",
-            // binary
-            "RegExp::/0b[01]+L?/",
             // octal
             "RegExp::/0o[0-7]+L?/",
             // decimal
@@ -61,96 +59,29 @@ var json_grammar = {
         },
         
         // atoms
-        "atom" : {
-            // enable autocompletion for these tokens, with their associated token ID
-            "autocomplete" : true,
-            "tokens" : [ "true", "false", "null" ]
-        }
+        "atom" : [ "true", "false", "null" ]
     },
     
     //
     // Syntax model (optional)
     "Syntax" : {
         
-        "literalObject" : {
-            "type" : "group",
-            "match" : "all",
-            "tokens" : [ "{", "literalPropertyValues", "}" ]
-        },
+        "literalObject" : "'{' (literalPropertyValue (',' literalPropertyValue)*)? '}'",
         
-        "literalArray" : {
-            "type" : "group",
-            "match" : "all",
-            "tokens" : [ "[", "literalValues", "]" ]
-        },
+        "literalArray" : "'[' (literalValue (',' literalValue)*)? ']'",
         
         // grammar recursion here
-        "literalValue" : {
-            "type" : "group",
-            "match" : "either",
-            "tokens" : [ "atom", "string", "number", "literalArray", "literalObject" ]
-        },
+        "literalValue" : "atom | string | number | literalArray | literalObject",
         
-        "literalValuesRest" : {
-            "type" : "group",
-            "match" : "all",
-            "tokens" : [ ",", "literalValue" ]
-        },
+        "literalPropertyValue" : "string ':' literalValue",
         
-        "literalPropertyValue" : {
-            "type" : "group",
-            "match" : "all",
-            "tokens" : [ "string", ":", "literalValue" ]
-        },
-        
-        "literalPropertyValuesRest" : {
-            "type" : "group",
-            "match" : "all",
-            "tokens" : [ ",", "literalPropertyValue" ]
-        },
-        
-        "literalValuesRestOptional" : {
-            "type" : "group",
-            "match" : "zeroOrMore",
-            "tokens" : [ "literalValuesRest" ]
-        },
-        
-        "literalPropertyValuesRestOptional" : {
-            "type" : "group",
-            "match" : "zeroOrMore",
-            "tokens" : [ "literalPropertyValuesRest" ]
-        },
-        
-        "literalValues" : {
+        "json" : {
             "type" : "ngram",
-            "tokens" : [
-                [ "literalValue", "literalValuesRestOptional" ]
-            ]
-        },
-        
-        "literalPropertyValues" : {
-            "type" : "ngram",
-            "tokens" : [
-                [ "literalPropertyValue", "literalPropertyValuesRestOptional" ]
-            ]
-        },
-        
-        "literalNGram" : {
-            "type" : "n-gram",
-            "tokens" : [
-                ["literalObject"],
-                ["literalArray"]
-            ]
+            "tokens" : ["literalValue"]
         }
     },
 
     // what to parse and in what order
-    "Parser" : [
-        // allow comments in json ;)
-        "comment",
-        "number",
-        "string",
-        "atom",
-        "literalNGram"
-    ]
+    // allow comments in json ;)
+    "Parser" : [ "comment", "json" ]
 };
