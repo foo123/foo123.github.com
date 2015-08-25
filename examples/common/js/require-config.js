@@ -4,7 +4,7 @@
         baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : "/foo123.github.com/examples/common/js"
         
         ,paths: {
-            Storage: "Storage"
+             Storage: "Storage"
             ,Snippets: "snippets"
             ,AreaSelect: "areaselect.min"
             ,utils: "utils.min"
@@ -17,6 +17,7 @@
             ,Asynchronous: "asynchronous.min"
             ,RegexAnalyzer: "RegexAnalyzer.min"
             ,RegexComposer: "RegexComposer.min"
+            ,DateX: "DateX.min"
             ,Contemplate: "Contemplate.min"
             ,Tao: "Tao.min"
             ,ModelView: "modelview.min"
