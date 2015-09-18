@@ -315,6 +315,8 @@ table td
     <option value="9" selected>9x9 Sudoku</option>
     <option value="6">6x6 Sudoku</option>
     <option value="4">4x4 Sudoku</option>
+    <option value="12">12x12 Sudoku</option>
+    <option value="16">16x16 Sudoku</option>
     </select></td>
     </tr>
     <tr>
@@ -388,7 +390,7 @@ var DisplayPuzzle = window.DisplayPuzzle = function( puzzle, sol, $dom, $control
     self.id = 'sudoku_' + (++_id);
     self.puzzle = puzzle;
     self.scaling = 1.0;
-    self.msg = 'Found Solution!';
+    self.msg = 'Found Sudoku Solution!';
     self.display( sol, $dom, $controls );
 };
 DisplayPuzzle.prototype = {
@@ -447,32 +449,17 @@ DisplayPuzzle.prototype = {
         {
             puzzle = self.puzzle;
             
-            /*puzzle.on( 'input', function( ) {
-                //self.updateProgressBar( );
-            });*/
             $controls.on('click.'+self.id, '.puzzle-control', function( evt ){ 
                 if ( self.disposed ) return false;
                 var $control = $(evt.target);
                 
-                /*if ( $control.is('.puzzle-zoom-in') )
-                {
-                    self.scaling += .1;
-                    puzzle.scale( self.scaling );
-                }
-                else if ( $control.is('.puzzle-zoom-out') )
-                {
-                    self.scaling -= .1;
-                    puzzle.scale( self.scaling );
-                }
-                else*/ if ( $control.is('.puzzle-clear-all') )
+                if ( $control.is('.puzzle-clear-all') )
                 {
                     puzzle.clearCells( true );
-                    //self.updateProgressBar( );
                 }
                 else if ( $control.is('.puzzle-clear-highlighted') )
                 {
                     puzzle.clearHighlighted( );
-                    //self.updateProgressBar( );
                 }
                 else if ( $control.is('.puzzle-highlight-errors') )
                 {
@@ -482,22 +469,18 @@ DisplayPuzzle.prototype = {
                 else if ( $control.is('.puzzle-clear-errors') )
                 {
                     puzzle.clearErrors( );
-                    //self.updateProgressBar( );
                 }
                 else if ( $control.is('.puzzle-reveal-solution') )
                 {
                     puzzle.revealSolution( );
-                    //self.updateProgressBar( );
                 }
                 else if ( $control.is('.puzzle-reveal-word') )
                 {
                     puzzle.revealCells( puzzle.getHighlighted( ) );
-                    //self.updateProgressBar( );
                 }
                 else if ( $control.is('.puzzle-reveal-letter,.puzzle-reveal-symbol,.puzzle-reveal-cell') )
                 {
                     puzzle.revealCell( );
-                    //self.updateProgressBar( );
                 }
                 else if ( $control.is('.puzzle-notes') )
                 {
@@ -516,7 +499,6 @@ DisplayPuzzle.prototype = {
                     puzzle.clearNotes( );
                 }
             });
-            //self.updateProgressBar( );
         }
         return self;
     },
@@ -548,12 +530,13 @@ function build_sudoku( dimensions )
 {
     var sudoku = Sudoku.Factory.getGrid('SUDOKU');
     sudoku.build( dimensions ).setDichromia( true );
+    //sudoku.alphabet = alphabet || null;
     return sudoku;
 };
-function compile_sudoku( on_complete, sudoku, dimension, difficulty, symmetry ) 
+function compile_sudoku( on_complete, sudoku, dimension, difficulty, symmetry, alphabet ) 
 {
     var compiler = Sudoku.Factory.getCompiler( sudoku );
-    sudoku.setAlphabet(Sudoku.range(dimension,{start:1}).join(''));
+    sudoku.setAlphabet(alphabet || Sudoku.range(dimension,{start:1}).join(''));
     compiler.liveUpdate = false;
     compiler
         .one('complete', function(evt){
@@ -602,20 +585,42 @@ $(function(){
         actions: {
             new_game: function( ){
                 var model = this.$model, 
-                    dimensions, 
+                    dimensions, alphabet,
                     prev_renderer = renderer,
                     dimension = model.get('type'), 
                     difficulty = model.get('difficulty'), 
                     symmetry = model.get('symmetry');
-                if ( 4 === dimension ) dimensions = {rows:4, columns:4, subRows:2, subColumns:2, cellSize:70};
-                else if ( 6 === dimension ) dimensions = {rows:6, columns:6, subRows:2, subColumns:3, cellSize:70};
-                else /*if ( 9 === dimension )*/ dimensions = {rows:9, columns:9, subRows:3, subColumns:3, cellSize:70};
+                if ( 4 === dimension )
+                {
+                    dimensions = {rows:4, columns:4, subRows:2, subColumns:2, cellSize:70};
+                    alphabet = "1234";
+                }
+                else if ( 6 === dimension )
+                {
+                    dimensions = {rows:6, columns:6, subRows:2, subColumns:3, cellSize:70};
+                    alphabet = "123456";
+                }
+                else if ( 12 === dimension )
+                {
+                    dimensions = {rows:12, columns:12, subRows:3, subColumns:4, cellSize:60};
+                    alphabet = "ABCDEFGHIJKL";
+                }
+                else if ( 16 === dimension )
+                {
+                    dimensions = {rows:16, columns:16, subRows:4, subColumns:4, cellSize:60};
+                    alphabet = "ABCDEFGHIJKLMNOP";
+                }
+                else /*if ( 9 === dimension )*/
+                {
+                    dimensions = {rows:9, columns:9, subRows:3, subColumns:3, cellSize:70};
+                    alphabet = "123456789";
+                }
                 $game_panel.addClass('ui-delayed').removeClass('ui-undelayed');
                 compile_sudoku(function( ){
                     $game_panel.addClass('ui-undelayed').removeClass('ui-delayed');
                     if ( prev_renderer ) { prev_renderer.dispose(); prev_renderer = null; }
                     renderer = display_sudoku( puzzle, $grid, $controls );
-                }, puzzle = build_sudoku( dimensions ), dimension, difficulty, symmetry);
+                }, puzzle = build_sudoku( dimensions ), dimension, difficulty, symmetry, alphabet);
             }
         }
     });
