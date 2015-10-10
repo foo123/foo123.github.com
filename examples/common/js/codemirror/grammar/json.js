@@ -2,7 +2,7 @@
 var json_grammar = {
         
     // prefix ID for regular expressions used in the grammar
-    "RegExpID" : "RegExp::",
+    "RegExpID" : "RE::",
     
     "Extra" : {
         "fold" : "brace"
@@ -40,18 +40,20 @@ var json_grammar = {
         // numbers, in order of matching
         "number" : [
             // floats
-            "RegExp::/\\d*\\.\\d+(e[\\+\\-]?\\d+)?/",
-            "RegExp::/\\d+\\.\\d*/",
-            "RegExp::/\\.\\d+/",
+            "RE::/\\d*\\.\\d+(e[\\+\\-]?\\d+)?/",
+            "RE::/\\d+\\.\\d*/",
+            "RE::/\\.\\d+/",
             // integers
             // hex
-            "RegExp::/0x[0-9a-fA-F]+L?/",
+            "RE::/0x[0-9a-fA-F]+L?/",
+            // binary
+            "RE::/0b[01]+L?/",
             // octal
-            "RegExp::/0o[0-7]+L?/",
+            "RE::/0o[0-7]+L?/",
             // decimal
-            "RegExp::/[1-9]\\d*(e[\\+\\-]?\\d+)?L?/",
+            "RE::/[1-9]\\d*(e[\\+\\-]?\\d+)?L?/",
             // just zero
-            "RegExp::/0(?![\\dx])/"
+            "RE::/0(?![\\dx])/"
         ],
 
         // usual strings
@@ -63,22 +65,21 @@ var json_grammar = {
         },
         
         // atoms
-        "atom" : [ "true", "false", "null" ]
+        "atom" : {
+            // enable autocompletion for these tokens, with their associated token ID
+            "autocomplete" : true,
+            "tokens" : [ "true", "false", "null" ]
+        }
     },
     
     //
     // Syntax model (optional)
     "Syntax" : {
-        
         "literalObject" : "'{' (literalPropertyValue (',' literalPropertyValue)*)? '}'",
-        
         "literalArray" : "'[' (literalValue (',' literalValue)*)? ']'",
-        
         // grammar recursion here
         "literalValue" : "atom | string | number | literalArray | literalObject",
-        
         "literalPropertyValue" : "string ':' literalValue",
-        
         "json" : {
             "type" : "ngram",
             "tokens" : ["literalValue"]
