@@ -183,7 +183,7 @@ pre[class*="language"] {
     
     
 <header id="header">
-    <h1>Prism Grammar</h1>
+    <h1>Prism Grammar (ver <span id="version">0</span>)</h1>
     <i>Build your own syntax-highlighter grammar for Prism</i>
 </header>
 <br /><br />
@@ -496,6 +496,7 @@ require(['jQuery', 'ModelView'],
             log = (console && console.log) ? function(s){console.log(s);} : function(){}
         ;
         
+        $('#version').text(PrismGrammar.VERSION);
         ModelView.jquery( $ );
     
         json_mode = CodeMirrorGrammar.getMode( json_grammar );

@@ -127,7 +127,7 @@
     
     
 <header id="header">
-    <h1>ACE Grammar</h1>
+    <h1>ACE Grammar (ver <span id="version">0</span>)</h1>
     <i>Build your own syntax-highlight grammar for ACE</i>
     <br /><br />
     <i>Ctrl-L: toggle line comments, Alt-L: toggle block comments, Ctrl-Space: keyword autocompletion popup</i>
@@ -388,6 +388,7 @@ require(['jQuery', 'ModelView'],
             log = (console && console.log) ? function(s){console.log(s);} : function(){}
         ;
         
+        $('#version').text(AceGrammar.VERSION);
         ModelView.jquery( $ );
     
         Editor = ace.require("ace/editor").Editor;

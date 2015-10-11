@@ -136,7 +136,7 @@
     
     
 <header id="header">
-    <h1>Codemirror Grammar</h1>
+    <h1>Codemirror Grammar (ver <span id="version">0</span>)</h1>
     <i>Build your own Codemirror syntax-highlight grammar</i>
     <br /><br />
     <i>Ctrl-L: toggle comments</i>
@@ -395,6 +395,7 @@ require(['jQuery', 'ModelView'],
             log = (console && console.log) ? function(s){console.log(s);} : function(){}
         ;
         
+        $('#version').text(CodeMirrorGrammar.VERSION);
         ModelView.jquery( $ );
     
         json_mode = CodeMirrorGrammar.getMode( json_grammar );
