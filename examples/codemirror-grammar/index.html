@@ -24,6 +24,7 @@
     
 <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
 <link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
+<link rel="stylesheet" href="../common/js/codemirror/addon/hint/show-hint.css">
 <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
 <link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
 <style type="text/css">
@@ -121,6 +122,7 @@
 <script src="../common/js/codemirror/codemirror.min.js"></script>
 <script src="../common/js/codemirror/addon/comment/comment.js"></script>
 <script src="../common/js/codemirror/addon/lint/lint.js"></script>
+<script src="../common/js/codemirror/addon/hint/show-hint.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
 <script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
@@ -139,7 +141,7 @@
     <h1>Codemirror Grammar (ver <span id="version">0</span>)</h1>
     <i>Build your own Codemirror syntax-highlight grammar</i>
     <br /><br />
-    <i>Ctrl-L: toggle comments</i>
+    <i>Ctrl-L: toggle comments, Ctrl-Space: keyword autocompletion popup</i>
 </header>
 <br /><br />
 
@@ -390,7 +392,7 @@ require(['jQuery', 'ModelView'],
     
         var $w = $(window), $screen = $('#screen'), 
             code = $('#code'), grammar = $('#grammar'), apply = $('#apply'), 
-            lang = "customLang", i = 0, json_mode,
+            lang = "customLang", i = 0, json_mode, grammar_mode = null,
             codeEditor, grammarEditor, width, height,
             log = (console && console.log) ? function(s){console.log(s);} : function(){}
         ;
@@ -403,6 +405,12 @@ require(['jQuery', 'ModelView'],
         json_mode.supportGrammarAnnotations = true;
         CodeMirror.registerHelper( "lint", 'json', json_mode.validator );
         
+        // enable autocomplete, have a unique cmd to not interfere with any default autocompletes
+        CodeMirror.commands.autocomplete_grammar = function( cm ) {
+            if ( grammar_mode )
+                CodeMirror.showHint(cm, grammar_mode.autocomplete);
+        };
+        
         // if codemirror activated, enable syntax highlight
         codeEditor = CodeMirror.fromTextArea(code[0], {
             mode: "text",
@@ -414,7 +422,7 @@ require(['jQuery', 'ModelView'],
             lint: false,
             gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers"],
             theme: 'lesser-dark',
-            extraKeys: {"Ctrl-L": "toggleComment"}
+            extraKeys: {"Ctrl-Space": "autocomplete_grammar", "Ctrl-L": "toggleComment"}
         });
         
         grammarEditor = CodeMirror.fromTextArea(grammar[0], {
@@ -445,33 +453,32 @@ require(['jQuery', 'ModelView'],
             }
             ,actions: { 
                 apply: function(evt, $el, data) {
-                    var model=this.$model, gramm, lines, len, i, line, gramm_mode;
+                    var model=this.$model, grammar, lines, l, i;
                     lines = grammarEditor.getValue().split("\n");
-                    len = lines.length;
-                    gramm = [];
-                    for (i=0; i<len; i++)
+                    grammar = [];
+                    for (i=0,l=lines.length; i<l; i++)
                     {
                         // remove comments
-                        line = lines[i].replace(/^\s+/, '');
-                        if ('//' == line.substr(0, 2)) continue;
-                        gramm.push( lines[i] );
+                        if ( !/^\s*\/\//.test( lines[i] ) )
+                            grammar.push( lines[i] );
                     }
-                    if ( gramm_mode )
+                    if ( grammar_mode )
                     {
+                        grammar_mode = null;
                         CodeMirror.defineMode(lang, null);
                     }
-                    gramm = JSON.parse(gramm.join("\n"));
-                    gramm_mode = CodeMirrorGrammar.getMode( gramm );
-                    CodeMirror.defineMode(lang, gramm_mode);
+                    grammar = JSON.parse(grammar.join("\n"));
+                    grammar_mode = CodeMirrorGrammar.getMode( grammar );
+                    CodeMirror.defineMode(lang, grammar_mode);
                     if ( model.get('annotate') )
                     {
-                        gramm_mode.supportGrammarAnnotations = true;
-                        CodeMirror.registerHelper("lint", lang, gramm_mode.validator);
+                        grammar_mode.supportGrammarAnnotations = true;
+                        CodeMirror.registerHelper("lint", lang, grammar_mode.validator);
                         codeEditor.setOption("lint", true);
                     }
                     else
                     {
-                        gramm_mode.supportGrammarAnnotations = false;
+                        grammar_mode.supportGrammarAnnotations = false;
                         codeEditor.setOption("lint", false);
                     }
                     codeEditor.setOption("mode", lang);

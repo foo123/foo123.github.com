@@ -383,7 +383,7 @@ require(['jQuery', 'ModelView'],
     
         var $w = $(window), $screen = $('#screen'), 
             code = $('#code'), grammar = $('#grammar'), apply = $('#apply'), 
-            _mode = "customMode", json_mode, commands, options,
+            _mode = "customMode", json_mode, grammar_mode = null, commands, options,
             Editor, codeEditor, grammarEditor, width, height,
             log = (console && console.log) ? function(s){console.log(s);} : function(){}
         ;
@@ -519,22 +519,20 @@ require(['jQuery', 'ModelView'],
                 }
                 ,actions: { 
                     apply: function(evt, $el, data) {
-                        var model=this.$model, gramm, lines, len, i, line, gramm_mode;
+                        var model=this.$model, grammar, lines, l, i;
                         lines = grammarEditor.getValue().split("\n");
-                        len = lines.length;
-                        gramm = [];
-                        for (i=0; i<len; i++)
+                        grammar = [];
+                        for (i=0,l=lines.length; i<l; i++)
                         {
                             // remove comments
-                            line = lines[i].replace(/^\s+/, '');
-                            if ('//' == line.substr(0, 2)) continue;
-                            gramm.push( lines[i] );
+                            if ( !/^\s*\/\//.test( lines[i] ) )
+                                grammar.push( lines[i] );
                         }
-                        gramm = JSON.parse(gramm.join("\n"));
-                        gramm_mode = AceGrammar.getMode( gramm );
+                        grammar = JSON.parse(grammar.join("\n"));
+                        grammar_mode = AceGrammar.getMode( grammar );
                         if ( model.get('annotate') )
-                            gramm_mode.supportGrammarAnnotations = true;
-                        codeEditor.getSession().setMode( gramm_mode );
+                            grammar_mode.supportGrammarAnnotations = true;
+                        codeEditor.getSession().setMode( grammar_mode );
                     }
                 }
             });
