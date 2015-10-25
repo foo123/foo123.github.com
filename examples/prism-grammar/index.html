@@ -144,9 +144,6 @@ body {
     
 
     
-    <script type="text/javascript" src="../common/js/require.js"></script>
-    <script type="text/javascript" src="../common/js/require-config.js"></script>
-    
 <script src="../common/js/codemirror/codemirror.min.js"></script>
 <script src="../common/js/codemirror/addon/comment/comment.js"></script>
 <script src="../common/js/codemirror/addon/lint/lint.js"></script>
@@ -162,6 +159,9 @@ body {
 <link rel="stylesheet" href="../common/js/prism/plugins/line-numbers/prism-line-numbers.css" data-noprefix />
 <script src="../common/js/prism/prefixfree.min.js"></script>
 <script src="../common/js/prism_grammar.min.js"></script>
+<script type="text/javascript" src="../common/js/require.js"></script>
+<script type="text/javascript" src="../common/js/require-config.js"></script>
+
 <style type="text/css">
 :not(pre) > code[class*="language-"], pre[class*="language-"] {
     background: #121212;
@@ -183,8 +183,10 @@ pre[class*="language"] {
     
     
 <header id="header">
-    <h1>Prism Grammar (ver <span id="version">0</span>)</h1>
+    <h1>Prism Grammar</h1>
     <i>Build your own syntax-highlighter grammar for Prism</i>
+    <br /><br />
+    Prism v.<span id="editor-version">0</span>, PrismGrammar v.<span id="grammar-version">0</span>
 </header>
 <br /><br />
 
@@ -282,12 +284,6 @@ getMode = function(grammar) {
         
 // prefix ID for regular expressions used in the grammar
 "RegExpID"                          : "RE::",
-    
-"Extra"                             : {
-    
-    "fold"                          : "brace"
-
-},
     
 // Style model
 "Style"                             : {
@@ -430,7 +426,8 @@ require(['jQuery', 'ModelView'],
             log = (console && console.log) ? function(s){console.log(s);} : function(){}
         ;
         
-        $('#version').text(PrismGrammar.VERSION);
+        $('#editor-version').text('1.2.0');
+        $('#grammar-version').text(PrismGrammar.VERSION);
         ModelView.jquery( $ );
     
         json_mode = CodeMirrorGrammar.getMode( json_grammar );
