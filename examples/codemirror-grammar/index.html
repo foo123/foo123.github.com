@@ -394,10 +394,11 @@ require(['jQuery', 'ModelView'],
                     }
                     if ( grammar_mode )
                     {
+                        grammar_mode.dispose( );
                         grammar_mode = null;
                         CodeMirror.defineMode(lang, null);
                     }
-                    grammar = JSON.parse(grammar.join("\n"));
+                    grammar = JSON.parse( grammar.join("\n") );
                     grammar_mode = CodeMirrorGrammar.getMode( grammar );
                     CodeMirror.defineMode(lang, grammar_mode);
                     if ( model.get('annotate') )

@@ -421,8 +421,8 @@ require(['jQuery', 'ModelView'],
     
         var $w = $(window), $screen = $('#screen'), 
             code = $('#code'), grammar = $('#grammar'), output = $('#output'),
-            codeEditor, grammarEditor, json_mode,
-            lang = "customLang", mode = null, apply = $('#apply'), 
+            codeEditor, grammarEditor, json_mode, grammar_mode = null,
+            lang = "customLang", apply = $('#apply'), 
             log = (console && console.log) ? function(s){console.log(s);} : function(){}
         ;
         
@@ -472,29 +472,25 @@ require(['jQuery', 'ModelView'],
             }
             ,actions: { 
                 apply: function(evt, $el, data) {
-                    var model=this.$model, gramm, lines, len, i, line, gramm_mode;
+                    var model=this.$model, grammar, lines, l, i;
                     lines = grammarEditor.getValue().split("\n");
-                    len = lines.length;
-                    gramm = [];
-                    for (i=0; i<len; i++)
+                    grammar = [];
+                    for (i=0,l=lines.length; i<l; i++)
                     {
                         // remove comments
-                        line = lines[i].replace(/^\s+/, '');
-                        if ('//' == line.substr(0, 2)) continue;
-                        gramm.push( lines[i] );
+                        if ( !/^\s*\/\//.test( lines[i] ) )
+                            grammar.push( lines[i] );
                     }
-                    gramm = JSON.parse( gramm.join("\n") );
-                    
-                    /*gramm_mode = CodeMirrorGrammar.getMode( gramm );
-                    CodeMirror.defineMode(lang, gramm_mode);
-                    gramm_mode.supportGrammarAnnotations = false;
-                    codeEditor.setOption("lint", false);
-                    codeEditor.setOption("mode", lang);*/
-                    
-                    if ( mode ) mode.unhook( );
-                    mode = PrismGrammar.getMode( gramm );
+                    if ( grammar_mode )
+                    {
+                        grammar_mode.dispose( );
+                        grammar_mode = null;
+                    }
+                    grammar = JSON.parse( grammar.join("\n") );
+                    grammar_mode = PrismGrammar.getMode( grammar );
+                    grammar_mode.escapeHtml = true;
                     output.html( codeEditor.getValue( ) );
-                    mode.hook( Prism, 'markup' );
+                    grammar_mode.hook( Prism, 'markup' );
                     Prism.highlightElement( output[0] );
                 }
             }
