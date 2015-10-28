@@ -122,7 +122,6 @@
 <script src="../common/js/codemirror/addon/hint/show-hint.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
-<script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
 <script src="../common/js/codemirror/grammar/json.js"></script>
 <script src="../common/js/codemirror_grammar.min.js"></script>
 <script type="text/javascript" src="../common/js/require.js"></script>
@@ -331,15 +330,25 @@ require(['jQuery', 'ModelView'],
         ModelView.jquery( $ );
     
         json_mode = CodeMirrorGrammar.getMode( json_grammar );
-        CodeMirror.defineMode( 'json', json_mode );
         json_mode.supportGrammarAnnotations = true;
+        json_mode.supportCodeFolding = true;
+        json_mode.supportAutoCompletion = false;
+        CodeMirror.defineMode( 'json', json_mode );
+        CodeMirror.registerHelper( "fold", json_mode.foldType, json_mode.folder );
         CodeMirror.registerHelper( "lint", 'json', json_mode.validator );
         
         // enable autocomplete, have a unique cmd to not interfere with any default autocompletes
         CodeMirror.commands.autocomplete_grammar = function( cm ) {
             if ( grammar_mode )
-                CodeMirror.showHint(cm, grammar_mode.autocomplete);
+                CodeMirror.showHint(cm, grammar_mode.autocompleter);
         };
+        CodeMirror.registerHelper("fold", lang, function( cm, start ) {
+            if ( grammar_mode )
+                return grammar_mode.folder( cm, start );
+        });
+        CodeMirror.registerHelper("lint", lang, function( code ) {
+            return grammar_mode ? grammar_mode.validator( code ) : [];
+        });
         
         // if codemirror activated, enable syntax highlight
         codeEditor = CodeMirror.fromTextArea(code[0], {
@@ -350,7 +359,8 @@ require(['jQuery', 'ModelView'],
             indentWithTabs: false,
             // enable syntax validation
             lint: false,
-            gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers"],
+            foldGutter: true,
+            gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
             theme: 'lesser-dark',
             extraKeys: {"Ctrl-Space": "autocomplete_grammar", "Ctrl-L": "toggleComment"}
         });
@@ -384,7 +394,8 @@ require(['jQuery', 'ModelView'],
             ,actions: { 
                 apply: function(evt, $el, data) {
                     var model=this.$model, grammar, lines, l, i;
-                    lines = grammarEditor.getValue().split("\n");
+                    lines = grammarEditor.getValue().split("\n"),
+                    src = codeEditor.getValue();
                     grammar = [];
                     for (i=0,l=lines.length; i<l; i++)
                     {
@@ -400,19 +411,14 @@ require(['jQuery', 'ModelView'],
                     }
                     grammar = JSON.parse( grammar.join("\n") );
                     grammar_mode = CodeMirrorGrammar.getMode( grammar );
+                    grammar_mode.foldType = lang;
+                    grammar_mode.supportCodeFolding = true;
+                    grammar_mode.supportAutoCompletion = true;
+                    codeEditor.setValue("\n");
+                    codeEditor.setOption("lint", grammar_mode.supportGrammarAnnotations = model.get('annotate'));
                     CodeMirror.defineMode(lang, grammar_mode);
-                    if ( model.get('annotate') )
-                    {
-                        grammar_mode.supportGrammarAnnotations = true;
-                        CodeMirror.registerHelper("lint", lang, grammar_mode.validator);
-                        codeEditor.setOption("lint", true);
-                    }
-                    else
-                    {
-                        grammar_mode.supportGrammarAnnotations = false;
-                        codeEditor.setOption("lint", false);
-                    }
                     codeEditor.setOption("mode", lang);
+                    codeEditor.setValue(src);
                 }
             }
         });

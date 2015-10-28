@@ -241,6 +241,8 @@ jQuery(function($){
     CodeMirror.defineMode('json', json_mode);
     json_mode.supportGrammarAnnotations = true;
     CodeMirror.registerHelper("lint", 'json', json_mode.validator);                
+    json_mode.supportCodeFolding = true;
+    CodeMirror.registerHelper("fold", json_mode.foldType, json_mode.folder);                
     
     // if codemirror activated, enable syntax highlight
     tplEditor = CodeMirror.fromTextArea(tpl[0], {

@@ -149,7 +149,6 @@ body {
 <script src="../common/js/codemirror/addon/lint/lint.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
-<script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
 <script src="../common/js/codemirror/grammar/json.js"></script>
 <script src="../common/js/codemirror_grammar.min.js"></script>
 
@@ -431,8 +430,11 @@ require(['jQuery', 'ModelView'],
         ModelView.jquery( $ );
     
         json_mode = CodeMirrorGrammar.getMode( json_grammar );
-        CodeMirror.defineMode( 'json', json_mode );
         json_mode.supportGrammarAnnotations = true;
+        json_mode.supportCodeFolding = true;
+        json_mode.supportAutoCompletion = false;
+        CodeMirror.defineMode( 'json', json_mode );
+        CodeMirror.registerHelper( "fold", json_mode.foldType, json_mode.folder );
         CodeMirror.registerHelper( "lint", 'json', json_mode.validator );
         
         // if codemirror activated, enable syntax highlight

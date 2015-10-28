@@ -111,12 +111,11 @@
     
 
     
-    <script type="text/javascript" src="../common/js/require.js"></script>
-    <script type="text/javascript" src="../common/js/require-config.js"></script>
-    
 <script src="../common/js/ace/ace.js" type="text/javascript" data-ace-base="../common/js/ace" charset="utf-8"></script>
 <script src="../common/js/ace/grammar/json.js"></script>
 <script src="../common/js/ace_grammar.min.js"></script>
+<script type="text/javascript" src="../common/js/require.js"></script>
+<script type="text/javascript" src="../common/js/require-config.js"></script>
 
     
 
@@ -127,10 +126,12 @@
     
     
 <header id="header">
-    <h1>ACE Grammar (ver <span id="version">0</span>)</h1>
+    <h1>ACE Grammar</h1>
     <i>Build your own syntax-highlight grammar for ACE</i>
     <br /><br />
     <i>Ctrl-L: toggle line comments, Alt-L: toggle block comments, Ctrl-Space: keyword autocompletion popup</i>
+    <br /><br />
+    ACE v.<span id="editor-version">0</span>, AceGrammar v.<span id="grammar-version">0</span>
 </header>
 <br /><br />
 
@@ -178,12 +179,6 @@ getMode = function(grammar, DEFAULT) {
         
 // prefix ID for regular expressions used in the grammar
 "RegExpID"                          : "RE::",
-    
-"Extra"                             : {
-    
-    "fold"                          : "brace"
-
-},
     
 // Style model
 "Style"                             : {
@@ -322,12 +317,15 @@ require(['jQuery', 'ModelView'],
             log = (console && console.log) ? function(s){console.log(s);} : function(){}
         ;
         
-        $('#version').text(AceGrammar.VERSION);
+        $('#editor-version').text('1.2.0');
+        $('#grammar-version').text(AceGrammar.VERSION);
         ModelView.jquery( $ );
     
         Editor = ace.require("ace/editor").Editor;
-        json_mode = AceGrammar.getMode(json_grammar);
+        json_mode = AceGrammar.getMode( json_grammar );
         json_mode.supportGrammarAnnotations = true;
+        json_mode.supportCodeFolding = true;
+        json_mode.supportAutoCompletion = false;
         
         // editor commands
         commands = {
@@ -454,7 +452,8 @@ require(['jQuery', 'ModelView'],
                 ,actions: { 
                     apply: function(evt, $el, data) {
                         var model=this.$model, grammar, lines, l, i;
-                        lines = grammarEditor.getValue().split("\n");
+                        lines = grammarEditor.getValue().split("\n"),
+                        src = codeEditor.getValue();
                         grammar = [];
                         for (i=0,l=lines.length; i<l; i++)
                         {
@@ -462,11 +461,19 @@ require(['jQuery', 'ModelView'],
                             if ( !/^\s*\/\//.test( lines[i] ) )
                                 grammar.push( lines[i] );
                         }
-                        grammar = JSON.parse(grammar.join("\n"));
+                        if ( grammar_mode )
+                        {
+                            grammar_mode.dispose( );
+                            grammar_mode = null;
+                        }
+                        grammar = JSON.parse( grammar.join("\n") );
                         grammar_mode = AceGrammar.getMode( grammar );
-                        if ( model.get('annotate') )
-                            grammar_mode.supportGrammarAnnotations = true;
+                        grammar_mode.supportCodeFolding = true;
+                        grammar_mode.supportAutoCompletion = true;
+                        grammar_mode.supportGrammarAnnotations = model.get('annotate');
+                        codeEditor.setValue("\n", -1);
                         codeEditor.getSession().setMode( grammar_mode );
+                        codeEditor.setValue(src, -1);
                     }
                 }
             });
