@@ -492,7 +492,7 @@ require(['jQuery', 'ModelView'],
                     grammar_mode = PrismGrammar.getMode( grammar );
                     grammar_mode.escapeHtml = true;
                     output.html( codeEditor.getValue( ) );
-                    grammar_mode.hook( Prism, 'markup' );
+                    grammar_mode.hook( 'markup', Prism );
                     Prism.highlightElement( output[0] );
                 }
             }
