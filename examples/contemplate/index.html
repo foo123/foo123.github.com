@@ -292,7 +292,7 @@ jQuery(function($){
                 Contemplate.add({'tpl': [ tplEditor.getValue() ]});
                 try{
                     data = JSON.parse( dataEditor.getValue() );
-                    output.html( Contemplate.tpl('tpl', data, {refresh: true, separators: "<% %>"}) );
+                    output.html( Contemplate.tpl('tpl', data, {refresh: true, standalone: true, separators: "<% %>"}) );
                 }catch(e) {log(e)};
             }
         }
