@@ -7,9 +7,7 @@
         if ( ModelView.jquery ) ModelView.jquery( $ );
         
         // Contemplate Templates
-        Contemplate.add({
-            "todo-tpl": "#todo-tpl"
-        });
+        Contemplate.add({"todo-tpl": "#todo-tpl"});
         Contemplate.setPlurals({
             // auto-plural used here
             'item': null
@@ -18,7 +16,7 @@
         var $window = $(window), $screen = $( "#todoapp" ), 
             $todoList = $( '#todo-list' ), $toggleAll = $( '#toggle-all' ),
             // pre-parse it
-            todoTpl = Contemplate.tpl( 'todo-tpl' ),
+            todoTpl = Contemplate.tpl( 'todo-tpl', null, {standalone:true} ),
             sprintf = Contemplate.sprintf, pluralise = Contemplate.plural,
             Model, View, Router, TodoView, 
             TypeCast = ModelView.Type.Cast, Validate = ModelView.Validation.Validate,
