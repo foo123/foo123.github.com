@@ -41,6 +41,8 @@
             ,AceGrammar: "ace_grammar.min"
             ,Prism: "prism/prism.min"
             ,PrismGrammar: "prism_grammar.min"
+            ,SyntaxHighlighter: "syntaxhighlighter/shCore"
+            ,SyntaxHighlighterGrammar: "syntaxhighlighter_grammar.min"
             ,Stats: "stats.min"
             ,DatGUI: "datgui.min"
             ,Parallel: "parallel/parallel.min"
