@@ -198,78 +198,98 @@ pre[class*="language"] {
 <textarea id="code" class="editor">
 // this is part of the PrismGrammar code itself
 
-getMode = function(grammar) {
+function get_mode( grammar, Prism ) 
+{
+    var prism_highlighter, is_hooked = 0, $Prism$ = Prism,
     
-    var LOCALS = { 
-            DEFAULT: DEFAULTSTYLE,
-            ERROR: DEFAULTERROR
-        }
-    ;
-    
-    // build the grammar
-    grammar = parseGrammar( grammar );
-    //console.log(grammar);
-    
-    var parser = getParser( grammar, LOCALS ), _Prism;
-    var isHooked = 0, hookedLanguage = null, thisHooks = {
-        
-        'before-highlight' : function( env ) {
+    highlighter$ = {
+        'before-highlight': function( env ) {
             // use the custom parser for the grammar to highlight
             // hook only if the language matches
-            if ( hookedLanguage == env.language )
+            if ( prism_highlighter.$parser &amp;&amp; (prism_highlighter.$lang === env.language) )
             {
                 // avoid double highlight work, set code to ""
                 env._code = env.code;
                 env.code = "";
-                env.parser = parser;
             }
         },
         
-        'before-insert' : function( env ) {
-            if ( hookedLanguage == env.language )
+        'before-insert': function( env ) {
+            if ( prism_highlighter.$parser &amp;&amp; (prism_highlighter.$lang === env.language) )
             {
                 // re-set
                 env.code = env._code;
                 env._code = "";
-                env._highlightedCode = env.highlightedCode;
                 // tokenize code and transform to prism-compatible tokens
-                env.highlightedCode = _Prism.Token.stringify(env.parser.tokenize(env.code), env.language);
+                var tokens = prism_highlighter.$parser.parse(env.code, TOKENS|ERRORS|FLAT).tokens;
+                // html-escape code
+                if ( prism_highlighter.escapeHtml ) iterate( esc_token, 0, tokens.length-1, tokens );
+                env.highlightedCode = $Prism$.Token.stringify( tokens, env.language );
             }
-        }            
+        }
     };
     
     // return a plugin that can be hooked-unhooked to Prism under certain language conditions
-    return {
+    prism_highlighter = {
+        $id: uuid("prism_grammar_highlighter")
         
-        hook: function(Prism, language) {
-            if ( !isHooked )
+        ,$parser: new PrismGrammar.Parser( parse_grammar( grammar ) )
+        
+        ,$lang: null
+        
+        // have escapeHtml flag true by default
+        ,escapeHtml: true
+        
+        // TODO:  a way to highlight in worker (like default prism async flag)
+        // post a request to prism repository?????
+        ,$async: false
+        
+        ,hook: function( language, Prism ) {
+            if ( is_hooked ) prism_highlighter.unhook();
+            if ( T_STR &amp; get_type(Prism) )
             {
-                _Prism = Prism;
-                hookedLanguage = language;
-                _Prism.hooks.add('before-highlight', thisHooks['before-highlight']);
-                _Prism.hooks.add('before-insert', thisHooks['before-insert']);
-                isHooked = 1;
+                // arguments given in different order
+                var tmp = language;
+                language = Prism;
+                Prism = tmp;
             }
-        },
-        
-        unhook: function() {
-            if ( isHooked )
+            $Prism$ = Prism || $Prism$;
+            prism_highlighter.$lang = language;
+            for (var hook in highlighter$ )
             {
-                var hooks = _Prism.hooks.all;
+                if ( highlighter$[HAS](hook) )
+                    $Prism$.hooks.add( hook, highlighter$[hook] );
+            }
+            is_hooked = 1;
+        }
+        
+        ,unhook: function( ) {
+            if ( is_hooked )
+            {
+                var prism_hooks = $Prism$.hooks.all, hook, this_hook;
                 
-                for (var name in thisHooks)
+                for (hook in highlighter$)
                 {
-                    if ( hooks[name] )
+                    if ( prism_hooks[HAS](hook) &amp;&amp; highlighter$[HAS](hook) )
                     {
-                        var thishook = hooks[name].indexOf( thisHooks[name] );
-                        if ( thishook > -1 ) hooks[name].splice(thishook, 1);
+                        this_hook = prism_hooks[hook].indexOf( highlighter$[hook] );
+                        if ( this_hook > -1 ) prism_hooks[hook].splice(this_hook, 1);
                     }
                 }
-                isHooked = 0;
+                is_hooked = 0;
+                prism_highlighter.$lang = null;
+                $Prism$ = null;
             }
         }
         
+        ,dispose: function( ) {
+            prism_highlighter.unhook();
+            if ( prism_highlighter.$parser ) prism_highlighter.$parser.dispose( );
+            prism_highlighter.$parser = null;
+            prism_highlighter.$lang = null;
+        }
     };
+    return prism_highlighter;
 }
 </textarea>
     </div>

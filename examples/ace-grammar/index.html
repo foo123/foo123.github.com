@@ -144,27 +144,196 @@
         
         <pre id="aceCode" class="editor"></pre>
 <textarea id="code" style="display:none;">
-// this is a sample code in javascript (you can use your custom code and language)
-// change the grammar specification below
-// to highlight this code in a different way, on-the-fly
-
 // this is part of the AceGrammar code itself
 
-getMode = function(grammar, DEFAULT) {
-    
-    var LOCALS = { 
-            // default return code for skipped or not-styled tokens
-            // 'text' should be used in most cases
-            DEFAULT: DEFAULT || DEFAULTSTYLE,
-            ERROR: DEFAULTERROR
+function get_mode( grammar, DEFAULT, ace ) 
+{
+    ace = ace || $ace$;  /* pass ace reference if not already available */
+    var grammar_copy = clone( grammar )
+    // ace required helpers
+    ,Range = ace.require('ace/range').Range
+    ,WorkerClient = ace.require('ace/worker/worker_client').WorkerClient
+    ,AceWorker = Class(WorkerClient, {
+        constructor: function AceWorker( topLevelNamespaces, mod, classname, workerUrl ) {
+            var self = this, require = ace.require, config = ace.config;
+            self.$sendDeltaQueue = self.$sendDeltaQueue.bind(self);
+            self.changeListener = self.changeListener.bind(self);
+            self.onMessage = self.onMessage.bind(self);
+            if (require.nameToUrl &amp;&amp; !require.toUrl) require.toUrl = require.nameToUrl;
+            
+            if ( !workerUrl )
+            {
+            if (config.get("packaged") || !require.toUrl) {
+                workerUrl = workerUrl || config.moduleUrl(mod, "worker");
+            } else {
+                var normalizePath = self.$normalizePath;
+                workerUrl = workerUrl || normalizePath(require.toUrl("ace/worker/worker.js", null, "_"));
+
+                var tlns = {};
+                topLevelNamespaces.forEach(function(ns) {
+                    tlns[ns] = normalizePath(require.toUrl(ns, null, "_").replace(/(\.js)?(\?.*)?$/, ""));
+                });
+            }
+            }
+
+            try {
+                self.$worker = new Worker(workerUrl);
+            } catch(e) {
+                if (e instanceof window.DOMException) {
+                    var blob = self.$workerBlob(workerUrl);
+                    var URL = window.URL || window.webkitURL;
+                    var blobURL = URL.createObjectURL(blob);
+
+                    self.$worker = new Worker(blobURL);
+                    URL.revokeObjectURL(blobURL);
+                } else {
+                    throw e;
+                }
+            }
+
+            self.$worker.postMessage({
+                load: true,
+                // browser caches worker source file, even with reset/reload, try to not cache
+                // https://github.com/ajaxorg/ace/issues/2730
+                ace_worker_base: this_path.base + '/' + config.moduleUrl("ace/worker/json") + NOCACHE
+            });
+
+            self.$worker.postMessage({
+                init : true,
+                tlns : tlns,
+                module : mod,
+                classname : classname
+            });
+
+            self.callbackId = 1;
+            self.callbacks = {};
+
+            self.$worker.onmessage = self.onMessage;
         }
-    ;
-    
-    // build the grammar
-    grammar = parseGrammar( grammar );
-    //console.log(grammar);
-    
-    return getAceMode( getParser( grammar, LOCALS ) );
+    })
+    ,FoldMode = ace.require('ace/mode/folding/fold_mode').FoldMode
+    ,AceFold = Class(FoldMode, {
+        constructor: function( $folder ) {
+            var self = this;
+            FoldMode.call( self );
+            self.$findFold = $folder;
+            self.$lastFold = null;
+        }
+        ,getFoldWidget: function( session, foldStyle, row ) {
+            var fold = this.$lastFold = this.$findFold( session, foldStyle, row );
+            // cache the fold to be re-used in getFoldWidgetRange
+            // it is supposed that getFoldWidgetRange is called after getFoldWidget succeeds
+            // on same row and with same style, so same fold should be re-used for efficiency
+            return fold
+                ? ("markbeginend" === foldStyle &amp;&amp; fold.end ? "end" : "start")
+                : "";
+        }
+        ,getFoldWidgetRange: function( session, foldStyle, row, forceMultiline ) {
+            // cache the fold to be re-used in getFoldWidgetRange
+            // it is supposed that getFoldWidgetRange is called after getFoldWidget succeeds
+            // on same row and with same style, so same fold should be re-used for efficiency
+            var fold = this.$lastFold;// this.$findFold( session, foldStyle, row );
+            if ( fold ) return new Range(fold[0], fold[1], fold[2], fold[3]);
+        }
+    })
+    ,Mode = ace.require('ace/mode/text').Mode
+    ,AceMode = Class(Mode, {
+        constructor: function AceMode( ) {
+            var self = this;
+            Mode.call( self );
+            self.$id = AceMode.$id;
+            self.$tokenizer = AceMode.$parser;
+            // comment-toggle functionality
+            self.lineCommentStart = AceMode.$parser.LC;
+            self.blockComment = AceMode.$parser.BC;
+            // custom, user-defined, code folding generated from grammar
+            self.foldingRules = new AceFold( self.folder.bind( self ) );
+        }
+        
+        // custom, user-defined, syntax lint-like validation/annotations generated from grammar
+        ,supportGrammarAnnotations: false
+        ,createWorker: function( session ) {
+            if ( !this.supportGrammarAnnotations ) 
+            {
+                clear_annotations( session, AceMode.$markers );
+                return null;
+            }
+            
+            // add this worker as an ace custom module
+            //ace.config.setModuleUrl("ace/grammar_worker", this_path.file + NOCACHE);
+            var worker = new AceWorker(['ace'], "ace/grammar_worker", 'AceGrammarWorker', this_path.file + NOCACHE);
+            worker.attachToDocument( session.getDocument( ) );
+            // create a worker for this grammar
+            worker.call('init_parser', [grammar_copy], function( ){
+                // hook worker to enable error annotations
+                worker.on("ace_grammar_worker_error", function( e ) {
+                    var errors = e.data;
+                    update_annotations( session, errors, AceMode.$markers, Range )
+                });
+                worker.on("ace_grammar_worker_ok", function() {
+                    clear_annotations( session, AceMode.$markers );
+                });
+            });
+            worker.on("terminate", function() {
+                clear_annotations( session, AceMode.$markers );
+            });
+            return worker;
+        }
+        
+        // custom, user-defined, code folding generated from grammar
+        ,supportCodeFolding: true
+        ,folder: function folder( session, foldStyle, row ) {
+            return !this.supportCodeFolding
+            ? null
+            : AceMode.$folder( session, foldStyle, row, folder.options||{} );
+        }
+        
+        // custom, user-defined, autocompletions generated from grammar
+        ,supportAutoCompletion: true
+        ,autocompleter: function autocompleter( state, session, position, prefix ) {
+            return !this.supportAutoCompletion
+            ? []
+            : AceMode.$autocompleter( state, session, position, prefix, autocompleter.options||{} );
+        }
+        ,getKeywords: function( append ) {
+            return []; // use getCompletions
+        }
+        ,getCompletions: function( state, session, position, prefix ) {
+            return this.autocompleter( state, session, position, prefix );
+        }
+        
+        ,dispose: function( ) {
+            var self = this;
+            self.$tokenizer = self.foldingRules = self.autocompleter = null;
+            AceMode.dispose( );
+        }
+    });
+    AceMode.$id = uuid("ace_grammar_mode");
+    AceMode.$markers = AceMode.$id+'$markers';
+    AceMode.$parser = new AceGrammar.Parser( parse_grammar( grammar ), DEFAULT );
+    AceMode.$folder = function folder( session, foldStyle, row, options ) {
+        var min_row, current_row, folder = AceMode.$parser,
+            fold = folder.fold( session, row, ace );
+        if ( "markbeginend" === foldStyle )
+        {
+            if ( fold ) { fold.start = true; fold.end = false; return fold; }
+            current_row = row; min_row = MAX(0, row-200); // check up to 200 rows up for efficiency
+            // try to find if any block ends on this row, backwards
+            // TODO, maybe a bit slower, than direct backwards search
+            while ( row > min_row &amp;&amp; (!fold || current_row !== fold[2]) ) fold = folder.fold( session, --row, ace );
+            // found end of fold, return end marker
+            if ( fold &amp;&amp; current_row === fold[2] ) { fold.start = false; fold.end = true; return fold; }
+        }
+        else if ( fold ) { fold.start = true; fold.end = false; return fold; }
+    };
+    AceMode.$autocompleter = function autocompleter( state, session, position, prefix, options ) {
+        return AceMode.$parser.autocomplete( state, session, position, prefix, options, ace );
+    };
+    AceMode.dispose = function( ) {
+        if ( AceMode.$parser ) AceMode.$parser.dispose( );
+        AceMode.$parser = AceMode.$folder = AceMode.$autocompleter = AceMode.autocompleter = null;
+    };
+    return new AceMode( ); // object
 }
 </textarea>
     </div>

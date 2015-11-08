@@ -153,27 +153,87 @@
         <div class="heading"><strong>Sample Code to be highlighted:</strong></div>
             
 <textarea id="code" class="editor">
-// this is a sample code in javascript (you can use your custom code and language)
-// change the grammar specification below
-// to highlight this code in a different way, on-the-fly
-
 // this is part of the CodeMirrorGrammar code itself
 
-getMode = function(grammar, DEFAULT) {
-
-    var LOCALS = { 
-            // default return code for skipped or not-styled tokens
-            // 'null' should be used in most cases
-            DEFAULT: DEFAULT || DEFAULTSTYLE,
-            ERROR: DEFAULTERROR
+function get_mode( grammar, DEFAULT, CodeMirror ) 
+{
+    // Codemirror-compatible Mode
+    CodeMirror = CodeMirror || $CodeMirror$; /* pass CodeMirror reference if not already available */
+    function CMode( conf, parserConf )
+    {
+        return {
+        startState: function( ) { 
+            return new State( );
         }
-    ;
-
-    // build the grammar
-    grammar = parseGrammar( grammar );
-    //console.log(grammar);
-
-    return getCodemirrorMode( getParser( grammar, LOCALS ) );
+        
+        ,copyState: function( state ) { 
+            return new State( 0, state );
+        }
+        
+        ,token: function( stream, state ) { 
+            var pstream = Stream( stream.string, stream.start, stream.pos ), 
+                token = CMode.$parser.token( pstream, state ).type;
+            stream.pos = pstream.pos;
+            return token;
+        }
+        
+        ,indent: function( state, textAfter, fullLine ) { 
+            return CMode.$parser.indent( state, textAfter, fullLine, conf, parserConf, CodeMirror ); 
+        }
+        
+        // support comments toggle functionality
+        ,lineComment: CMode.$parser.LC
+        ,blockCommentStart: CMode.$parser.BCS
+        ,blockCommentEnd: CMode.$parser.BCE
+        ,blockCommentContinue: CMode.$parser.BCC
+        ,blockCommentLead: CMode.$parser.BCL
+        // support extra functionality defined in grammar
+        // eg. code folding, electriChars etc..
+        ,electricInput: CMode.$parser.$grammar.$extra.electricInput || false
+        ,electricChars: CMode.$parser.$grammar.$extra.electricChars || false
+        ,fold: CMode.foldType
+        };
+    }
+    CMode.$id = uuid("codemirror_grammar_mode");
+    CMode.$parser = new CodeMirrorGrammar.Parser( parse_grammar( grammar ), DEFAULT );
+    // custom, user-defined, syntax lint-like validation/annotations generated from grammar
+    CMode.supportGrammarAnnotations = false;
+    CMode.validator = function validator( code, options )  {
+        return CMode.supportGrammarAnnotations &amp;&amp; CMode.$parser &amp;&amp; code &amp;&amp; code.length
+        ? CMode.$parser.validate( code, validator.options||options||{}, CodeMirror )
+        : [];
+    };
+    CMode.linter = CMode.validator; // alias
+    // custom, user-defined, code folding generated from grammar
+    CMode.supportCodeFolding = true;
+    CMode.foldType = "fold_"+CMode.$id;
+    CMode.folder = function folder( cm, start ) {
+        var fold;
+        if ( CMode.supportCodeFolding &amp;&amp; CMode.$parser &amp;&amp; (fold = CMode.$parser.fold( cm, start, CodeMirror )) )
+        {
+            return {
+                from: CodeMirror.Pos( fold[0], fold[1] ),
+                to: CodeMirror.Pos( fold[2], fold[3] )
+            };
+        }
+    };
+    // custom, user-defined, autocompletions generated from grammar
+    CMode.supportAutoCompletion = true;
+    CMode.autocompleter = function autocompleter( cm, options ) {
+        if ( CMode.supportAutoCompletion &amp;&amp; CMode.$parser )
+        {
+            options = autocompleter.options || options || {};
+            if ( !options[HAS]('renderer') ) options.renderer = autocompleter.renderer || autocomplete_renderer;
+            return CMode.$parser.autocomplete( cm, options, CodeMirror );
+        }
+    };
+    CMode.autocompleter.renderer = autocomplete_renderer;
+    CMode.autocomplete = CMode.autocompleter; // deprecated, alias for compatibility
+    CMode.dispose = function( ) {
+        if ( CMode.$parser ) CMode.$parser.dispose( );
+        CMode.$parser = CMode.validator = CMode.linter = CMode.autocompleter = CMode.autocomplete = CMode.folder = null;
+    };
+    return CMode;
 }
 </textarea>
     </div>
