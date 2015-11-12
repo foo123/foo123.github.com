@@ -26,21 +26,21 @@
 {
     z-index: -1;
     opacity: 0;
-    -webkit-transition: opacity .3s ease .1s;
-    -moz-transition: opacity .3s ease .1s;
-    -o-transition: opacity .3s ease .1s;
-    -ms-transition: opacity .3s ease .1s;
-    transition: opacity .3s ease .1s;
+    -webkit-transition: opacity .3s ease .25s;
+    -moz-transition: opacity .3s ease .25s;
+    -o-transition: opacity .3s ease .25s;
+    -ms-transition: opacity .3s ease .25s;
+    transition: opacity .3s ease .25s;
 }
 .controller:not(#controller_page_main):target ~ #wrapper p #back_button
 {
     z-index: 5;
     opacity: 1;
-    -webkit-transition: opacity .3s ease .1s;
-    -moz-transition: opacity .3s ease .1s;
-    -o-transition: opacity .3s ease .1s;
-    -ms-transition: opacity .3s ease .1s;
-    transition: opacity .3s ease .1s;
+    -webkit-transition: opacity .3s ease .25s;
+    -moz-transition: opacity .3s ease .25s;
+    -o-transition: opacity .3s ease .25s;
+    -ms-transition: opacity .3s ease .25s;
+    transition: opacity .3s ease .25s;
 }
 .page 
 {
@@ -49,6 +49,17 @@
     -o-transition: -o-transform .3s ease;
     -ms-transition: -ms-transform .3s ease;
     transition: transform .3s ease;
+}
+.page-title
+{
+    display: inline-block;
+    position: absolute;
+    opacity: 0;
+    -webkit-transition: opacity .3s ease;
+    -moz-transition: opacity .3s ease;
+    -o-transition: opacity .3s ease;
+    -ms-transition: opacity .3s ease;
+    transition: opacity .3s ease;
 }
 .controller:not(#controller_page_main):target ~ #wrapper #panel #page_main
 {
@@ -83,6 +94,16 @@
     -ms-transition: -ms-transform .3s ease;
     transition: transform .3s ease;
 }
+#controller_page_frameworks:target ~ #wrapper #title_page_frameworks.page-title
+{
+    position: relative;
+    opacity: 1;
+    -webkit-transition: opacity .3s ease;
+    -moz-transition: opacity .3s ease;
+    -o-transition: opacity .3s ease;
+    -ms-transition: opacity .3s ease;
+    transition: opacity .3s ease;
+}
 
 #controller_page_dsp:target ~ #wrapper #panel #page_dsp
 {
@@ -99,6 +120,16 @@
     -o-transition: -o-transform .3s ease;
     -ms-transition: -ms-transform .3s ease;
     transition: transform .3s ease;
+}
+#controller_page_dsp:target ~ #wrapper #title_page_dsp.page-title
+{
+    position: relative;
+    opacity: 1;
+    -webkit-transition: opacity .3s ease;
+    -moz-transition: opacity .3s ease;
+    -o-transition: opacity .3s ease;
+    -ms-transition: opacity .3s ease;
+    transition: opacity .3s ease;
 }
 
 #controller_page_plugins:target ~ #wrapper #panel #page_plugins
@@ -117,6 +148,16 @@
     -ms-transition: -ms-transform .3s ease;
     transition: transform .3s ease;
 }
+#controller_page_plugins:target ~ #wrapper #title_page_plugins.page-title
+{
+    position: relative;
+    opacity: 1;
+    -webkit-transition: opacity .3s ease;
+    -moz-transition: opacity .3s ease;
+    -o-transition: opacity .3s ease;
+    -ms-transition: opacity .3s ease;
+    transition: opacity .3s ease;
+}
 
 #controller_page_processors:target ~ #wrapper #panel #page_processors
 {
@@ -133,6 +174,16 @@
     -o-transition: -o-transform .3s ease;
     -ms-transition: -ms-transform .3s ease;
     transition: transform .3s ease;
+}
+#controller_page_processors:target ~ #wrapper #title_page_processors.page-title
+{
+    position: relative;
+    opacity: 1;
+    -webkit-transition: opacity .3s ease;
+    -moz-transition: opacity .3s ease;
+    -o-transition: opacity .3s ease;
+    -ms-transition: opacity .3s ease;
+    transition: opacity .3s ease;
 }
 
 #controller_page_apps:target ~ #wrapper #panel #page_apps
@@ -151,6 +202,16 @@
     -ms-transition: -ms-transform .3s ease;
     transition: transform .3s ease;
 }
+#controller_page_apps:target ~ #wrapper #title_page_apps.page-title
+{
+    position: relative;
+    opacity: 1;
+    -webkit-transition: opacity .3s ease;
+    -moz-transition: opacity .3s ease;
+    -o-transition: opacity .3s ease;
+    -ms-transition: opacity .3s ease;
+    transition: opacity .3s ease;
+}
 
 #controller_page_graphics:target ~ #wrapper #panel #page_graphics
 {
@@ -167,6 +228,16 @@
     -o-transition: -o-transform .3s ease;
     -ms-transition: -ms-transform .3s ease;
     transition: transform .3s ease;
+}
+#controller_page_graphics:target ~ #wrapper #title_page_graphics.page-title
+{
+    position: relative;
+    opacity: 1;
+    -webkit-transition: opacity .3s ease;
+    -moz-transition: opacity .3s ease;
+    -o-transition: opacity .3s ease;
+    -ms-transition: opacity .3s ease;
+    transition: opacity .3s ease;
 }
 
 #controller_page_games:target ~ #wrapper #panel #page_games
@@ -185,6 +256,16 @@
     -ms-transition: -ms-transform .3s ease;
     transition: transform .3s ease;
 }
+#controller_page_games:target ~ #wrapper #title_page_games.page-title
+{
+    position: relative;
+    opacity: 1;
+    -webkit-transition: opacity .3s ease;
+    -moz-transition: opacity .3s ease;
+    -o-transition: opacity .3s ease;
+    -ms-transition: opacity .3s ease;
+    transition: opacity .3s ease;
+}
 
 #controller_page_tools:target ~ #wrapper #panel #page_tools
 {
@@ -202,6 +283,16 @@
     -ms-transition: -ms-transform .3s ease;
     transition: transform .3s ease;
 }
+#controller_page_tools:target ~ #wrapper #title_page_tools.page-title
+{
+    position: relative;
+    opacity: 1;
+    -webkit-transition: opacity .3s ease;
+    -moz-transition: opacity .3s ease;
+    -o-transition: opacity .3s ease;
+    -ms-transition: opacity .3s ease;
+    transition: opacity .3s ease;
+}
 
 #controller_page_various:target ~ #wrapper #panel #page_various
 {
@@ -218,6 +309,16 @@
     -o-transition: -o-transform .3s ease;
     -ms-transition: -ms-transform .3s ease;
     transition: transform .3s ease;
+}
+#controller_page_various:target ~ #wrapper #title_page_various.page-title
+{
+    position: relative;
+    opacity: 1;
+    -webkit-transition: opacity .3s ease;
+    -moz-transition: opacity .3s ease;
+    -o-transition: opacity .3s ease;
+    -ms-transition: opacity .3s ease;
+    transition: opacity .3s ease;
 }
 
 .controller
@@ -279,12 +380,31 @@
         <br />
     </div>
     
-    <p class="fluid col-4-5 text-left title"><strong>Demos, Experiments and Showcases</strong>
+    <p class="fluid col-4-5 text-left title"><strong id="title_page_main">Demos, Experiments and Showcases</strong>
         <a id="back_button" class="graybutton" href="#controller_page_main">Back</a>
+        &nbsp;&nbsp;<i style="font-size:1em;">The whole page is pure HTML/CSS, no JavaScript!</i>
     </p>
     
     <p class="fluid col-1-1 text-left" style="margin-bottom:20px;">
-        <i>The whole page is pure HTML/CSS, no JavaScript!</i>
+        
+        <strong id="title_page_frameworks" class="page-title">Page:&nbsp;&nbsp;Frameworks / Libraries</strong>
+        
+        <strong id="title_page_dsp" class="page-title">Page:&nbsp;&nbsp;DSP / Machine Learning</strong>
+        
+        <strong id="title_page_plugins" class="page-title">Page:&nbsp;&nbsp;Plugins / Add-Ons</strong>
+        
+        <strong id="title_page_processors" class="page-title">Page:&nbsp;&nbsp;Engines / Processors</strong>
+        
+        <strong id="title_page_apps" class="page-title">Page:&nbsp;&nbsp;Demo Applications</strong>
+        
+        <strong id="title_page_graphics" class="page-title">Page:&nbsp;&nbsp;Graphics / 3D</strong>
+        
+        <strong id="title_page_games" class="page-title">Page:&nbsp;&nbsp;Simple Games</strong>
+        
+        <strong id="title_page_tools" class="page-title">Page:&nbsp;&nbsp;Tools / Scripts</strong>
+        
+        <strong id="title_page_various" class="page-title">Page:&nbsp;&nbsp;Various experiments</strong>
+        
     </p>
     
     <div id="panel" class="fluid col-4-5 clearfloat">
