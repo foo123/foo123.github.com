@@ -60,7 +60,6 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
 }*/        
 ,shim: {
     Storage: { exports: 'Storage' }
-    ,AreaSelect: { exports: 'AreaSelect' }
     ,utils: { exports: 'U' }
     ,jQuery: { exports: 'jQuery' }
     ,lodash: { exports: '_' }
