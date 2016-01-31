@@ -224,7 +224,7 @@ function useWithjQuery( ) { location.href = baseUrl + '?jquery=1'; }
 function useWithoutjQuery( ) { location.href = baseUrl + '?standalone=1'; }
 
 // use requireJS
-require(['Snippets', 'ModelView', 'jQuery'], 
+require(['Snippets', 'ModelView', 'jQuery', 'ModelViewValidation'], 
 function( Snippets,   ModelView,    $ ) {
     Snippets(
         ['html-snippet', notUsesjQuery ? 'js-snippet-without-jquery' : 'js-snippet-with-jquery'], 

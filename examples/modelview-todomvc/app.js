@@ -1,6 +1,6 @@
 !function( window, require, undef ) {
     // use requireJS
-    require(['jQuery', 'Storage', 'Contemplate', 'Dromeo', 'ModelView'], 
+    require(['jQuery', 'Storage', 'Contemplate', 'Dromeo', 'ModelView', 'ModelViewValidation'], 
         function( $, Storage, Contemplate, Dromeo, ModelView ) {
         "use strict";
 

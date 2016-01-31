@@ -19,7 +19,8 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     ,RegExpX: "RegExpX.min"
     ,DateX: "DateX.min"
     ,Tao: "Tao.min"
-    ,ModelView: "modelview.min"
+    //,ModelView: "modelview.min"
+    ,ModelViewBundle: "modelview.bundle"
     ,Importer: "Importer.min"
     ,HtmlWidget: "HtmlWidget.min"
     ,Contemplate: "Contemplate.min"
@@ -55,9 +56,10 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     ,ThreeOld: "three_old"
     ,Tween: "Tween"
 }
-/*,bundles: {
-    FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_PLUGINS"]
-}*/        
+,bundles: {
+    //FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_PLUGINS"],
+    ModelViewBundle: ["ModelView", "ModelViewValidation"]
+}        
 ,shim: {
     Storage: { exports: 'Storage' }
     ,utils: { exports: 'U' }
