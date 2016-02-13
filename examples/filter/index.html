@@ -177,7 +177,7 @@
             ,restoreBt = $('#restoreBt')
             ,container = $('#container'), filters = $('#filters')
              
-            ,closeThread = function( ) { this.thread( false ); }
+            ,closeThread = function( ) { /*this.thread( false );*/ }
             
              // displacemap
             ,displacemap = $F.Image( )
@@ -378,7 +378,7 @@
             im4.apply( blueChannel, closeThread );
             // apply to right half of image
             im5.select(0.5, 0, 1, 1).apply( clr, function( ) { 
-                this.worker( false );
+                closeThread.call(this);
                 im5.deselect( ); 
             });
             im6.apply( grc, closeThread );
