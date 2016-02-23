@@ -74,7 +74,7 @@ var contemplate_grammar = {
                                 "n","s","f","q","qq","dq","addslashes","stripslashes","sprintf",
                                 "concat","ltrim","rtrim","trim","lowercase","uppercase",
                                 "lcfirst","ucfirst","camelcase","snakecase","count","haskey",
-                                "uuid","time","now","date","ldate","locale","l","plural",
+                                "uuid","time","now","date","ldate","locale","l","nlocale","nl","plural",
                                 "inline","tpl","e","url","empty","iif"
                                 ]}
     ,"plugin"                   : "RE::/[a-zA-Z_][a-zA-Z0-9_]*/"
@@ -96,15 +96,13 @@ var contemplate_grammar_compat = {
                                 "%n","%s","%f","%q","%qq","%dq","%addslashes","%stripslashes","%sprintf",
                                 "%concat","%ltrim","%rtrim","%trim","%lowercase","%uppercase",
                                 "%lcfirst","%ucfirst","%camelcase","%snakecase","%count","%haskey",
-                                "%uuid","%time","%now","%date","%ldate","%locale","%l","%plural",
+                                "%uuid","%time","%now","%date","%ldate","%locale","%l","%nlocale","%nl","%plural",
                                 "%inline","%tpl","%e","%url","%empty","%iif"
                                 ]}
     ,"plugin"                   : "RE::/%[a-zA-Z_][a-zA-Z0-9_]*/"
 
 }
 };
-
-
 
 // 2. parse the grammar into a Codemirror syntax-highlight mode
 var contemplate_grammar_full = contemplate_grammar_base;
