@@ -17,7 +17,7 @@
             $todoList = $( '#todo-list' ), $toggleAll = $( '#toggle-all' ),
             // pre-parse it
             todoTpl = Contemplate.tpl( 'todo-tpl', null, {standalone:true} ),
-            sprintf = Contemplate.sprintf, pluralise = Contemplate.plural,
+            sprintf = Contemplate.sprintf,
             Model, View, Router, TodoView, 
             TypeCast = ModelView.Type.Cast, Validate = ModelView.Validation.Validate,
             STORAGE_KEY = "modelview_todomvc",
@@ -297,7 +297,7 @@
                 // custom getter observable for itemsLabel
                 ,getters: {
                     'todoList.items': function( ) { 
-                        return pluralise( 'item', this.$data.todoList.active );
+                        return 1 === this.$data.todoList.active ? 'item' : 'items';
                     }
                 }
                 
