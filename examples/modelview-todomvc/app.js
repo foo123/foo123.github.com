@@ -8,10 +8,6 @@
         
         // Contemplate Templates
         Contemplate.add({"todo-tpl": "#todo-tpl"});
-        Contemplate.setPlurals({
-            // auto-plural used here
-            'item': null
-        });
         
         var $window = $(window), $screen = $( "#todoapp" ), 
             $todoList = $( '#todo-list' ), $toggleAll = $( '#toggle-all' ),
