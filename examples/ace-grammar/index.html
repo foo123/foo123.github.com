@@ -639,6 +639,7 @@ require(['jQuery', 'ModelView'],
                         grammar_mode = AceGrammar.getMode( grammar );
                         grammar_mode.supportCodeFolding = true;
                         grammar_mode.supportAutoCompletion = true;
+                        grammar_mode.autocompleter.options = {inContext:true};
                         grammar_mode.supportGrammarAnnotations = model.get('annotate');
                         codeEditor.setValue("\n", -1);
                         codeEditor.getSession().setMode( grammar_mode );

@@ -401,7 +401,7 @@ require(['jQuery', 'ModelView'],
         // enable autocomplete, have a unique cmd to not interfere with any default autocompletes
         CodeMirror.commands.autocomplete_grammar = function( cm ) {
             if ( grammar_mode )
-                CodeMirror.showHint(cm, grammar_mode.autocompleter);
+                CodeMirror.showHint(cm, grammar_mode.autocompleter, {inContext:true});
         };
         CodeMirror.registerHelper("fold", lang, function( cm, start ) {
             if ( grammar_mode )
