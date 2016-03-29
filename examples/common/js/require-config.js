@@ -27,6 +27,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     ,PublishSubscribe: "PublishSubscribe.min"
     ,Dromeo: "Dromeo.min"
     ,Dialect: "Dialect.min"
+    ,GrammarTemplate: "GrammarTemplate.min"
     ,Xpresion: "Xpresion.min"
     ,HAAR: "haar-detector.min"
     ,cascades: "../cascades"
