@@ -47,6 +47,8 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     ,PrismGrammar: "prism_grammar.min"
     ,SyntaxHighlighter: "syntaxhighlighter/shCore"
     ,SyntaxHighlighterGrammar: "syntaxhighlighter_grammar.min"
+    ,HighlightJS: "highlightjs/highlight"
+    ,HighlightJSGrammar: "highlightjs_grammar.min"
     ,Stats: "stats.min"
     ,DatGUI: "datgui.min"
     ,Parallel: "parallel/parallel.min"
