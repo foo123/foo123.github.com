@@ -258,6 +258,19 @@ jQuery(function($){
     CodeMirror.registerHelper("lint", 'css', css_mode.validator);                
     css_mode.supportCodeFolding = true;
     CodeMirror.registerHelper("fold", css_mode.foldType, css_mode.folder);                
+    css_mode.supportCodeMatching = true;
+    CodeMirror.defineOption("css-mode-match", false, function( cm, val, old ) {
+        if ( old && old != CodeMirror.Init )
+        {
+            cm.off( "cursorActivity", css_mode.matcher );
+            css_mode.matcher.clear( cm );
+        }
+        if ( val )
+        {
+            cm.on( "cursorActivity", css_mode.matcher );
+            css_mode.matcher( cm );
+        }
+    });
     CodeMirror.defineMode('css', css_mode);
     
     // if codemirror activated, enable syntax highlight
@@ -269,6 +282,8 @@ jQuery(function($){
         indentWithTabs: false,
         // enable syntax validation
         lint: true,
+        // enable token matching
+        "css-mode-match": true,
         foldGutter: true,
         gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         theme: 'lesser-dark'
@@ -282,6 +297,8 @@ jQuery(function($){
         indentWithTabs: false,
         // enable syntax validation
         lint: true,
+        // enable token matching
+        "css-mode-match": true,
         foldGutter: true,
         gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         theme: 'lesser-dark'

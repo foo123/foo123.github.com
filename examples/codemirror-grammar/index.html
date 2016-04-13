@@ -393,10 +393,23 @@ require(['jQuery', 'ModelView'],
         json_mode = CodeMirrorGrammar.getMode( json_grammar );
         json_mode.supportGrammarAnnotations = true;
         json_mode.supportCodeFolding = true;
+        json_mode.supportCodeMatching = true;
         json_mode.supportAutoCompletion = false;
         CodeMirror.defineMode( 'json', json_mode );
         CodeMirror.registerHelper( "fold", json_mode.foldType, json_mode.folder );
         CodeMirror.registerHelper( "lint", 'json', json_mode.validator );
+        CodeMirror.defineOption("json-mode-match", false, function( cm, val, old ) {
+            if ( old && old != CodeMirror.Init )
+            {
+                cm.off( "cursorActivity", json_mode.matcher );
+                json_mode.matcher.clear( cm );
+            }
+            if ( val )
+            {
+                cm.on( "cursorActivity", json_mode.matcher );
+                json_mode.matcher( cm );
+            }
+        });
         
         // enable autocomplete, have a unique cmd to not interfere with any default autocompletes
         CodeMirror.commands.autocomplete_grammar = function( cm ) {
@@ -410,6 +423,19 @@ require(['jQuery', 'ModelView'],
         CodeMirror.registerHelper("lint", lang, function( code ) {
             return grammar_mode ? grammar_mode.validator( code ) : [];
         });
+        CodeMirror.defineOption("grammar-mode-match", false, function( cm, val, old ) {
+            if ( !grammar_mode ) return;
+            if ( old && old != CodeMirror.Init )
+            {
+                cm.off( "cursorActivity", grammar_mode.matcher );
+                grammar_mode.matcher.clear( cm );
+            }
+            if ( val )
+            {
+                cm.on( "cursorActivity", grammar_mode.matcher );
+                grammar_mode.matcher( cm );
+            }
+        });
         
         // if codemirror activated, enable syntax highlight
         codeEditor = CodeMirror.fromTextArea(code[0], {
@@ -420,6 +446,8 @@ require(['jQuery', 'ModelView'],
             indentWithTabs: false,
             // enable syntax validation
             lint: false,
+            // enable token matching
+            "grammar-mode-match": false,
             foldGutter: true,
             gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
             theme: 'lesser-dark',
@@ -434,6 +462,8 @@ require(['jQuery', 'ModelView'],
             indentWithTabs: false,
             // enable syntax validation
             lint: true,
+            // enable token matching
+            "json-mode-match": true,
             foldGutter: true,
             gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
             theme: 'lesser-dark'
@@ -466,6 +496,7 @@ require(['jQuery', 'ModelView'],
                     }
                     if ( grammar_mode )
                     {
+                        codeEditor.setOption("grammar-mode-match", false);
                         grammar_mode.dispose( );
                         grammar_mode = null;
                         CodeMirror.defineMode(lang, null);
@@ -474,11 +505,13 @@ require(['jQuery', 'ModelView'],
                     grammar_mode = CodeMirrorGrammar.getMode( grammar );
                     grammar_mode.foldType = lang;
                     grammar_mode.supportCodeFolding = true;
+                    grammar_mode.supportCodeMatching = true;
                     grammar_mode.supportAutoCompletion = true;
                     codeEditor.setValue("\n");
                     codeEditor.setOption("lint", grammar_mode.supportGrammarAnnotations = model.get('annotate'));
                     CodeMirror.defineMode(lang, grammar_mode);
                     codeEditor.setOption("mode", lang);
+                    codeEditor.setOption("grammar-mode-match", true);
                     codeEditor.setValue(src);
                 }
             }

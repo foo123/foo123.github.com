@@ -452,10 +452,23 @@ require(['jQuery', 'ModelView'],
         json_mode = CodeMirrorGrammar.getMode( json_grammar );
         json_mode.supportGrammarAnnotations = true;
         json_mode.supportCodeFolding = true;
+        json_mode.supportCodeMatching = true;
         json_mode.supportAutoCompletion = false;
         CodeMirror.defineMode( 'json', json_mode );
         CodeMirror.registerHelper( "fold", json_mode.foldType, json_mode.folder );
         CodeMirror.registerHelper( "lint", 'json', json_mode.validator );
+        CodeMirror.defineOption("json-mode-match", false, function( cm, val, old ) {
+            if ( old && old != CodeMirror.Init )
+            {
+                cm.off( "cursorActivity", json_mode.matcher );
+                json_mode.matcher.clear( cm );
+            }
+            if ( val )
+            {
+                cm.on( "cursorActivity", json_mode.matcher );
+                json_mode.matcher( cm );
+            }
+        });
         
         // if codemirror activated, enable syntax highlight
         codeEditor = CodeMirror.fromTextArea(code[0], {
@@ -479,6 +492,8 @@ require(['jQuery', 'ModelView'],
             indentWithTabs: false,
             // enable syntax validation
             lint: true,
+            // enable token matching
+            "json-mode-match": true,
             foldGutter: true,
             gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
             theme: 'lesser-dark'

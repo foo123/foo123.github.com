@@ -136,7 +136,7 @@
 <br /><br />
 
     
-<div class="showcase">ACE Editor <a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/theme/chrome.css" target="_blank">available token styles</a></div>
+<div class="showcase">ACE Editor <a href="https://github.com/ajaxorg/ace/wiki/Creating-or-Extending-an-Edit-Mode#common-tokens" target="_blank">common tokens</a> and <a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/theme/chrome.css" target="_blank">available token styles</a></div>
 <div id="screen" class="fluid col-1-1">
         
     <div id="codeContainer" class="fluid col-4-10 container">
@@ -495,6 +495,7 @@ require(['jQuery', 'ModelView'],
         json_mode.supportGrammarAnnotations = true;
         json_mode.supportCodeFolding = true;
         json_mode.supportAutoCompletion = false;
+        json_mode.supportCodeMatching = true;
         
         // editor commands
         commands = {
@@ -601,6 +602,7 @@ require(['jQuery', 'ModelView'],
             codeEditor.setTheme("ace/theme/twilight");
             
             grammarEditor = ace.edit('aceGrammar');
+            json_mode.matcher( grammarEditor );
             grammarEditor.setValue( grammar.val(), -1 );
             grammarEditor.getSession().setMode( json_mode );
             grammarEditor.setTheme("ace/theme/twilight");
@@ -632,15 +634,18 @@ require(['jQuery', 'ModelView'],
                         }
                         if ( grammar_mode )
                         {
+                            grammar_mode.matcher( codeEditor, false );
                             grammar_mode.dispose( );
                             grammar_mode = null;
                         }
                         grammar = JSON.parse( grammar.join("\n") );
                         grammar_mode = AceGrammar.getMode( grammar );
                         grammar_mode.supportCodeFolding = true;
+                        grammar_mode.supportCodeMatching = true;
                         grammar_mode.supportAutoCompletion = true;
                         grammar_mode.autocompleter.options = {inContext:true};
                         grammar_mode.supportGrammarAnnotations = model.get('annotate');
+                        grammar_mode.matcher( codeEditor );
                         codeEditor.setValue("\n", -1);
                         codeEditor.getSession().setMode( grammar_mode );
                         codeEditor.setValue(src, -1);

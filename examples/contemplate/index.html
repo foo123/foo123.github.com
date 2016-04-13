@@ -244,6 +244,19 @@ jQuery(function($){
     CodeMirror.registerHelper("lint", 'json', json_mode.validator);                
     json_mode.supportCodeFolding = true;
     CodeMirror.registerHelper("fold", json_mode.foldType, json_mode.folder);                
+    json_mode.supportCodeMatching = true;
+    CodeMirror.defineOption("json-mode-match", false, function( cm, val, old ) {
+        if ( old && old != CodeMirror.Init )
+        {
+            cm.off( "cursorActivity", json_mode.matcher );
+            json_mode.matcher.clear( cm );
+        }
+        if ( val )
+        {
+            cm.on( "cursorActivity", json_mode.matcher );
+            json_mode.matcher( cm );
+        }
+    });
     
     // if codemirror activated, enable syntax highlight
     tplEditor = CodeMirror.fromTextArea(tpl[0], {
@@ -263,6 +276,8 @@ jQuery(function($){
         indentWithTabs: false,
         // enable syntax validation
         lint: true,
+        // enable token matching
+        "json-mode-match": true,
         foldGutter: true,
         gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         theme: 'lesser-dark'
