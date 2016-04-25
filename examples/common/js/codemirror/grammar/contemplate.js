@@ -75,7 +75,7 @@ var contemplate_grammar = {
                                 "concat","cc","ltrim","rtrim","trim","lowercase","uppercase",
                                 "lcfirst","ucfirst","camelcase","snakecase","count","haskey",
                                 "uuid","time","now","date","ldate","locale","l","nlocale","nl","xlocale","xl","nxlocale","nxl",
-                                "inline","tpl","e","url","is_array"
+                                "inline","tpl","e","url","is_array","in_array","json_encode","json_decode"
                                 ]}
     ,"plugin"                   : "RE::/[a-zA-Z_][a-zA-Z0-9_]*/"
 
@@ -97,12 +97,13 @@ var contemplate_grammar_compat = {
                                 "%concat","%cc","%ltrim","%rtrim","%trim","%lowercase","%uppercase",
                                 "%lcfirst","%ucfirst","%camelcase","%snakecase","%count","%haskey",
                                 "%uuid","%time","%now","%date","%ldate","%locale","%l","%nlocale","%nl","%xlocale","%xl","%nxlocale","%nxl",
-                                "%inline","%tpl","%e","%url","%is_array"
+                                "%inline","%tpl","%e","%url","%is_array","%in_array","%json_encode","%json_decode"
                                 ]}
     ,"plugin"                   : "RE::/%[a-zA-Z_][a-zA-Z0-9_]*/"
 
 }
 };
+
 
 // 2. parse the grammar into a Codemirror syntax-highlight mode
 var contemplate_grammar_full = contemplate_grammar_base;
