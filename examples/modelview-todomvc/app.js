@@ -23,8 +23,8 @@
         ;
         
         // sub-class of ModelView for a single Todo View
-        TodoView = function( id, model, atts ) {
-            ModelView.View.call( this, id, model, atts );
+        TodoView = function( /*id, model, atts*/ ) {
+            ModelView.View.apply( this, arguments );
         };
         TodoView.prototype = ModelView.Extend( Object.create( ModelView.View.prototype ), {
             
@@ -46,7 +46,7 @@
                 $el = $($el);
                 var todo = this.$model,
                     $todo = $(this.$dom),
-                    title, todoList
+                    title, todoList, completed
                 ;
                 
                 if ( todo.$data.editing )
@@ -59,16 +59,18 @@
                     {
                         // remove
                         todoList = Model.get( 'todoList' );
-                        
-                        todoList.todos.splice( $todo.index( ), 1 );
-                        
-                        if ( todo.get('completed') ) todoList.completed--;
-                        else todoList.active--;
-                        
-                        $todo.remove( );
-                        
-                        setTimeout(function() {
-                            $todo.modelview( 'dispose' );
+                        completed = todo.get('completed');
+                        setTimeout(function( ){
+                        $todo.fadeOut( 'fast', function( ) {
+                            if ( completed ) todoList.completed--;
+                            else todoList.active--;
+                            
+                            todoList.todos.splice($todo.index( ), 1);
+                            $todo.remove( );
+                            
+                            Model.notify( 'todoList' );
+                            $todoList.toggleCompleted( );
+                        });
                         }, 50);
                     }
                     else
@@ -77,10 +79,10 @@
                         todo.set('title', title, true);
                         todo.$data.editing = false;
                         $todo.removeClass( 'editing' );
+                        
+                        Model.notify( 'todoList' );
+                        $todoList.toggleCompleted( );
                     }
-                    
-                    Model.notify( 'todoList' );
-                    $todoList.toggleCompleted( );
                 }
             }
             
@@ -125,25 +127,20 @@
                 $el = $($el);
                 var todo = this.$model,
                     $todo = $(this.$dom), 
-                    todoList
+                    todoList, completed = todo.get('completed')
                 ;
                 
                 todoList = Model.get( 'todoList' );
                 
                 $todo.fadeOut( 'fast', function( ) {
+                    if ( completed ) todoList.completed--;
+                    else todoList.active--;
                     
                     todoList.todos.splice($todo.index( ), 1);
                     $todo.remove( );
                     
-                    if ( todo.get('completed') ) todoList.completed--;
-                    else todoList.active--;
-                    
                     Model.notify( 'todoList' );
                     $todoList.toggleCompleted( );
-                    
-                    setTimeout(function() {
-                        $todo.modelview( 'dispose' );
-                    }, 50);
                 });
             }
         });
@@ -252,13 +249,20 @@
         
         $todoList.toggleCompleted = function( ) {
             setTimeout(function( ) {
-                var visible = $todoList.children( ':visible' ),
-                    completed = $todoList.children( '.completed:visible' )
-                ;
-                if ( visible.length && visible.length === completed.length )
-                    $toggleAll.prop('checked', true);
-                else
+                if ( $todoList.hasClass( 'show-active' ) )
+                {
                     $toggleAll.prop('checked', false);
+                }
+                else if ( $todoList.hasClass( 'show-completed' ) )
+                {
+                    $toggleAll.prop('checked', true);
+                }
+                else
+                {
+                    var visible = $todoList.children( ),
+                        completed = $todoList.children( '.completed' );
+                    $toggleAll.prop('checked', !!(visible.length && visible.length === completed.length));
+                }
             }, 20);
         };
         
@@ -342,7 +346,7 @@
                         todoList = Model.get( 'todoList' );
                         
                         notcompleted = $todoList
-                            .children( '.todo:visible:not(.completed)' )
+                            .children( '.todo:not(.completed)' )
                             .each(function( ) {
                                 var $todo = $(this);
                                 
@@ -363,8 +367,8 @@
                     // if unchecked and all visible todos on current filter are completed, uncomplete them
                     else if ( !isChecked )
                     {
-                        completed = $todoList.children( '.todo.completed:visible' );
-                        visible = $todoList.children( '.todo:visible' );
+                        completed = $todoList.children( '.todo.completed' );
+                        visible = $todoList.children( '.todo' );
                         
                         // if all completed on current filter, uncomplete them
                         if ( completed.length === visible.length )
