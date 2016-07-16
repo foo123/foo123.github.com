@@ -87,6 +87,8 @@
         
         <script src="../common/js/stats.min.js"></script>
         <script src="../common/js/three.min.js"></script>
+        <script src="../common/js/Projector.js"></script>
+        <script src="../common/js/CanvasRenderer.js"></script>
         <script src="../common/js/dancer.min.js"></script>
         <script src="../common/js/mod3.bundle.js"></script>
 
@@ -220,18 +222,18 @@
             }
             
             // change modifier over time
-            function changeMod()
+            function changeMod( )
             {
-                clearTimeout(tim)
-                if (Math.random()+Math.random()+Math.random()+Math.random()>0.7)
+                clearTimeout( tim )
+                if ( Math.random()+Math.random()+Math.random()+Math.random() > 0.7 )
                 {
-                    modStack.clear();
-                    modStack.addModifier(stack[Math.round((stack.length-1)*Math.random())]);
+                    modStack.clear( );
+                    modStack.addModifier( stack[Math.round((stack.length-1)*Math.random())] );
                 }
-                tim=setTimeout(changeMod, Math.random()*1000+2500);
+                tim = setTimeout( changeMod, Math.random()*1000+2500 );
             }
             
-            function drawCircle(t)
+            function drawCircle( t )
             {
                 var cir=5, r=100, i;
                 ctx.fillStyle="#0099EE";
@@ -287,62 +289,62 @@
                 container.addEventListener( 'mousedown', onDocumentMouseDown, false );
                 
                 // set up modifiers for dancing cube (MOD3.js)
-                modStack = new MOD3.ModifierStack(MOD3.LibraryThree, cube);
-                skew = new MOD3.Skew(0);
-                skewPhase=new MOD3.Phase();
-                stack.push(skew);
-                taper = new MOD3.Taper(3);
+                modStack = new MOD3.ModifierStack( MOD3.LibraryThree, cube );
+                skew = new MOD3.Skew( 0 );
+                skewPhase = new MOD3.Phase( );
+                stack.push( skew );
+                taper = new MOD3.Taper( 3 );
                 //taper.setFalloff(0.2, 0.5);
-                taper.vector2 = new MOD3.Vector3(1, 0, 0);
+                taper.vector2 = new MOD3.Vector3( 1, 0, 0 );
                 taper.power = 4;
-                taperPhase=new MOD3.Phase();
-                stack.push(taper);
-                twist = new MOD3.Twist(Math.PI / 2);
-                twistPhase=new MOD3.Phase();
-                stack.push(twist);
-                bloat = new MOD3.Bloat();
-                stack.push(bloat);
-                tim=setTimeout(changeMod, Math.random()*1000+2500);
+                taperPhase = new MOD3.Phase( );
+                stack.push( taper );
+                twist = new MOD3.Twist( 0.5*Math.PI );
+                twistPhase = new MOD3.Phase( );
+                stack.push( twist );
+                bloat = new MOD3.Bloat( );
+                stack.push( bloat );
+                tim = setTimeout( changeMod, Math.random()*1000+2500 );
             }
             
-            function animate() 
+            function animate( ) 
             {
                 var vol2;
                 
                 camera.position.x = rad * Math.sin( targetRotationY*multy ) * Math.cos( targetRotationX*multx );
                 camera.position.y = rad * Math.sin( targetRotationX*multx );
                 camera.position.z = rad * Math.cos( targetRotationY*multy ) * Math.cos( targetRotationX*multx );
-                camera.lookAt(scene.position);
+                camera.lookAt( scene.position );
                 
-                if (dancer.isPlaying())
+                if ( dancer.isPlaying() )
                 {
-                    prevvolume=volume;
+                    prevvolume = volume;
                     //volume=0.33*(signal[3]*0.01+signal[1]*0.01+signal[2]*0.01);
                     //volume=0.42*dancer.getFrequency(0,2);
-                    volume=0.52*dancer.getFrequency(0,1);
+                    volume = 0.6*dancer.getFrequency(0,1);
                     // smooth it a little bit
-                    vol2=-(2*volume*volume*volume-3*volume*volume);
+                    vol2 = -2*volume*volume*volume + 3*volume*volume;
                     
                     // yaw box
                     //cube.rotation.y -= (.02+volume*3.5);
-                    cube.rotation.y -= (.02+vol2*9.2);
+                    cube.rotation.y -= .02+vol2*8.6;
                     // draw updated sides texture
-                    t+=100*volume;
-                    if (t>=150) t=0;
-                    else if (t<0) t=149;
+                    t += 100*volume;
+                    if ( t >= 150 ) t = 0;
+                    else if ( t < 0 ) t = 149;
                     
-                    drawCircle(t);
+                    drawCircle( t );
                      
                     // if hit change mod now
-                    if (volume>prevvolume && volume>0.06) { changeMod(); }
+                    if ( (volume > prevvolume) && (volume > 0.06) ) changeMod( );
                     
                     // update modifers
                     //skewPhase.value += (volume*5);
-                    skewPhase.value += (volume*13);
-                    skew.force = skewPhase.getPhasedValue() * 100;
+                    skewPhase.value += volume*4;
+                    skew.force = skewPhase.getPhasedValue( ) * 50;
                    
                     //taperPhase.value += (volume-0.02);
-                    taperPhase.value += (3*volume-0.02);
+                    taperPhase.value += 3*volume-0.02;
                     taper.force = taperPhase.getAbsPhasedValue() * 0.5;
                    
                     //twistPhase.value += volume*2;
@@ -350,7 +352,7 @@
                     twist.angle = mathPi8 * twistPhase.getPhasedValue();
                    
                     // apply modifiers
-                    modStack.apply();
+                    modStack.apply( );
                 }
                 
                 stats.begin();

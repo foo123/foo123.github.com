@@ -71,7 +71,8 @@
         </style>
         
         <script type="text/javascript" src="../common/js/three.min.js"></script>
-        <script src="../common/js/THREEx.WindowResize.js"></script>
+        <script type="text/javascript" src="../common/js/Projector.js"></script>
+        <script type="text/javascript" src="../common/js/THREEx.WindowResize.js"></script>
         <script type="text/javascript" src="../common/js/mod3.bundle.js"></script>
         <script type="text/javascript" src="../common/js/Tween.js"></script>
         <script type="text/javascript" src="./FlipBook3D.js"></script>
@@ -98,8 +99,8 @@
         <div id="controls" style="position:absolute;top:60px;z-index:1000">
             <input class="button" type="button" id="flipleft" value="flipLeft" />
             <input class="button" type="button" id="flipright" value="flipRight" />
-            <input class="button" type="button" id="parallel" value="Parallel" />
-            <input class="button" type="button" id="synchronous" value="Synchronous" />
+            <!--<input class="button" type="button" id="parallel" value="Parallel" />
+            <input class="button" type="button" id="synchronous" value="Synchronous" />-->
         </div>
         
         
@@ -107,14 +108,14 @@
         
         <script>//<![CDATA[
         
-            var baseUrl = location.href.split(/#|\?/)[ 0 ];
+            /*var baseUrl = location.href.split(/#|\?/)[ 0 ];
             
             document.getElementById('parallel').addEventListener('click', function(){
                 location.href = baseUrl + '?parallel=1';
             }, false);
             document.getElementById('synchronous').addEventListener('click', function(){
                 location.href = baseUrl + '?synchronous=1';
-            }, false);
+            }, false);*/
             
             FlipBook3DApplication.init([
                 {f:document.getElementById('1f').src,b:document.getElementById('1b').src, hard:1},
