@@ -1,5 +1,6 @@
 (function(window){
-    
+"use strict";
+
 /**
  * Provides requestAnimationFrame in a cross browser way.
  * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
@@ -277,8 +278,8 @@ function onDocumentMouseDown( event ) {
 
 function onDocumentMouseMove( event ) {
 
-    mouseX = event.clientX - windowHalfX;
-    mouseY = event.clientY - windowHalfY;
+    var mouseX = event.clientX - windowHalfX;
+    var mouseY = event.clientY - windowHalfY;
 
     targetRotationY = targetRotationOnMouseDownY + ( mouseX - mouseXOnMouseDown ) * 0.02;
     targetRotationX = targetRotationOnMouseDownX + ( mouseY - mouseYOnMouseDown ) * 0.02;

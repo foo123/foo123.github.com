@@ -92,6 +92,11 @@
             background: rgba(128, 128, 128, 0.4);
         }
         #forkongithub a{background:#c83022;color:#fff;}
+        select {
+            font-size: 1.8em !important;
+            padding: 0.4em !important;
+            color: black !important;
+        }
     </style>
     <script src="../common/js/require.js"></script>
     <script src="../common/js/require-config.js"></script>
@@ -130,14 +135,15 @@
     <div class="fluid col-1-1">
     
         <div class="panel">
-            <strong>You can select part of video to apply filters to (use your mouse)</strong>&nbsp;&nbsp;
+            <strong>You can select part of video to apply filters to (use your mouse on the processed video on the right)</strong>&nbsp;&nbsp;
             <input id="select" type="button" class="button" value="Select" />
             <input id="deselect" type="button" class="button" value="DeSelect" />
         </div>
         
         <div class="panel">
             <strong>Apply Post-Process Filter to Video :</strong><br /><br />
-            <select id="filterSelect" style="font-size:20px;">
+            <select id="filterSelect">
+                <option value='#'>None</option>
                 <optgroup label="Color Matrix Filters">
                     <option value='#'>Colorize</option>
                     <option value='#'>Grayscale</option>
@@ -199,7 +205,7 @@
                 </optgroup>
             </select>
             &nbsp;
-            <select id="flipSelect" style="font-size:20px;">
+            <select id="flipSelect">
                 <option value='0'>No Flip</option>
                 <option value='1'>Flip Horizontal</option>
                 <option value='2'>Flip Vertical</option>
@@ -207,7 +213,7 @@
                 <option value='4'>Flip Vertical using Filter</option>
             </select>
             &nbsp;
-            <select id="blendSelect" style="font-size:20px;">
+            <select id="blendSelect">
                 <option value='Normal'>Normal</option>
                 <option value='Lighten'>Lighten</option>
                 <option value='Darken'>Darken</option>
@@ -277,7 +283,7 @@
         }
     });
     require(['Classy', 'Asynchronous', 'FILTER', 'FILTER_CODECS', 'FILTER_PLUGINS', 'AreaSelect', 'Stats'/*, 'domReady!'*/], 
-        function( $_1, $_2, $_3, $_4, $F, AreaSelect, Stats ) {
+        function( _1, _2, _3, _4, $F, AreaSelect, Stats ) {
         var 
             icon,
             filterSelect = getEl('filterSelect'), 
@@ -371,11 +377,12 @@
             shift = new $F.GeometricMapFilter().shift(-3, 0),
             //seamless = new $F.SeamlessTileFilter(),
             //seamlessPerlin = new $F.CompositeFilter([new $F.PerlinNoiseFilter(100,80), new $F.SeamlessTileFilter()]),
-            seamlessPerlin = new $F.PerlinNoiseFilter(100,80).simplex().octaves(1).seamless(true),
+            //seamlessPerlin = new $F.PerlinNoiseFilter(100,80).simplex().octaves(1).seamless(true),
             perlinDisplaceFilter = new $F.DisplacementMapFilter(),
             
             // filter selection list
             videoFilters = [
+                null,
                 clr,
                 gray,
                 grc,
@@ -502,7 +509,7 @@
             addEvent(filterSelect, "change", function(){
                 currentFilterIndex = filterSelect.selectedIndex || 0;
                 // preview the filter while hovering the option
-                currentFilter = videoFilters[currentFilterIndex];
+                currentFilter = videoFilters[ currentFilterIndex ] || null;
                 if (blend === currentFilter)
                 {
                     blendSelect.style.display = "inline-block";
@@ -525,10 +532,9 @@
             
             addEvent(selectBt, 'click', function(){
                 var sel = areaSelect.getSelection();
-                if (sel)
+                if ( sel )
                 {
-                    var w = postVideo.width;
-                    var h = postVideo.height;
+                    var w = postVideo.width, h = postVideo.height;
                     currentSelection = [ Math.min(sel.x1/w, 1), Math.min(sel.y1/h, 1), Math.min(sel.x2/w, 1), Math.min(sel.y2/h, 1) ];
                     areaSelect.hide();
                     doSelect = true;
@@ -624,19 +630,15 @@
             }
             else if (perlinDisplaceFilter===currentFilter)
             {
-                if ( !perlinNoise )
+                if ( null === perlinNoise )
                 {
-                    perlinNoise = $F.Image()
-                        .restorable(false)
-                        .fill("rgb(128,128,128)", 0, 0, vw, vh)
-                        .apply(seamlessPerlin);
+                    perlinDisplaceFilter.setMap( perlinNoise = $F.PerlinNoise.Image( true/* seamless */, vw, vh, 100, 80 ) );
                 }
                 else
                 {
                     // animate the perlinNoise image
-                    perlinNoise.apply( shift );
+                    shift.apply( perlinNoise );
                 }
-                perlinDisplaceFilter.setMap( perlinNoise );
             }
             else if (twirlFilter===currentFilter)
             {

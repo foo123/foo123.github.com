@@ -7,7 +7,7 @@
 **/
 
 // upscale
-var upscaleX = 1.7, upscaleY = 1.7, invupscaleX = 1.0/upscaleX, invupscaleY = 1.0/upscaleY;
+var upscaleX = 1.3, upscaleY = 1.3, invupscaleX = 1.0/upscaleX, invupscaleY = 1.0/upscaleY;
 $F.Create({
     name: "TriopticSimpleFilter"
     
@@ -40,12 +40,10 @@ $F.Create({
                 toCol = $F.Color.Color2RGBA
             ;
                 
-            i = 0;
-            while ( i < l )
+            for(i=0; i<l; i++)
             {
                 sintable[ i ] = Sin( i*toRad );
                 squares[ i ] = toCol( ~~(16777215*i*i) ); // * 0xFFFFFF
-                i++;
             }
         
             // this is the filter actual apply method routine

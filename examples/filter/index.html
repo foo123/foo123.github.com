@@ -198,7 +198,7 @@
                 displacemap.octx.fill();
                 displacemap.store();
                 
-                im15.fill('rgb(200,200,200)', 0, 0, im1.width, im1.height);
+                im15.setImage($F.PerlinNoise.Image(true, im1.width, im1.height, 80, 50, 4, [[0,0],[10,10], [20,10], [10,20]]));
             })
             ,im2 = $F.HTMLImageLoader.load( che )
             ,im3 = $F.HTMLImageLoader.load( che )
@@ -299,7 +299,7 @@
                 //seamless,
                 //,shift
             ]).worker( runInThread )*/
-            ,simplexNoise = new $F.PerlinNoiseFilter(80,50).simplex().octaves(4, [[0,0],[10,10], [20,10], [10,20]]).seamless(true).worker( runInThread )
+            //,simplexNoise = new $F.PerlinNoiseFilter(80,50).simplex().octaves(4, [[0,0],[10,10], [20,10], [10,20]]).seamless(true).worker( runInThread )
             //,bokeh = new $F.BokehFilter(80, 90, 60, 10).worker( runInThread )
             ,canny = new $F.CannyEdgesFilter( 1, 7 ).worker( runInThread )
             ,faceDetector = new $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt)/*.params()*/.worker( runInThread )
@@ -355,7 +355,7 @@
         //.append(span('21.')).append(im21.domElement)
         ;
         
-        aside.append("<div><ol><li>Original Image</li><li>Red Channel</li><li>Green Channel</li><li>Blue Channel</li><li>Red Colorized applied to Selection</li><li>Grayscale and Contrast</li><li>Quick Sepia</li><li>Posterize</li><li>Pixelate (Plugin)</li><li>Emboss</li><li>Geometric Twirl Map</li><li>Displace Map</li><li>Grayscale, Sobel Gradient Magnitude (Composite)</li><li>Histogram Equalization (Plugin)</li><li>Perlin Noise (Plugin)</li><li>Flood Fill (Plugin)</li><li>Seamless Tile (Plugin)</li><li>Canny Edges (Plugin)</li><li>HAAR Detector for Face  (Plugin)</li></ol>M: Displace Map</div>");
+        aside.append("<div><ol><li>Original Image</li><li>Red Channel</li><li>Green Channel</li><li>Blue Channel</li><li>Red Colorized applied to Selection</li><li>Grayscale and Contrast</li><li>Quick Sepia</li><li>Posterize</li><li>Pixelate (Plugin)</li><li>Emboss</li><li>Geometric Twirl Map</li><li>Displace Map</li><li>Grayscale, Sobel Gradient Magnitude (Composite)</li><li>Histogram Equalization (Plugin)</li><li>Perlin Noise Image</li><li>Flood Fill (Plugin)</li><li>Seamless Tile (Plugin)</li><li>Canny Edges (Plugin)</li><li>HAAR Detector for Face  (Plugin)</li></ol>M: Displace Map</div>");
             
         function apply(evt)
         {
@@ -393,7 +393,7 @@
             im13.apply( grsb, closeThread );
             //im13.apply( glow, closeThread );
             im14.apply( equalize, closeThread );
-            im15.apply( simplexNoise, closeThread );
+            //im15.apply( simplexNoise, closeThread );
             im16.apply( floodFill, closeThread );
             im17.apply( seamless, closeThread );
             im18.apply( canny, closeThread );

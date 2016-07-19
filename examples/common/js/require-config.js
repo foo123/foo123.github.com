@@ -14,6 +14,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     ,Benchmark: "benchmark.min"
     ,Classy: "classy.min"
     ,Asynchronous: "asynchronous.min"
+    ,RT: "RT.min"
     ,RegexAnalyzer: "RegexAnalyzer.min"
     ,RegexComposer: "RegexComposer.min"
     ,RegExpX: "RegExpX.min"
@@ -34,7 +35,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     ,FILTER: "filter.min"
     ,FILTER_PLUGINS: "filter.plugins.min"
     ,FILTER_CODECS: "filter.codecs.min"
-    //,FilterBundle: "filter.bundle"
+    //,FilterBundle: "filter.bundle",
     ,MOD3: "mod3.min"
     ,Sort: "sort.min"
     ,Pattern: "pattern.min"
@@ -60,7 +61,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     ,Tween: "Tween"
 }
 ,bundles: {
-    //FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_PLUGINS"],
+    //FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_CODECS", "FILTER_PLUGINS"],
     ModelViewBundle: ["ModelView", "ModelViewValidation"]
 }        
 ,shim: {
