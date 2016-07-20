@@ -32,9 +32,6 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     ,Xpresion: "Xpresion.min"
     ,HAAR: "haar-detector.min"
     ,cascades: "../cascades"
-    ,FILTER: "filter.min"
-    ,FILTER_PLUGINS: "filter.plugins.min"
-    ,FILTER_CODECS: "filter.codecs.min"
     //,FilterBundle: "filter.bundle",
     ,MOD3: "mod3.min"
     ,Sort: "sort.min"
@@ -61,7 +58,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     ,Tween: "Tween"
 }
 ,bundles: {
-    //FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_CODECS", "FILTER_PLUGINS"],
+    //FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_IO", "FILTER_CODECS", "FILTER_FILTERS", "FILTER_PLUGINS"],
     ModelViewBundle: ["ModelView", "ModelViewValidation"]
 }        
 ,shim: {
