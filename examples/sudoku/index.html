@@ -116,7 +116,12 @@ table td
 {
     padding-bottom:10px;
 }
-
+select
+{
+    font-size: 1.2em !important;
+    color: black !important;
+    padding: 0.3em;
+}
 .ui-delayable-overlay
 {
     position: absolute;
@@ -284,14 +289,14 @@ table td
 <script type="text/javascript" src="./jquery.js"></script>
 <!--<script type="text/javascript" src="./jqueryui.js"></script>-->
 <!--<script type="text/javascript" src="../common/js/Contemplate.min.js"></script>-->
-<script type="text/javascript" src="../common/js/modelview.min.js"></script>
+<script type="text/javascript" src="../common/js/modelview.bundle.js"></script>
 <script type="text/javascript" src="./sudoku.bundle.js"></script>
 <link rel="stylesheet" type="text/css" href="./sudoku.min.css" />
 
 </head>
 
 <body class="responsive-864-container">
-<span id="forkongithub"><a href="https://github.com/foo123/sudoku.js">PLay with me on GitHub</a></span>
+<span id="forkongithub"><a href="https://github.com/foo123/sudoku.js">Play with me on GitHub</a></span>
     
     
 <header id="header" class="fluid col-1-1">
@@ -413,7 +418,7 @@ DisplayPuzzle.prototype = {
         if ( self.puzzle ) self.puzzle.dispose();
         self.puzzle = null;
         self.$dom = null;
-        self.$controls.off('click.'+self.id);
+        if ( self.$controls ) self.$controls.off('click.'+self.id);
         self.$controls = null;
         self.disposed = true;
         return self;
