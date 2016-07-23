@@ -200,7 +200,7 @@
                 displacemap.store();
                 
                 $F.Image.PerlinNoise.seed( Math.random() );
-                im15.image($F.Image.PerlinNoise(true, im1.width, im1.height, 80, 50, 4, [[0,0],[10,10], [20,10], [10,20]]));
+                im15.image($F.Image.PerlinNoise(im1.width, im1.height, true, true, 80, 50, 4, [[0,0],[10,10], [20,10], [10,20]]));
             })
             ,im2 = $F.IO.HTMLImageLoader.load( che )
             ,im3 = $F.IO.HTMLImageLoader.load( che )

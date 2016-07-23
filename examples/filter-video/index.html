@@ -438,24 +438,15 @@
             cX1 = 0, cX2 = 0, cY1 = 0, cY2 = 0
         ;
         
-        function init()
+        function init( )
         {
-            if ($F.Browser.isChrome)
-                icon = $F.IO.HTMLImageLoader.load("../common/assets/chrome.png", function(){
-                    blend.setImage( icon );
-                }).restorable(false);
-            else if ($F.Browser.isOpera)
-                icon = $F.IO.HTMLImageLoader.load("../common/assets/opera.png", function(){
-                    blend.setImage( icon );
-                }).restorable(false);
-            else if ($F.Browser.isIE)
-                icon = $F.IO.HTMLImageLoader.load("../common/assets/ie.png", function(){
-                    blend.setImage( icon );
-                }).restorable(false);
-            else
-                icon = $F.IO.HTMLImageLoader.load("../common/assets/firefox.png", function(){
-                    blend.setImage( icon );
-                }).restorable(false);
+            icon = $F.IO.HTMLImageLoader.load($F.Browser.isChrome
+            ? "../common/assets/chrome.png"
+            : ($F.Browser.isOpera
+            ? "../common/assets/opera.png"
+            : ($F.Browser.isIE
+            ? "../common/assets/ie.png"
+            : "../common/assets/firefox.png")), function( ){ blend.setImage( icon ); }).restorable(false);
             blendSelect.style.display = "none";
             selectBt.style.display = 'inline';
             deselectBt.style.display = 'none';
@@ -632,7 +623,7 @@
             {
                 if ( null === perlinNoise )
                 {
-                    perlinDisplaceFilter.setMap( perlinNoise = $F.Image.PerlinNoise( true/* seamless */, vw, vh, 100, 80 ) );
+                    perlinDisplaceFilter.setMap( perlinNoise = $F.Image.PerlinNoise( vw, vh, true/* seamless */, true/* grayscale */, 100, 80 ) );
                 }
                 else
                 {
