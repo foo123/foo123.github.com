@@ -199,8 +199,7 @@
                 displacemap.octx.fill();
                 displacemap.store();
                 
-                $F.Image.PerlinNoise.seed( Math.random() );
-                im15.image($F.Image.PerlinNoise(im1.width, im1.height, true, true, 80, 50, 4, [[0,0],[10,10], [20,10], [10,20]]));
+                im15.image($F.Image.PerlinNoise(im1.width, im1.height, Math.random(), true, true, 80, 50, 4, [[0,0],[10,10], [20,10], [10,20]]));
             })
             ,im2 = $F.IO.HTMLImageLoader.load( che )
             ,im3 = $F.IO.HTMLImageLoader.load( che )
@@ -228,69 +227,74 @@
             
              // filters
             //,redChannel = new $F.ColorMatrixFilter( ).worker( runInThread ).redChannel( )
-            ,redChannel = new $F.CustomFilter(function(filt, im, w, h) { 
-                var l = im.length, i;
+            ,redChannel = new $F.InlineFilter(function(filt, im, w, h) { 
                 // get red channel using a custom filter that can run in parallel worker also
-                for (i=0; i<l; i+=4)
+                for (var i=0,l=im.length; i<l; i+=4)
                 {
                     im[ i+1 ] = 0;
                     im[ i+2 ] = 0;
                 }
                 return im;
             }).worker( runInThread )
-            ,greenChannel = new $F.ColorMatrixFilter( ).worker( runInThread ).greenChannel( )
-            ,blueChannel = new $F.ColorMatrixFilter( ).worker( runInThread ).blueChannel( )
-            ,clr = new $F.ColorMatrixFilter( ).worker( runInThread ).colorize( 0xff0000 )
-            //,gamma = new $F.TableLookupFilter( ).worker( runInThread ).gammaCorrection( 1.7 )
-            //,solarize = new $F.TableLookupFilter( ).worker( runInThread ).solarize( 0.5 )
-            ,posterize = new $F.TableLookupFilter( ).worker( runInThread ).posterize( 4 )
-            //,extract = new $F.TableLookupFilter( ).worker( runInThread ).extract( $F.CHANNEL.RED, [0x75, 0x91] )
-            //,mask = new $F.TableLookupFilter( ).worker( runInThread ).mask( 0xffff7732 )
-            //,swapChannels = new $F.ColorMatrixFilter( ).worker( runInThread ).swapChannels( $F.CHANNEL.BLUE, $F.CHANNEL.GREEN )
-            //,maskChannel = new $F.ColorMatrixFilter( ).worker( runInThread ).maskChannel( $F.CHANNEL.GREEN )
-            //,invert = new $F.TableLookupFilter( ).worker( runInThread ).invert( )
-            /*,erode = new $F.MorphologicalFilter( ).worker( runInThread ).erode([
+            ,greenChannel = new $F.ColorMatrixFilter( ).greenChannel( ).worker( runInThread )
+            ,blueChannel = new $F.ColorMatrixFilter( ).blueChannel( ).worker( runInThread )
+            ,clr = new $F.ColorMatrixFilter( ).colorize( 0xff0000 ).worker( runInThread )
+            //,gamma = new $F.TableLookupFilter( ).gammaCorrection( 1.7 ).worker( runInThread )
+            //,solarize = new $F.TableLookupFilter( ).solarize( 0.5 ).worker( runInThread )
+            ,posterize = new $F.TableLookupFilter( ).posterize( 4 ).worker( runInThread )
+            //,extract = new $F.TableLookupFilter( ).extract( $F.CHANNEL.RED, [0x75, 0x91] ).worker( runInThread )
+            //,mask = new $F.TableLookupFilter( ).mask( 0xffff7732 ).worker( runInThread )
+            //,swapChannels = new $F.ColorMatrixFilter( ).swapChannels( $F.CHANNEL.BLUE, $F.CHANNEL.GREEN ).worker( runInThread )
+            //,maskChannel = new $F.ColorMatrixFilter( ).maskChannel( $F.CHANNEL.GREEN ).worker( runInThread )
+            //,invert = new $F.TableLookupFilter( ).invert( ).worker( runInThread )
+            /*,erode = new $F.MorphologicalFilter( ).erode([
                 0, 0, 0, 1,
                 0, 0, 1, 0,
                 0, 1, 0, 0,
                 1, 0, 0, 0
-            ])*/
+            ]).worker( runInThread )*/
             ,equalize = new $F.HistogramEqualizeFilter( ).worker( runInThread )
             //,rgbequalize = new $F.RGBHistogramEqualizeFilter( ).worker( runInThread )
             //,noise = new $F.NoiseFilter( -127, 127 ).worker( runInThread )
-            ,sepia = new $F.ColorMatrixFilter( ).worker( runInThread ).sepia2( )
-            ,gray = new $F.ColorMatrixFilter( ).worker( runInThread ).grayscale( )
-            //,binary = new $F.TableLookupFilter( ).worker( runInThread ).threshold( 0.7 )
-            //,threshold = new $F.ColorMatrixFilter( ).worker( runInThread ).threshold_rgb( 128 )
-            ,grc = new $F.ColorMatrixFilter( ).worker( runInThread ).grayscale( ).contrast( 1 )
-            //,median = new $F.StatisticalFilter( ).worker( runInThread ).median( 5 )
-            //,maximum = new $F.StatisticalFilter( ).worker( runInThread ).maximum( 15 )
+            ,sepia = new $F.ColorMatrixFilter( ).sepia2( ).worker( runInThread )
+            ,gray = new $F.ColorMatrixFilter( ).grayscale( ).worker( runInThread )
+            //,binary = new $F.TableLookupFilter( ).threshold( 0.7 ).worker( runInThread )
+            //,threshold = new $F.ColorMatrixFilter( ).threshold_rgb( 128 ).worker( runInThread )
+            ,grc = new $F.ColorMatrixFilter( ).grayscale( ).contrast( 1 ).worker( runInThread )
+            //,median = new $F.StatisticalFilter( ).median( 5 ).worker( runInThread )
+            //,maximum = new $F.StatisticalFilter( ).maximum( 15 ).worker( runInThread )
             ,pixelate = new $F.PixelateFilter( 10 ).worker( runInThread )
             //,tripixelate = new $F.TriangularPixelateFilter( 10 ).worker( runInThread )
             //,pixelate = new $F.HexagonalPixelateFilter( 20 ).worker( runInThread )
-            //,hueExtractor = new $F.HueExtractorFilter([10, 36]).worker( runInThread ) // extract hues corresponding to skin color
-            //,thresh = new $F.TableLookupFilter( ).worker( runInThread ).threshold( 0.94 )
+            //,hueExtractor = new $F.HueExtractorFilter( 10, 36 ).worker( runInThread ) // extract hues corresponding to skin color
+            //,thresh = new $F.TableLookupFilter( ).threshold( 0.94 ).worker( runInThread )
             //,hsv = new $F.HSVConverterFilter( ).worker( runInThread )
             //,skinExtractor = new $F.CompositeFilter([hsv, redChannel, invert, gray, thresh]).worker( runInThread ) // extract skin region
-            //,laplace = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).laplace( 7 )
-            ,twirl = new $F.GeometricMapFilter( ).worker( runInThread ).twirl( Math.PI/2, 120, 0.33, 0.27 )
-            ,shift = new $F.GeometricMapFilter( ).worker( runInThread ).shift(-50)
-            //,rotate = new $F.GeometricMapFilter( ).worker( runInThread ).rotateCCW( )
-            //,blur = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).boxBlur( 3 )
-            //,gauss = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).fastGauss( 3 )//gaussBlur(3)
-            //,vertical = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).verticalBlur( 21 )
-            //,diagonal = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).directionalBlur( 45, 9 )
-            ,sobel = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).sobel( 3 )
-            //,glow = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).glow( )
-            ,emboss = new $F.ConvolutionMatrixFilter( ).worker( runInThread ).emboss( )
+            //,laplace = new $F.ConvolutionMatrixFilter( ).laplace( 7 ).worker( runInThread )
+            ,twirl = new $F.GeometricMapFilter( ).twirl( Math.PI/2, 120, 0.33, 0.27 ).worker( runInThread )
+            ,shift = new $F.GeometricMapFilter( ).shift(-50).worker( runInThread )
+            //,rotate = new $F.GeometricMapFilter( ).rotateCCW( ).worker( runInThread )
+            //,blur = new $F.ConvolutionMatrixFilter( ).boxBlur( 3 ).worker( runInThread )
+            //,gauss = new $F.ConvolutionMatrixFilter( ).fastGauss( 3 ).worker( runInThread )//gaussBlur(3)
+            //,vertical = new $F.ConvolutionMatrixFilter( ).verticalBlur( 21 ).worker( runInThread )
+            //,diagonal = new $F.ConvolutionMatrixFilter( ).directionalBlur( 45, 9 ).worker( runInThread )
+            ,sobel = new $F.ConvolutionMatrixFilter( ).sobel( 3 ).worker( runInThread )
+            //,glow = new $F.ConvolutionMatrixFilter( ).glow( ).worker( runInThread )
+            ,emboss = new $F.ConvolutionMatrixFilter( ).emboss( ).worker( runInThread )
             ,grsb = new $F.CompositeFilter([gray, sobel/*, binary*/]).worker( runInThread )
             ,displace = new $F.DisplacementMapFilter( /*displacemap*/ ).worker( runInThread )
             ,floodFill = new $F.CompositeFilter([
-                new $F.FloodFillFilter(25/* x0 */,75/* y0 */,[255,0,0]/* fill color */,0.8/* tolerance */),
-                new $F.FloodFillFilter(75/* x0 */,112/* y0 */,[255,0,0]/* fill color */,0.8/* tolerance */),
-                new $F.FloodFillFilter(125/* x0 */,75/* y0 */,[0,0,255]/* fill color */,0.8/* tolerance */),
-                new $F.FloodFillFilter(75/* x0 */,36/* y0 */,[0,0,255]/* fill color */,0.8/* tolerance */)
+                new $F.FloodFillFilter(25/* x0 */,75/* y0 */,0xff0000/* fill color */,0.8/* tolerance */),
+                new $F.FloodFillFilter(75/* x0 */,112/* y0 */,0xff0000/* fill color */,0.8/* tolerance */),
+                new $F.FloodFillFilter(125/* x0 */,75/* y0 */,0x0000ff/* fill color */,0.8/* tolerance */),
+                new $F.FloodFillFilter(75/* x0 */,36/* y0 */,0x0000ff/* fill color */,0.8/* tolerance */)
             ]).worker( runInThread )
+            /*,floodFill = new $F.CompositeFilter([
+                new $F.FloodFillFilter(25/* x0 * /,75/* y0 * /,0xff0000/* fill color * /,0.05/* tolerance * /,0x0/*border* /),
+                new $F.FloodFillFilter(75/* x0 * /,112/* y0 * /,0xff0000/* fill color * /,0.05/* tolerance * /,0x0/*border* /),
+                new $F.FloodFillFilter(125/* x0 * /,75/* y0 * /,0x0000ff/* fill color * /,0.05/* tolerance * /,0x0/*border* /),
+                new $F.FloodFillFilter(75/* x0 * /,36/* y0 * /,0x0000ff/* fill color * /,0.05/* tolerance * /,0x0/*border* /)
+            ]).worker( runInThread )*/
             ,seamless = new $F.SeamlessTileFilter().worker( runInThread )
             /*,halfTone = new $F.CompositeFilter([
                 gray,

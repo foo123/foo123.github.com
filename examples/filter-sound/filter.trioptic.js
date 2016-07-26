@@ -14,7 +14,7 @@ $F.Create({
     // parameters
     ,spectrum: 0
     
-    ,path: $F.getPath( )
+    ,path: null
     
     ,serialize: function( ) {
         return { filter: this.name, params: { spectrum: this.spectrum } };

@@ -157,6 +157,9 @@
                     <option value='#'>Solarize2</option>
                     <option value='#'>Posterize</option>
                     <option value='#'>Invert</option>
+                    <option value='#'>RED Channel</option>
+                    <option value='#'>GREEN Channel</option>
+                    <option value='#'>BLUE Channel</option>
                 </optgroup>
                 <optgroup label="Convolution Filters">
                     <option value='#'>Fast Gauss Blur 3x3</option>
@@ -199,6 +202,7 @@
                     <option value='#'>YCbCr Color Space</option>
                     <option value='#'>Equalize Histogram</option>
                     <option value='#'>Alpha Mask</option>
+                    <option value='#'>Quantize and Extract Connected Components</option>
                     <option value='#'>Blend</option>
                     <option value='#'>Noise</option>
                     <option value='#'>Bokeh (Depth-of-Field)</option>
@@ -329,10 +333,13 @@
             grlb11 = new $F.CompositeFilter([gray, laplace11, binary]),
             grglb5 = new $F.CompositeFilter([gray, blur3, laplace5, binary]),
             emboss = new $F.ConvolutionMatrixFilter().emboss(),
-            redC = new $F.ColorMatrixFilter().redChannel(),
             redCGray = new $F.ColorMatrixFilter().redChannel(true),
+            redC = new $F.ColorMatrixFilter().redChannel(),
             greenC = new $F.ColorMatrixFilter().greenChannel(),
             blueC = new $F.ColorMatrixFilter().blueChannel(),
+            redCT = new $F.TableLookupFilter().redChannel(),
+            greenCT = new $F.TableLookupFilter().greenChannel(),
+            blueCT = new $F.TableLookupFilter().blueChannel(),
             clr = new $F.ColorMatrixFilter().colorize(0xfdc171),
             equ = new $F.HistogramEqualizeFilter(),
             // median is slow ..
@@ -348,6 +355,9 @@
                 1, 0, 0, 0, 0, 0, 0
             ]),
             open = new $F.MorphologicalFilter().opening(3),
+            connected_components = new $F.ConnectedComponentsFilter(),
+            //quantize = new $F.TableLookupFilter().quantize(4),
+            quantized_connected_components = new $F.CompositeFilter([gray, posterize, connected_components]),
             noise = new $F.NoiseFilter(10, 70),
             displaceFilter = new $F.DisplacementMapFilter(),
             twirlFilter = new $F.GeometricMapFilter().twirl(Math.PI/2, 150, 0.5, 0.5),
@@ -368,7 +378,7 @@
             swapChannel = new $F.ColorMatrixFilter().swapChannels($F.CHANNEL.BLUE, $F.CHANNEL.ALPHA),
             hsv = new $F.HSVConverterFilter(),
             hueOnly = new $F.CompositeFilter([hsv, redCGray]),
-            hueE = new $F.HueExtractorFilter([10, 150]),
+            hueE = new $F.HueExtractorFilter(10, 150),
             hueExtractor = new $F.CompositeFilter([hueE, open]),
             ycbcr = new $F.ColorMatrixFilter().RGB2YCbCr(),
             //ycbcr = new $F.YCbCrConverterFilter(),
@@ -393,6 +403,9 @@
                 solarize2,
                 posterize,
                 invert,
+                redCT,
+                greenCT,
+                blueCT,
                 blur3,
                 blur7,
                 blur15,
@@ -427,6 +440,7 @@
                 ycbcr,
                 equ,
                 alphaMask,
+                quantized_connected_components,
                 blend,
                 noise,
                 bokeh
@@ -576,7 +590,7 @@
             
             stats.begin( );
             
-            postVideo.setImage( video );
+            postVideo.image( video );
             
             vw = postVideo.width;
             vh = postVideo.height;
@@ -623,7 +637,7 @@
             {
                 if ( null === perlinNoise )
                 {
-                    perlinDisplaceFilter.setMap( perlinNoise = $F.Image.PerlinNoise( vw, vh, true/* seamless */, true/* grayscale */, 100, 80 ) );
+                    perlinDisplaceFilter.setMap( perlinNoise = $F.Image.PerlinNoise( vw, vh, 0, true/* seamless */, true/* grayscale */, 100, 80 ) );
                 }
                 else
                 {
