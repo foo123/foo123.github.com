@@ -188,12 +188,18 @@
                     <option value='#'>DisplaceMap with PerlinNoise</option>
                 </optgroup>
                 <optgroup label="Plugins and Composites">
+                    <option value='#'>Pixelate 2%</option>
                     <option value='#'>Pixelate 5%</option>
                     <option value='#'>Pixelate 10%</option>
                     <option value='#'>Pixelate 15%</option>
+                    <option value='#'>Triangular Pixelate 2%</option>
                     <option value='#'>Triangular Pixelate 5%</option>
                     <option value='#'>Triangular Pixelate 10%</option>
                     <option value='#'>Triangular Pixelate 15%</option>
+                    <!--<option value='#'>Hexagonal Pixelate 2%</option>
+                    <option value='#'>Hexagonal Pixelate 5%</option>
+                    <option value='#'>Hexagonal Pixelate 10%</option>
+                    <option value='#'>Hexagonal Pixelate 15%</option>-->
                     <option value='#'>Halftoned/Dithered</option>
                     <option value='#'>HSV Color Space</option>
                     <option value='#'>Hue only as grayscale Image</option>
@@ -202,7 +208,7 @@
                     <option value='#'>YCbCr Color Space</option>
                     <option value='#'>Equalize Histogram</option>
                     <option value='#'>Alpha Mask</option>
-                    <option value='#'>Quantize and Extract Connected Components</option>
+                    <option value='#'>Quantize Hue and Extract Connected Components</option>
                     <option value='#'>Blend</option>
                     <option value='#'>Noise</option>
                     <option value='#'>Bokeh (Depth-of-Field)</option>
@@ -341,7 +347,7 @@
             greenCT = new $F.TableLookupFilter().greenChannel(),
             blueCT = new $F.TableLookupFilter().blueChannel(),
             clr = new $F.ColorMatrixFilter().colorize(0xfdc171),
-            equ = new $F.HistogramEqualizeFilter(),
+            equ = new $F.HistogramEqualizeFilter($F.MODE.COLOR),
             // median is slow ..
             minimum = new $F.StatisticalFilter().minimum(3),
             maximum = new $F.StatisticalFilter().maximum(3),
@@ -355,29 +361,37 @@
                 1, 0, 0, 0, 0, 0, 0
             ]),
             open = new $F.MorphologicalFilter().opening(3),
-            connected_components = new $F.ConnectedComponentsFilter(),
-            //quantize = new $F.TableLookupFilter().quantize(4),
-            quantized_connected_components = new $F.CompositeFilter([gray, posterize, connected_components]),
+            //connected_components = new $F.ConnectedComponentsFilter(4, 0.1),
+            //quantize = new $F.TableLookupFilter().quantize(128),
+            //quantized_connected_components = new $F.CompositeFilter([gray, /*laplace5,*/ /*quantize,*/ connected_components, new $F.ThresholdFilter([100, 140], [0, 0xffffff, 0], 1)]),
+            quantized_connected_components = new $F.ConnectedComponentsFilter(4, 0.3, $F.MODE.HUE, 100),
             noise = new $F.NoiseFilter(10, 70),
             displaceFilter = new $F.DisplacementMapFilter(),
             twirlFilter = new $F.GeometricMapFilter().twirl(Math.PI/2, 150, 0.5, 0.5),
             sphereFilter = new $F.GeometricMapFilter().sphere(150, 0.5, 0.5),
             rippleFilter = new $F.GeometricMapFilter().ripple(10, 16, 10, 0, 0.5, 0.5),
+            pixelate2 = new $F.PixelateFilter(2),
             pixelate5 = new $F.PixelateFilter(5),
             pixelate10 = new $F.PixelateFilter(10),
             pixelate15 = new $F.PixelateFilter(15),
+            trianglepixelate2 = new $F.TriangularPixelateFilter(2),
             trianglepixelate5 = new $F.TriangularPixelateFilter(5),
             trianglepixelate10 = new $F.TriangularPixelateFilter(10),
             trianglepixelate15 = new $F.TriangularPixelateFilter(15),
+            //hexapixelate2 = new $F.HexagonalPixelateFilter(2),
+            //hexapixelate5 = new $F.HexagonalPixelateFilter(5),
+            //hexapixelate10 = new $F.HexagonalPixelateFilter(10),
+            //hexapixelate15 = new $F.HexagonalPixelateFilter(15),
             halftoned = new $F.CompositeFilter([
                 gray,
-                new $F.HalftoneFilter().threshold(0.4).size(1).grayscale(true)
+                new $F.HalftoneFilter(1).threshold(0.4).grayscale(true)
             ]),
-            alphaMask = new $F.AlphaMaskFilter(/*alphamask*/null, 0.5, 0.5),
+            alphaMask = new $F.AlphaMaskFilter(/*alphamask*/null, 0.5, 0.5, $F.CHANNEL.BLUE),
             blend = new $F.BlendFilter(/*icon*/),
-            swapChannel = new $F.ColorMatrixFilter().swapChannels($F.CHANNEL.BLUE, $F.CHANNEL.ALPHA),
+            //swapChannel = new $F.ColorMatrixFilter().swapChannels($F.CHANNEL.BLUE, $F.CHANNEL.ALPHA),
             hsv = new $F.HSVConverterFilter(),
-            hueOnly = new $F.CompositeFilter([hsv, redCGray]),
+            //hueOnly = new $F.CompositeFilter([hsv, redCGray]),
+            hueOnly = new $F.HSVConverterFilter( $F.MODE.HUE ),
             hueE = new $F.HueExtractorFilter(10, 150),
             hueExtractor = new $F.CompositeFilter([hueE, open]),
             ycbcr = new $F.ColorMatrixFilter().RGB2YCbCr(),
@@ -426,12 +440,18 @@
                 sphereFilter,
                 rippleFilter,
                 perlinDisplaceFilter,
+                pixelate2,
                 pixelate5,
                 pixelate10,
                 pixelate15,
+                trianglepixelate2,
                 trianglepixelate5,
                 trianglepixelate10,
                 trianglepixelate15,
+                /*hexapixelate2,
+                hexapixelate5,
+                hexapixelate10,
+                hexapixelate15,*/
                 halftoned,
                 hsv,
                 hueOnly,
@@ -495,7 +515,7 @@
             alphamask.octx.arc(alphamask.width/2, alphamask.height/2, alphamask.width/2, 0, Math.PI*2, true);
             alphamask.octx.fill();
             alphamask.store();
-            swapChannel.apply( alphamask );
+            //swapChannel.apply( alphamask );
             
             alphaMask.setMask( alphamask );
             
