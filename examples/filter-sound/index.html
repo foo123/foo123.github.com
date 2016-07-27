@@ -87,7 +87,7 @@
     <span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
     
     <header id="header">
-        <h1>Sound Visualization with Filter.js</h1>
+        <h1>Sound Visualization with Filter.js v.<span id="lib-version">0</span></h1>
     </header>
     
     <strong>A JS version of  <a href="http://lf8.org/simple2.swf" target="_blank">Trioptic visualization</a> 
@@ -168,6 +168,7 @@
     require(['jQuery', 'Dancer', 'Stats', 'Classy', 'Asynchronous', 'FILTER', 'FILTER_IO', 'FILTER_CODECS', 'FILTER_FILTERS', 'FILTER_PLUGINS'], 
         function( $, Dancer, Stats, _1, _2, _3, _4, _5, _6, $F ) {
         
+        document.getElementById('lib-version').innerHTML = $F.VERSION;
         var useParallelFilters = $F.Browser.supportsWorker && /(&|\?)parallel\b/i.test( location.href )
             ,baseUrl = location.href.split(/#|\?/)[ 0 ]
             ,audio, container, statsContainer

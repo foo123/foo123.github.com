@@ -105,7 +105,7 @@
     <span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
     
     <header id="header">
-        <h1>Video Processing with Filter.js</h1><br /><br />
+        <h1>Video Processing with Filter.js v.<span id="lib-version">0</span></h1><br /><br />
     </header>
     
     <div class="fluid col-1-1 text-left" style="margin-bottom: 10px; padding-left: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net/#contact_tab" class="donate">hire me for a job</a></div>
@@ -294,6 +294,7 @@
     });
     require(['Classy', 'Asynchronous', 'FILTER', 'FILTER_IO', 'FILTER_CODECS', 'FILTER_FILTERS', 'FILTER_PLUGINS', 'AreaSelect', 'Stats'/*, 'domReady!'*/], 
         function( _1, _2, _3, _4, _5, _6, $F, AreaSelect, Stats ) {
+        document.getElementById('lib-version').innerHTML = $F.VERSION;
         var 
             icon,
             filterSelect = getEl('filterSelect'), 

@@ -106,7 +106,7 @@
     <span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
     
     <header class="fluid col-1-1" style="padding:10px;z-index:100">
-        <h1>Filter.js with Three.js</h1>
+        <h1>Filter.js with Three.js v.<span id="lib-version">0</span></h1>
     </header>
     
     <div class="fluid col-1-1 text-left" style="margin-bottom:10px; padding-left: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net/#contact_tab" class="donate">hire me for a job</a></div>
@@ -120,6 +120,7 @@
     <script>
     /*<![CDATA[ */
             
+        document.getElementById('lib-version').innerHTML = FILTER.VERSION;
         Filter3Application.init();
         
     /*]]>*/
