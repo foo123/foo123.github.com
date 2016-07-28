@@ -144,22 +144,22 @@
             <strong>Apply Post-Process Filter to Video :</strong><br /><br />
             <select id="filterSelect">
                 <option value='#'>None</option>
-                <optgroup label="Color Matrix Filters">
-                    <option value='#'>Colorize</option>
-                    <option value='#'>Grayscale</option>
-                    <option value='#'>Grayscale and Contrast</option>
+                <optgroup label="Table Lookup Filters">
                     <option value='#'>RED Channel</option>
                     <option value='#'>GREEN Channel</option>
                     <option value='#'>BLUE Channel</option>
-                </optgroup>
-                <optgroup label="Table Lookup Filters">
                     <option value='#'>Solarize</option>
                     <option value='#'>Solarize2</option>
                     <option value='#'>Posterize</option>
                     <option value='#'>Invert</option>
+                </optgroup>
+                <optgroup label="Color Matrix Filters">
                     <option value='#'>RED Channel</option>
                     <option value='#'>GREEN Channel</option>
                     <option value='#'>BLUE Channel</option>
+                    <option value='#'>Colorize</option>
+                    <option value='#'>Grayscale</option>
+                    <option value='#'>Grayscale and Contrast</option>
                 </optgroup>
                 <optgroup label="Convolution Filters">
                     <option value='#'>Fast Gauss Blur 3x3</option>
@@ -181,37 +181,39 @@
                     <option value='#'>Morphological Dilate</option>
                 </optgroup>
                 <optgroup label="Displace/Geometric Filters">
-                    <option value='#'>DisplaceMap</option>
+                    <option value='#'>DisplaceMap with Radial Gradient</option>
                     <option value='#'>TwirlMap</option>
                     <option value='#'>SphereMap</option>
                     <option value='#'>RippleMap</option>
-                    <option value='#'>DisplaceMap with PerlinNoise</option>
+                    <option value='#'>DisplaceMap with Perlin Noise</option>
                 </optgroup>
-                <optgroup label="Plugins and Composites">
-                    <option value='#'>Pixelate 2%</option>
-                    <option value='#'>Pixelate 5%</option>
-                    <option value='#'>Pixelate 10%</option>
-                    <option value='#'>Pixelate 15%</option>
-                    <option value='#'>Triangular Pixelate 2%</option>
-                    <option value='#'>Triangular Pixelate 5%</option>
-                    <option value='#'>Triangular Pixelate 10%</option>
-                    <option value='#'>Triangular Pixelate 15%</option>
-                    <!--<option value='#'>Hexagonal Pixelate 2%</option>
-                    <option value='#'>Hexagonal Pixelate 5%</option>
-                    <option value='#'>Hexagonal Pixelate 10%</option>
-                    <option value='#'>Hexagonal Pixelate 15%</option>-->
-                    <option value='#'>Halftoned/Dithered</option>
+                <optgroup label="Color Space Transformations">
+                    <option value='#'>YCbCr Color Space</option>
                     <option value='#'>HSV Color Space</option>
                     <option value='#'>Hue only as grayscale Image</option>
-                    <option value='#'>Extract range of Hues, Open Morphological</option>
-                    <option value='#'>Canny Edges Extractor</option>
-                    <option value='#'>YCbCr Color Space</option>
+                </optgroup>
+                <optgroup label="Plugins and Composites">
+                    <option value='#'>Noise</option>
                     <option value='#'>Equalize Histogram</option>
                     <option value='#'>Alpha Mask</option>
-                    <option value='#'>Quantize Hue and Extract Connected Components</option>
                     <option value='#'>Blend</option>
-                    <option value='#'>Noise</option>
                     <option value='#'>Bokeh (Depth-of-Field)</option>
+                    <option value='#'>Pixelate 2%</option>
+                    <option value='#'>Pixelate 3%</option>
+                    <option value='#'>Pixelate 5%</option>
+                    <option value='#'>Pixelate 10%</option>
+                    <option value='#'>Triangular Pixelate 2%</option>
+                    <option value='#'>Triangular Pixelate 3%</option>
+                    <option value='#'>Triangular Pixelate 5%</option>
+                    <option value='#'>Triangular Pixelate 10%</option>
+                    <!--<option value='#'>Hexagonal Pixelate 2%</option>
+                    <option value='#'>Hexagonal Pixelate 3%</option>
+                    <option value='#'>Hexagonal Pixelate 5%</option>
+                    <option value='#'>Hexagonal Pixelate 10%</option>-->
+                    <option value='#'>Halftoned/Dithered</option>
+                    <option value='#'>Extract range of Hues, Open Morphological</option>
+                    <option value='#'>Quantize Hue and Extract Connected Components</option>
+                    <option value='#'>Canny Edges Extractor</option>
                 </optgroup>
             </select>
             &nbsp;
@@ -372,17 +374,17 @@
             sphereFilter = new $F.GeometricMapFilter().sphere(150, 0.5, 0.5),
             rippleFilter = new $F.GeometricMapFilter().ripple(10, 16, 10, 0, 0.5, 0.5),
             pixelate2 = new $F.PixelateFilter(2),
+            pixelate3 = new $F.PixelateFilter(3),
             pixelate5 = new $F.PixelateFilter(5),
             pixelate10 = new $F.PixelateFilter(10),
-            pixelate15 = new $F.PixelateFilter(15),
             trianglepixelate2 = new $F.TriangularPixelateFilter(2),
+            trianglepixelate3 = new $F.TriangularPixelateFilter(3),
             trianglepixelate5 = new $F.TriangularPixelateFilter(5),
             trianglepixelate10 = new $F.TriangularPixelateFilter(10),
-            trianglepixelate15 = new $F.TriangularPixelateFilter(15),
             //hexapixelate2 = new $F.HexagonalPixelateFilter(2),
+            //hexapixelate3 = new $F.HexagonalPixelateFilter(3),
             //hexapixelate5 = new $F.HexagonalPixelateFilter(5),
             //hexapixelate10 = new $F.HexagonalPixelateFilter(10),
-            //hexapixelate15 = new $F.HexagonalPixelateFilter(15),
             halftoned = new $F.CompositeFilter([
                 gray,
                 new $F.HalftoneFilter(1).threshold(0.4).grayscale(true)
@@ -408,19 +410,19 @@
             // filter selection list
             videoFilters = [
                 null,
-                clr,
-                gray,
-                grc,
-                redC,
-                greenC,
-                blueC,
+                redCT,
+                greenCT,
+                blueCT,
                 solarize,
                 solarize2,
                 posterize,
                 invert,
-                redCT,
-                greenCT,
-                blueCT,
+                redC,
+                greenC,
+                blueC,
+                clr,
+                gray,
+                grc,
                 blur3,
                 blur7,
                 blur15,
@@ -441,30 +443,30 @@
                 sphereFilter,
                 rippleFilter,
                 perlinDisplaceFilter,
-                pixelate2,
-                pixelate5,
-                pixelate10,
-                pixelate15,
-                trianglepixelate2,
-                trianglepixelate5,
-                trianglepixelate10,
-                trianglepixelate15,
-                /*hexapixelate2,
-                hexapixelate5,
-                hexapixelate10,
-                hexapixelate15,*/
-                halftoned,
+                ycbcr,
                 hsv,
                 hueOnly,
-                hueExtractor,
-                canny,
-                ycbcr,
+                noise,
                 equ,
                 alphaMask,
-                quantized_connected_components,
                 blend,
-                noise,
-                bokeh
+                bokeh,
+                pixelate2,
+                pixelate3,
+                pixelate5,
+                pixelate10,
+                trianglepixelate2,
+                trianglepixelate3,
+                trianglepixelate5,
+                trianglepixelate10,
+                /*hexapixelate2,
+                hexapixelate3,
+                hexapixelate5,
+                hexapixelate10,*/
+                halftoned,
+                hueExtractor,
+                quantized_connected_components,
+                canny
             ],
             currentOrientation = 0, currentBlendMode = "normal",
             currentFilterIndex = 0,  currentFilter = videoFilters[currentFilterIndex],
