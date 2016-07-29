@@ -1,4 +1,4 @@
-!function($F){
+!function(FILTER){
 "use strict";
 /**
 *
@@ -8,7 +8,16 @@
 
 // upscale
 var upscaleX = 1.3, upscaleY = 1.3, invupscaleX = 1.0/upscaleX, invupscaleY = 1.0/upscaleY;
-$F.Create({
+// precompute some values
+var i, l=1440, sintable = new FILTER.Array32F( l ), squares = new FILTER.ImArray( l<<2 ),
+    Sin = Math.sin, toRad = FILTER.CONST.toRad, toCol = FILTER.Color.Color2RGBA;
+for(i=0; i<l; i++)
+{
+    sintable[ i ] = Sin( i*toRad );
+    toCol( ~~(16777215*i*i), squares, i<<2 ); // * 0xFFFFFF
+}
+
+FILTER.Create({
     name: "TriopticSimpleFilter"
     
     // parameters
@@ -28,65 +37,45 @@ $F.Create({
         return this;
     }
     
-    // use a "closure" to store some precomputed values
-    ,apply: (function( ) {
-            
-            // precompute some values
-            var i, l=1440, 
-                sintable = new $F.Array32F( l ), 
-                squares = new $F.Array( l ),
-                Sin = Math.sin, 
-                toRad = $F.CONSTANTS.toRad,
-                toCol = $F.Color.Color2RGBA
-            ;
-                
-            for(i=0; i<l; i++)
-            {
-                sintable[ i ] = Sin( i*toRad );
-                squares[ i ] = toCol( ~~(16777215*i*i) ); // * 0xFFFFFF
-            }
+    // this is the filter actual apply method routine
+    ,apply: function( im, w, h ) {
+        // im is a copy of the image data as an image array
+        // w is image width, h is image height
+        // for this filter, no need to clone the image data, operate in-place
+        var l = im.length, iupx, iupy,
+            s = this.spectrum, res=2,
+            off, i, j, ii, i4, x, y, iw, jw, 
+            ws = upscaleX*w,
+            wr = w*0.5  // w/res
+        ;
         
-            // this is the filter actual apply method routine
-            return function( im, w, h ) {
-                // im is a copy of the image data as an image array
-                // w is image width, h is image height
-                // for this filter, no need to clone the image data, operate in-place
-                var l = im.length, iupx, iupy,
-                    s = this.spectrum, res=2,
-                    off, rgba, i, j, ii, x, y, iw, jw, 
-                    ws = upscaleX*w,
-                    wr = w*0.5  // w/res
-                ;
-                
-                s = ~~s;
-                i=0; iw=0; iupx=0; iupy=0;
-                while ( i < 1440 )
-                {
-                    rgba = squares[ i ];
-                    if (s>=0 && s<w && iupy<h)
-                    {
-                        off = (s + iw)<<2; 
-                        im[off] = rgba[0]; im[off+1] = rgba[1]; im[off+2] = rgba[2];
-                    }
-                    
-                    j = 0; jw=0;
-                    while ( j < res )
-                    {
-                        x = s*sintable[ i ] + jw - 50;  
-                        y = iupy-0.5*iupy*(j%2); // i/j;
-                        if (x>=0 && x<w && y<h)
-                        {
-                            off = (~~(x + y*ws))<<2;
-                            im[off] = rgba[0]; im[off+1] = rgba[1]; im[off+2] = rgba[2];
-                        }
-                        j++; jw+=wr;
-                    }
-                    i++; iw+=w; iupx+=invupscaleX; iupy+=invupscaleY;
-                }
-                
-                // return the new image data
-                return im;
+        s = ~~s;
+        i=0; iw=0; iupx=0; iupy=0;
+        while ( i < 1440 )
+        {
+            i4 = i<<2;
+            if (s>=0 && s<w && iupy<h)
+            {
+                off = (s + iw)<<2; 
+                im[off] = squares[i4]; im[off+1] = squares[i4+1]; im[off+2] = squares[i4+2];
             }
-    })( )
+            
+            j = 0; jw=0;
+            while ( j < res )
+            {
+                x = s*sintable[ i ] + jw - 50;  
+                y = iupy-0.5*iupy*(j%2); // i/j;
+                if (x>=0 && x<w && y<h)
+                {
+                    off = (~~(x + y*ws))<<2;
+                    im[off] = squares[i4]; im[off+1] = squares[i4+1]; im[off+2] = squares[i4+2];
+                }
+                j++; jw+=wr;
+            }
+            i++; iw+=w; iupx+=invupscaleX; iupy+=invupscaleY;
+        }
+        // return the new image data
+        return im;
+    }
 });
 }(FILTER);   
