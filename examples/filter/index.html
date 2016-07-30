@@ -240,16 +240,16 @@
             }).worker( runInThread )
             ,greenChannel = new $F.ColorMatrixFilter( ).greenChannel( ).worker( runInThread )
             //,blueChannel = new $F.ColorMatrixFilter( ).blueChannel( ).worker( runInThread )
-            ,blueChannel = new $F.TableLookupFilter( ).blueChannel( ).worker( runInThread )
+            ,blueChannel = new $F.ColorTableFilter( ).blueChannel( ).worker( runInThread )
             ,clr = new $F.ColorMatrixFilter( ).colorize( 0xff0000 ).worker( runInThread )
-            //,gamma = new $F.TableLookupFilter( ).gammaCorrection( 1.7 ).worker( runInThread )
-            //,solarize = new $F.TableLookupFilter( ).solarize( 0.5 ).worker( runInThread )
-            ,posterize = new $F.TableLookupFilter( ).posterize( 4 ).worker( runInThread )
-            //,extract = new $F.TableLookupFilter( ).extract( $F.CHANNEL.RED, [0x75, 0x91] ).worker( runInThread )
-            //,mask = new $F.TableLookupFilter( ).mask( 0xffff7732 ).worker( runInThread )
+            //,gamma = new $F.ColorTableFilter( ).gammaCorrection( 1.7 ).worker( runInThread )
+            //,solarize = new $F.ColorTableFilter( ).solarize( 0.5 ).worker( runInThread )
+            ,posterize = new $F.ColorTableFilter( ).posterize( 4 ).worker( runInThread )
+            //,extract = new $F.ColorTableFilter( ).extract( $F.CHANNEL.RED, [0x75, 0x91] ).worker( runInThread )
+            //,mask = new $F.ColorTableFilter( ).mask( 0xffff7732 ).worker( runInThread )
             //,swapChannels = new $F.ColorMatrixFilter( ).swapChannels( $F.CHANNEL.BLUE, $F.CHANNEL.GREEN ).worker( runInThread )
             //,maskChannel = new $F.ColorMatrixFilter( ).maskChannel( $F.CHANNEL.GREEN ).worker( runInThread )
-            //,invert = new $F.TableLookupFilter( ).invert( ).worker( runInThread )
+            //,invert = new $F.ColorTableFilter( ).invert( ).worker( runInThread )
             /*,erode = new $F.MorphologicalFilter( ).erode([
                 0, 0, 0, 1,
                 0, 0, 1, 0,
@@ -261,7 +261,7 @@
             //,noise = new $F.NoiseFilter( -127, 127 ).worker( runInThread )
             ,sepia = new $F.ColorMatrixFilter( ).sepia2( ).worker( runInThread )
             ,gray = new $F.ColorMatrixFilter( ).grayscale( ).worker( runInThread )
-            //,binary = new $F.TableLookupFilter( ).threshold( 0.7 ).worker( runInThread )
+            //,binary = new $F.ColorTableFilter( ).threshold( 0.7 ).worker( runInThread )
             //,threshold = new $F.ColorMatrixFilter( ).threshold_rgb( 128 ).worker( runInThread )
             ,grc = new $F.ColorMatrixFilter( ).grayscale( ).contrast( 1 ).worker( runInThread )
             //,median = new $F.StatisticalFilter( ).median( 5 ).worker( runInThread )
@@ -271,7 +271,7 @@
             //,pixelate = new $F.HexagonalPixelateFilter( 25 ).worker( runInThread )
             //,connected_components = new $F.ConnectedComponentsFilter(4, 0.1, $F.MODE.HUE, 30).worker( runInThread )
             //,hueExtractor = new $F.HueExtractorFilter( 10, 36 ).worker( runInThread ) // extract hues corresponding to skin color
-            //,thresh = new $F.TableLookupFilter( ).threshold( 0.94 ).worker( runInThread )
+            //,thresh = new $F.ColorTableFilter( ).threshold( 0.94 ).worker( runInThread )
             //,hsv = new $F.HSVConverterFilter( ).worker( runInThread )
             //,skinExtractor = new $F.CompositeFilter([hsv, redChannel, invert, gray, thresh]).worker( runInThread ) // extract skin region
             //,laplace = new $F.ConvolutionMatrixFilter( ).laplace( 7 ).worker( runInThread )

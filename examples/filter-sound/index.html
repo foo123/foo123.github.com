@@ -158,7 +158,7 @@
                 exports: "FILTER.TriopticSimpleFilter",
                 init: function( $F ) {
                     var link = document.createElement('a');
-                    link.href = "./filter.trioptic.js";
+                    link.href = "./filter.trioptic.js?"+Math.random();
                     $F.TriopticSimpleFilter.prototype.path = $F.getPath(link.protocol + "//" + link.host + link.pathname + link.search + link.hash);
                     return $F.TriopticSimpleFilter;
                 }
