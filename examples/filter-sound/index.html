@@ -159,7 +159,7 @@
                 init: function( $F ) {
                     var link = document.createElement('a');
                     link.href = "./filter.trioptic.js?"+Math.random();
-                    $F.TriopticSimpleFilter.prototype.path = $F.getPath(link.protocol + "//" + link.host + link.pathname + link.search + link.hash);
+                    $F.TriopticSimpleFilter.prototype.path = $F.getPath(link.protocol + "//" + link.host + link.pathname/* + link.search + link.hash*/);
                     return $F.TriopticSimpleFilter;
                 }
             }
@@ -260,17 +260,17 @@
             
             
             // prepare filters
-            trioptic = new $F.TriopticSimpleFilter( );
+            trioptic = $F.TriopticSimpleFilter( );
             
-            displace = new $F.DisplacementMapFilter( );
+            displace = $F.DisplacementMapFilter( );
             displace.startX = 0;  
             displace.startY = 0;
             displace.componentX = $F.CHANNEL.BLUE;  
             displace.componentY = $F.CHANNEL.GREEN;
             
-            blur = new $F.ConvolutionMatrixFilter( ).boxBlur( 3 );
+            blur = $F.ConvolutionMatrixFilter( ).boxBlur( 3 );
             
-            triopticVisualizer = new $F.CompositeFilter([ trioptic, displace, blur ]).stable( true );
+            triopticVisualizer = $F.CompositeFilter([ trioptic, displace, blur ]).stable( true );
             
             if ( useParallelFilters )
             {
