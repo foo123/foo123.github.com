@@ -229,7 +229,7 @@
             
              // filters
             //,redChannel = new $F.ColorMatrixFilter( ).worker( runInThread ).redChannel( )
-            ,redChannel = new $F.InlineFilter(function(filt, im, w, h) { 
+            ,redChannel = new $F.InlineFilter(function(params, im, w, h) { 
                 // get red channel using an inline filter that can run in parallel worker also
                 for (var i=0,l=im.length; i<l; i+=4)
                 {
@@ -312,7 +312,7 @@
             ]).worker( runInThread )*/
             //,simplexNoise = $F.PerlinNoiseFilter(80,50).simplex().octaves(4, [[0,0],[10,10], [20,10], [10,20]]).seamless(true).worker( runInThread )
             //,bokeh = $F.BokehFilter(80, 90, 60, 10).worker( runInThread )
-            ,canny = $F.CannyEdgesFilter( 1, 7 ).worker( runInThread )
+            ,canny = $F.CompositeFilter([gray, $F.CannyEdgesFilter( 1, 7 )]).worker( runInThread )
             ,faceDetector = $F.CompositeFilter([gray, $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt)/*.params()*/]).update(false).stable(true).worker( runInThread )
             ,drawDetectedFeatures = function( detector, image ) {
                 var ctx = image.octx, objects = detector.get(1).objects;

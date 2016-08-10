@@ -404,7 +404,7 @@
             hueE = $F.ColorMapFilter().setMode($F.MODE.HUE).extract(10, 150),
             hueExtractor = $F.CompositeFilter([hueE, open]),
             bokeh = $F.BokehFilter(0.5, 0.5, 100, 10),
-            canny = $F.CannyEdgesFilter(1.5, 5.5),
+            canny = $F.CompositeFilter([gray, $F.CannyEdgesFilter(1.5, 5.5)]),
             shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(3, 0),
             //seamless = $F.SeamlessTileFilter(),
             //seamlessPerlin = $F.CompositeFilter([$F.PerlinNoiseFilter(100,80), $F.SeamlessTileFilter()]),
