@@ -372,7 +372,7 @@
             //quantized_connected_components = $F.CompositeFilter([gray, /*laplace5,*/ /*quantize,*/ connected_components, $F.ThresholdFilter([100, 140], [0, 0xffffff, 0], 1)]),
             quantized_connected_components = $F.ConnectedComponentsFilter(4, 0.3, $F.MODE.HUE, 100),
             noise = $F.NoiseFilter(10, 70),
-            displaceFilter = $F.DisplacementMapFilter(),
+            displaceFilter = $F.DisplacementMapFilter(displacemap),
             twirlFilter = $F.GeometricMapFilter().twirl(Math.PI/2, 150, 0.5, 0.5),
             sphereFilter = $F.GeometricMapFilter().sphere(150, 0.5, 0.5),
             //rippleFilter = $F.GeometricMapFilter().ripple(10, 16, 10, 0, 0.5, 0.5),
@@ -392,7 +392,7 @@
                 gray,
                 $F.HalftoneFilter(1).threshold(0.4).grayscale(true)
             ]),
-            alphaMask = $F.AlphaMaskFilter(/*alphamask*/null, 0.5, 0.5, $F.CHANNEL.BLUE),
+            alphaMask = $F.AlphaMaskFilter(alphamask, 0.5, 0.5, $F.CHANNEL.BLUE),
             blend = $F.BlendFilter(/*icon*/),
             //swapChannel = new $F.ColorMatrixFilter().swapChannels($F.CHANNEL.BLUE, $F.CHANNEL.ALPHA),
             ycbcr = $F.ColorMatrixFilter().RGB2YCbCr(),
@@ -482,13 +482,13 @@
         
         function init( )
         {
-            icon = $F.IO.HTMLImageLoader.load($F.Browser.isChrome
+            blend.setInput( "blend", icon = $F.IO.HTMLImageLoader.load($F.Browser.isChrome
             ? "../common/assets/chrome.png"
             : ($F.Browser.isOpera
             ? "../common/assets/opera.png"
             : ($F.Browser.isIE
             ? "../common/assets/ie.png"
-            : "../common/assets/firefox.png")), function( ){ blend.setImage( icon ); }).restorable(false);
+            : "../common/assets/firefox.png"))).restorable(false) );
             blendSelect.style.display = "none";
             selectBt.style.display = 'inline';
             deselectBt.style.display = 'none';
@@ -504,7 +504,7 @@
             displacemap.octx.arc(displacemap.width/2, displacemap.height/2, displacemap.width/2, 0, Math.PI*2, true);
             displacemap.octx.fill();
             displacemap.store();
-            displaceFilter.setMap( displacemap );
+            //displaceFilter.setInput( "map", displacemap );
             displaceFilter.startX=0; displaceFilter.startY=0;
             displaceFilter.scaleX=120; displaceFilter.scaleY=120; 
             displaceFilter.componentX=$F.CHANNEL.RED; displaceFilter.componentY=$F.CHANNEL.GREEN;
@@ -525,7 +525,7 @@
             alphamask.store();
             //swapChannel.apply( alphamask );
             
-            alphaMask.setMask( alphamask );
+            //alphaMask.setInput( "mask", alphamask );
             
             dx = Max(10*rnd(), 5); dy = Max(10*rnd(), 5); 
             dtheta = Math.PI*Max(2*rnd(), 1)/32;  
@@ -614,6 +614,10 @@
         {
             if (video.paused || video.ended)  return;
 
+            // Render every fixed interval
+            requestAnimationFrame( processVideo );
+            //setTimeout( processVideo, renderInterval );
+            
             var vw, vh, brad;
             
             stats.begin( );
@@ -666,7 +670,7 @@
             {
                 if ( null === perlinNoise )
                 {
-                    perlinDisplaceFilter.setMap( perlinNoise = $F.Image.PerlinNoise( vw, vh, 0, true/* seamless */, true/* grayscale */, 100, 80 ) );
+                    perlinDisplaceFilter.setInput( "map", perlinNoise = $F.Image.PerlinNoise( vw, vh, 0, true/* seamless */, true/* grayscale */, 100, 80 ) );
                 }
                 else
                 {
@@ -726,10 +730,6 @@
             //upscaleVideo.setImage(downscaleVideo.canvasElement);
             
             stats.end( );
-            
-            // Render every fixed interval
-            requestAnimationFrame( processVideo );
-            //setTimeout( processVideo, renderInterval );
         }
         
         // play

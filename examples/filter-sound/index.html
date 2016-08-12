@@ -262,7 +262,7 @@
             // prepare filters
             trioptic = $F.TriopticSimpleFilter( );
             
-            displace = $F.DisplacementMapFilter( );
+            displace = $F.DisplacementMapFilter( visualization );
             displace.startX = 0;  
             displace.startY = 0;
             displace.componentX = $F.CHANNEL.BLUE;  
@@ -297,7 +297,7 @@
             // set the various filters parameters
             trioptic.spectrum = s;
             
-            displace.setMap( visualization );
+            //displace.setInput( "map", visualization );
             displace.scaleX = z * s * 0.1;  
             displace.scaleY = z + 3;
             

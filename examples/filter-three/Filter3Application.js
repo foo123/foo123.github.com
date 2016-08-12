@@ -64,7 +64,7 @@ var
     sobel = new $F.ConvolutionMatrixFilter().sobel(3),
     grs = new $F.CompositeFilter([gray, sobel]),
     emboss = new $F.ConvolutionMatrixFilter().emboss(),
-    dF = new $F.DisplacementMapFilter()
+    dF = new $F.DisplacementMapFilter(displacemap)
 ;
 
 var self={
@@ -246,7 +246,7 @@ function dotest(event)
     twirl.apply(image[4]);
     grs.apply(image[5]);
     emboss.apply(image[6]);
-    dF.setMap(displacemap);
+    //dF.setInput("map", displacemap);
     dF.scaleX=100;
     dF.scaleY=100;
     dF.apply(image[7]);
