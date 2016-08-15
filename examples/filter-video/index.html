@@ -177,17 +177,19 @@
                     <option value='#'>Fast Gauss Blur 51x51</option>
                     <option value='#'>Grayscale, Sobel Edges 3x3</option>
                     <option value='#'>Grayscale, Sobel Edges 3x3, Binary Threshold</option>
+                    <option value='#'>Grayscale, Laplace Edges 3x3</option>
                     <option value='#'>Grayscale, Laplace Edges 5x5</option>
-                    <option value='#'>Grayscale, Laplace Edges 11x11</option>
                     <option value='#'>Grayscale, Laplace Edges 5x5, Binary Threshold</option>
                     <option value='#'>Grayscale, Laplace Edges 11x11, Binary Threshold</option>
                     <option value='#'>Gray, Gauss, Laplace 5x5, Threshold</option>
                 </optgroup>
                 <optgroup label="Statistical/Morphological Filters">
-                    <option value='#'>Minimum 3x3</option>
-                    <option value='#'>Maximum 3x3</option>
-                    <!--<option value='#'>Median 3x3</option>-->
+                    <option value='#'>Statistical Minimum 3x3</option>
+                    <option value='#'>Statistical Maximum 3x3</option>
+                    <option value='#'>Statistical Median 3x3</option>
+                    <option value='#'>Statistical Median 5x5</option>
                     <option value='#'>Morphological Dilate</option>
+                    <option value='#'>Morphological Erode</option>
                 </optgroup>
                 <optgroup label="Displace/Affine/Geometric Filters">
                     <option value='#'>TwirlMap</option>
@@ -324,7 +326,6 @@
             alphamask = $F.Image().restorable(false).fill("rgb(0,0,0)", 0, 0, 200, 200),
             postVideo = $F.Image().restorable(false),
             //postVideo = $F.ScaledImage(0.8, 0.8).restorable(false),
-            //upscaleVideo = $F.ScaledImage(2, 2).restorable(false),
             
              // filters
             flipX = $F.AffineMatrixFilter().flipX(),
@@ -334,7 +335,6 @@
             solarize2 = $F.ColorTableFilter().solarize2(0.4),
             posterize = $F.ColorTableFilter().posterize(8),
             invert = $F.ColorTableFilter().invert(),
-            //invert = $F.ColorMatrixFilter().invert(),
             gray = $F.ColorMatrixFilter().grayscale(),
             grc = $F.ColorMatrixFilter().grayscale().contrast(1),
             blur3 = $F.ConvolutionMatrixFilter().fastGauss(2, 3),
@@ -342,10 +342,12 @@
             blur15 = $F.ConvolutionMatrixFilter().fastGauss(2, 15),
             blur51 = $F.ConvolutionMatrixFilter().fastGauss(2, 51),
             sobel = $F.ConvolutionMatrixFilter().sobel(3),
+            laplace3 = $F.ConvolutionMatrixFilter().laplace(3),
             laplace5 = $F.ConvolutionMatrixFilter().laplace(5),
             laplace11 = $F.ConvolutionMatrixFilter().laplace(11),
             grs = $F.CompositeFilter([gray, sobel]),
             grsb = $F.CompositeFilter([gray, sobel, binary]),
+            grl3 = $F.CompositeFilter([gray, laplace3]),
             grl5 = $F.CompositeFilter([gray, laplace5]),
             grl11 = $F.CompositeFilter([gray, laplace11]),
             grlb5 = $F.CompositeFilter([gray, laplace5, binary]),
@@ -363,8 +365,8 @@
             equ = $F.HistogramEqualizeFilter($F.MODE.INTENSITY),
             minimum = $F.StatisticalFilter().minimum(3),
             maximum = $F.StatisticalFilter().maximum(3),
-            // median is slow ..
-            //median = $F.StatisticalFilter().median(3),
+            median3 = $F.StatisticalFilter().median(3),
+            median5 = $F.StatisticalFilter().median(5),
             mdilate = $F.MorphologicalFilter().dilate([
                 0, 0, 0, 0, 0, 0, 1,
                 0, 0, 0, 0, 0, 1, 0,
@@ -374,10 +376,16 @@
                 0, 1, 0, 0, 0, 0, 0,
                 1, 0, 0, 0, 0, 0, 0
             ]),
+            merode = $F.MorphologicalFilter().erode([
+                0, 0, 0, 0, 0, 0, 1,
+                0, 0, 0, 0, 0, 1, 0,
+                0, 0, 0, 0, 1, 0, 0,
+                0, 0, 0, 1, 0, 0, 0,
+                0, 0, 1, 0, 0, 0, 0,
+                0, 1, 0, 0, 0, 0, 0,
+                1, 0, 0, 0, 0, 0, 0
+            ]),
             open = $F.MorphologicalFilter().opening(3),
-            //connected_components = $F.ConnectedComponentsFilter(4, 0.1),
-            //quantize = $F.ColorTableFilter().quantize(128),
-            //quantized_connected_components = $F.CompositeFilter([gray, /*laplace5,*/ /*quantize,*/ connected_components, $F.ThresholdFilter([100, 140], [0, 0xffffff, 0], 1)]),
             quantized_connected_components = $F.ConnectedComponentsFilter(4, 0.3, $F.MODE.HUE, 100),
             noise = $F.NoiseFilter(10, 70),
             displaceFilter = $F.DisplacementMapFilter(displacemap),
@@ -397,29 +405,21 @@
             //hexapixelate5 = $F.HexagonalPixelateFilter(5),
             //hexapixelate10 = $F.HexagonalPixelateFilter(10),
             halftoned = $F.CompositeFilter([
-                gray,
-                $F.HalftoneFilter(1).threshold(0.4).grayscale(true)
+                gray, $F.HalftoneFilter(1).threshold(0.4).grayscale(true)
             ]),
-            alphaMask = $F.ChannelCopyFilter($F.CHANNEL.BLUE, $F.CHANNEL.ALPHA, 0.5, 0.5, 0).setMode($F.MODE.COLOR).setInput("source",alphamask),
-            blend = $F.BlendFilter(["normal", 1, 1, 1/*,
-                                    "screen", 50, 40, 0.7*/]),
-            //swapChannel = new $F.ColorMatrixFilter().swapChannels($F.CHANNEL.BLUE, $F.CHANNEL.ALPHA),
+            alphaMask = $F.ChannelCopyFilter($F.CHANNEL.BLUE, $F.CHANNEL.ALPHA, 0.5, 0.5, 0).setMode($F.MODE.COLOR).setInput("source", alphamask),
+            blend = $F.BlendFilter(["normal", 1, 1, 1, 1/*,
+                                    "screen", 50, 40, 0.7, 1*/]),
             ycbcr = $F.ColorMatrixFilter().RGB2YCbCr(),
-            //ycbcr = $F.YCbCrConverterFilter(),
             hsv = $F.ColorMapFilter().RGB2HSV(),
             cmyk = $F.ColorMapFilter().RGB2CMYK(),
-            //hueOnly = $F.CompositeFilter([hsv, redCGray]),
             hueOnly = $F.ColorMapFilter().hue(),
             hueE = $F.ColorMapFilter().setMode($F.MODE.HUE).extract(10, 150),
             hueExtractor = $F.CompositeFilter([hueE, open]),
             bokeh = $F.BokehFilter(0.5, 0.5, 100, 10),
             canny = $F.CompositeFilter([gray, $F.CannyEdgesFilter(1.5, 5.5)]),
             shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(3, 0),
-            //seamless = $F.SeamlessTileFilter(),
-            //seamlessPerlin = $F.CompositeFilter([$F.PerlinNoiseFilter(100,80), $F.SeamlessTileFilter()]),
-            //seamlessPerlin = $F.PerlinNoiseFilter(100,80).simplex().octaves(1).seamless(true),
             perlinDisplaceFilter = $F.DisplacementMapFilter(),
-            //resample_and_process = $F.CompositeFilter([$F.ResampleFilter(0.7, 0.7), null, $F.ResampleFilter(1/0.7, 1/0.7)]),
             
             // filter selection list
             videoFilters = [
@@ -448,15 +448,17 @@
                 blur51,
                 grs,
                 grsb,
+                grl3,
                 grl5,
-                grl11,
                 grlb5,
                 grlb11,
                 grglb5,
                 minimum,
                 maximum,
-                //median,
+                median3,
+                median5,
                 mdilate,
+                merode,
                 twirlFilter,
                 sphereFilter,
                 //rippleFilter,
@@ -748,7 +750,6 @@
                 blend.matrix[3]/*alpha*/ = currentBlendAlpha;
                 if (blend.matrix[1]<=cX1 || blend.matrix[1]>=cX2) dx = -dx;
                 if (blend.matrix[2]<=cY1 || blend.matrix[2]>=cY2) dy = -dy;
-                //console.log(blend.input(1));
             }
             
             /*if ( currentFilter )

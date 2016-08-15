@@ -152,8 +152,8 @@
             FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_IO", "FILTER_CODECS", "FILTER_FILTERS", "FILTER_PLUGINS"]
         }
     });
-    require(['cascades/haarcascade_frontalface_alt', 'jQuery', 'Classy', 'Asynchronous', 'FILTER', 'FILTER_IO', 'FILTER_CODECS', 'FILTER_FILTERS', 'FILTER_PLUGINS'],
-    function( haarcascade_frontalface_alt, $, _1, _2, _3, _4, _5, _6, $F ) {
+    require(['cascades/haarcascade_frontalface_alt'/*, 'cascades/haarcascade_mcs_mouth'*/, 'jQuery', 'Classy', 'Asynchronous', 'FILTER', 'FILTER_IO', 'FILTER_CODECS', 'FILTER_FILTERS', 'FILTER_PLUGINS'],
+    function( haarcascade_frontalface_alt/*, haarcascade_mcs_mouth*/, $, _1, _2, _3, _4, _5, _6, $F ) {
         
         // utils
         function br() { return $('<br />'); }
@@ -319,18 +319,44 @@
             ]).worker( runInThread )*/
             //,simplexNoise = $F.PerlinNoiseFilter(80,50).simplex().octaves(4, [[0,0],[10,10], [20,10], [10,20]]).seamless(true).worker( runInThread )
             //,bokeh = $F.BokehFilter(80, 90, 60, 10).worker( runInThread )
-            ,canny = $F.CompositeFilter([/*subselection,*/ gray, $F.CannyEdgesFilter( 1, 7 )]).worker( runInThread )
-            ,faceDetector = $F.CompositeFilter([gray, $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt)/*.params()*/]).update(false).stable(true).worker( runInThread )
+            ,canny = $F.CompositeFilter([/*subselection,*/gray, $F.CannyEdgesFilter( 1, 7 )]).worker( runInThread )
+            ,faceDetector = $F.CompositeFilter([
+                gray,
+                $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt)/*,
+                new $F.InlineFilter(function(params, im, w, h, meta){
+                    var faces = meta.container.filters[meta.index-1].meta().objects;
+                    if ( faces.length )
+                        // restrict eyes detection on first detected face
+                        meta.container.filters[meta.index+1].select(faces[0].x1/(w-1), faces[0].y1/(h-1), faces[0].x2/(w-1), faces[0].y2/(h-1));
+                    return im;
+                }),
+                $F.HaarDetectorFilter(haarcascade_mcs_mouth.haarcascade_mcs_mouth).params({
+                    baseScale: 1,
+                    scaleIncrement: 1.25,
+                    stepIncrement: 0.25,
+                    minNeighbors: 1,
+                    doCannyPruning: true,
+                    cannyLow: 20,
+                    cannyHigh: 200
+                })*/
+            ]).update( false ).worker( runInThread )
             ,drawDetectedFeatures = function( detector, image ) {
-                var ctx = image.octx, i, l, rect, objects = detector.meta().objects;
+                var ctx = image.octx, i, l, rect,
+                    faces = detector.filters[1].meta().objects/*,
+                    eyes = detector.filters[3].meta().objects*/;
                 // draw any features found
                 ctx.strokeStyle = "rgba(75,221,17,1)"; 
                 ctx.lineWidth = 2;
-                for (i=0,l=objects.length; i<l; i++)
+                for (i=0,l=faces.length; i<l; i++)
                 {
-                    rect = objects[i];
+                    rect = faces[i];
                     ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
                 }
+                /*for (i=0,l=eyes.length; i<l; i++)
+                {
+                    rect = eyes[i];
+                    ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                }*/
             }
         ;
         
@@ -418,7 +444,7 @@
             //im19.apply( halfTone, closeThread );
             im19.apply(faceDetector, function(){
                 closeThread.call(this);
-                drawDetectedFeatures( this.get(1), im19 );
+                drawDetectedFeatures( this, im19 );
             });
             
             /*var arry = new $F.Array8U([0,255,255,0,127,127]);
