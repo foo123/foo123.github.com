@@ -92,7 +92,7 @@
             background: rgba(128, 128, 128, 0.4);
         }
         #forkongithub a{background:#c83022;color:#fff;}
-        select {
+        select, input[type="number"] {
             font-size: 1.8em !important;
             padding: 0.4em !important;
             color: black !important;
@@ -127,7 +127,7 @@
         </div>
         
         <div id="filters"  class="fluid col-2-5 panel">
-            <strong>Post-Processed Video</strong><br /><br />
+            <strong>Post-Processed Video (downsampled)</strong><br /><br />
         </div>
     
     </div>
@@ -170,6 +170,7 @@
                     <option value='#'>Hue only as grayscale Image (Color Map)</option>
                 </optgroup>
                 <optgroup label="Convolution Matrix Filters">
+                    <option value='#'>Emboss</option>
                     <option value='#'>Fast Gauss Blur 3x3</option>
                     <option value='#'>Fast Gauss Blur 7x7</option>
                     <option value='#'>Fast Gauss Blur 15x15</option>
@@ -181,11 +182,11 @@
                     <option value='#'>Grayscale, Laplace Edges 5x5, Binary Threshold</option>
                     <option value='#'>Grayscale, Laplace Edges 11x11, Binary Threshold</option>
                     <option value='#'>Gray, Gauss, Laplace 5x5, Threshold</option>
-                    <option value='#'>Emboss</option>
                 </optgroup>
                 <optgroup label="Statistical/Morphological Filters">
                     <option value='#'>Minimum 3x3</option>
                     <option value='#'>Maximum 3x3</option>
+                    <!--<option value='#'>Median 3x3</option>-->
                     <option value='#'>Morphological Dilate</option>
                 </optgroup>
                 <optgroup label="Displace/Affine/Geometric Filters">
@@ -195,11 +196,13 @@
                     <option value='#'>DisplaceMap with Radial Gradient</option>
                     <option value='#'>DisplaceMap with Perlin Noise</option>
                 </optgroup>
+                <optgroup label="Blend Filters">
+                    <option value='#'>Blend</option>
+                </optgroup>
                 <optgroup label="Plugins and Composites">
                     <option value='#'>Noise</option>
                     <option value='#'>Equalize Histogram</option>
-                    <option value='#'>Alpha Mask</option>
-                    <option value='#'>Blend</option>
+                    <option value='#'>Alpha Mask (ChannelCopy)</option>
                     <option value='#'>Bokeh (Depth-of-Field)</option>
                     <option value='#'>Pixelate 2%</option>
                     <option value='#'>Pixelate 3%</option>
@@ -255,11 +258,14 @@
                 <option value='LinearDodge'>LinearDodge (same as Add)</option>
                 <option value='LinearBurn'>LinearBurn (same as Subtract)</option>
             </select>
+            &nbsp;
+            <input id="blendAlpha" type="number" value="1.0" step="0.1" style="width:60px" />
         </div>
     
     </div>
     
     <script>//<![CDATA[
+    "use strict";
    /**
      * Provides requestAnimationFrame in a cross browser way.
      * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
@@ -305,6 +311,7 @@
             filterSelect = getEl('filterSelect'), 
             flipSelect = getEl('flipSelect'), 
             blendSelect = getEl('blendSelect'), 
+            blendAlpha = getEl('blendAlpha'), 
             video = getEl('video'), 
             container = getEl('container'), 
             filters = getEl('filters'),
@@ -315,9 +322,9 @@
             displacemap = $F.Image().restorable(false).fill("rgb(128,128,128)", 0, 0, 220, 220),
             perlinNoise = null,
             alphamask = $F.Image().restorable(false).fill("rgb(0,0,0)", 0, 0, 200, 200),
-            //downscaleVideo = $F.ScaledImage(0.5, 0.5),
-            //upscaleVideo = $F.ScaledImage(2, 2),
             postVideo = $F.Image().restorable(false),
+            //postVideo = $F.ScaledImage(0.8, 0.8).restorable(false),
+            //upscaleVideo = $F.ScaledImage(2, 2).restorable(false),
             
              // filters
             flipX = $F.AffineMatrixFilter().flipX(),
@@ -354,9 +361,10 @@
             blueCT = $F.ColorTableFilter().blueChannel(),
             clr = $F.ColorMatrixFilter().colorize(0xfdc171),
             equ = $F.HistogramEqualizeFilter($F.MODE.INTENSITY),
-            // median is slow ..
             minimum = $F.StatisticalFilter().minimum(3),
             maximum = $F.StatisticalFilter().maximum(3),
+            // median is slow ..
+            //median = $F.StatisticalFilter().median(3),
             mdilate = $F.MorphologicalFilter().dilate([
                 0, 0, 0, 0, 0, 0, 1,
                 0, 0, 0, 0, 0, 1, 0,
@@ -392,8 +400,9 @@
                 gray,
                 $F.HalftoneFilter(1).threshold(0.4).grayscale(true)
             ]),
-            alphaMask = $F.AlphaMaskFilter(alphamask, 0.5, 0.5, $F.CHANNEL.BLUE),
-            blend = $F.BlendFilter(/*icon*/),
+            alphaMask = $F.ChannelCopyFilter($F.CHANNEL.BLUE, $F.CHANNEL.ALPHA, 0.5, 0.5, 0).setMode($F.MODE.COLOR).setInput("source",alphamask),
+            blend = $F.BlendFilter(["normal", 1, 1, 1/*,
+                                    "screen", 50, 40, 0.7*/]),
             //swapChannel = new $F.ColorMatrixFilter().swapChannels($F.CHANNEL.BLUE, $F.CHANNEL.ALPHA),
             ycbcr = $F.ColorMatrixFilter().RGB2YCbCr(),
             //ycbcr = $F.YCbCrConverterFilter(),
@@ -410,6 +419,7 @@
             //seamlessPerlin = $F.CompositeFilter([$F.PerlinNoiseFilter(100,80), $F.SeamlessTileFilter()]),
             //seamlessPerlin = $F.PerlinNoiseFilter(100,80).simplex().octaves(1).seamless(true),
             perlinDisplaceFilter = $F.DisplacementMapFilter(),
+            //resample_and_process = $F.CompositeFilter([$F.ResampleFilter(0.7, 0.7), null, $F.ResampleFilter(1/0.7, 1/0.7)]),
             
             // filter selection list
             videoFilters = [
@@ -431,6 +441,7 @@
                 hsv,
                 cmyk,
                 hueOnly,
+                emboss,
                 blur3,
                 blur7,
                 blur15,
@@ -442,19 +453,19 @@
                 grlb5,
                 grlb11,
                 grglb5,
-                emboss,
                 minimum,
                 maximum,
+                //median,
                 mdilate,
                 twirlFilter,
                 sphereFilter,
                 //rippleFilter,
                 displaceFilter,
                 perlinDisplaceFilter,
+                blend,
                 noise,
                 equ,
                 alphaMask,
-                blend,
                 bokeh,
                 pixelate2,
                 pixelate3,
@@ -473,25 +484,27 @@
                 quantized_connected_components,
                 canny
             ],
-            currentOrientation = 0, currentBlendMode = "normal",
+            currentOrientation = 0, currentBlendMode = "normal", currentBlendAlpha = 1.0,
             currentFilterIndex = 0,  currentFilter = videoFilters[currentFilterIndex],
             renderInterval = 60,  rnd = Math.random, Max = Math.max, dx, dy, dx2, dy2, dtheta, dr, vw, vh,
             currentSelection = null, areaSelect, doSelect = false, doDeselect = false,
-            cX1 = 0, cX2 = 0, cY1 = 0, cY2 = 0
+            cX1 = 0, cX2 = 0, cY1 = 0, cY2 = 0, stats
         ;
         
         function init( )
         {
-            blend.setInput( "blend", icon = $F.IO.HTMLImageLoader.load($F.Browser.isChrome
+            blend.setInput(1, icon = $F.IO.HTMLImageLoader.load($F.Browser.isChrome
             ? "../common/assets/chrome.png"
             : ($F.Browser.isOpera
             ? "../common/assets/opera.png"
             : ($F.Browser.isIE
             ? "../common/assets/ie.png"
-            : "../common/assets/firefox.png"))).restorable(false) );
+            : "../common/assets/firefox.png"))).restorable(false));
+            //blend.setInput(2, $F.IO.HTMLImageLoader.load("../common/assets/chrome.png").restorable(false));
             blendSelect.style.display = "none";
-            selectBt.style.display = 'inline';
-            deselectBt.style.display = 'none';
+            blendAlpha.style.display = "none";
+            selectBt.style.display = "inline";
+            deselectBt.style.display = "none";
             
             var grd;
             // create a displace map image
@@ -504,7 +517,6 @@
             displacemap.octx.arc(displacemap.width/2, displacemap.height/2, displacemap.width/2, 0, Math.PI*2, true);
             displacemap.octx.fill();
             displacemap.store();
-            //displaceFilter.setInput( "map", displacemap );
             displaceFilter.startX=0; displaceFilter.startY=0;
             displaceFilter.scaleX=120; displaceFilter.scaleY=120; 
             displaceFilter.componentX=$F.CHANNEL.RED; displaceFilter.componentY=$F.CHANNEL.GREEN;
@@ -523,9 +535,6 @@
             alphamask.octx.arc(alphamask.width/2, alphamask.height/2, alphamask.width/2, 0, Math.PI*2, true);
             alphamask.octx.fill();
             alphamask.store();
-            //swapChannel.apply( alphamask );
-            
-            //alphaMask.setInput( "mask", alphamask );
             
             dx = Max(10*rnd(), 5); dy = Max(10*rnd(), 5); 
             dtheta = Math.PI*Max(2*rnd(), 1)/32;  
@@ -546,10 +555,12 @@
                 if (blend === currentFilter)
                 {
                     blendSelect.style.display = "inline-block";
+                    blendAlpha.style.display = "inline-block";
                 }
                 else
                 {
                     blendSelect.style.display = "none";
+                    blendAlpha.style.display = "none";
                 }
             });
             
@@ -560,7 +571,22 @@
             
             // change the blend mode
             addEvent(blendSelect, "change", function(){
-                currentBlendMode = blendSelect.options[blendSelect.selectedIndex || 0].value;
+                currentBlendMode = blendSelect.options[blendSelect.selectedIndex || 0].value.toLowerCase();
+            });
+            
+            // change the blend alpha
+            addEvent(blendAlpha, "change", function(){
+                currentBlendAlpha = +blendAlpha.value;
+                if ( currentBlendAlpha < 0 )
+                {
+                    currentBlendAlpha = 0;
+                    blendAlpha.value = currentBlendAlpha;
+                }
+                if ( currentBlendAlpha > 1 )
+                {
+                    currentBlendAlpha = 1;
+                    blendAlpha.value = currentBlendAlpha;
+                }
             });
             
             addEvent(selectBt, 'click', function(){
@@ -624,8 +650,7 @@
             
             postVideo.image( video );
             
-            vw = postVideo.width;
-            vh = postVideo.height;
+            vw = postVideo.width; vh = postVideo.height;
             
             if ( 0 === cX2 )
             {
@@ -640,15 +665,15 @@
             if (doSelect && currentSelection)
             {
                 postVideo.select( currentSelection[0], currentSelection[1], currentSelection[2], currentSelection[3] );
-                blend.startX = cX1+1; 
-                blend.startY = cY1+1;
+                blend.matrix[1]/*startX*/ = cX1+1; 
+                blend.matrix[2]/*startY*/ = cY1+1;
                 doSelect = false;
             }
             else if (doDeselect)
             {
                 postVideo.deselect( );
-                blend.startX = 1; 
-                blend.startY = 1;
+                blend.matrix[1]/*startX*/ = 1; 
+                blend.matrix[2]/*startY*/ = 1;
                 doDeselect = false;
             }
             
@@ -717,13 +742,20 @@
             else if (blend===currentFilter)
             {
                 // animate the blend filter
-                blend.setMode( currentBlendMode );
-                blend.startX += dx; 
-                blend.startY += dy;
-                if (blend.startX<=cX1 || blend.startX>=cX2) dx = -dx;
-                if (blend.startY<=cY1 || blend.startY>=cY2) dy = -dy;
+                blend.matrix[0]/*mode*/ = currentBlendMode; 
+                blend.matrix[1]/*startX*/ += dx; 
+                blend.matrix[2]/*startY*/ += dy;
+                blend.matrix[3]/*alpha*/ = currentBlendAlpha;
+                if (blend.matrix[1]<=cX1 || blend.matrix[1]>=cX2) dx = -dx;
+                if (blend.matrix[2]<=cY1 || blend.matrix[2]>=cY2) dy = -dy;
+                //console.log(blend.input(1));
             }
             
+            /*if ( currentFilter )
+            {
+                resample_and_process._stack[1] = currentFilter;
+                resample_and_process.apply( postVideo );
+            }*/
             if ( currentFilter ) currentFilter.apply( postVideo );
             
             // up-scale

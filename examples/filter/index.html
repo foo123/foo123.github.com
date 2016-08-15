@@ -143,6 +143,7 @@
     <div id="filters" class="panel"></div>
     
     <script>//<![CDATA[
+    "use strict";
     require.config({
         paths: {
             FilterBundle: "filter.bundle"
@@ -201,7 +202,7 @@
                 displacemap.octx.fill();
                 displacemap.store();
                 
-                im15.image($F.Image.PerlinNoise(im1.width, im1.height, Math.random(), true, true, 80, 50, 4, [[0,0],[10,10], [20,10], [10,20]]));
+                im15.createImageData(im1.width, im1.height).perlinNoise(Math.random(), true, true, 80, 50, 4, [[0,0],[10,10], [20,10], [10,20]]);
             })
             ,im2 = $F.IO.HTMLImageLoader.load( che )
             ,im3 = $F.IO.HTMLImageLoader.load( che )
@@ -266,8 +267,10 @@
             ,grc = $F.ColorMatrixFilter( ).grayscale( ).contrast( 1 ).worker( runInThread )
             //,median = $F.StatisticalFilter( ).median( 5 ).worker( runInThread )
             //,maximum = $F.StatisticalFilter( ).maximum( 15 ).worker( runInThread )
+            //,downsampler = $F.ResampleFilter(0.7, 0.7)
+            //,subselection = $F.SelectionFilter(0.1, 0.1, 0.9, 0.9)
             ,halftoned = $F.CompositeFilter([
-                gray,
+                /*downsampler,*/ gray,
                 $F.HalftoneFilter(1).threshold(0.4).grayscale(true)
             ])
             //,pixelate = $F.PixelateFilter( 8 ).worker( runInThread )
@@ -316,14 +319,14 @@
             ]).worker( runInThread )*/
             //,simplexNoise = $F.PerlinNoiseFilter(80,50).simplex().octaves(4, [[0,0],[10,10], [20,10], [10,20]]).seamless(true).worker( runInThread )
             //,bokeh = $F.BokehFilter(80, 90, 60, 10).worker( runInThread )
-            ,canny = $F.CompositeFilter([gray, $F.CannyEdgesFilter( 1, 7 )]).worker( runInThread )
+            ,canny = $F.CompositeFilter([/*subselection,*/ gray, $F.CannyEdgesFilter( 1, 7 )]).worker( runInThread )
             ,faceDetector = $F.CompositeFilter([gray, $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt)/*.params()*/]).update(false).stable(true).worker( runInThread )
             ,drawDetectedFeatures = function( detector, image ) {
-                var ctx = image.octx, objects = detector.objects;
+                var ctx = image.octx, i, l, rect, objects = detector.meta().objects;
                 // draw any features found
                 ctx.strokeStyle = "rgba(75,221,17,1)"; 
                 ctx.lineWidth = 2;
-                for (i=0; i<objects.length; i++)
+                for (i=0,l=objects.length; i<l; i++)
                 {
                     rect = objects[i];
                     ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);

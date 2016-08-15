@@ -120,7 +120,7 @@
     <div id="container" class="fluid col-1-1"></div>
     
     <script>//<![CDATA[
-    
+    "use strict";
    /**
      * Provides requestAnimationFrame in a cross browser way.
      * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
@@ -171,7 +171,7 @@
         document.getElementById('lib-version').innerHTML = $F.VERSION;
         var useParallelFilters = $F.Browser.supportsWorker && /(&|\?)parallel\b/i.test( location.href )
             ,baseUrl = location.href.split(/#|\?/)[ 0 ]
-            ,audio, container, statsContainer
+            ,audio, container, stats, statsContainer
             
             ,AUDIO_FILE = '../common/assets/trioptic'
             ,flashSWF = '../common/js/soundmanager2.swf'
