@@ -262,16 +262,16 @@
             //,noise = $F.NoiseFilter( -127, 127 ).worker( runInThread )
             ,sepia = $F.ColorMatrixFilter( ).sepia2( ).worker( runInThread )
             ,gray = $F.ColorMatrixFilter( ).grayscale( ).worker( runInThread )
-            //,binary = $F.ColorTableFilter( ).threshold( 0.7 ).worker( runInThread )
+            //,binary = $F.ColorTableFilter( ).threshold( 0.6 ).worker( runInThread )
             //,threshold = $F.ColorMatrixFilter( ).threshold_rgb( 128 ).worker( runInThread )
             ,grc = $F.ColorMatrixFilter( ).grayscale( ).contrast( 1 ).worker( runInThread )
             //,median = $F.StatisticalFilter( ).median( 5 ).worker( runInThread )
             //,maximum = $F.StatisticalFilter( ).maximum( 15 ).worker( runInThread )
             //,downsampler = $F.ResampleFilter(0.7, 0.7)
-            //,subselection = $F.SelectionFilter(0.1, 0.1, 0.9, 0.9)
+            //,subselection = $F.SelectionFilter([0.1, 0.1, 0.9, 0.9])
             ,halftoned = $F.CompositeFilter([
                 /*downsampler,*/ gray,
-                $F.HalftoneFilter(1).threshold(0.4).grayscale(true)
+                $F.HalftoneFilter(1).threshold(0.4)/*.setMode($F.MODE.GRAY)*/
             ])
             //,pixelate = $F.PixelateFilter( 8 ).worker( runInThread )
             //,pixelate = $F.TriangularPixelateFilter( 10 ).worker( runInThread )
@@ -283,13 +283,13 @@
             //,skinExtractor = $F.CompositeFilter([hsv, redChannel, invert, gray, thresh]).worker( runInThread ) // extract skin region
             //,laplace = $F.ConvolutionMatrixFilter( ).laplace( 7 ).worker( runInThread )
             ,twirl = $F.GeometricMapFilter( ).twirl( Math.PI/2, 120, 0.33, 0.27 ).worker( runInThread )
-            ,shift = $F.AffineMatrixFilter( ).setMode( $F.MODE.WRAP ).shift(-50, 0).worker( runInThread )
+            //,shift = $F.AffineMatrixFilter( ).setMode( $F.MODE.WRAP ).shift(-50, 0).worker( runInThread )
             //,rotate = $F.AffineMatrixFilter( ).rotate( -Math.PI ).worker( runInThread )
             //,blur = $F.ConvolutionMatrixFilter( ).boxBlur( 3 ).worker( runInThread )
             //,gauss = $F.ConvolutionMatrixFilter( ).fastGauss( 3 ).worker( runInThread )//gaussBlur(3)
             //,vertical = $F.ConvolutionMatrixFilter( ).verticalBlur( 21 ).worker( runInThread )
             //,diagonal = $F.ConvolutionMatrixFilter( ).directionalBlur( 45, 9 ).worker( runInThread )
-            ,sobel = $F.ConvolutionMatrixFilter( ).sobel( 3 ).worker( runInThread )
+            ,sobel = $F.ConvolutionMatrixFilter( ).sobel( 3 ).setMode($F.MODE.GRAY).worker( runInThread )
             //,glow = $F.ConvolutionMatrixFilter( ).glow( ).worker( runInThread )
             ,emboss = $F.ConvolutionMatrixFilter( ).emboss( ).worker( runInThread )
             ,grsb = $F.CompositeFilter([gray, sobel/*, binary*/]).worker( runInThread )
@@ -311,7 +311,7 @@
                 gray,
                 $F.HalftoneFilter( 1 ).threshold(0.4).grayscale(true)
             ]).worker( runInThread )*/
-            //,halfTone = $F.HalftoneFilter(1).threshold(0.4).grayscale(false).worker( runInThread )
+            //,halfTone = $F.HalftoneFilter(1).threshold(0.4).setMode($F.MODE.COLOR).worker( runInThread )
             /*,simplexNoise = $F.CompositeFilter([
                 $F.PerlinNoiseFilter(80,50).simplex().octaves(4, [[0,0],[10,10], [20,10], [10,20]]).seamless(true)
                 //seamless,

@@ -61,7 +61,7 @@ var
     grc = new $F.ColorMatrixFilter().grayscale().contrast(1),
     blur = new $F.ConvolutionMatrixFilter().fastGauss(3),
     twirl = new $F.GeometricMapFilter().twirl(Math.PI/2, 120, 0.33, 0.27),
-    sobel = new $F.ConvolutionMatrixFilter().sobel(3),
+    sobel = new $F.ConvolutionMatrixFilter().sobel(3).setMode($F.MODE.GRAY),
     grs = new $F.CompositeFilter([gray, sobel]),
     emboss = new $F.ConvolutionMatrixFilter().emboss(),
     dF = new $F.DisplacementMapFilter(displacemap)
