@@ -220,8 +220,9 @@
                     <option value='#'>Hexagonal Pixelate 10%</option>-->
                     <option value='#'>Halftoned/Dithered</option>
                     <option value='#'>Extract range of Hues, Open Morphological</option>
-                    <option value='#'>Quantize Hue and Extract Connected Components</option>
                     <option value='#'>Canny Edges Extractor</option>
+                    <option value='#'>Quantize Hue and Extract Connected Components</option>
+                    <option value='#'>Quantize Hue and Extract Connected Components Contours</option>
                 </optgroup>
             </select>
             &nbsp;
@@ -387,7 +388,8 @@
                 1, 0, 0, 0, 0, 0, 0
             ]),
             open = $F.MorphologicalFilter().opening(3),
-            quantized_connected_components = $F.ConnectedComponentsFilter(4, 0.3, $F.MODE.HUE, 100),
+            quantized_connected_components = $F.ConnectedComponentsFilter(4, 0.25, $F.MODE.HUE, 100),
+            quantized_connected_components_contours = $F.CompositeFilter([quantized_connected_components, laplace3]),
             noise = $F.NoiseFilter(10, 70),
             displaceFilter = $F.DisplacementMapFilter(displacemap),
             twirlFilter = $F.GeometricMapFilter().twirl(Math.PI/2, 150, 0.5, 0.5),
@@ -484,8 +486,9 @@
                 hexapixelate10,*/
                 halftoned,
                 hueExtractor,
+                canny,
                 quantized_connected_components,
-                canny
+                quantized_connected_components_contours
             ],
             currentOrientation = 0, currentBlendMode = "normal", currentBlendAlpha = 1.0,
             currentFilterIndex = 0,  currentFilter = videoFilters[currentFilterIndex],

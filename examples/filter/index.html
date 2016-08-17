@@ -324,7 +324,7 @@
                 gray,
                 $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt)/*,
                 new $F.InlineFilter(function(params, im, w, h, meta){
-                    var faces = meta.container.filters[meta.index-1].meta().objects;
+                    var faces = meta.container.filters[meta.index-1].metaData().objects;
                     if ( faces.length )
                         // restrict eyes detection on first detected face
                         meta.container.filters[meta.index+1].select(faces[0].x1/(w-1), faces[0].y1/(h-1), faces[0].x2/(w-1), faces[0].y2/(h-1));
@@ -342,8 +342,8 @@
             ]).update( false ).worker( runInThread )
             ,drawDetectedFeatures = function( detector, image ) {
                 var ctx = image.octx, i, l, rect,
-                    faces = detector.filters[1].meta().objects/*,
-                    eyes = detector.filters[3].meta().objects*/;
+                    faces = detector.filters[1].metaData().objects/*,
+                    eyes = detector.filters[3].metaData().objects*/;
                 // draw any features found
                 ctx.strokeStyle = "rgba(75,221,17,1)"; 
                 ctx.lineWidth = 2;
