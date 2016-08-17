@@ -26,7 +26,7 @@ if ( !window.requestAnimationFrame ) {
 
 var 
     $F = FILTER,
-    aside, test, container, mouseXOnMouseDown, windowHalfX,
+    aside, test, restore, container, mouseXOnMouseDown, windowHalfX,
     mouseYOnMouseDown, windowHalfY,
     targetRotationOnMouseDownY = 0, targetRotationY = 0,
     targetRotationOnMouseDownX = 0, targetRotationX = 0,
