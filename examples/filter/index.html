@@ -229,8 +229,8 @@
             ,im19 = $F.IO.HTMLImageLoader.load( che )
             
              // filters
-            //,redChannel = new $F.ColorMatrixFilter( ).worker( runInThread ).redChannel( )
-            ,redChannel = new $F.InlineFilter(function(params, im, w, h) { 
+            //,redChannel = $F.ColorMatrixFilter( ).worker( runInThread ).redChannel( )
+            ,redChannel = $F.InlineFilter(function(params, im, w, h) { 
                 // get red channel using an inline filter that can run in parallel worker also
                 for (var i=0,l=im.length; i<l; i+=4)
                 {
@@ -261,9 +261,9 @@
             //,rgbequalize = $F.HistogramEqualizeFilter( $F.MODE.RGB ).worker( runInThread )
             //,noise = $F.NoiseFilter( -127, 127 ).worker( runInThread )
             ,sepia = $F.ColorMatrixFilter( ).sepia2( ).worker( runInThread )
-            ,gray = $F.ColorMatrixFilter( ).grayscale( ).worker( runInThread )
+            ,gray = $F.ColorMatrixFilter( ).grayscale( )/*.worker( runInThread )*/
             //,binary = $F.ColorTableFilter( ).threshold( 0.6 ).worker( runInThread )
-            //,threshold = $F.ColorMatrixFilter( ).threshold_rgb( 128 ).worker( runInThread )
+            //,threshold = $F.ColorMatrixFilter( ).thresholdRGB( 128 ).worker( runInThread )
             ,grc = $F.ColorMatrixFilter( ).grayscale( ).contrast( 1 ).worker( runInThread )
             //,median = $F.StatisticalFilter( ).median( 5 ).worker( runInThread )
             //,maximum = $F.StatisticalFilter( ).maximum( 15 ).worker( runInThread )
@@ -272,7 +272,7 @@
             ,halftoned = $F.CompositeFilter([
                 /*downsampler,*/ gray,
                 $F.HalftoneFilter(1).threshold(0.4)/*.setMode($F.MODE.GRAY)*/
-            ])
+            ]).worker( runInThread )
             //,pixelate = $F.PixelateFilter( 8 ).worker( runInThread )
             //,pixelate = $F.TriangularPixelateFilter( 10 ).worker( runInThread )
             //,pixelate = $F.HexagonalPixelateFilter( 25 ).worker( runInThread )
@@ -286,13 +286,16 @@
             //,shift = $F.AffineMatrixFilter( ).setMode( $F.MODE.WRAP ).shift(-50, 0).worker( runInThread )
             //,rotate = $F.AffineMatrixFilter( ).rotate( -Math.PI ).worker( runInThread )
             //,blur = $F.ConvolutionMatrixFilter( ).boxBlur( 3 ).worker( runInThread )
-            //,gauss = $F.ConvolutionMatrixFilter( ).fastGauss( 3 ).worker( runInThread )//gaussBlur(3)
+            ,gauss = $F.ConvolutionMatrixFilter( ).fastGauss( 6, 3 ).setMode($F.MODE.GRAY)/*.worker( runInThread )*///gaussBlur(3)
             //,vertical = $F.ConvolutionMatrixFilter( ).verticalBlur( 21 ).worker( runInThread )
             //,diagonal = $F.ConvolutionMatrixFilter( ).directionalBlur( 45, 9 ).worker( runInThread )
-            ,sobel = $F.ConvolutionMatrixFilter( ).sobel( 3 ).setMode($F.MODE.GRAY).worker( runInThread )
             //,glow = $F.ConvolutionMatrixFilter( ).glow( ).worker( runInThread )
             ,emboss = $F.ConvolutionMatrixFilter( ).emboss( ).worker( runInThread )
-            ,grsb = $F.CompositeFilter([gray, sobel/*, binary*/]).worker( runInThread )
+            ,grsb = $F.CompositeFilter([
+                gray,
+                $F.ConvolutionMatrixFilter( ).sobel( 3 ).setMode($F.MODE.GRAY)
+                /*, binary*/
+            ]).worker( runInThread )
             ,displace = $F.DisplacementMapFilter( displacemap ).worker( runInThread )
             ,floodFill = $F.CompositeFilter([
                 $F.FloodFillFilter(25/* x0 */,75/* y0 */,0xff0000/* fill color */,0.8/* tolerance */),
@@ -307,23 +310,22 @@
                 $F.FloodFillFilter(75/* x0 * /,36/* y0 * /,0x0000ff/* fill color * /,0.05/* tolerance * /,0x0/*border* /)
             ]).worker( runInThread )*/
             ,seamless = $F.SeamlessTileFilter().worker( runInThread )
-            /*,halfTone = $F.CompositeFilter([
-                gray,
-                $F.HalftoneFilter( 1 ).threshold(0.4).grayscale(true)
-            ]).worker( runInThread )*/
-            //,halfTone = $F.HalftoneFilter(1).threshold(0.4).setMode($F.MODE.COLOR).worker( runInThread )
-            /*,simplexNoise = $F.CompositeFilter([
-                $F.PerlinNoiseFilter(80,50).simplex().octaves(4, [[0,0],[10,10], [20,10], [10,20]]).seamless(true)
-                //seamless,
-                //,shift
-            ]).worker( runInThread )*/
-            //,simplexNoise = $F.PerlinNoiseFilter(80,50).simplex().octaves(4, [[0,0],[10,10], [20,10], [10,20]]).seamless(true).worker( runInThread )
             //,bokeh = $F.BokehFilter(80, 90, 60, 10).worker( runInThread )
-            ,canny = $F.CompositeFilter([/*subselection,*/gray, $F.CannyEdgesFilter( 1, 7 )]).worker( runInThread )
+            /*$F.ConvolutionMatrixFilter([2,  4,  5,  4, 2,
+                                        4,  9, 12,  9, 4,
+                                        5, 12, 15, 12, 5,
+                                        4,  9, 12,  9, 4,
+                                        2,  4,  5,  4, 2], 1.0/159.0).setMode($F.MODE.GRAY)*/
+            ,canny = $F.CompositeFilter([
+                /*subselection,*/gray,
+                $F.HistogramEqualizeFilter($F.MODE.GRAY),
+                gauss,
+                $F.CannyEdgesFilter(35, 70, false)
+            ]).worker( runInThread )
             ,faceDetector = $F.CompositeFilter([
                 gray,
-                $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt)/*,
-                new $F.InlineFilter(function(params, im, w, h, meta){
+                $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt),
+                /*new $F.InlineFilter(function(params, im, w, h, meta){
                     var faces = meta.container.filters[meta.index-1].metaData().objects;
                     if ( faces.length )
                         // restrict eyes detection on first detected face
@@ -482,8 +484,7 @@
         
         /*function dotest2()
         {
-            var A=$F.ImArray, 
-                a, a2;
+            var A=$F.ImArray, a, a2;
             a = new A([1,2,3]);
             a2 = new A(a);
             

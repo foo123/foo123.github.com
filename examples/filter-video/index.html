@@ -127,7 +127,7 @@
         </div>
         
         <div id="filters"  class="fluid col-2-5 panel">
-            <strong>Post-Processed Video (downsampled)</strong><br /><br />
+            <strong>Post-Processed Video <!--(downsampled)--></strong><br /><br />
         </div>
     
     </div>
@@ -190,6 +190,9 @@
                     <option value='#'>Statistical Median 5x5</option>
                     <option value='#'>Morphological Dilate</option>
                     <option value='#'>Morphological Erode</option>
+                    <option value='#'>Morphological Opening</option>
+                    <option value='#'>Morphological Gradient</option>
+                    <option value='#'>Morphological Laplacian</option>
                 </optgroup>
                 <optgroup label="Displace/Affine/Geometric Filters">
                     <option value='#'>TwirlMap</option>
@@ -387,6 +390,8 @@
                 0, 1, 0, 0, 0, 0, 0,
                 1, 0, 0, 0, 0, 0, 0
             ]),
+            mgrad = $F.MorphologicalFilter().gradient(3),
+            mlap = $F.MorphologicalFilter().laplacian(3),
             open = $F.MorphologicalFilter().opening(3),
             quantized_connected_components = $F.ConnectedComponentsFilter(4, 0.25, $F.MODE.HUE, 100),
             quantized_connected_components_contours = $F.CompositeFilter([quantized_connected_components, laplace3]),
@@ -420,7 +425,7 @@
             hueE = $F.ColorMapFilter().setMode($F.MODE.HUE).extract(10, 150),
             hueExtractor = $F.CompositeFilter([hueE, open]),
             bokeh = $F.BokehFilter(0.5, 0.5, 100, 10),
-            canny = $F.CompositeFilter([gray, $F.CannyEdgesFilter(1.5, 5.5)]),
+            canny = $F.CompositeFilter([gray, $F.CannyEdgesFilter(30, 70)]),
             shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(3, 0),
             perlinDisplaceFilter = $F.DisplacementMapFilter(),
             
@@ -462,6 +467,9 @@
                 median5,
                 mdilate,
                 merode,
+                open,
+                mgrad,
+                mlap,
                 twirlFilter,
                 sphereFilter,
                 //rippleFilter,
