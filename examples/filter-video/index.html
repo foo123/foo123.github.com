@@ -306,11 +306,11 @@
             FilterBundle: "filter.bundle"
         },
         bundles: {
-            FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_IO", "FILTER_CODECS", "FILTER_FILTERS", "FILTER_PLUGINS"]
+            FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_ML", "FILTER_IO", "FILTER_CODECS", "FILTER_FILTERS", "FILTER_PLUGINS"]
         }
     });
-    require(['Classy', 'Asynchronous', 'FILTER', 'FILTER_IO', 'FILTER_CODECS', 'FILTER_FILTERS', 'FILTER_PLUGINS', 'AreaSelect', 'Stats'/*, 'domReady!'*/], 
-        function( _1, _2, _3, _4, _5, _6, $F, AreaSelect, Stats ) {
+    require(['Classy', 'Asynchronous', 'FILTER', 'FILTER_ML', 'FILTER_IO', 'FILTER_CODECS', 'FILTER_FILTERS', 'FILTER_PLUGINS', 'AreaSelect', 'Stats'/*, 'domReady!'*/], 
+        function( _1, _2, _3, _4, _5, _6, _7, $F, AreaSelect, Stats ) {
         document.getElementById('lib-version').innerHTML = $F.VERSION;
         var 
             icon,
@@ -341,11 +341,11 @@
             invert = $F.ColorTableFilter().invert(),
             gray = $F.ColorMatrixFilter().grayscale(),
             grc = $F.ColorMatrixFilter().grayscale().contrast(1),
-            blur3g = $F.ConvolutionMatrixFilter().fastGauss(4, 3).setMode($F.MODE.GRAY),
-            blur3 = $F.ConvolutionMatrixFilter().fastGauss(4, 3),
-            blur7 = $F.ConvolutionMatrixFilter().fastGauss(4, 7),
-            blur15 = $F.ConvolutionMatrixFilter().fastGauss(4, 15),
-            blur51 = $F.ConvolutionMatrixFilter().fastGauss(4, 51),
+            blur3g = $F.ConvolutionMatrixFilter().fastGauss(3, 3).setMode($F.MODE.GRAY),
+            blur3 = $F.ConvolutionMatrixFilter().fastGauss(3, 3),
+            blur7 = $F.ConvolutionMatrixFilter().fastGauss(3, 7),
+            blur15 = $F.ConvolutionMatrixFilter().fastGauss(3, 15),
+            blur51 = $F.ConvolutionMatrixFilter().fastGauss(3, 51),
             sobel = $F.ConvolutionMatrixFilter().sobel(3).setMode($F.MODE.GRAY),
             laplace3 = $F.ConvolutionMatrixFilter().laplace(3).setMode($F.MODE.GRAY),
             laplace5 = $F.ConvolutionMatrixFilter().laplace(5).setMode($F.MODE.GRAY),
