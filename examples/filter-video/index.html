@@ -222,8 +222,8 @@
                     <option value='#'>Hexagonal Pixelate 5%</option>
                     <option value='#'>Hexagonal Pixelate 10%</option>-->
                     <option value='#'>Halftoned/Dithered</option>
-                    <option value='#'>Extract range of Hues, Open Morphological</option>
                     <option value='#'>Canny Edges Extractor</option>
+                    <option value='#'>Extract range of Hues</option>
                     <option value='#'>Quantize Hue and Extract Connected Components</option>
                     <option value='#'>Quantize Hue and Extract Connected Components Contours</option>
                 </optgroup>
@@ -393,7 +393,7 @@
             mgrad = $F.MorphologicalFilter().gradient(3),
             mlap = $F.MorphologicalFilter().laplacian(3),
             open = $F.MorphologicalFilter().opening(3),
-            quantized_connected_components = $F.ConnectedComponentsFilter(4, 0.25, $F.MODE.HUE, 100),
+            quantized_connected_components = $F.ConnectedComponentsFilter(8, 0.25, $F.MODE.HUE, 45),
             quantized_connected_components_contours = $F.CompositeFilter([quantized_connected_components, laplace3]),
             noise = $F.NoiseFilter(10, 70),
             displaceFilter = $F.DisplacementMapFilter(displacemap),
@@ -422,8 +422,8 @@
             hsv = $F.ColorMapFilter().RGB2HSV(),
             cmyk = $F.ColorMapFilter().RGB2CMYK(),
             hueOnly = $F.ColorMapFilter().hue(),
-            hueE = $F.ColorMapFilter().setMode($F.MODE.HUE).extract(10, 150),
-            hueExtractor = $F.CompositeFilter([hueE, open]),
+            /*hueE =*/ hueExtractor = $F.ColorMapFilter().setMode($F.MODE.HUE).extract(10, 50),
+            //hueExtractor = $F.CompositeFilter([hueE, open]),
             bokeh = $F.BokehFilter(0.5, 0.5, 100, 10),
             canny = $F.CompositeFilter([gray, $F.CannyEdgesFilter(30, 70)]),
             shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(3, 0),
@@ -493,8 +493,8 @@
                 hexapixelate5,
                 hexapixelate10,*/
                 halftoned,
-                hueExtractor,
                 canny,
+                hueExtractor,
                 quantized_connected_components,
                 quantized_connected_components_contours
             ],
