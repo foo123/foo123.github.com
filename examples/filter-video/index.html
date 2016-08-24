@@ -162,12 +162,13 @@
                     <option value='#'>Colorize</option>
                     <option value='#'>Grayscale</option>
                     <option value='#'>Grayscale and Contrast</option>
+                    <option value='#'>YCbCr Color Space</option>
                 </optgroup>
-                <optgroup label="Color Map Filters and Color Space Transformations">
-                    <option value='#'>YCbCr Color Space (Color Matrix)</option>
-                    <option value='#'>HSV Color Space (Color Map)</option>
-                    <option value='#'>CMY Color Space (Color Map)</option>
-                    <option value='#'>Hue only as grayscale Image (Color Map)</option>
+                <optgroup label="Color Map Filters">
+                    <option value='#'>HSV Color Space</option>
+                    <option value='#'>CMY Color Space</option>
+                    <option value='#'>Hue only as grayscale Image</option>
+                    <option value='#'>Extract range of Hues</option>
                 </optgroup>
                 <optgroup label="Convolution Matrix Filters">
                     <option value='#'>Emboss</option>
@@ -175,13 +176,13 @@
                     <option value='#'>Fast Gauss Blur 7x7</option>
                     <option value='#'>Fast Gauss Blur 15x15</option>
                     <option value='#'>Fast Gauss Blur 51x51</option>
-                    <option value='#'>Grayscale, Sobel Edges 3x3</option>
-                    <option value='#'>Grayscale, Sobel Edges 3x3, Binary Threshold</option>
-                    <option value='#'>Grayscale, Laplace Edges 3x3</option>
-                    <option value='#'>Grayscale, Laplace Edges 5x5</option>
-                    <option value='#'>Grayscale, Laplace Edges 5x5, Binary Threshold</option>
-                    <option value='#'>Grayscale, Laplace Edges 11x11, Binary Threshold</option>
-                    <option value='#'>Gray, Gauss, Laplace 5x5, Threshold</option>
+                    <option value='#'>Gray, Sobel 3x3</option>
+                    <option value='#'>Gray, Sobel 3x3, Threshold</option>
+                    <option value='#'>Gray, Laplace 3x3</option>
+                    <option value='#'>Gray, Laplace 5x5</option>
+                    <option value='#'>Gray, Laplace 5x5, Threshold</option>
+                    <option value='#'>Gray, Laplace 11x11, Threshold</option>
+                    <option value='#'>Gray, Gauss, Laplace 3x3, Threshold</option>
                 </optgroup>
                 <optgroup label="Statistical/Morphological Filters">
                     <option value='#'>Statistical Minimum 3x3</option>
@@ -191,8 +192,8 @@
                     <option value='#'>Morphological Dilate</option>
                     <option value='#'>Morphological Erode</option>
                     <option value='#'>Morphological Opening</option>
-                    <option value='#'>Morphological Gradient</option>
-                    <option value='#'>Morphological Laplacian</option>
+                    <option value='#'>Morphological Gradient, Threshold</option>
+                    <option value='#'>Morphological Laplacian, Threshold</option>
                 </optgroup>
                 <optgroup label="Displace/Affine/Geometric Filters">
                     <option value='#'>TwirlMap</option>
@@ -201,14 +202,13 @@
                     <option value='#'>DisplaceMap with Radial Gradient</option>
                     <option value='#'>DisplaceMap with Perlin Noise</option>
                 </optgroup>
-                <optgroup label="Blend Filters">
+                <optgroup label="Blend Filter">
                     <option value='#'>Blend</option>
                 </optgroup>
                 <optgroup label="Plugins and Composites">
                     <option value='#'>Noise</option>
-                    <option value='#'>Equalize Histogram</option>
                     <option value='#'>Alpha Mask (ChannelCopy)</option>
-                    <option value='#'>Bokeh (Depth-of-Field)</option>
+                    <option value='#'>Equalize Histogram</option>
                     <option value='#'>Pixelate 2%</option>
                     <option value='#'>Pixelate 3%</option>
                     <option value='#'>Pixelate 5%</option>
@@ -221,9 +221,9 @@
                     <option value='#'>Hexagonal Pixelate 3%</option>
                     <option value='#'>Hexagonal Pixelate 5%</option>
                     <option value='#'>Hexagonal Pixelate 10%</option>-->
+                    <option value='#'>Bokeh (Depth-of-Field)</option>
                     <option value='#'>Halftoned/Dithered</option>
                     <option value='#'>Canny Edges Extractor</option>
-                    <option value='#'>Extract range of Hues</option>
                     <option value='#'>Quantize Hue and Extract Connected Components</option>
                     <option value='#'>Quantize Hue and Extract Connected Components Contours</option>
                 </optgroup>
@@ -335,13 +335,14 @@
             flipX = $F.AffineMatrixFilter().flipX(),
             flipY = $F.AffineMatrixFilter().flipY(),
             binary = $F.ColorTableFilter().threshold(0.7),
+            binary2 = $F.ColorTableFilter().threshold(0.05),
             solarize = $F.ColorTableFilter().solarize(0.6),
             solarize2 = $F.ColorTableFilter().solarize2(0.4),
             posterize = $F.ColorTableFilter().posterize(8),
             invert = $F.ColorTableFilter().invert(),
             gray = $F.ColorMatrixFilter().grayscale(),
             grc = $F.ColorMatrixFilter().grayscale().contrast(1),
-            blur3g = $F.ConvolutionMatrixFilter().fastGauss(3, 3).setMode($F.MODE.GRAY),
+            blur3g = $F.ConvolutionMatrixFilter().fastGauss(5, 3).setMode($F.MODE.GRAY),
             blur3 = $F.ConvolutionMatrixFilter().fastGauss(3, 3),
             blur7 = $F.ConvolutionMatrixFilter().fastGauss(3, 7),
             blur15 = $F.ConvolutionMatrixFilter().fastGauss(3, 15),
@@ -357,7 +358,7 @@
             grl11 = $F.CompositeFilter([gray, laplace11]),
             grlb5 = $F.CompositeFilter([gray, laplace5, binary]),
             grlb11 = $F.CompositeFilter([gray, laplace11, binary]),
-            grglb5 = $F.CompositeFilter([gray, blur3g, laplace5, binary]),
+            grglb5 = $F.CompositeFilter([gray, blur3g, laplace3, binary2]),
             emboss = $F.ConvolutionMatrixFilter().emboss(),
             redCGray = $F.ColorMatrixFilter().redChannel(true),
             redC = $F.ColorMatrixFilter().redChannel(),
@@ -390,8 +391,16 @@
                 0, 1, 0, 0, 0, 0, 0,
                 1, 0, 0, 0, 0, 0, 0
             ]),
-            mgrad = $F.MorphologicalFilter().gradient(3),
-            mlap = $F.MorphologicalFilter().laplacian(3),
+            mgrad = $F.CompositeFilter([
+                gray,
+                $F.MorphologicalFilter().gradient(3).setMode($F.MODE.GRAY),
+                binary2
+            ]),
+            mlap = $F.CompositeFilter([
+                gray,
+                $F.MorphologicalFilter().laplacian(3).setMode($F.MODE.GRAY),
+                binary2
+            ]),
             open = $F.MorphologicalFilter().opening(3),
             quantized_connected_components = $F.ConnectedComponentsFilter(8, 0.25, $F.MODE.HUE, 45),
             quantized_connected_components_contours = $F.CompositeFilter([quantized_connected_components, laplace3]),
@@ -449,6 +458,7 @@
                 hsv,
                 cmyk,
                 hueOnly,
+                hueExtractor,
                 emboss,
                 blur3,
                 blur7,
@@ -477,9 +487,8 @@
                 perlinDisplaceFilter,
                 blend,
                 noise,
-                equ,
                 alphaMask,
-                bokeh,
+                equ,
                 pixelate2,
                 pixelate3,
                 pixelate5,
@@ -492,9 +501,9 @@
                 hexapixelate3,
                 hexapixelate5,
                 hexapixelate10,*/
+                bokeh,
                 halftoned,
                 canny,
-                hueExtractor,
                 quantized_connected_components,
                 quantized_connected_components_contours
             ],
