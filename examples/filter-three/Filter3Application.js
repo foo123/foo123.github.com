@@ -222,16 +222,16 @@ function callback(ind)
         if (ind==7)
         {
             displacemap.createImageData(image[7].width,image[7].height);
-            displacemap.ictx.fillStyle="rgb(128,128,128)";
-            displacemap.ictx.fillRect(0,0,displacemap.width,displacemap.height);
+            displacemap.octx.fillStyle="rgb(128,128,128)";
+            displacemap.octx.fillRect(0,0,displacemap.width,displacemap.height);
             // create radial gradient
-            var grd = displacemap.ictx.createRadialGradient(displacemap.width/2, displacemap.height/2, 0, displacemap.width/2, displacemap.height/2, displacemap.width/2);
+            var grd = displacemap.octx.createRadialGradient(displacemap.width/2, displacemap.height/2, 0, displacemap.width/2, displacemap.height/2, displacemap.width/2);
             grd.addColorStop(1, "#808080"); // neutral
             grd.addColorStop(0, "#ffffff"); // white
-            displacemap.ictx.fillStyle = grd;
-            displacemap.ictx.beginPath();
-            displacemap.ictx.arc(displacemap.width/2,displacemap.height/2,displacemap.width/2,0,Math.PI*2,true);
-            displacemap.ictx.fill();
+            displacemap.octx.fillStyle = grd;
+            displacemap.octx.beginPath();
+            displacemap.octx.arc(displacemap.width/2,displacemap.height/2,displacemap.width/2,0,Math.PI*2,true);
+            displacemap.octx.fill();
             displacemap.store();
             //image[7].setPixelData(displacemap.getPixelData());
         }
