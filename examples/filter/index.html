@@ -299,17 +299,11 @@
             ]).worker( runInThread )
             ,displace = $F.DisplacementMapFilter( displacemap ).worker( runInThread )
             ,floodFill = $F.CompositeFilter([
-                $F.FloodFillFilter(25/* x0 */,75/* y0 */,0xff0000/* fill color */,0.8/* tolerance */),
-                $F.FloodFillFilter(75/* x0 */,112/* y0 */,0xff0000/* fill color */,0.8/* tolerance */),
+                $F.FloodFillFilter(25/* x0 */,75/* y0 */,0xff0000/* fill color */,0.2/* tolerance */, 0x0/* border */),
+                $F.FloodFillFilter(75/* x0 */,112/* y0 */,0xff0000/* fill color */,0.2/* tolerance */, 0x0/* border */),
                 $F.FloodFillFilter(125/* x0 */,75/* y0 */,0x0000ff/* fill color */,0.8/* tolerance */),
                 $F.FloodFillFilter(75/* x0 */,36/* y0 */,0x0000ff/* fill color */,0.8/* tolerance */)
             ]).worker( runInThread )
-            /*,floodFill = new $F.CompositeFilter([
-                $F.FloodFillFilter(25/* x0 * /,75/* y0 * /,0xff0000/* fill color * /,0.05/* tolerance * /,0x0/*border* /),
-                $F.FloodFillFilter(75/* x0 * /,112/* y0 * /,0xff0000/* fill color * /,0.05/* tolerance * /,0x0/*border* /),
-                $F.FloodFillFilter(125/* x0 * /,75/* y0 * /,0x0000ff/* fill color * /,0.05/* tolerance * /,0x0/*border* /),
-                $F.FloodFillFilter(75/* x0 * /,36/* y0 * /,0x0000ff/* fill color * /,0.05/* tolerance * /,0x0/*border* /)
-            ]).worker( runInThread )*/
             ,seamless = $F.SeamlessTileFilter().worker( runInThread )
             //,bokeh = $F.BokehFilter(80, 90, 60, 10).worker( runInThread )
             /*$F.ConvolutionMatrixFilter([2,  4,  5,  4, 2,
