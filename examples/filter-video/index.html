@@ -417,10 +417,10 @@
             trianglepixelate3 = $F.TriangularPixelateFilter(3),
             trianglepixelate5 = $F.TriangularPixelateFilter(5),
             trianglepixelate10 = $F.TriangularPixelateFilter(10),
-            //hexapixelate2 = $F.HexagonalPixelateFilter(2),
-            //hexapixelate3 = $F.HexagonalPixelateFilter(3),
-            //hexapixelate5 = $F.HexagonalPixelateFilter(5),
-            //hexapixelate10 = $F.HexagonalPixelateFilter(10),
+            /*hexapixelate2 = $F.HexagonalPixelateFilter(2),
+            hexapixelate3 = $F.HexagonalPixelateFilter(3),
+            hexapixelate5 = $F.HexagonalPixelateFilter(5),
+            hexapixelate10 = $F.HexagonalPixelateFilter(10),*/
             halftoned = $F.CompositeFilter([
                 gray, $F.HalftoneFilter(1).threshold(0.4)/*.setMode($F.MODE.GRAY)*/
             ]),

@@ -40,6 +40,7 @@
             width:250px;
             right:0;
             top:100px;
+            padding-top:50px;
         }
         #container { max-width:400px; }
         #filters { max-width:600px; }
@@ -128,15 +129,13 @@
     <div style="padding:0;margin:0;position:relative;z-index:1000;margin-left:25px">
         <button id="synchronous" class="button">Synchronous</button>
         <button id="parallel" class="button">Parallel</button>
+        <button id="applyBt" style="display:none" class="button">Apply</button>
+        <button id="restoreBt" style="display:none" class="button">Restore</button>
     </div>
     <br />
     
     
-    <aside id="aside">
-        <button id="applyBt" style="display:none" class="button">Apply</button>
-        <br />
-        <button id="restoreBt" style="display:none" class="button">Restore</button>
-    </aside>
+    <aside id="aside"></aside>
     
     <div id="container" class="panel"></div>
     
