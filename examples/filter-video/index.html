@@ -32,6 +32,10 @@
         strong {
             font-size:14px;
         }
+        select optgroup {
+            padding:10px 0 !important;
+            border-bottom:2px solid #000 !important;
+        }
         #statsContainer {
             margin-bottom:20px;
         }
@@ -155,7 +159,7 @@
                     <option value='#'>Posterize</option>
                     <option value='#'>Invert</option>
                 </optgroup>
-                <optgroup label="Color Matrix Filters">
+                <optgroup label="Color Matrix/Color Map Filters">
                     <option value='#'>RED Channel</option>
                     <option value='#'>GREEN Channel</option>
                     <option value='#'>BLUE Channel</option>
@@ -163,8 +167,6 @@
                     <option value='#'>Grayscale</option>
                     <option value='#'>Grayscale and Contrast</option>
                     <option value='#'>YCbCr Color Space</option>
-                </optgroup>
-                <optgroup label="Color Map Filters">
                     <option value='#'>HSV Color Space</option>
                     <option value='#'>CMY Color Space</option>
                     <option value='#'>Hue only as grayscale Image</option>
@@ -205,28 +207,32 @@
                 <optgroup label="Blend Filter">
                     <option value='#'>Blend</option>
                 </optgroup>
-                <optgroup label="Plugins and Composites">
+                <optgroup label="Other Plugins and Composite Filters">
                     <option value='#'>Noise</option>
                     <option value='#'>Alpha Mask (ChannelCopy)</option>
                     <option value='#'>Equalize Histogram</option>
-                    <option value='#'>Pixelate 2%</option>
-                    <option value='#'>Pixelate 3%</option>
-                    <option value='#'>Pixelate 5%</option>
-                    <option value='#'>Pixelate 10%</option>
-                    <option value='#'>Triangular Pixelate 2%</option>
-                    <option value='#'>Triangular Pixelate 3%</option>
-                    <option value='#'>Triangular Pixelate 5%</option>
-                    <option value='#'>Triangular Pixelate 10%</option>
-                    <option value='#'>Rhomboid Pixelate 2%</option>
-                    <option value='#'>Rhomboid Pixelate 3%</option>
-                    <option value='#'>Rhomboid Pixelate 5%</option>
-                    <option value='#'>Rhomboid Pixelate 10%</option>
-                    <!--<option value='#'>Hexagonal Pixelate 2%</option>
-                    <option value='#'>Hexagonal Pixelate 3%</option>
-                    <option value='#'>Hexagonal Pixelate 5%</option>
-                    <option value='#'>Hexagonal Pixelate 10%</option>-->
                     <option value='#'>Bokeh (Depth-of-Field)</option>
-                    <option value='#'>Halftoned/Dithered</option>
+                    <option value='#'>Halftone</option>
+                    <option value='#'>Pixelate Rectangular&nbsp;2%</option>
+                    <option value='#'>Pixelate Rectangular&nbsp;3%</option>
+                    <option value='#'>Pixelate Rectangular&nbsp;5%</option>
+                    <option value='#'>Pixelate Rectangular&nbsp;10%</option>
+                    <option value='#'>Pixelate Rectangular&nbsp;15%</option>
+                    <option value='#'>Pixelate Triangular&nbsp;&nbsp;&nbsp;&nbsp;2%</option>
+                    <option value='#'>Pixelate Triangular&nbsp;&nbsp;&nbsp;&nbsp;3%</option>
+                    <option value='#'>Pixelate Triangular&nbsp;&nbsp;&nbsp;&nbsp;5%</option>
+                    <option value='#'>Pixelate Triangular&nbsp;&nbsp;&nbsp;&nbsp;10%</option>
+                    <option value='#'>Pixelate Triangular&nbsp;&nbsp;&nbsp;&nbsp;15%</option>
+                    <option value='#'>Pixelate Rhomboid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2%</option>
+                    <option value='#'>Pixelate Rhomboid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3%</option>
+                    <option value='#'>Pixelate Rhomboid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5%</option>
+                    <option value='#'>Pixelate Rhomboid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10%</option>
+                    <option value='#'>Pixelate Rhomboid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15%</option>
+                    <option value='#'>Pixelate Hexagonal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2%</option>
+                    <option value='#'>Pixelate Hexagonal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3%</option>
+                    <option value='#'>Pixelate Hexagonal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5%</option>
+                    <option value='#'>Pixelate Hexagonal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10%</option>
+                    <option value='#'>Pixelate Hexagonal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15%</option>
                     <option value='#'>Canny Edges Extractor</option>
                     <option value='#'>Quantize Hue and Extract Connected Components</option>
                     <option value='#'>Quantize Hue and Extract Connected Components Contours</option>
@@ -413,22 +419,7 @@
             twirlFilter = $F.GeometricMapFilter().twirl(Math.PI/2, 150, 0.5, 0.5),
             sphereFilter = $F.GeometricMapFilter().sphere(150, 0.5, 0.5),
             //rippleFilter = $F.GeometricMapFilter().ripple(10, 16, 10, 0, 0.5, 0.5),
-            pixelate2 = $F.PixelateFilter(2),
-            pixelate3 = $F.PixelateFilter(3),
-            pixelate5 = $F.PixelateFilter(5),
-            pixelate10 = $F.PixelateFilter(10),
-            trianglepixelate2 = $F.TriangularPixelateFilter(2),
-            trianglepixelate3 = $F.TriangularPixelateFilter(3),
-            trianglepixelate5 = $F.TriangularPixelateFilter(5),
-            trianglepixelate10 = $F.TriangularPixelateFilter(10),
-            rhombpixelate2 = $F.RhomboidPixelateFilter(2),
-            rhombpixelate3 = $F.RhomboidPixelateFilter(3),
-            rhombpixelate5 = $F.RhomboidPixelateFilter(5),
-            rhombpixelate10 = $F.RhomboidPixelateFilter(10),
-            /*hexapixelate2 = $F.HexagonalPixelateFilter(2),
-            hexapixelate3 = $F.HexagonalPixelateFilter(3),
-            hexapixelate5 = $F.HexagonalPixelateFilter(5),
-            hexapixelate10 = $F.HexagonalPixelateFilter(10),*/
+            pixelate = $F.PixelateFilter(2, 'rectangular'),
             halftoned = $F.CompositeFilter([
                 gray, $F.HalftoneFilter(1).threshold(0.4)/*.setMode($F.MODE.GRAY)*/
             ]),
@@ -497,24 +488,28 @@
                 noise,
                 alphaMask,
                 equ,
-                pixelate2,
-                pixelate3,
-                pixelate5,
-                pixelate10,
-                trianglepixelate2,
-                trianglepixelate3,
-                trianglepixelate5,
-                trianglepixelate10,
-                rhombpixelate2,
-                rhombpixelate3,
-                rhombpixelate5,
-                rhombpixelate10,
-                /*hexapixelate2,
-                hexapixelate3,
-                hexapixelate5,
-                hexapixelate10,*/
                 bokeh,
                 halftoned,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
+                pixelate,
                 canny,
                 quantized_connected_components,
                 quantized_connected_components_contours
@@ -523,7 +518,29 @@
             currentFilterIndex = 0,  currentFilter = videoFilters[currentFilterIndex],
             renderInterval = 60,  rnd = Math.random, Max = Math.max, dx, dy, dx2, dy2, dtheta, dr, vw, vh,
             currentSelection = null, areaSelect, doSelect = false, doDeselect = false,
-            cX1 = 0, cX2 = 0, cY1 = 0, cY2 = 0, stats
+            cX1 = 0, cX2 = 0, cY1 = 0, cY2 = 0, stats,
+            pixelation_params = [
+            [2,  'rectangular'],
+            [3,  'rectangular'],
+            [5,  'rectangular'],
+            [10, 'rectangular'],
+            [15, 'rectangular'],
+            [2,  'triangular'],
+            [3,  'triangular'],
+            [5,  'triangular'],
+            [10, 'triangular'],
+            [15, 'triangular'],
+            [2,  'rhomboidal'],
+            [3,  'rhomboidal'],
+            [5,  'rhomboidal'],
+            [10, 'rhomboidal'],
+            [15, 'rhomboidal'],
+            [2,  'hexagonal'],
+            [3,  'hexagonal'],
+            [5,  'hexagonal'],
+            [10, 'hexagonal'],
+            [15, 'hexagonal']
+            ]
         ;
         
         function init( )
@@ -596,6 +613,11 @@
                 {
                     blendSelect.style.display = "none";
                     blendAlpha.style.display = "none";
+                }
+                if ( 50 <= currentFilterIndex && currentFilterIndex < 50+pixelation_params.length )
+                {
+                    pixelate.scale = pixelation_params[currentFilterIndex-50][0];
+                    pixelate.pattern = pixelation_params[currentFilterIndex-50][1];
                 }
             });
             
@@ -695,8 +717,6 @@
                 cY2 = vh;
             }
                 
-            // down-scale
-            //downscaleVideo.setImage(video);
             if (doSelect && currentSelection)
             {
                 postVideo.select( currentSelection[0], currentSelection[1], currentSelection[2], currentSelection[3] );
@@ -724,13 +744,12 @@
                 displaceFilter.startY += dy/vh;
                 if (displaceFilter.startX<-0.5 || displaceFilter.startX>0.5) dx = -dx;
                 if (displaceFilter.startY<-0.5 || displaceFilter.startY>0.5) dy = -dy;
-                //postVideo.image( /*alphamask*/displacemap );
             }
             else if (perlinDisplaceFilter===currentFilter)
             {
                 if ( null === perlinNoise )
                 {
-                    perlinDisplaceFilter.setInput( "map", perlinNoise = $F.Image.PerlinNoise( vw, vh, 0, true/* seamless */, true/* grayscale */, 100, 80 ) );
+                    perlinDisplaceFilter.setInput( "map", perlinNoise = $F.Image.PerlinNoise( vw, vh, 0, true/* seamless */, true/* grayscale */, vw/4, vh/4 ) );
                 }
                 else
                 {
@@ -785,15 +804,7 @@
                 if (blend.matrix[2]<=cY1 || blend.matrix[2]>=cY2) dy = -dy;
             }
             
-            /*if ( currentFilter )
-            {
-                resample_and_process._stack[1] = currentFilter;
-                resample_and_process.apply( postVideo );
-            }*/
             if ( currentFilter ) currentFilter.apply( postVideo );
-            
-            // up-scale
-            //upscaleVideo.setImage(downscaleVideo.canvasElement);
             
             stats.end( );
         }

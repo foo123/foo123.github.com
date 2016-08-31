@@ -151,8 +151,8 @@
             FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_ML", "FILTER_IO", "FILTER_CODECS", "FILTER_FILTERS", "FILTER_PLUGINS"]
         }
     });
-    require(['cascades/haarcascade_frontalface_alt'/*, 'cascades/haarcascade_mcs_mouth'*/, 'jQuery', 'Classy', 'Asynchronous', 'FILTER', 'FILTER_ML', 'FILTER_IO', 'FILTER_CODECS', 'FILTER_FILTERS', 'FILTER_PLUGINS'],
-    function( haarcascade_frontalface_alt/*, haarcascade_mcs_mouth*/, $, _1, _2, _3, _4, _5, _6, _7, $F ) {
+    require(['cascades/haarcascade_frontalface_alt', 'cascades/haarcascade_eye', 'jQuery', 'Classy', 'Asynchronous', 'FILTER', 'FILTER_ML', 'FILTER_IO', 'FILTER_CODECS', 'FILTER_FILTERS', 'FILTER_PLUGINS'],
+    function( haarcascade_frontalface_alt, haarcascade_eye, $, _1, _2, _3, _4, _5, _6, _7, $F ) {
         
         // utils
         function br() { return $('<br />'); }
@@ -172,6 +172,7 @@
             ,htmlImage = $F.IO.HTMLImageLoader( )
             ,binaryImage = $F.IO.BinaryManager( )
             ,che = '../common/assets/che.jpg'
+            ,face_model = '../common/assets/model_face.jpg'
             ,yinyang = '../common/assets/yin_yang_blank.png'
             ,yinyang_tga = '../common/assets/yin_yang_blank.tga'
             ,yinyang_gif = '../common/assets/yin_yang_blank.gif'
@@ -227,7 +228,7 @@
             //,im16 = binaryImage.codec( $F.Codec.TGA ).read( yinyang_tga )
             ,im17 = htmlImage.load( che )
             ,im18 = htmlImage.load( che )
-            ,im19 = htmlImage.load( che )
+            ,im19 = htmlImage.load( face_model )
             
              // filters
             //,redChannel = $F.ColorMatrixFilter( ).worker( runInThread ).redChannel( )
@@ -259,6 +260,7 @@
                 1, 0, 0, 0
             ]).worker( runInThread )*/
             ,equalize = $F.HistogramEqualizeFilter( $F.MODE.INTENSITY ).worker( runInThread )
+            ,equalize_gray = $F.HistogramEqualizeFilter( $F.MODE.GRAY )
             //,rgbequalize = $F.HistogramEqualizeFilter( $F.MODE.RGB ).worker( runInThread )
             //,noise = $F.NoiseFilter( -127, 127 ).worker( runInThread )
             ,sepia = $F.ColorMatrixFilter( ).sepia2( ).worker( runInThread )
@@ -274,9 +276,9 @@
                 /*downsampler,*/ gray,
                 $F.HalftoneFilter(1).threshold(0.4)/*.setMode($F.MODE.GRAY)*/
             ]).worker( runInThread )
-            //,pixelate = $F.PixelateFilter( 8 ).worker( runInThread )
-            //,pixelate = $F.TriangularPixelateFilter( 10 ).worker( runInThread )
-            //,pixelate = $F.HexagonalPixelateFilter( 25 ).worker( runInThread )
+            //,pixelate = $F.PixelateFilter( 8, 'rectangular' ).worker( runInThread )
+            //,pixelate = $F.PixelateFilter( 10, 'triangular' ).worker( runInThread )
+            //,pixelate = $F.PixelateFilter( 25, 'hexagonal' ).worker( runInThread )
             //,connected_components = $F.ConnectedComponentsFilter(4, 0.1, $F.MODE.HUE, 30).worker( runInThread )
             //,hueExtractor = $F.ColorMapFilter( ).setMode( $F.MODE.HUE ).extract( 10, 36 ).worker( runInThread ) // extract hues corresponding to skin color
             //,thresh = $F.ColorTableFilter( ).threshold( 0.94 ).worker( runInThread )
@@ -299,10 +301,11 @@
             ]).worker( runInThread )
             ,displace = $F.DisplacementMapFilter( displacemap ).worker( runInThread )
             ,floodFill = $F.CompositeFilter([
-                $F.FloodFillFilter(25/* x0 */,75/* y0 */,0xff0000/* fill color */,0.2/* tolerance */, 0x0/* border */),
-                $F.FloodFillFilter(75/* x0 */,112/* y0 */,0xff0000/* fill color */,0.2/* tolerance */, 0x0/* border */),
-                $F.FloodFillFilter(125/* x0 */,75/* y0 */,0x0000ff/* fill color */,0.8/* tolerance */),
-                $F.FloodFillFilter(75/* x0 */,36/* y0 */,0x0000ff/* fill color */,0.8/* tolerance */)
+                /*                 x0, y0,  color,   tolerance, exterior border */
+                $F.FloodFillFilter(25, 75,  0xff0000, 0.2,       0x0),
+                $F.FloodFillFilter(75, 112, 0xff0000, 0.2,       0x0),
+                $F.FloodFillFilter(125,75,  0x0000ff, 0.8           ),
+                $F.FloodFillFilter(75, 36,  0x0000ff, 0.8           )
             ]).worker( runInThread )
             ,seamless = $F.SeamlessTileFilter().worker( runInThread )
             //,bokeh = $F.BokehFilter(80, 90, 60, 10).worker( runInThread )
@@ -312,48 +315,63 @@
                                         4,  9, 12,  9, 4,
                                         2,  4,  5,  4, 2], 1.0/159.0).setMode($F.MODE.GRAY)*/
             ,canny = $F.CompositeFilter([
-                /*subselection,*/gray,
-                $F.HistogramEqualizeFilter($F.MODE.GRAY),
-                gauss,
-                $F.CannyEdgesFilter(35, 70, false)
+                /*subselection,*/gray, equalize_gray, gauss,
+                $F.CannyEdgesFilter(35, 70, false/* use custom pre-bluring */)
             ]).worker( runInThread )
             ,faceDetector = $F.CompositeFilter([
-                gray,
-                $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt),
-                /*new $F.InlineFilter(function(params, im, w, h, meta){
-                    var faces = meta.container.filters[meta.index-1].metaData().objects;
-                    if ( faces.length )
-                        // restrict eyes detection on first detected face
-                        meta.container.filters[meta.index+1].select(faces[0].x1/(w-1), faces[0].y1/(h-1), faces[0].x2/(w-1), faces[0].y2/(h-1));
+                gray, //equalize_gray,
+                $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt).params({
+                    scaleIncrement: 1.25,
+                    stepIncrement: 0.15,
+                    doCannyPruning: true,
+                    cannyLow: 10,
+                    cannyHigh: 100
+                }),
+                $F.InlineFilter(function(params, im, w, h, meta){
+                    if ( !meta.container.filters[meta.index+1] ) return im;
+                    var feats = meta.container.filters[meta.index-1].metaData().objects;
+                    if ( feats.length )
+                    {
+                        var sx1, sx2, sy1, sy2, sw, sh, face = feats[0], cx = 0.5*(face.x1+face.x2);
+                        // restrict eyes detection on first detected face (amplify selection a bit and focus on upper face, eyes region)
+                        sw = (1.2*face.width)|0; sh = (0.8*face.height)|0;
+                        sx1 = (cx-0.5*sw)|0; sx2 = (cx+0.5*sh)|0;
+                        sy1 = face.y1;  sy2 = (sy1+sh-1)|0;
+                        meta.container.filters[meta.index+1].select(sx1, sy1, sx2, sy2, true);
+                    }
+                    else
+                    {
+                        meta.container.filters[meta.index+1].select(false);
+                    }
                     return im;
                 }),
-                $F.HaarDetectorFilter(haarcascade_mcs_mouth.haarcascade_mcs_mouth).params({
-                    baseScale: 1,
-                    scaleIncrement: 1.25,
-                    stepIncrement: 0.25,
-                    minNeighbors: 1,
+                $F.HaarDetectorFilter(haarcascade_eye.haarcascade_eye).params({
+                    baseScale: 0.8,
+                    scaleIncrement: 1.2,
+                    stepIncrement: 0.15,
                     doCannyPruning: true,
-                    cannyLow: 20,
-                    cannyHigh: 200
-                })*/
+                    cannyLow: 2,
+                    cannyHigh: 100
+                })
             ]).update( false ).worker( runInThread )
             ,drawDetectedFeatures = function( detector, image ) {
                 var ctx = image.octx, i, l, rect,
-                    faces = detector.filters[1].metaData().objects/*,
-                    eyes = detector.filters[3].metaData().objects*/;
+                    faces = detector.filters[1].metaData().objects,
+                    eyes = detector.filters[3].metaData().objects;
                 // draw any features found
-                ctx.strokeStyle = "rgba(75,221,17,1)"; 
                 ctx.lineWidth = 2;
+                ctx.strokeStyle = "rgba(75,221,17,1)"; 
                 for (i=0,l=faces.length; i<l; i++)
                 {
                     rect = faces[i];
                     ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
                 }
-                /*for (i=0,l=eyes.length; i<l; i++)
+                ctx.strokeStyle = "rgba(200,2,2,1)"; 
+                for (i=0,l=eyes.length; i<l; i++)
                 {
                     rect = eyes[i];
                     ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
-                }*/
+                }
             }
         ;
         
@@ -396,7 +414,7 @@
         //.append(span('21.')).append(im21.domElement)
         ;
         
-        aside.append("<div><ol><li>Original Image</li><li>Red Channel</li><li>Green Channel</li><li>Blue Channel</li><li>Red Colorized applied to Selection</li><li>Grayscale and Contrast</li><li>Quick Sepia</li><li>Posterize</li><li>HalfTone (Plugin)</li><li>Emboss</li><li>Geometric Twirl Map</li><li>Displace Map</li><li>Grayscale, Sobel Gradient Magnitude (Composite)</li><li>Histogram Equalization (Plugin)</li><li>Perlin Noise Image</li><li>Flood Fill (Plugin)</li><li>Seamless Tile (Plugin)</li><li>Canny Edges (Plugin)</li><li>HAAR Detector for Face  (Plugin)</li></ol>M: Displace Map</div>");
+        aside.append("<div><ol><li>Original Image</li><li>Red Channel</li><li>Green Channel</li><li>Blue Channel</li><li>Red Colorized applied to Selection</li><li>Grayscale and Contrast</li><li>Quick Sepia</li><li>Posterize</li><li>HalfTone (Plugin)</li><li>Emboss</li><li>Geometric Twirl Map</li><li>Displace Map</li><li>Grayscale, Sobel Gradient Magnitude (Composite)</li><li>Histogram Equalization (Plugin)</li><li>Perlin Noise Image</li><li>Flood Fill (Plugin)</li><li>Seamless Tile (Plugin)</li><li>Canny Edges (Plugin)</li><li>Face and Eyes Composite HAAR Detector (Plugin)</li></ol>M: Displace Map</div>");
         
         function apply(evt)
         {
