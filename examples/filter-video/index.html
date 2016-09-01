@@ -213,26 +213,7 @@
                     <option value='#'>Equalize Histogram</option>
                     <option value='#'>Bokeh (Depth-of-Field)</option>
                     <option value='#'>Halftone</option>
-                    <option value='#'>Pixelate Rectangular&nbsp;2%</option>
-                    <option value='#'>Pixelate Rectangular&nbsp;3%</option>
-                    <option value='#'>Pixelate Rectangular&nbsp;5%</option>
-                    <option value='#'>Pixelate Rectangular&nbsp;10%</option>
-                    <option value='#'>Pixelate Rectangular&nbsp;15%</option>
-                    <option value='#'>Pixelate Triangular&nbsp;&nbsp;&nbsp;&nbsp;2%</option>
-                    <option value='#'>Pixelate Triangular&nbsp;&nbsp;&nbsp;&nbsp;3%</option>
-                    <option value='#'>Pixelate Triangular&nbsp;&nbsp;&nbsp;&nbsp;5%</option>
-                    <option value='#'>Pixelate Triangular&nbsp;&nbsp;&nbsp;&nbsp;10%</option>
-                    <option value='#'>Pixelate Triangular&nbsp;&nbsp;&nbsp;&nbsp;15%</option>
-                    <option value='#'>Pixelate Rhomboid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2%</option>
-                    <option value='#'>Pixelate Rhomboid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3%</option>
-                    <option value='#'>Pixelate Rhomboid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5%</option>
-                    <option value='#'>Pixelate Rhomboid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10%</option>
-                    <option value='#'>Pixelate Rhomboid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15%</option>
-                    <option value='#'>Pixelate Hexagonal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2%</option>
-                    <option value='#'>Pixelate Hexagonal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3%</option>
-                    <option value='#'>Pixelate Hexagonal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5%</option>
-                    <option value='#'>Pixelate Hexagonal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10%</option>
-                    <option value='#'>Pixelate Hexagonal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15%</option>
+                    <option value='#'>Pixelate</option>
                     <option value='#'>Canny Edges Extractor</option>
                     <option value='#'>Quantize Hue and Extract Connected Components</option>
                     <option value='#'>Quantize Hue and Extract Connected Components Contours</option>
@@ -274,8 +255,15 @@
                 <option value='LinearDodge'>LinearDodge (same as Add)</option>
                 <option value='LinearBurn'>LinearBurn (same as Subtract)</option>
             </select>
+            <select id="pixelationPattern">
+                <option value='rectangular'>Rectangular</option>
+                <option value='triangular'>Triangular</option>
+                <option value='rhomboidal'>Rhomboidal</option>
+                <option value='hexagonal'>Hexagonal</option>
+            </select>
             &nbsp;
-            <input id="blendAlpha" type="number" value="1.0" step="0.1" style="width:60px" />
+            <input id="blendAlpha" type="number" value="1.0" min="0.0" max="1.0" step="0.1" style="width:60px" />
+            <input id="pixelationScale" type="number" value="2" min="1" max="100" step="1" style="width:60px" />
         </div>
     
     </div>
@@ -328,6 +316,8 @@
             flipSelect = getEl('flipSelect'), 
             blendSelect = getEl('blendSelect'), 
             blendAlpha = getEl('blendAlpha'), 
+            pixelationPattern = getEl('pixelationPattern'), 
+            pixelationScale = getEl('pixelationScale'), 
             video = getEl('video'), 
             container = getEl('container'), 
             filters = getEl('filters'),
@@ -491,56 +481,14 @@
                 bokeh,
                 halftoned,
                 pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
-                pixelate,
                 canny,
                 quantized_connected_components,
                 quantized_connected_components_contours
             ],
-            currentOrientation = 0, currentBlendMode = "normal", currentBlendAlpha = 1.0,
-            currentFilterIndex = 0,  currentFilter = videoFilters[currentFilterIndex],
+            currentOrientation = 0, currentFilterIndex = 0,  currentFilter = videoFilters[currentFilterIndex],
             renderInterval = 60,  rnd = Math.random, Max = Math.max, dx, dy, dx2, dy2, dtheta, dr, vw, vh,
             currentSelection = null, areaSelect, doSelect = false, doDeselect = false,
-            cX1 = 0, cX2 = 0, cY1 = 0, cY2 = 0, stats,
-            pixelation_params = [
-            [2,  'rectangular'],
-            [3,  'rectangular'],
-            [5,  'rectangular'],
-            [10, 'rectangular'],
-            [15, 'rectangular'],
-            [2,  'triangular'],
-            [3,  'triangular'],
-            [5,  'triangular'],
-            [10, 'triangular'],
-            [15, 'triangular'],
-            [2,  'rhomboidal'],
-            [3,  'rhomboidal'],
-            [5,  'rhomboidal'],
-            [10, 'rhomboidal'],
-            [15, 'rhomboidal'],
-            [2,  'hexagonal'],
-            [3,  'hexagonal'],
-            [5,  'hexagonal'],
-            [10, 'hexagonal'],
-            [15, 'hexagonal']
-            ]
+            cX1 = 0, cX2 = 0, cY1 = 0, cY2 = 0, stats
         ;
         
         function init( )
@@ -555,6 +503,8 @@
             //blend.setInput(2, $F.IO.HTMLImageLoader.load("../common/assets/chrome.png").restorable(false));
             blendSelect.style.display = "none";
             blendAlpha.style.display = "none";
+            pixelationPattern.style.display = "none";
+            pixelationScale.style.display = "none";
             selectBt.style.display = "inline";
             deselectBt.style.display = "none";
             
@@ -614,10 +564,15 @@
                     blendSelect.style.display = "none";
                     blendAlpha.style.display = "none";
                 }
-                if ( 50 <= currentFilterIndex && currentFilterIndex < 50+pixelation_params.length )
+                if (pixelate === currentFilter)
                 {
-                    pixelate.scale = pixelation_params[currentFilterIndex-50][0];
-                    pixelate.pattern = pixelation_params[currentFilterIndex-50][1];
+                    pixelationPattern.style.display = "inline-block";
+                    pixelationScale.style.display = "inline-block";
+                }
+                else
+                {
+                    pixelationPattern.style.display = "none";
+                    pixelationScale.style.display = "none";
                 }
             });
             
@@ -628,22 +583,46 @@
             
             // change the blend mode
             addEvent(blendSelect, "change", function(){
-                currentBlendMode = blendSelect.options[blendSelect.selectedIndex || 0].value.toLowerCase();
+                var blendMode = blendSelect.options[blendSelect.selectedIndex || 0].value.toLowerCase();
+                blend.matrix[0]/*mode*/ = blendMode; 
             });
             
             // change the blend alpha
             addEvent(blendAlpha, "change", function(){
-                currentBlendAlpha = +blendAlpha.value;
-                if ( currentBlendAlpha < 0 )
+                var alpha = +blendAlpha.value;
+                if ( alpha < 0 )
                 {
-                    currentBlendAlpha = 0;
-                    blendAlpha.value = currentBlendAlpha;
+                    alpha = 0;
+                    blendAlpha.value = alpha;
                 }
-                if ( currentBlendAlpha > 1 )
+                if ( alpha > 1 )
                 {
-                    currentBlendAlpha = 1;
-                    blendAlpha.value = currentBlendAlpha;
+                    alpha = 1;
+                    blendAlpha.value = alpha;
                 }
+                blend.matrix[3]/*alpha*/ = alpha;
+            });
+            
+            // change the pixelation pattern
+            addEvent(pixelationPattern, "change", function(){
+                var pattern = pixelationPattern.options[pixelationPattern.selectedIndex || 0].value.toLowerCase();
+                pixelate.pattern = pattern;
+            });
+            
+            // change the pixelation scale
+            addEvent(pixelationScale, "change", function(){
+                var scale = +pixelationScale.value;
+                if ( scale < 0 )
+                {
+                    scale = 1;
+                    pixelationScale.value = scale;
+                }
+                if ( scale > 100 )
+                {
+                    scale = 100;
+                    pixelationScale.value = scale;
+                }
+                pixelate.scale = scale;
             });
             
             addEvent(selectBt, 'click', function(){
@@ -796,10 +775,8 @@
             else if (blend===currentFilter)
             {
                 // animate the blend filter
-                blend.matrix[0]/*mode*/ = currentBlendMode; 
                 blend.matrix[1]/*startX*/ += dx; 
                 blend.matrix[2]/*startY*/ += dy;
-                blend.matrix[3]/*alpha*/ = currentBlendAlpha;
                 if (blend.matrix[1]<=cX1 || blend.matrix[1]>=cX2) dx = -dx;
                 if (blend.matrix[2]<=cY1 || blend.matrix[2]>=cY2) dy = -dy;
             }
