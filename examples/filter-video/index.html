@@ -32,10 +32,6 @@
         strong {
             font-size:14px;
         }
-        select optgroup {
-            padding:10px 0 !important;
-            border-bottom:2px solid #000 !important;
-        }
         #statsContainer {
             margin-bottom:20px;
         }
@@ -97,9 +93,18 @@
         }
         #forkongithub a{background:#c83022;color:#fff;}
         select, input[type="number"] {
-            font-size: 1.8em !important;
-            padding: 0.4em !important;
+            font-size: 1.4em !important;
+            padding: 0.2em !important;
             color: black !important;
+        }
+        select + select,
+        select + input[type="number"],
+        input + input[type="number"] {
+            margin-left: 10px !important;
+        }
+        select optgroup {
+            padding: 2px 0 !important;
+            border-bottom: 1px solid #000 !important;
         }
     </style>
     <script src="../common/js/require.js"></script>
@@ -148,7 +153,7 @@
         
         <div class="panel">
             <strong>Apply Post-Process Filter to Video :</strong><br /><br />
-            <select id="filterSelect">
+            <select id="filterSelect" title="Filter to use">
                 <option value='#'>None</option>
                 <optgroup label="Color Table Filters">
                     <option value='#'>RED Channel</option>
@@ -219,16 +224,17 @@
                     <option value='#'>Quantize Hue and Extract Connected Components Contours</option>
                 </optgroup>
             </select>
-            &nbsp;
-            <select id="flipSelect">
+            <select id="flipSelect" title="Flip Output?">
+                <optgroup label="Flip Output?">
                 <option value='0'>No Flip</option>
                 <option value='1'>Flip Horizontal</option>
                 <option value='2'>Flip Vertical</option>
                 <option value='3'>Flip Horizontal using Filter</option>
                 <option value='4'>Flip Vertical using Filter</option>
+                </optgroup>
             </select>
-            &nbsp;
-            <select id="blendSelect">
+            <select id="blendSelect" title="Blend Mode">
+                <optgroup label="Blend Mode">
                 <option value='Normal'>Normal</option>
                 <option value='Lighten'>Lighten</option>
                 <option value='Darken'>Darken</option>
@@ -254,16 +260,20 @@
                 <option value='HardMix'>HardMix</option>
                 <option value='LinearDodge'>LinearDodge (same as Add)</option>
                 <option value='LinearBurn'>LinearBurn (same as Subtract)</option>
+                </optgroup>
             </select>
-            <select id="pixelationPattern">
+            <select id="pixelationPattern" title="Pixelation Pattern">
+                <optgroup label="Pixelation Pattern">
                 <option value='rectangular'>Rectangular</option>
                 <option value='triangular'>Triangular</option>
                 <option value='rhomboidal'>Rhomboidal</option>
                 <option value='hexagonal'>Hexagonal</option>
+                </optgroup>
             </select>
-            &nbsp;
-            <input id="blendAlpha" type="number" value="1.0" min="0.0" max="1.0" step="0.1" style="width:60px" />
-            <input id="pixelationScale" type="number" value="2" min="1" max="100" step="1" style="width:60px" />
+            <input id="blendAlpha" title="Alpha (0-1)" type="number" value="1.0" min="0.0" max="1.0" step="0.1" style="width:60px" />
+            <input id="pixelationScale" title="Scale (1-100)" type="number" value="2" min="1" max="100" step="1" style="width:60px" />
+            <input id="paramHue" title="Hue (0-360)" type="number" value="30" step="1" style="width:60px" />
+            <input id="paramThresh" title="Threshold (0-1)" type="number" value="0.05" min="0.0" max="1.0" step="0.05" style="width:60px" />
         </div>
     
     </div>
@@ -310,14 +320,15 @@
     require(['Classy', 'Asynchronous', 'FILTER', 'FILTER_ML', 'FILTER_IO', 'FILTER_CODECS', 'FILTER_FILTERS', 'FILTER_PLUGINS', 'AreaSelect', 'Stats'/*, 'domReady!'*/], 
         function( _1, _2, _3, _4, _5, _6, _7, $F, AreaSelect, Stats ) {
         document.getElementById('lib-version').innerHTML = $F.VERSION;
-        var 
-            icon,
-            filterSelect = getEl('filterSelect'), 
-            flipSelect = getEl('flipSelect'), 
-            blendSelect = getEl('blendSelect'), 
-            blendAlpha = getEl('blendAlpha'), 
-            pixelationPattern = getEl('pixelationPattern'), 
-            pixelationScale = getEl('pixelationScale'), 
+        var icon,
+            filterSelect = getEl('filterSelect'),
+            flipSelect = getEl('flipSelect'),
+            blendSelect = getEl('blendSelect'),
+            blendAlpha = getEl('blendAlpha'),
+            pixelationPattern = getEl('pixelationPattern'),
+            pixelationScale = getEl('pixelationScale'),
+            paramHue = getEl('paramHue'),
+            paramThresh = getEl('paramThresh'),
             video = getEl('video'), 
             container = getEl('container'), 
             filters = getEl('filters'),
@@ -336,6 +347,7 @@
             flipY = $F.AffineMatrixFilter().flipY(),
             binary = $F.ColorTableFilter().threshold(0.7),
             binary2 = $F.ColorTableFilter().threshold(0.05),
+            binaryThreshold = $F.ColorTableFilter().threshold(0.05),
             solarize = $F.ColorTableFilter().solarize(0.6),
             solarize2 = $F.ColorTableFilter().solarize2(0.4),
             posterize = $F.ColorTableFilter().posterize(8),
@@ -402,8 +414,9 @@
                 binary2
             ]),
             open = $F.MorphologicalFilter().opening(3),
-            quantized_connected_components = $F.ConnectedComponentsFilter(8, 0.25, $F.MODE.HUE, 45),
-            quantized_connected_components_contours = $F.CompositeFilter([quantized_connected_components, laplace3]),
+            qcc = $F.ConnectedComponentsFilter(8, 0.15, 30).setMode($F.MODE.HUE),
+            quantized_connected_components = $F.CompositeFilter([/*equ,*/ qcc, binaryThreshold]),
+            quantized_connected_components_contours = $F.CompositeFilter([/*equ,*/ qcc, laplace3, binaryThreshold]),
             noise = $F.NoiseFilter(10, 70),
             displaceFilter = $F.DisplacementMapFilter(displacemap),
             twirlFilter = $F.GeometricMapFilter().twirl(Math.PI/2, 150, 0.5, 0.5),
@@ -505,6 +518,8 @@
             blendAlpha.style.display = "none";
             pixelationPattern.style.display = "none";
             pixelationScale.style.display = "none";
+            paramHue.style.display = "none";
+            paramThresh.style.display = "none";
             selectBt.style.display = "inline";
             deselectBt.style.display = "none";
             
@@ -554,7 +569,7 @@
                 currentFilterIndex = filterSelect.selectedIndex || 0;
                 // preview the filter while hovering the option
                 currentFilter = videoFilters[ currentFilterIndex ] || null;
-                if (blend === currentFilter)
+                if (blend===currentFilter)
                 {
                     blendSelect.style.display = "inline-block";
                     blendAlpha.style.display = "inline-block";
@@ -564,7 +579,7 @@
                     blendSelect.style.display = "none";
                     blendAlpha.style.display = "none";
                 }
-                if (pixelate === currentFilter)
+                if (pixelate===currentFilter)
                 {
                     pixelationPattern.style.display = "inline-block";
                     pixelationScale.style.display = "inline-block";
@@ -573,6 +588,25 @@
                 {
                     pixelationPattern.style.display = "none";
                     pixelationScale.style.display = "none";
+                }
+                if ((quantized_connected_components===currentFilter) ||
+                    (quantized_connected_components_contours===currentFilter))
+                {
+                    paramThresh.style.display = "inline-block";
+                }
+                else
+                {
+                    paramThresh.style.display = "none";
+                }
+                if ((hueExtractor===currentFilter) ||
+                    (quantized_connected_components===currentFilter) ||
+                    (quantized_connected_components_contours===currentFilter))
+                {
+                    paramHue.style.display = "inline-block";
+                }
+                else
+                {
+                    paramHue.style.display = "none";
                 }
             });
             
@@ -623,6 +657,26 @@
                     pixelationScale.value = scale;
                 }
                 pixelate.scale = scale;
+            });
+            
+            addEvent(paramHue, "change", function(){
+                var hue = +paramHue.value;
+                if ( 0 > hue )
+                {
+                    hue += 360;
+                    paramHue.value = hue;
+                }
+                if ( 360 < hue )
+                {
+                    hue -= 360;
+                    paramHue.value = hue;
+                }
+                qcc.color = hue;
+                hueExtractor.thresholds = [Math.max(0,hue-20), Math.min(360,hue+20)];
+            });
+            addEvent(paramThresh, "change", function(){
+                var thresh = +paramThresh.value;
+                binaryThreshold.reset( ).threshold( thresh );
             });
             
             addEvent(selectBt, 'click', function(){

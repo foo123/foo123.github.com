@@ -302,10 +302,10 @@
             ,displace = $F.DisplacementMapFilter( displacemap ).worker( runInThread )
             ,floodFill = $F.CompositeFilter([
                 /*                 x0, y0,  color,   tolerance, exterior border */
-                $F.FloodFillFilter(25, 75,  0xff0000, 0.2,       0x0),
-                $F.FloodFillFilter(75, 112, 0xff0000, 0.2,       0x0),
-                $F.FloodFillFilter(125,75,  0x0000ff, 0.8           ),
-                $F.FloodFillFilter(75, 36,  0x0000ff, 0.8           )
+                $F.ColorFillFilter(25, 75,  0xff0000, 0.2,       0x0),
+                $F.ColorFillFilter(75, 112, 0xff0000, 0.2,       0x0),
+                $F.ColorFillFilter(125,75,  0x0000ff, 0.8           ),
+                $F.ColorFillFilter(75, 36,  0x0000ff, 0.8           )
             ]).worker( runInThread )
             ,seamless = $F.SeamlessTileFilter().worker( runInThread )
             //,bokeh = $F.BokehFilter(80, 90, 60, 10).worker( runInThread )
@@ -414,7 +414,7 @@
         //.append(span('21.')).append(im21.domElement)
         ;
         
-        aside.append("<div><ol><li>Original Image</li><li>Red Channel</li><li>Green Channel</li><li>Blue Channel</li><li>Red Colorized applied to Selection</li><li>Grayscale and Contrast</li><li>Quick Sepia</li><li>Posterize</li><li>HalfTone (Plugin)</li><li>Emboss</li><li>Geometric Twirl Map</li><li>Displace Map</li><li>Grayscale, Sobel Gradient Magnitude (Composite)</li><li>Histogram Equalization (Plugin)</li><li>Perlin Noise Image</li><li>Flood Fill (Plugin)</li><li>Seamless Tile (Plugin)</li><li>Canny Edges (Plugin)</li><li>Face and Eyes Composite HAAR Detector (Plugin)</li></ol>M: Displace Map</div>");
+        aside.append("<div><ol><li>Original Image</li><li>Red Channel</li><li>Green Channel</li><li>Blue Channel</li><li>Red Colorized applied to Selection</li><li>Grayscale and Contrast</li><li>Quick Sepia</li><li>Posterize</li><li>HalfTone (Plugin)</li><li>Emboss</li><li>Geometric Twirl Map</li><li>Displace Map</li><li>Grayscale, Sobel Gradient Magnitude (Composite)</li><li>Histogram Equalization (Plugin)</li><li>Perlin Noise Image</li><li>Color Flood Fill (Plugin)</li><li>Seamless Tile (Plugin)</li><li>Canny Edges (Plugin)</li><li>Face and Eyes Composite HAAR Detector (Plugin)</li></ol>M: Displace Map</div>");
         
         function apply(evt)
         {
