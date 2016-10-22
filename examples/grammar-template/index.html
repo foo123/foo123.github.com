@@ -12,12 +12,12 @@
 <html lang="en" class="no-ie">
 <!--<![endif]-->
 <head>
-    <title>Xpresion Expression Parser Engine</title>
+    <title>Grammar Template</title>
     
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <meta name="description" content="Xpresion Expression Parser Engine" />
+    <meta name="description" content="Grammar Template" />
     
     
     <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
@@ -26,17 +26,11 @@
 <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
 <link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
 <style type="text/css">
-#output,#vars {
+#input,#output,#data {
     position:relative;
-    padding:10px;
+    padding:2px;
     width: 90%;
-    height: 450px;
-}
-
-#expr {
-    position:relative;
-    display:inline-block;
-    width:80%;
+    height: 250px;
 }
 
 .button {
@@ -111,12 +105,12 @@
 </head>
 
 <body class="responsive-864-container">
-    <span id="forkongithub"><a href="https://github.com/foo123/Xpresion">Xpresed on GitHub</a></span>
+    <span id="forkongithub"><a href="https://github.com/foo123/GrammarTemplate">Play on GitHub</a></span>
     
     
 <header id="header">
-    <h1>Xpresion</h1>
-    <i>A simple and flexible Expression Parser Engine for PHP, Python, Node/XPCOM/JS</i>
+    <h1>Grammar Template</h1>
+    <i>A versatile and intuitive grammar-based templating for PHP, Python, Node/XPCOM/JS, ActionScript</i>
 </header>
 
 <br /><br />
@@ -125,27 +119,42 @@
     
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
+    <div class="fluid col-2-5">
     
-        <strong>Expression:</strong>
-        &nbsp;&nbsp;<input type="button" class="button" id="debug" data-bind='{"click":"debug"}' value="Debug" />
-        &nbsp;&nbsp;<input type="button" class="button" id="evaluate" data-bind='{"click":"evaluate"}' value="Evaluate" />
-        &nbsp;&nbsp;<a class="button" id="help" href="https://github.com/foo123/Xpresion" target="_blank">Help</a>
+        <strong>Grammar Template:</strong>
+        &nbsp;&nbsp;<input type="button" class="button" id="render" data-bind='{"click":"render"}' value="Render" />
+        &nbsp;&nbsp;<a class="button" id="help" href="https://github.com/foo123/GrammarTemplate" target="_blank">Help</a>
         <br /><br />
-        <input type="text" size=120 id="expr" name="model[expr]" value="" />
+        <textarea id="input">SELECT &lt;column.select&gt;[, &lt;*column.select&gt;]
+FROM &lt;table.from&gt;[, &lt;*table.from&gt;][
+WHERE (&lt;?required.where&gt;) AND (&lt;?condition.where&gt;)][
+WHERE &lt;?required.where&gt;&lt;?!condition.where&gt;][
+WHERE &lt;?!required.where&gt;&lt;?condition.where&gt;][
+GROUP BY &lt;?group&gt;[, &lt;*group&gt;]][
+HAVING (&lt;?required.having&gt;) AND (&lt;?condition.having&gt;)][
+HAVING &lt;?required.having&gt;&lt;?!condition.having&gt;][
+HAVING &lt;?!required.having&gt;&lt;?condition.having&gt;][
+ORDER BY &lt;?order&gt;[, &lt;*order&gt;]][
+LIMIT &lt;offset|0&gt;, &lt;?count&gt;]</textarea>
     </div>
+    <div class="fluid col-2-5">
     
+        <strong style="display:inline-block;margin-bottom:11px">Data (JSON):</strong><br /><br />
+        <textarea id="data">{
+"column"      : { "select" : [ "field1", "field2", "field3", "field4" ] },
+"table"       : { "from" : [ "tbl1", "tbl2" ] },
+"condition"   : { "where" : "field1=1 AND field2=2", "having" : "field3=1 OR field4=2" },
+"count"       : 5
+}</textarea>
+        
+    </div>
+    </div>
     <br /><br />
     
-    <div class="fluid col-2-5">
+    <div class="fluid col-1-1">
     
         <strong>Output:</strong><br /><br />
         <textarea id="output"></textarea>
-        
-    </div>
-    <div class="fluid col-2-5">
-    
-        <strong>Variables (JSON):</strong><br /><br />
-        <textarea id="vars">{"v":3}</textarea>
         
     </div>
 </div>
@@ -168,26 +177,38 @@
     
     
 <script type="text/javascript">//<![CDATA[
-require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
-    function( $, $R, $MV, Xpresion ) {
+require(['jQuery', 'Dromeo', 'ModelView', 'GrammarTemplate'],
+    function( $, $R, $MV, GrammarTemplate ) {
     "use strict";
     
-    Xpresion.defaultConfiguration( );
-    
     var undef=undefined, $window = $(window), $screen = $('#screen'), 
+        input = document.getElementById('input'),
         output = document.getElementById('output'),
-        vars = document.getElementById('vars'),
-        oEditor, vEditor,
+        data = document.getElementById('data'),
+        oEditor, vEditor, iEditor,
         appTask, appModel, appView, appRouter, 
+        iwidth = input.clientWidth, iheight = input.clientHeight,
         width = output.clientWidth, height = output.clientHeight,
         toJSON = JSON.stringify, fromJSON = JSON.parse,
-        expr = null
+        cur_tpl = String(input.value), gramTpl = null
     ;
     
     $MV.jquery( $ );
     
+    iEditor = CodeMirror.fromTextArea(input, {
+        mode: "text",
+        lineWrapping: true,
+        lineNumbers : true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        theme: 'lesser-dark',
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+    });
+    iEditor.setSize( iwidth, iheight );
+    
     oEditor = CodeMirror.fromTextArea(output, {
-        mode: "application/json",
+        mode: "text",
         lineWrapping: true,
         lineNumbers : true,
         indentUnit: 4,
@@ -198,7 +219,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
     });
     oEditor.setSize( width, height );
         
-    vEditor = CodeMirror.fromTextArea(vars, {
+    vEditor = CodeMirror.fromTextArea(data, {
         mode: "application/json",
         lineWrapping: true,
         lineNumbers : true,
@@ -211,27 +232,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
     vEditor.setSize( width, height );
         
     appTask = {
-        debug: function( appModel ) {
-            var input = appModel.get('expr');
-            if ( !expr || expr.source !== input ) expr = Xpresion(input);
+        render: function( ) {
+            var template = iEditor.getValue();
+            if ( !gramTpl || (cur_tpl !== template) )
+            {
+                cur_tpl = template;
+                gramTpl = new GrammarTemplate(template);
+            }
             
-            oEditor.setValue([
-                "Debug Information"
-                ,"Input Expression: " + input
-                ,"Debug Output: "
-                ,expr.debug(fromJSON(vEditor.getValue()))
-            ].join( "\n\n" ));
-        },
-        
-        evaluate: function( appModel ) {
-            var input = appModel.get('expr');
-            if ( !expr || expr.source !== input ) expr = Xpresion(input);
-            
-            oEditor.setValue([
-                "Evaluation"
-                ,"Input Expression: " + input
-                ,"Result: " + expr.evaluate(fromJSON(vEditor.getValue()))
-            ].join( "\n\n" ));
+            oEditor.setValue(gramTpl.render(fromJSON(vEditor.getValue())));
         }
     };
     
@@ -241,9 +250,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
         params = params && params.hash ? appRouter.unglue( params.hash ) : null;
         if ( params && params.action && appTask.hasOwnProperty(params.action) )
         {
-            var appModel = $screen.modelview( 'model' );
-            if ( params.expr ) appModel.set('expr', params.expr, 1);
-            appTask[ params.action ]( appModel );
+            if ( null != params.input ) iEditor.setValue(params.input);
+            if ( null != params.data ) vEditor.setValue(params.data);
+            appTask[ params.action ]( );
         }
     }});
     
@@ -253,30 +262,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
         
         ,model: {
             id: 'model'
-            ,data: { 
-                expr: "1+2+$v"
-            }
-            ,types: { 
-                expr: $MV.Type.Cast.STR
-            }
         }
         ,actions: { 
-            debug: function(evt, $el, data) {
-                var model=this.$model;
+            render: function(evt, $el, data) {
                 location.hash = '#' + appRouter.glue({
-                    action: 'debug',
-                    expr: model.get( 'expr' )
+                    action: 'render',
+                    input: iEditor.getValue(),
+                    data: vEditor.getValue()
                 });
-                appTask.debug( model );
-            },
-            
-            evaluate: function(evt, $el, data) {
-                var model=this.$model;
-                location.hash = '#' + appRouter.glue({
-                    action: 'evaluate',
-                    expr: model.get( 'expr' )
-                });
-                appTask.evaluate( model );
+                appTask.render( );
             }
         }
     });
@@ -285,15 +279,17 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
         .on('resize', function( evt ) {
             var v = output.style.visibility,
                 d = output.style.display,
-                v2 = vars.style.visibility,
-                d2 = vars.style.display
+                v2 = data.style.visibility,
+                d2 = data.style.display,
+                v3 = input.style.visibility,
+                d3 = input.style.display
             ;
-            vars.style.visibility = 'hidden';
-            vars.style.display = 'block';
-            width = vars.clientWidth; 
-            height = vars.clientHeight;
-            vars.style.display = d2;
-            vars.style.visibility = v2;
+            data.style.visibility = 'hidden';
+            data.style.display = 'block';
+            width = data.clientWidth; 
+            height = data.clientHeight;
+            data.style.display = d2;
+            data.style.visibility = v2;
             vEditor.setSize( width, height );
             
             output.style.visibility = 'hidden';
@@ -303,6 +299,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
             output.style.display = d;
             output.style.visibility = v;
             oEditor.setSize( width, height );
+            
+            input.style.visibility = 'hidden';
+            input.style.display = 'block';
+            iwidth = input.clientWidth; 
+            iheight = input.clientHeight;
+            input.style.display = d3;
+            input.style.visibility = v3;
+            iEditor.setSize( iwidth, iheight );
         })
         .one('hashchange', function( evt ) {
             appRouter.route( location.hash );
