@@ -127,15 +127,18 @@
         &nbsp;&nbsp;<input type="button" class="button" id="render" data-bind='{"click":"render"}' value="Render" />
         &nbsp;&nbsp;<a class="button" id="help" href="https://github.com/foo123/GrammarTemplate" target="_blank">Help</a>
         <br /><br />
-        <textarea id="input">SELECT &lt;column.select&gt;[, &lt;*column.select&gt;]
+        <textarea id="input">&lt;:FACTOR&gt;:=[&lt;lhs&gt;[ &lt;?op&gt; &lt;rhs|NULL&gt;]]
+&lt;:TERM&gt;:=[(&lt;factor:FACTOR&gt;[ AND &lt;*factor:FACTOR&gt;])]
+&lt;:EXPR&gt;:=[&lt;term:TERM&gt;[ OR &lt;*term:TERM&gt;]]
+SELECT &lt;column.select&gt;[, &lt;*column.select&gt;]
 FROM &lt;table.from&gt;[, &lt;*table.from&gt;][
-WHERE (&lt;?required.where&gt;) AND (&lt;?condition.where&gt;)][
-WHERE &lt;?required.where&gt;&lt;?!condition.where&gt;][
-WHERE &lt;?!required.where&gt;&lt;?condition.where&gt;][
+WHERE (&lt;?required.where:EXPR&gt;) AND (&lt;?condition.where:EXPR&gt;)][
+WHERE &lt;?required.where:EXPR&gt;&lt;?!condition.where:EXPR&gt;][
+WHERE &lt;?!required.where:EXPR&gt;&lt;?condition.where:EXPR&gt;][
 GROUP BY &lt;?group&gt;[, &lt;*group&gt;]][
-HAVING (&lt;?required.having&gt;) AND (&lt;?condition.having&gt;)][
-HAVING &lt;?required.having&gt;&lt;?!condition.having&gt;][
-HAVING &lt;?!required.having&gt;&lt;?condition.having&gt;][
+HAVING (&lt;?required.having:EXPR&gt;) AND (&lt;?condition.having:EXPR&gt;)][
+HAVING &lt;?required.having:EXPR&gt;&lt;?!condition.having:EXPR&gt;][
+HAVING &lt;?!required.having:EXPR&gt;&lt;?condition.having:EXPR&gt;][
 ORDER BY &lt;?order&gt;[, &lt;*order&gt;]][
 LIMIT &lt;offset|0&gt;, &lt;?count&gt;]</textarea>
     </div>
@@ -143,10 +146,33 @@ LIMIT &lt;offset|0&gt;, &lt;?count&gt;]</textarea>
     
         <strong style="display:inline-block;margin-bottom:11px">Data (JSON):</strong><br /><br />
         <textarea id="data">{
-"column"      : { "select" : [ "field1", "field2", "field3", "field4" ] },
-"table"       : { "from" : [ "tbl1", "tbl2" ] },
-"condition"   : { "where" : "field1=1 AND field2=2", "having" : "field3=1 OR field4=2" },
-"count"       : 5
+"column"        : {
+    "select"    : [ "field1", "field2", "field3", "field4" ]
+},
+"table"         : {
+    "from"      : [ "tbl1", "tbl2" ]
+},
+"condition"     : {
+    "where"     : [
+        [
+            {"lhs": "field1", "op": "=", "rhs": 1},
+            {"lhs": "field2", "op": "=", "rhs": 2}
+        ],
+        [
+            {"lhs": "field1", "op": "=", "rhs": 1},
+            {"lhs": "field3", "op": "=", "rhs": 4}
+        ]
+    ],
+    "having"    : [
+        [
+            {"lhs": "field1", "op": "=", "rhs": 1}
+        ],
+        [
+            {"lhs": "field3", "op": "=", "rhs": 4}
+        ]
+    ]
+},
+"count"         : 5
 }</textarea>
         
     </div>

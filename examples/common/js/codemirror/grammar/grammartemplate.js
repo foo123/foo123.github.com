@@ -23,8 +23,8 @@ var grammartemplate_grammar = {
     ,"renderer"                 : "RE::/[_A-Za-z][_A-Za-z0-9]*/"
     ,"default_value"            : "RE::/[_A-Za-z0-9]*/"
     ,"text"                     : "RE::/[^\\s]/"
-    ,"delim1"                   : "RE::/<|&lt;/"
-    ,"delim2"                   : "RE::/>|&gt;(:=)?/"
+    ,"delim1"                   : "RE::/(<|&lt;)/"
+    ,"delim2"                   : "RE::/(>|&gt;)(:=)?/"
     ,"block1"                   : "RE::/\\[/"
     ,"block2"                   : "RE::/\\]/"
     ,"opened:action"            : {"push":">","ci":true}
