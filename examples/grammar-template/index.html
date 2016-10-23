@@ -248,7 +248,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'GrammarTemplate'],
     appRouter.one({route:'#{%ALL%:hash}', handler:function( params ){
         params = params.data;
         params = params && params.hash ? appRouter.unglue( params.hash ) : null;
-        if ( params && params.action && appTask.hasOwnProperty(params.action) )
+        if ( !params )
+        {
+            setTimeout(function(){
+                appTask.render( );
+            }, 10);
+        }
+        else if ( params && params.action && appTask.hasOwnProperty(params.action) )
         {
             if ( null != params.input ) iEditor.setValue(params.input);
             if ( null != params.data ) vEditor.setValue(params.data);
@@ -308,11 +314,12 @@ require(['jQuery', 'Dromeo', 'ModelView', 'GrammarTemplate'],
             input.style.visibility = v3;
             iEditor.setSize( iwidth, iheight );
         })
-        .one('hashchange', function( evt ) {
+        /*.one('hashchange', function( evt ) {
             appRouter.route( location.hash );
-        })
-        .trigger( 'hashchange' )
+        })*/
     ;
+        if ( location.hash ) appRouter.route( location.hash );/*$window.trigger( 'hashchange' );*/
+        else $('#render').trigger( 'click' );
 });
 //]]></script>
 

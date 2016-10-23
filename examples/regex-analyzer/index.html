@@ -218,7 +218,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
                 ,"// Experimental Feature, not all characters are expanded, eg. special characters (like .) appear as special"
                 ,"// Peek Characters are the start characters of a hypothetical input string"
                 ,"// which can generate a (further) possible match of the regular expression"].join("\n")
-                ,toJSON(peekChars, null, 4)
+                ,toJSON({
+                    pass: Object.keys(peekChars.peek||{}),
+                    fail: Object.keys(peekChars.negativepeek||{})
+                }, null, 4)
             ].join( "\n\n" );
             
             code.setValue( output );
