@@ -32,7 +32,7 @@ var grammartemplate_grammar = {
 },
 
 "Syntax"                        : {
-     "nonterminal"              : "delim1.keyword '' (modifier.function? identifier.keyword '')? (':' '' renderer.function '')? ('|' '' default_value.string '')? delim2.keyword"
+     "nonterminal"              : "delim1.keyword '' (modifier.function? identifier.keyword '')? (':'.function '' renderer.function '')? ('|'.function '' default_value.string '')? delim2.keyword"
     ,"template"                 : "nonterminal | block1.function | block2.function | text"
 },
 
