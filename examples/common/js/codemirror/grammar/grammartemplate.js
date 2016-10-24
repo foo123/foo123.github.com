@@ -17,23 +17,22 @@ var grammartemplate_grammar = {
 
 // Lexical model
 "Lex"                           : {
-
-     "modifier"                 : "RE::/(\\?!|\\*|\\?|\\{\\d+(,\\d+)?\\})/"
+     "escaped"                  : "RE::/\\\\(\\\\\\\\)*/"
+    ,"modifier"                 : "RE::/(\\?!|\\*|\\?|\\{\\d+(,\\d+)?\\})/"
     ,"identifier"               : "RE::/[_A-Za-z][_A-Za-z0-9]*(\\.[_A-Za-z][_A-Za-z0-9]*)?/"
     ,"renderer"                 : "RE::/[_A-Za-z][_A-Za-z0-9]*/"
     ,"default_value"            : "RE::/[_A-Za-z0-9]*/"
     ,"text"                     : "RE::/[^\\s]/"
     ,"delim1"                   : "RE::/(<|&lt;)/"
     ,"delim2"                   : "RE::/(>|&gt;)(:=)?/"
-    ,"block1"                   : "RE::/\\[/"
-    ,"block2"                   : "RE::/\\]/"
+    ,"block"                    : "RE::/[\\[\\]]/"
     ,"opened:action"            : {"push":">","ci":true}
     ,"closed:action"            : {"pop":">","ci":true,"msg":"Non-Terminal delimiters do not match"}
 },
 
 "Syntax"                        : {
      "nonterminal"              : "delim1.keyword '' (modifier.function? identifier.keyword '')? (':'.function '' renderer.function '')? ('|'.function '' default_value.string '')? delim2.keyword"
-    ,"template"                 : "nonterminal | block1.function | block2.function | text"
+    ,"template"                 : "escaped text | block.function | nonterminal | text"
 },
 
 // what to parse and in what order

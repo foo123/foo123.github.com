@@ -127,10 +127,7 @@
         &nbsp;&nbsp;<input type="button" class="button" id="render" data-bind='{"click":"render"}' value="Render" />
         &nbsp;&nbsp;<a class="button" id="help" href="https://github.com/foo123/GrammarTemplate" target="_blank">Help</a>
         <br /><br />
-        <textarea id="input">&lt;:FACTOR&gt;:=[&lt;lhs&gt;[ &lt;?op&gt; &lt;rhs|NULL&gt;]]
-&lt;:TERM&gt;:=[(&lt;factor:FACTOR&gt;[ AND &lt;*factor:FACTOR&gt;])]
-&lt;:EXPR&gt;:=[&lt;term:TERM&gt;[ OR &lt;*term:TERM&gt;]]
-SELECT &lt;column.select&gt;[, &lt;*column.select&gt;]
+        <textarea id="input">SELECT &lt;column.select&gt;[, &lt;*column.select&gt;]
 FROM &lt;table.from&gt;[, &lt;*table.from&gt;][
 WHERE (&lt;?required.where:EXPR&gt;) AND (&lt;?condition.where:EXPR&gt;)][
 WHERE &lt;?required.where:EXPR&gt;&lt;?!condition.where:EXPR&gt;][
@@ -140,7 +137,10 @@ HAVING (&lt;?required.having:EXPR&gt;) AND (&lt;?condition.having:EXPR&gt;)][
 HAVING &lt;?required.having:EXPR&gt;&lt;?!condition.having:EXPR&gt;][
 HAVING &lt;?!required.having:EXPR&gt;&lt;?condition.having:EXPR&gt;][
 ORDER BY &lt;?order&gt;[, &lt;*order&gt;]][
-LIMIT &lt;offset|0&gt;, &lt;?count&gt;]</textarea>
+LIMIT &lt;offset|0&gt;, &lt;?count&gt;]
+&lt;:FACTOR&gt;:=[&lt;lhs&gt;[ &lt;?op&gt; &lt;rhs|NULL&gt;]]
+&lt;:TERM&gt;:=[(&lt;factor:FACTOR&gt;[ AND &lt;*factor:FACTOR&gt;])]
+&lt;:EXPR&gt;:=[&lt;term:TERM&gt;[ OR &lt;*term:TERM&gt;]]</textarea>
     </div>
     <div class="fluid col-2-5">
     
