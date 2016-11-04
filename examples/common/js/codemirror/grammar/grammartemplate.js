@@ -40,10 +40,14 @@ var grammartemplate_grammar = {
 
 };
 
+var grammartemplate_mode = null;
 
+if ( ("undefined" !== typeof CodeMirror) && ("undefined" !== typeof CodeMirrorGrammar) )
+{
 // 2. parse the grammar into a Codemirror syntax-highlight mode
-var grammartemplate_mode = CodeMirrorGrammar.getMode( grammartemplate_grammar );
+grammartemplate_mode = CodeMirrorGrammar.getMode( grammartemplate_grammar );
 
 // 3. register the mode with Codemirror
 CodeMirror.defineMode("grammartemplate", grammartemplate_mode);
 CodeMirror.defineMIME("text/x-grammartemplate", "grammartemplate");
+}

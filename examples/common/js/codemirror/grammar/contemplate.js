@@ -104,19 +104,21 @@ var contemplate_grammar_compat = {
 }
 };
 
-
+var contemplate_mode = null, contemplate_mode_compat = null, contemplate_grammar_full_compat, contemplate_grammar_full;
+if ( ("undefined" !== typeof CodeMirror) && ("undefined" !== typeof CodeMirrorGrammar) )
+{
 // 2. parse the grammar into a Codemirror syntax-highlight mode
-var contemplate_grammar_full = contemplate_grammar_base;
+contemplate_grammar_full = contemplate_grammar_base;
 contemplate_grammar_full.Lex['keyword'] = contemplate_grammar.Lex['keyword'];
 contemplate_grammar_full.Lex['function'] = contemplate_grammar.Lex['function'];
 contemplate_grammar_full.Lex['plugin'] = contemplate_grammar.Lex['plugin'];
-var contemplate_mode = CodeMirrorGrammar.getMode( contemplate_grammar_full );
+contemplate_mode = CodeMirrorGrammar.getMode( contemplate_grammar_full );
 
-var contemplate_grammar_full_compat = contemplate_grammar_base;
+contemplate_grammar_full_compat = contemplate_grammar_base;
 contemplate_grammar_full_compat.Lex['keyword'] = contemplate_grammar_compat.Lex['keyword'];
 contemplate_grammar_full_compat.Lex['function'] = contemplate_grammar_compat.Lex['function'];
 contemplate_grammar_full_compat.Lex['plugin'] = contemplate_grammar_compat.Lex['plugin'];
-var contemplate_mode_compat = CodeMirrorGrammar.getMode( contemplate_grammar_full_compat );
+contemplate_mode_compat = CodeMirrorGrammar.getMode( contemplate_grammar_full_compat );
 
 // 3. register the mode with Codemirror
 CodeMirror.defineMode("contemplate", contemplate_mode);
@@ -125,3 +127,4 @@ CodeMirror.defineMIME("text/x-contemplate", "contemplate");
 CodeMirror.defineMIME("text/x-contemplate-compat", "contemplate-compat");
 CodeMirror.defineMIME("application/x-contemplate", {name:"htmlembedded", scriptingModeSpec:"contemplate", scriptStartRegex:/^<%/, scriptEndRegex:/^%>/});
 CodeMirror.defineMIME("application/x-contemplate-compat", {name:"htmlembedded", scriptingModeSpec:"contemplate-compat", scriptStartRegex:/^<%/, scriptEndRegex:/^%>/});
+}
