@@ -121,9 +121,9 @@
     
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
-    <div class="fluid col-2-5">
+    <div class="fluid col-1-1" style="margin-bottom:10px">
     
-        <strong>Grammar Template:</strong>
+        <strong>Grammar Template ($(grammartemplate_version)):</strong>
         &nbsp;&nbsp;<input type="button" class="button" id="render" data-bind='{"click":"render"}' value="Render" />
         &nbsp;&nbsp;<a class="button" id="help" href="https://github.com/foo123/GrammarTemplate" target="_blank">Help</a>
         <br /><br />
@@ -142,9 +142,9 @@ LIMIT &lt;offset|0&gt;, &lt;?count&gt;]
 &lt;:TERM&gt;:=[(&lt;factor:FACTOR&gt;[ AND &lt;*factor:FACTOR&gt;])]
 &lt;:EXPR&gt;:=[&lt;term:TERM&gt;[ OR &lt;*term:TERM&gt;]]</textarea>
     </div>
-    <div class="fluid col-2-5">
+    <div class="fluid col-1-1" style="margin-bottom:10px">
     
-        <strong style="display:inline-block;margin-bottom:11px">Data (JSON):</strong><br /><br />
+        <strong style="display:inline-block;margin-bottom:5px">Data (JSON):</strong><br />
         <textarea id="data">{
 "column"        : {
     "select"    : [ "field1", "field2", "field3", "field4" ]
@@ -181,7 +181,7 @@ LIMIT &lt;offset|0&gt;, &lt;?count&gt;]
     
     <div class="fluid col-1-1">
     
-        <strong>Output:</strong><br /><br />
+        <strong>Output:</strong><br />
         <textarea id="output"></textarea>
         
     </div>
@@ -293,10 +293,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'GrammarTemplate'],
     
     $screen.modelview({
         autobind: true
+        ,livebind: '$(__KEY__)'
         ,bindAttribute: 'data-bind'
         
         ,model: {
             id: 'model'
+            ,data: {  
+                grammartemplate_version: 'v.'+GrammarTemplate.VERSION
+            }
         }
         ,actions: { 
             render: function(evt, $el, data) {

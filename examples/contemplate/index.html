@@ -32,8 +32,8 @@
     background-color:#343434;
     color:#aaa;
     border:3px solid #444;
-    padding:0px;
-    margin:10px 5px;
+    padding:0;
+    margin:10px 0;
     font-size:12px;
 }
 
@@ -51,12 +51,11 @@
     margin:0px;
     border:none;
     width:100%;
-    min-height:400px;
+    min-height:300px;
 }
 
-#tplContainer .cm-s-lesser-dark.CodeMirror {font-size:11px;}
-
-#dataContainer .cm-s-lesser-dark.CodeMirror {font-size:11px;}
+#tplContainer .cm-s-lesser-dark.CodeMirror {font-size:12px;}
+#dataContainer .cm-s-lesser-dark.CodeMirror {font-size:12px;}
 
 .button {
     -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
@@ -150,12 +149,10 @@
     
     
 <div id="screen" class="fluid col-1-1">
-    <div class="fluid col-1-1">
-
-        <div id="tplContainer" class="fluid col-5-10 container">
-            <div class="heading"><strong>Template Markup (Contemplate $(contemplate_version)):</strong>&nbsp;&nbsp;<input type="checkbox" data-bind='{"change":"setCompatibility"}' />&nbsp;&nbsp;Compatibility Mode</div>
-            
-            <textarea id="tpl" class="editor">
+    <div id="tplContainer" class="fluid col-9-10 container">
+        <div class="heading"><strong>Template Markup (Contemplate $(contemplate_version)):</strong>&nbsp;&nbsp;<input type="checkbox" data-bind='{"change":"setCompatibility"}' />&nbsp;&nbsp;Compatibility Mode</div>
+        
+        <textarea id="tpl" class="editor">
 <div class="class">
     Number of Items: <% count($data) %><hr />
     <% for($data as $i=>$d) %>
@@ -171,36 +168,27 @@
     <br />
     user[ Email ] = <strong><% $user["email"] %></strong>
 </div>
-            </textarea>
-        </div>
+        </textarea>
+    </div>
             
-        <div id="dataContainer" class="fluid col-4-10 container">
-            <div class="heading"><strong>Data (JSON format):</strong></div>
-                        
-            <textarea id="data" class="editor">
+    <div id="dataContainer" class="fluid col-9-10 container">
+        <div class="heading"><strong>Data (JSON format):</strong></div>
+                    
+        <textarea id="data" class="editor">
 {
     "data": [1, 2, 3, 4, 5, 6], 
     "user": {"name":"foo", "email":"foo@fooland.net", "id":"f00" }
 }
-            </textarea>
-                
-        </div>
-            
+        </textarea>
     </div>
         
-    <div class="fluid col-1-1">
-    
-        <div class="fluid col-9-10 container">
-            
-            <div class="heading"><strong>Output:</strong> &nbsp;&nbsp; <input class="button" type="button" id="render" value="Render" data-bind='{"click":"render"}' />&nbsp;&nbsp;<i>(Enable console to see any errors)</i>
-            </div>
-            
-            <div id="output" style="min-height:200px; font-size:12px; background:#262626;">
-                <br />
-            </div>
-        
+    <div class="fluid col-9-10 container">
+        <div class="heading"><strong>Output:</strong> &nbsp;&nbsp; <input class="button" type="button" id="render" value="Render" data-bind='{"click":"render"}' />&nbsp;&nbsp;<i>(Enable console to see any errors)</i>
         </div>
         
+        <div id="output" style="min-height:300px; font-size:12px; background:#262626;">
+            <br />
+        </div>
     </div>
 </div>
 
@@ -291,7 +279,7 @@ jQuery(function($){
         ,model: {
             id: 'model'
             ,data: {  
-                contemplate_version: Contemplate.VERSION
+                contemplate_version: 'v.'+Contemplate.VERSION
             }
         }
         ,actions: { 
