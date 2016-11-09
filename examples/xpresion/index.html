@@ -26,17 +26,14 @@
 <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
 <link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
 <style type="text/css">
-#output,#vars {
+#input,#output,#vars {
     position:relative;
-    padding:10px;
+    padding:2px;
     width: 90%;
-    height: 450px;
+    height: 250px;
 }
-
-#expr {
-    position:relative;
-    display:inline-block;
-    width:80%;
+#input {
+    height: 60px;
 }
 
 .button {
@@ -125,28 +122,22 @@
     
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
-    
         <strong>Expression:</strong>
         &nbsp;&nbsp;<input type="button" class="button" id="debug" data-bind='{"click":"debug"}' value="Debug" />
         &nbsp;&nbsp;<input type="button" class="button" id="evaluate" data-bind='{"click":"evaluate"}' value="Evaluate" />
         &nbsp;&nbsp;<a class="button" id="help" href="https://github.com/foo123/Xpresion" target="_blank">Help</a>
-        <br /><br />
-        <input type="text" size=120 id="expr" name="model[expr]" value="" />
+        <br />
+        <textarea id="input">1+2+$v</textarea>
     </div>
     
-    <br /><br />
-    
-    <div class="fluid col-2-5">
-    
-        <strong>Output:</strong><br /><br />
-        <textarea id="output"></textarea>
-        
-    </div>
-    <div class="fluid col-2-5">
-    
-        <strong>Variables (JSON):</strong><br /><br />
+    <div class="fluid col-1-1" style="margin-top:10px">
+        <strong>Variables (JSON):</strong><br />
         <textarea id="vars">{"v":3}</textarea>
-        
+    </div>
+    
+    <div class="fluid col-1-1" style="margin-top:10px">
+        <strong>Output:</strong><br />
+        <textarea id="output"></textarea>
     </div>
 </div>
 
@@ -175,17 +166,32 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
     Xpresion.defaultConfiguration( );
     
     var undef=undefined, $window = $(window), $screen = $('#screen'), 
+        input = document.getElementById('input'),
         output = document.getElementById('output'),
         vars = document.getElementById('vars'),
-        oEditor, vEditor,
+        iEditor, oEditor, vEditor,
         appTask, appModel, appView, appRouter, 
-        width = output.clientWidth, height = output.clientHeight,
+        width = output.clientWidth, height,
         toJSON = JSON.stringify, fromJSON = JSON.parse,
         expr = null
     ;
     
     $MV.jquery( $ );
     
+    height = input.clientHeight;
+    iEditor = CodeMirror.fromTextArea(input, {
+        mode: "text",
+        lineWrapping: true,
+        lineNumbers : true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        theme: 'lesser-dark',
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+    });
+    iEditor.setSize( width, height );
+    
+    height = output.clientHeight;
     oEditor = CodeMirror.fromTextArea(output, {
         mode: "application/json",
         lineWrapping: true,
@@ -254,10 +260,20 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
         ,model: {
             id: 'model'
             ,data: { 
-                expr: "1+2+$v"
+                //expr: null
             }
             ,types: { 
-                expr: $MV.Type.Cast.STR
+                //expr: $MV.Type.Cast.STR
+            }
+            ,getters: {
+                expr: function( ) {
+                    return iEditor.getValue();
+                }
+            }
+            ,setters: {
+                expr: function( k, v ) {
+                    iEditor.setValue(String(v));
+                }
             }
         }
         ,actions: { 
@@ -286,8 +302,18 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
             var v = output.style.visibility,
                 d = output.style.display,
                 v2 = vars.style.visibility,
-                d2 = vars.style.display
+                d2 = vars.style.display,
+                vi = input.style.visibility,
+                di = input.style.display
             ;
+            input.style.visibility = 'hidden';
+            input.style.display = 'block';
+            width = input.clientWidth; 
+            height = input.clientHeight;
+            input.style.display = di;
+            input.style.visibility = vi;
+            iEditor.setSize( width, height );
+            
             vars.style.visibility = 'hidden';
             vars.style.display = 'block';
             width = vars.clientWidth; 

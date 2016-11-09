@@ -26,17 +26,15 @@
 <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
 <link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
 <style type="text/css">
-#code {
+#regex,#code {
     position:relative;
-    padding:10px;
+    padding:2px;
     width: 90%;
-    height: 450px;
+    height: 500px;
 }
 
 #regex {
-    position:relative;
-    display:inline-block;
-    width:80%;
+    height: 30px;
 }
 
 .button {
@@ -99,6 +97,11 @@
     background: #414141; 
     padding: 10px; 
 }
+.accordion-ctrl {
+    display: inline-block;
+    visibility: hidden;
+    height: 0; width: 0;
+}
 
 /* General Accordion */
 
@@ -111,38 +114,42 @@
     margin: 3px; 
     max-height: 40px; 
 }
-.accordion section:hover { 
-    background: #444;
-}
-.accordion section h2 a {
+.accordion section > .heading { 
+    position: relative; 
     padding: 8px 10px;
-    display: block; 
+    display: block;
     font-size: 16px; 
     font-weight: normal;
     color: #eee; 
-    text-decoration: none; 
+    text-decoration: none !important;
+    border: 0 !important; outline: 0 !important;
+    background: none !important;
+    cursor: pointer !important;
+}
+.accordion section:hover { 
+    background: #444;
 }
 
 /* Set style of open slide */
+.accordion .accordion-ctrl:checked + section,
 .accordion section:target { 
     background: #efefef; 
     padding: 10px; 
     max-height: 600px; 
-    -webkit-transition: max-height 0.2s ease-out; 
-    -moz-transition: max-height 0.2s ease-out; 
-    -ms-transition: max-height 0.2s ease-out; 
-    -o-transition: max-height 0.2s ease-out; 
-    transition: max-height 0.2s ease-out; 
+    -webkit-transition: max-height 0.4s ease-in; 
+    -moz-transition: max-height 0.4s ease-in; 
+    -ms-transition: max-height 0.4s ease-in; 
+    -o-transition: max-height 0.4s ease-in; 
+    transition: max-height 0.4s ease-in; 
 }
+.accordion .accordion-ctrl:checked + section:hover,
 .accordion section:target:hover { 
     background: #efefef; 
 }
-.accordion section:target h2 {
+.accordion .accordion-ctrl:checked + section > .heading,
+.accordion section:target .heading {
     width: 100%;
-}
-.accordion section:target h2 a { 
-    color: #333; 
-    padding: 0;
+    color: #121212;
 }
 
 /* End General Accordion */
@@ -150,17 +157,12 @@
 /* Vertical Accordion */
 .accordion.vertical section { 
     width: 100%; 
-    -webkit-transition: max-height 0.2s ease-out; 
-    -moz-transition: max-height 0.2s ease-out; 
-    -ms-transition: max-height 0.2s ease-out; 
-    -o-transition: max-height 0.2s ease-out; 
-    transition: max-height 0.2s ease-out; 
+    -webkit-transition: max-height 0.4s ease-out; 
+    -moz-transition: max-height 0.4s ease-out; 
+    -ms-transition: max-height 0.4s ease-out; 
+    -o-transition: max-height 0.4s ease-out; 
+    transition: max-height 0.4s ease-out; 
 }
-.accordion.vertical section h2 { 
-    position: relative; 
-    left: 0; 
-    top: -15px; 
-}        
 </style>
 
     
@@ -187,7 +189,7 @@
     
 <header id="header">
     <h1>Regex Composer</h1>
-    <i>An intuitive Regular Expression Composer for PHP, Python, Node/JS</i>
+    <i>An intuitive Regular Expression Composer for PHP, Python, Node/XPCOM/JS</i>
 </header>
 
 <br /><br />
@@ -196,17 +198,13 @@
     
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
-    
         <strong>Composed Regular Expression:</strong>
         &nbsp;&nbsp;<input type="button" class="button" id="compose" data-bind='{"click":"compose"}' value="Compose" />
-        <br /><br />
-        <input type="text" size=120 id="regex" name="model[regex]" value="" />
+        <br />
+        <textarea id="regex"></textarea>
     </div>
         
-    <br /><br />
-    
-    <div class="fluid col-1-1">
-        
+    <div class="fluid col-1-1" style="margin-top:10px">
         <div class="fluid col-3-5">
             <strong>Code:</strong><br /><br />
 <textarea id="code">
@@ -241,8 +239,9 @@ new RegexComposer( )
         <div class="fluid col-2-5 float-right autofloat-none">
             <strong>Doc:</strong><br /><br />
             <div class="fluid col-1-1 accordion vertical">
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="start-of-input-ctrl" value="start-of-input" />
             <section id="start-of-input" class="fluid col-1-1 float-left">
-                <h2><a href="#start-of-input">startOfInput / startOfLine</a></h2>
+                <label class="heading" for="start-of-input-ctrl">startOfInput / startOfLine</label>
                 <p>
                     <strong>&quot;^&quot;</strong> Matches beginning of input. If the multiline flag is set to true, also matches immediately after a line break character.
                     <br /><br />
@@ -253,8 +252,9 @@ new RegexComposer( )
                     Example: <code>composer.startOfInput();</code>
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="end-of-input-ctrl" value="end-of-input" />
             <section id="end-of-input" class="fluid col-1-1 float-left">
-                <h2><a href="#end-of-input">endOfInput / endOfLine</a></h2>
+                <label class="heading" for="end-of-input-ctrl">endOfInput / endOfLine</label>
                 <p>
                     <strong>&quot;$&quot;</strong> Matches end of input. If the multiline flag is set to true, also matches immediately before a line break character.
                     <br /><br />
@@ -262,8 +262,9 @@ new RegexComposer( )
                     Example: <code>composer.endOfInput();</code>
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="any-ctrl" value="any" />
             <section id="any" class="fluid col-1-1 float-left">
-                <h2><a href="#any">any</a></h2>
+                <label class="heading" for="any-ctrl">any</a>
                 <p>
                     <strong>&quot;.&quot;</strong> (The decimal point) matches any single character except the newline character.
                     <br /><br />
@@ -272,8 +273,9 @@ new RegexComposer( )
                     Example: <code>composer.any();</code>
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="space-ctrl" value="space" />
             <section id="space" class="fluid col-1-1 float-left">
-                <h2><a href="#space">space</a></h2>
+                <label class="heading" for="space-ctrl">space</a>
                 <p>
                     <strong>&quot;\s&quot;</strong> Matches any space character.
                     <br /><br />
@@ -284,8 +286,9 @@ new RegexComposer( )
                     Example: <code>composer.space(false);</code>
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="digit-ctrl" value="digit" />
             <section id="digit" class="fluid col-1-1 float-left">
-                <h2><a href="#digit">digit</a></h2>
+                <label class="heading" for="digit-ctrl">digit</label>
                 <p>
                     <strong>&quot;\d&quot;</strong> Matches any single digit character.
                     <br /><br />
@@ -296,8 +299,9 @@ new RegexComposer( )
                     Example: <code>composer.digit(false);</code>
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="word-ctrl" value="word" />
             <section id="word" class="fluid col-1-1 float-left">
-                <h2><a href="#word">word</a></h2>
+                <label class="heading" for="word-ctrl">word</label>
                 <p>
                     <strong>&quot;\w&quot;</strong> Matches any single word character.
                     <br /><br />
@@ -308,8 +312,9 @@ new RegexComposer( )
                     Example: <code>composer.word(false);</code>
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="literal-ctrl" value="literal" />
             <section id="literal" class="fluid col-1-1 float-left">
-                <h2><a href="#literal">literal / match</a></h2>
+                <label class="heading" for="literal-ctrl">literal / match</label>
                 <p>
                     Matches a literal string.
                     <br /><br />
@@ -318,8 +323,9 @@ new RegexComposer( )
                     Example: <code>composer.match("**aabb**", wrapInParenthesis=false);</code>
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="zero-or-more-ctrl" value="zero-or-more" />
             <section id="zero-or-more" class="fluid col-1-1 float-left">
-                <h2><a href="#zero-or-more">zeroOrMore</a></h2>
+                <label class="heading" for="zero-or-more-ctrl">zeroOrMore</label>
                 <p>
                     <strong>&quot;*&quot;</strong> Matches the preceding character 0 or more times.
                     <br /><br />
@@ -330,8 +336,9 @@ new RegexComposer( )
                     Example: <code>composer.zeroOrMore(false);</code> (non-greedy)
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="one-or-more-ctrl" value="one-or-more" />
             <section id="one-or-more" class="fluid col-1-1 float-left">
-                <h2><a href="#one-or-more">oneOrMore</a></h2>
+                <label class="heading" for="one-or-more-ctrl">oneOrMore</label>
                 <p>
                     <strong>&quot;+&quot;</strong> Matches the preceding character 1 or more times. Equivalent to {1,}.
                     <br /><br />
@@ -342,8 +349,9 @@ new RegexComposer( )
                     Example: <code>composer.oneOrMore(false);</code> (non-greedy)
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="zero-or-one-ctrl" value="zero-or-one" />
             <section id="zero-or-one" class="fluid col-1-1 float-left">
-                <h2><a href="#zero-or-one">zeroOrOne</a></h2>
+                <label class="heading" for="zero-or-one-ctrl">zeroOrOne</label>
                 <p>
                     <strong>&quot;?&quot;</strong> Matches the preceding character 0 or 1 time. Equivalent to {0,1}.
                     <br /><br />
@@ -358,8 +366,9 @@ new RegexComposer( )
                     Example: <code>composer.zeroOrOne(false);</code> (non-greedy)
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="repeat-ctrl" value="repeat" />
             <section id="repeat" class="fluid col-1-1 float-left">
-                <h2><a href="#repeat">repeat</a></h2>
+                <label class="heading" for="repeat-ctrl">repeat</label>
                 <p>
                     <strong>&quot;{n}&quot;</strong> Matches exactly n occurrences of the preceding character. N must be a positive integer.
                     <br /><br />
@@ -374,8 +383,9 @@ new RegexComposer( )
                     Example: <code>composer.repeat(min, max, false);</code> (non-greedy)
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="group-ctrl" value="group" />
             <section id="group" class="fluid col-1-1 float-left">
-                <h2><a href="#group">group / subGroup / subgroup</a></h2>
+                <label class="heading" for="group-ctrl">group / subGroup / subgroup</label>
                 <p>
                     <strong>&quot;(x)&quot;</strong> Matches 'x' and remembers the match, as the following example shows. The parentheses are called capturing parentheses.
                     <br /><br />
@@ -386,8 +396,9 @@ new RegexComposer( )
                     Example: <code>composer.end();</code> (end of group)
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="non-capturing-group-ctrl" value="non-capturing-group" />
             <section id="non-capturing-group" class="fluid col-1-1 float-left">
-                <h2><a href="#non-capturing-group">nonCaptureGroup / nonCaptureSubGroup</a></h2>
+                <label class="heading" for="non-capturing-group-ctrl">nonCaptureGroup / nonCaptureSubGroup</label>
                 <p>
                     <strong>&quot;(?:x)&quot;</strong> Matches 'x' but does not remember the match. The parentheses are called non-capturing parentheses, and let you define subexpressions for regular expression operators to work with. Consider the sample expression <code>/(?:foo){1,2}/</code>. Without the non-capturing parentheses, the {1,2} characters would apply only to the last 'o' in 'foo'. With the capturing parentheses, the {1,2} applies to the entire word 'foo'.
                     <br /><br />
@@ -396,8 +407,9 @@ new RegexComposer( )
                     Example: <code>composer.end();</code> (end of group)
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="lookahead-group-ctrl" value="lookahead-group" />
             <section id="lookahead-group" class="fluid col-1-1 float-left">
-                <h2><a href="#lookahead-group">lookAheadGroup / lookAheadSubGroup</a></h2>
+                <label class="heading" for="lookahead-group-ctrl">lookAheadGroup / lookAheadSubGroup</label>
                 <p>
                     <strong>&quot;x(?=y)&quot;</strong> Matches 'x' only if 'x' is followed by 'y'. This is called a lookahead.
                     <br /><br />
@@ -412,8 +424,9 @@ new RegexComposer( )
                     Example: <code>composer.end();</code> (end of group)
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="alternate-group-ctrl" value="alternate-group" />
             <section id="alternate-group" class="fluid col-1-1 float-left">
-                <h2><a href="#alternate-group">alternate / either</a></h2>
+                <label class="heading" for="alternate-group-ctrl">alternate / either</label>
                 <p>
                     <strong>&quot;(x|y)&quot;</strong> Matches either 'x' or 'y' (as a group).
                     <br /><br />
@@ -424,8 +437,9 @@ new RegexComposer( )
                     Example: <code>composer.end();</code> (end of group)
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="character-set-ctrl" value="character-set" />
             <section id="character-set" class="fluid col-1-1 float-left">
-                <h2><a href="#character-set">characterGroup / charGroup</a></h2>
+                <label class="heading" for="character-set-ctrl">characterGroup / charGroup</label>
                 <p>
                     <strong>&quot;[xyz]&quot;</strong> Character set. This pattern type matches any one of the characters in the brackets, including escape sequences. Special characters like the dot(.) and asterisk (*) are not special inside a character set, so they don't need to be escaped. You can specify a range of characters by using a hyphen, as the following examples illustrate.
                     <br /><br />
@@ -440,16 +454,18 @@ new RegexComposer( )
                     Example: <code>composer.end();</code> (end of group)
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="characters-ctrl" value="characters" />
             <section id="characters" class="fluid col-1-1 float-left">
-                <h2><a href="#characters">characters / chars</a></h2>
+                <label class="heading" for="characters-ctrl">characters / chars</label>
                 <p>
                     <strong>x, y, z</strong> Specify a set of characters to be matched in a character group.
                     <br /><br />
                     Example: <code>composer.characters("x", "y", "z");</code>
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="range-ctrl" value="range" />
             <section id="range" class="fluid col-1-1 float-left">
-                <h2><a href="#range">range</a></h2>
+                <label class="heading" for="range-ctrl">range</label>
                 <p>
                     <strong>&quot;x&quot;, &quot;z&quot;</strong> Specify a range of characters to be matched in a character group. Results in <code>[x-z]</code>
                     <br /><br />
@@ -483,13 +499,27 @@ new RegexComposer( )
 require(['jQuery', 'ModelView', 'RegexComposer'],
     function($, ModelView, RegexComposer) {
     var $screen = $('#screen'),
-        codeEditor = document.getElementById('code'),
-        width = codeEditor.clientWidth, height = codeEditor.clientHeight
+        oEditor, regex = document.getElementById('regex'),
+        codeEditor, code = document.getElementById('code'),
+        owidth = regex.clientWidth, oheight = regex.clientHeight,
+        width = code.clientWidth, height = code.clientHeight
     ;
     
     ModelView.jquery( $ );
     
-    code = CodeMirror.fromTextArea(codeEditor, {
+    oEditor = CodeMirror.fromTextArea(regex, {
+        mode: "text",
+        lineWrapping: true,
+        lineNumbers : true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        theme: 'lesser-dark',
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+    });
+    oEditor.setSize(owidth, oheight);
+    
+    codeEditor = CodeMirror.fromTextArea(code, {
         mode: "javascript",
         lineWrapping: true,
         lineNumbers : true,
@@ -499,7 +529,7 @@ require(['jQuery', 'ModelView', 'RegexComposer'],
         foldGutter: true,
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
-    code.setSize(width, height);
+    codeEditor.setSize(width, height);
         
     $screen.modelview({
         autobind: true
@@ -508,10 +538,20 @@ require(['jQuery', 'ModelView', 'RegexComposer'],
         ,model: {
             id: 'model'
             ,data: { 
-                regex: ""
+                //regex: ""
             }
             ,types: { 
-                regex: $.ModelView.Type.Cast.STR
+                //regex: $.ModelView.Type.Cast.STR
+            }
+            ,getters: {
+                regex: function( ) {
+                    return oEditor.getValue();
+                }
+            }
+            ,setters: {
+                regex: function( k, v ) {
+                    oEditor.setValue(String(v));
+                }
             }
         }
         ,actions: { 
@@ -519,9 +559,10 @@ require(['jQuery', 'ModelView', 'RegexComposer'],
                 var regex, e, model = this.$model;
                 
                 try{
-                    regex = new Function("RegexComposer", "'use strict'; return "+code.getValue( )+";")( RegexComposer );
+                    regex = new Function("RegexComposer", "\"use strict\"; return "+codeEditor.getValue( )+";")( RegexComposer );
                 } catch (e) { 
-                    regex = "Error Occured!"; 
+                    regex = "Error Occured!";
+                    //console.error(e.toString());
                 }
                 model.set('regex', regex, true);
             }
@@ -530,15 +571,25 @@ require(['jQuery', 'ModelView', 'RegexComposer'],
     
     window.addEventListener('resize', function() {
     
-        var v = codeEditor.style.visibility;
-        var d = codeEditor.style.display;
-        codeEditor.style.visibility = 'hidden';
-        codeEditor.style.display = 'block';
-        width = codeEditor.clientWidth; 
-        height = codeEditor.clientHeight;
-        codeEditor.style.display = d;
-        codeEditor.style.visibility = v;
-        code.setSize(width, height);
+        var v = code.style.visibility,
+            d = code.style.display,
+            ov = regex.style.visibility,
+            od = regex.style.display;
+        regex.style.visibility = 'hidden';
+        regex.style.display = 'block';
+        owidth = regex.clientWidth; 
+        oheight = regex.clientHeight;
+        regex.style.display = od;
+        regex.style.visibility = ov;
+        oEditor.setSize(owidth, oheight);
+        
+        code.style.visibility = 'hidden';
+        code.style.display = 'block';
+        width = code.clientWidth; 
+        height = code.clientHeight;
+        code.style.display = d;
+        code.style.visibility = v;
+        codeEditor.setSize(width, height);
         
     }, false);
 });    

@@ -26,18 +26,16 @@
 <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
 <link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
 <style type="text/css">
-#output {
+#regex,#output {
     position:relative;
-    padding:10px;
+    padding:2px;
     width: 90%;
-    height: 450px;
+    height: 500px;
+}
+#regex {
+    height: 30px;
 }
 
-#regex {
-    position:relative;
-    display:inline-block;
-    width:80%;
-}
 
 .button {
     -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
@@ -116,7 +114,7 @@
     
 <header id="header">
     <h1>Regex Analyzer</h1>
-    <i>A simple Regular Expression Analyzer for PHP, Python, Node/JS</i>
+    <i>A simple Regular Expression Analyzer for PHP, Python, Node/XPCOM/JS</i>
 </header>
 
 <br /><br />
@@ -125,22 +123,17 @@
     
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
-    
         <strong>Regular Expression:</strong>
         &nbsp;&nbsp;<input type="button" class="button" id="analyze" data-bind='{"click":"analyze"}' value="Analyze" />
         &nbsp;&nbsp;<input type="button" class="button" id="peek" data-bind='{"click":"peek"}' value="Peek" />
         &nbsp;&nbsp;<input type="button" class="button" id="generate" data-bind='{"click":"generate"}' value="Sample" />
-        <br /><br />
-        <input type="text" size=120 id="regex" name="model[regex]" value="" />
+        <br />
+        <textarea id="regex">/[abc]+/gi</textarea>
     </div>
     
-    <br /><br />
-    
-    <div class="fluid col-1-1">
-    
+    <div class="fluid col-1-1" style="margin-top:10px">
         <strong>Output:</strong><br /><br />
         <textarea id="output"></textarea>
-        
     </div>
 </div>
 
@@ -166,14 +159,29 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
     function( $, $R, $MV, RegexAnalyzer ) {
     "use strict";
     
-    var undef=undefined, $window = $(window), $screen = $('#screen'), output = document.getElementById('output'),
-        appTask, appModel, appView, appRouter, analyzer = new RegexAnalyzer(), code,
-        width = output.clientWidth, height = output.clientHeight,
-        toJSON = JSON.stringify
+    var undef=undefined, $window = $(window), $screen = $('#screen'),
+        input = document.getElementById('regex'),
+        output = document.getElementById('output'),
+        appTask, appModel, appView, appRouter, analyzer = new RegexAnalyzer(), regex, code,
+        width = output.clientWidth, height, toJSON = JSON.stringify
     ;
     
     $MV.jquery( $ );
     
+    height = input.clientHeight;
+    regex = CodeMirror.fromTextArea(input, {
+        mode: "text",
+        lineWrapping: true,
+        lineNumbers : true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        theme: 'lesser-dark',
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+    });
+    regex.setSize( width, height );
+    
+    height = output.clientHeight;
     code = CodeMirror.fromTextArea(output, {
         mode: "application/json",
         lineWrapping: true,
@@ -266,10 +274,20 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
         ,model: {
             id: 'model'
             ,data: { 
-                regex: "/[abc]+/gi"
+                //regex: "/[abc]+/gi"
             }
             ,types: { 
-                regex: $MV.Type.Cast.STR
+                //regex: $MV.Type.Cast.STR
+            }
+            ,getters: {
+                regex: function( ) {
+                    return regex.getValue();
+                }
+            }
+            ,setters: {
+                regex: function( k, v ) {
+                    regex.setValue(String(v));
+                }
             }
         }
         ,actions: { 
@@ -305,8 +323,18 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
     $window
         .on('resize', function( evt ) {
             var v = output.style.visibility,
-                d = output.style.display
+                d = output.style.display,
+                vi = input.style.visibility,
+                di = input.style.display
             ;
+            input.style.visibility = 'hidden';
+            input.style.display = 'block';
+            width = input.clientWidth; 
+            height = input.clientHeight;
+            input.style.display = di;
+            input.style.visibility = vi;
+            regex.setSize( width, height );
+            
             output.style.visibility = 'hidden';
             output.style.display = 'block';
             width = output.clientWidth; 
