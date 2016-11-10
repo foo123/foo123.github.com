@@ -123,7 +123,7 @@
     
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
-        <strong>Regular Expression:</strong>
+        <strong>Regular Expression:</strong> (wrap the expression in <code>/../[flags]</code> and optionaly add flags)
         &nbsp;&nbsp;<input type="button" class="button" id="analyze" data-bind='{"click":"analyze"}' value="Analyze" />
         &nbsp;&nbsp;<input type="button" class="button" id="peek" data-bind='{"click":"peek"}' value="Peek" />
         &nbsp;&nbsp;<input type="button" class="button" id="generate" data-bind='{"click":"generate"}' value="Sample" />
@@ -198,13 +198,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
         analyze: function( appModel ) {
             var input = appModel.get('regex'), output;
             
+            if ( ('/' !== input.charAt(0)) && ('/' !== input.charAt(input.length-1)) ) input = '/'+input+'/';
             analyzer.regex( input ).analyze( );
             
             output = [
                 "Input: " + input
                 ,"Regular Expression: " + analyzer._regex
-                ,"Regular Expression Flags: "
-                ,toJSON( analyzer._flags )
+                ,"Regular Expression Flags: " + Object.keys( analyzer._flags ).join(',')
                 ,"Regular Expression Parts: "
                 ,toJSON( analyzer._parts.toObject(), null, 4 )
             ].join( "\n\n" );
@@ -215,13 +215,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
         peek: function( appModel ) {
             var input = appModel.get('regex'), output, peekChars;
             
+            if ( ('/' !== input.charAt(0)) && ('/' !== input.charAt(input.length-1)) ) input = '/'+input+'/';
             peekChars = analyzer.regex( input ).peek( );
             
             output = [
                 "Input: " + input
                 ,"Regular Expression: " + analyzer._regex
-                ,"Regular Expression Flags: "
-                ,toJSON( analyzer._flags )
+                ,"Regular Expression Flags: " + Object.keys( analyzer._flags ).join(',')
                 ,["Regular Expression Peek Characters: "
                 ,"// Experimental Feature, not all characters are expanded, eg. special characters (like .) appear as special"
                 ,"// Peek Characters are the start characters of a hypothetical input string"
@@ -238,13 +238,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
         generate: function( appModel ) {
             var input = appModel.get('regex'), output, sample;
             
+            if ( ('/' !== input.charAt(0)) && ('/' !== input.charAt(input.length-1)) ) input = '/'+input+'/';
             sample = analyzer.regex( input ).sample( );
             
             output = [
                 "Input: " + input
                 ,"Regular Expression: " + analyzer._regex
-                ,"Regular Expression Flags: "
-                ,toJSON( analyzer._flags )
+                ,"Regular Expression Flags: " + Object.keys( analyzer._flags ).join(',')
                 ,["Regular Expression Sample Matching String: "
                 ,"// Experimental Feature"
                 ,"// Generates a random string which is supposed to match the regular expression"].join("\n")
