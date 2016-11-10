@@ -122,7 +122,7 @@
     
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
-        <strong>Expression:</strong>
+        <strong>Xpresion ($(xpresion_version)):</strong>
         &nbsp;&nbsp;<input type="button" class="button" id="debug" data-bind='{"click":"debug"}' value="Debug" />
         &nbsp;&nbsp;<input type="button" class="button" id="evaluate" data-bind='{"click":"evaluate"}' value="Evaluate" />
         &nbsp;&nbsp;<a class="button" id="help" href="https://github.com/foo123/Xpresion" target="_blank">Help</a>
@@ -254,13 +254,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
     }});
     
     $screen.modelview({
-        autobind: true
+        //autobind: true
+        livebind: '$(__KEY__)'
         ,bindAttribute: 'data-bind'
         
         ,model: {
             id: 'model'
             ,data: { 
                 //expr: null
+                xpresion_version: 'v.'+Xpresion.VERSION
             }
             ,types: { 
                 //expr: $MV.Type.Cast.STR
