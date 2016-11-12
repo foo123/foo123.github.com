@@ -260,10 +260,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
                 ,"match of the regular expression"
                 ,""
                 ,"*******************************************/"
-                ,toJSON({peek: {
-                    pass: Object.keys(peekChars.peek||{}),
-                    fail: Object.keys(peekChars.negativepeek||{})
-                }}, null, 4)
+                ,toJSON({
+                    positive: Object.keys(peekChars.positive||{}),
+                    negative: Object.keys(peekChars.negative||{})
+                }, null, 4)
                 ,"",""
                 ,"/******************************************"
                 ,""
