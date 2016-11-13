@@ -195,107 +195,101 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
     code.setSize( width, height );
         
     appTask = {
-        analyze: function( appModel ) {
-            var input = appModel.get('regex'), output;
-            
+        analyze: function( input ) {
             if ( ('/' !== input.charAt(0)) && ('/' !== input.charAt(input.length-1)) ) input = '/'+input+'/';
-            analyzer.regex( input ).analyze( );
+            analyzer.set( input ).analyze( );
             
-            output = [
-                "/*******************************************"
-                ,"Regular Expression Analysis"
-                ,"*******************************************/"
-                ,""
-                ,"/******************************************"
-                ,""
-                ,"Input                    : " + input
-                ,"Regular Expression       : " + analyzer._regex
-                ,"Regular Expression Flags : " + Object.keys( analyzer._flags ).join(',')
-                ,""
-                ,"/*******************************************"
-                ,"** Regular Expression Structure **"
-                ,"*******************************************/"
-                ,""
-                ,toJSON( analyzer._parts.toObject(), null, 4 )
-            ].join( "\n" );
-            
-            code.setValue( output );
+            code.setValue([
+            "/*******************************************"
+            ,"Regular Expression Analysis"
+            ,"*******************************************/"
+            ,""
+            ,"/******************************************"
+            ,""
+            ,"Input                    : " + input
+            ,"Regular Expression       : " + analyzer.re
+            ,"Regular Expression Flags : " + Object.keys( analyzer.fl ).join(',')
+            ,""
+            ,"/*******************************************"
+            ,"** Regular Expression Syntax Tree **"
+            ,"*******************************************/"
+            ,""
+            ,toJSON( analyzer.tree(true), null, 4 )
+            ].join( "\n" ));
         },
         
-        statistics: function( appModel ) {
-            var input = appModel.get('regex'), re, output, peekChars, sample, samples, minLen;
+        statistics: function( input ) {
+            var re, peek, samples, min;
             
             if ( ('/' !== input.charAt(0)) && ('/' !== input.charAt(input.length-1)) ) input = '/'+input+'/';
-            peekChars = analyzer.regex( input ).peek( );
-            minLen = analyzer.minimum( );
-            samples = new Array(10); re = analyzer.getRegex( analyzer._flags&&analyzer._flags.i?{i:1}:{} );
+            analyzer.set( input ).analyze( );
+            
+            peek = analyzer.peek( );
+            min = analyzer.minimum( );
+            samples = analyzer.sample( (min||1)+10, 10 );
+            re = analyzer.compile( analyzer.fl.i?{i:1}:{} );
             for(var i=0; i<10; i++)
-            {
-                sample = analyzer.sample( (minLen||5)+10 );
-                samples[i] = {sample: sample, match:re.test(sample) ? true : false};
-            }
+                samples[i] = {sample: samples[i], match:re.test(samples[i]) ? 'yes' : 'no'};
             
-            output = [
-                "/********************************************"
-                ,"Regular Expression Statistics (Exprerimental)"
-                ,"********************************************/"
-                ,""
-                ,"/******************************************"
-                ,""
-                ,"Input                    : " + input
-                ,"Regular Expression       : " + analyzer._regex
-                ,"Regular Expression Flags : " + Object.keys( analyzer._flags ).join(',')
-                ,""
-                ,"*******************************************/"
-                ,"",""
-                ,"/******************************************"
-                ,""
-                ,"** Peek Characters **"
-                ,"(not all characters are expanded,"
-                ,"eg. special characters, like '.', appear as special)"
-                ,""
-                ,"Peek Characters are the start characters"
-                ,"of a hypothetical input string"
-                ,"which can generate a (further) possible"
-                ,"match of the regular expression"
-                ,""
-                ,"*******************************************/"
-                ,toJSON({
-                    positive: Object.keys(peekChars.positive||{}),
-                    negative: Object.keys(peekChars.negative||{})
-                }, null, 4)
-                ,"",""
-                ,"/******************************************"
-                ,""
-                ,"** Minimum Match **"
-                ,""
-                ,"The minimum length any string must have"
-                ,"to necesarily match the regular expression"
-                ,"Strings having smaller length will NOT match"
-                ,""
-                ,"*******************************************/"
-                ,toJSON({minimum: minLen}, null, 4)
-                ,"",""
-                ,"/******************************************"
-                ,""
-                ,"** Match Samples **"
-                ,""
-                ,"Samples are random strings (up to some length)"
-                ,"which match the regular expression"
-                ,""
-                ,"*******************************************/"
-                ,toJSON({samples:samples}, null, 4)
-            ].join( "\n" );
-            
-            code.setValue( output );
+            code.setValue([
+            "/********************************************"
+            ,"Regular Expression Statistics (Exprerimental)"
+            ,"********************************************/"
+            ,""
+            ,"/******************************************"
+            ,""
+            ,"Input                    : " + input
+            ,"Regular Expression       : " + analyzer.re
+            ,"Regular Expression Flags : " + Object.keys( analyzer.fl ).join(',')
+            ,""
+            ,"*******************************************/"
+            ,"",""
+            ,"/******************************************"
+            ,""
+            ,"** Peek Characters **"
+            ,"(not all characters are expanded,"
+            ,"eg. special characters, like '.', appear as special)"
+            ,""
+            ,"Peek Characters are the start characters"
+            ,"of a hypothetical input string"
+            ,"which can generate a further possible"
+            ,"match of the regular expression"
+            ,""
+            ,"*******************************************/"
+            ,toJSON({
+                positive: Object.keys(peek.positive||{}),
+                negative: Object.keys(peek.negative||{})
+            }, null, 4)
+            ,"",""
+            ,"/******************************************"
+            ,""
+            ,"** Minimum Match **"
+            ,""
+            ,"The minimum length any string must have"
+            ,"to necesarily match the regular expression"
+            ,"Strings having smaller length will NOT match"
+            ,""
+            ,"*******************************************/"
+            ,toJSON({minimum: min}, null, 4)
+            ,"",""
+            ,"/******************************************"
+            ,""
+            ,"** Match Samples **"
+            ,""
+            ,"Samples are random strings (up to some length)"
+            ,"which match the regular expression"
+            ,""
+            ,"*******************************************/"
+            ,toJSON(samples, null, 4)
+            ].join( "\n" ));
         },
         
-        peek: function( appModel ) {
-            appTask.statistics( appModel );
+        peek: function( input ) {
+            appTask.statistics( input );
         },
         
-        generate: function( appModel ) {
-            appTask.statistics( appModel );
+        generate: function( input ) {
+            appTask.statistics( input );
         }
     };
     
@@ -307,7 +301,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
         {
             var appModel = $screen.modelview( 'model' );
             if ( params.regex ) appModel.set('regex', params.regex, 1);
-            appTask[ params.action ]( appModel );
+            appTask[ params.action ]( appModel.get('regex') );
         }
     }});
     
@@ -338,29 +332,29 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
         }
         ,actions: { 
             analyze: function(evt, $el, data) {
-                var model=this.$model;
+                var regex = this.$model.get( 'regex' );
                 location.hash = '#' + appRouter.glue({
                     action: 'analyze',
-                    regex: model.get( 'regex' )
+                    regex: regex
                 });
-                appTask.analyze( model );
+                appTask.analyze( regex );
             },
             
             statistics: function(evt, $el, data) {
-                var model=this.$model;
+                var regex = this.$model.get( 'regex' );
                 location.hash = '#' + appRouter.glue({
                     action: 'statistics',
-                    regex: model.get( 'regex' )
+                    regex: regex
                 });
-                appTask.statistics( model );
+                appTask.statistics( regex );
             },
             
             peek: function(evt, $el, data) {
-                this.statistics(evt, $el, data);
+                this.do_statistics(evt, $el, data);
             },
             
             generate: function(evt, $el, data) {
-                this.statistics(evt, $el, data);
+                this.do_statistics(evt, $el, data);
             }
         }
     });
