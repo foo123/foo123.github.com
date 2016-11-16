@@ -219,13 +219,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
         },
         
         statistics: function( input ) {
-            var re, peek, samples, min;
+            var re, peek, samples, min, max;
             
             if ( ('/' !== input.charAt(0)) && ('/' !== input.charAt(input.length-1)) ) input = '/'+input+'/';
             analyzer.set( input ).analyze( );
             
             peek = analyzer.peek( );
             min = analyzer.minimum( );
+            max = analyzer.maximum( );
             samples = analyzer.sample( (min||1)+10, 10 );
             re = analyzer.compile( analyzer.fl.i?{i:1}:{} );
             for(var i=0; i<10; i++)
@@ -263,14 +264,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
             ,"",""
             ,"/******************************************"
             ,""
-            ,"** Minimum Match **"
+            ,"** Minimum / Maximum Match **"
             ,""
-            ,"The minimum length any string must have"
+            ,"The minimum/maximum length any string must have"
             ,"to necesarily match the regular expression"
             ,"Strings having smaller length will NOT match"
             ,""
             ,"*******************************************/"
-            ,toJSON({minimum: min}, null, 4)
+            ,toJSON({minimum: min, maximum: -1===max?"unlimited":max}, null, 4)
             ,"",""
             ,"/******************************************"
             ,""
