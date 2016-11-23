@@ -204,12 +204,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
             ,"Regular Expression Analysis"
             ,"*******************************************/"
             ,""
-            ,"/******************************************"
+            ,"/******************************************/"
             ,""
-            ,"Input                    : " + input
-            ,"Regular Expression       : " + analyzer.re
-            ,"Regular Expression Flags : " + Object.keys( analyzer.fl ).join(',')
+            ,"// Input                    : " + input
+            ,"// Regular Expression       : " + analyzer.re
+            ,"// Regular Expression Flags : " + Object.keys( analyzer.fl ).join(',')
             ,""
+            ,"/*******************************************/"
+            ,"",""
             ,"/*******************************************"
             ,"** Regular Expression Syntax Tree **"
             ,"*******************************************/"
@@ -237,24 +239,24 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
             ,"Regular Expression Statistics (Exprerimental)"
             ,"********************************************/"
             ,""
-            ,"/******************************************"
+            ,"/******************************************/"
             ,""
-            ,"Input                    : " + input
-            ,"Regular Expression       : " + analyzer.re
-            ,"Regular Expression Flags : " + Object.keys( analyzer.fl ).join(',')
+            ,"// Input                    : " + input
+            ,"// Regular Expression       : " + analyzer.re
+            ,"// Regular Expression Flags : " + Object.keys( analyzer.fl ).join(',')
             ,""
-            ,"*******************************************/"
+            ,"/*******************************************/"
             ,"",""
             ,"/******************************************"
             ,""
             ,"** Peek Characters **"
-            ,"(not all characters are expanded,"
-            ,"eg. special characters, like '.', appear as special)"
             ,""
             ,"Peek Characters are the start characters"
             ,"of a hypothetical input string"
             ,"which can generate a further possible"
             ,"match of the regular expression"
+            ,"(not all characters are expanded,"
+            ,"eg. special characters, like '.', appear as special)"
             ,""
             ,"*******************************************/"
             ,toJSON({
