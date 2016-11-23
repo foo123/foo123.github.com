@@ -125,8 +125,24 @@
     
         <strong>Grammar Template ($(grammartemplate_version)):</strong>
         &nbsp;&nbsp;<input type="button" class="button" id="render" data-bind='{"click":"render"}' value="Render" />
-        &nbsp;&nbsp;<a class="button" id="help" href="https://github.com/foo123/GrammarTemplate" target="_blank">Help</a>
+        &nbsp;&nbsp;<a class="button" id="help" href="https://github.com/foo123/GrammarTemplate" target="_blank">Help</a>&nbsp;&nbsp;<input id="mode" type="checkbox" data-bind='{"change":"setMode"}' />&nbsp;&nbsp;<label id="setmode" for="mode">PostOp Mode</label>
         <br /><br />
+<!--
+SELECT <column.select>[, <column.select>*]
+FROM <table.from>[, <table.from>*][
+WHERE (<required.where:EXPR>?) AND (<condition.where:EXPR>?)][
+WHERE <required.where:EXPR>?<condition.where:EXPR>?!][
+WHERE <required.where:EXPR>?!<condition.where:EXPR>?][
+GROUP BY <group>?[, <group>*]][
+HAVING (<required.having:EXPR>?) AND (<condition.having:EXPR>?)][
+HAVING <required.having:EXPR>?<condition.having:EXPR>?!][
+HAVING <required.having:EXPR>?!<condition.having:EXPR>?][
+ORDER BY <order>?[, <order>*]][
+LIMIT <offset|0>, <count>?]
+<:FACTOR>:=[<lhs>[ <op>? <rhs|NULL>]]
+<:TERM>:=[(<factor:FACTOR>[ AND <factor:FACTOR>*])]
+<:EXPR>:=[<term:TERM>[ OR <term:TERM>*]]
+-->
         <textarea id="input">SELECT &lt;column.select&gt;[, &lt;*column.select&gt;]
 FROM &lt;table.from&gt;[, &lt;*table.from&gt;][
 WHERE (&lt;?required.where:EXPR&gt;) AND (&lt;?condition.where:EXPR&gt;)][
@@ -219,7 +235,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'GrammarTemplate'],
         iwidth = input.clientWidth, iheight = input.clientHeight,
         width = output.clientWidth, height = output.clientHeight,
         toJSON = JSON.stringify, fromJSON = JSON.parse,
-        cur_tpl = String(input.value), gramTpl = null
+        cur_tpl = String(input.value), gramTpl = null, prevmode = false, postop = false
     ;
     
     $MV.jquery( $ );
@@ -263,10 +279,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'GrammarTemplate'],
     appTask = {
         render: function( ) {
             var template = iEditor.getValue();
-            if ( !gramTpl || (cur_tpl !== template) )
+            if ( !gramTpl || (cur_tpl !== template) || (prevmode !== postop) )
             {
                 cur_tpl = template;
-                gramTpl = new GrammarTemplate(template);
+                gramTpl = new GrammarTemplate(template, null, postop);
             }
             
             oEditor.setValue(gramTpl.render(fromJSON(vEditor.getValue())));
@@ -287,6 +303,11 @@ require(['jQuery', 'Dromeo', 'ModelView', 'GrammarTemplate'],
         {
             if ( null != params.input ) iEditor.setValue(params.input);
             if ( null != params.data ) vEditor.setValue(params.data);
+            if ( null != params.mode )
+            {
+                var opmode = 1 === +params.mode;
+                if ( opmode !== postop ) $('#setmode').trigger('click');
+            }
             appTask[ params.action ]( );
         }
     }});
@@ -303,10 +324,16 @@ require(['jQuery', 'Dromeo', 'ModelView', 'GrammarTemplate'],
             }
         }
         ,actions: { 
+            setMode: function(evt, el) {
+                prevmode = postop; postop = el.checked ? true : false;
+                if ( prevmode !== postop )
+                    iEditor.setOption( "mode", postop ? "grammartemplate-post" : "grammartemplate" );
+            },
             render: function(evt, $el, data) {
                 location.hash = '#' + appRouter.glue({
                     action: 'render',
                     input: iEditor.getValue(),
+                    mode: postop ? 1 : 0,
                     data: vEditor.getValue()
                 });
                 appTask.render( );
