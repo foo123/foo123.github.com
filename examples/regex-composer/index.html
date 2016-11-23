@@ -174,6 +174,8 @@
 <script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
 <script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
 <script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
+<script src="../common/js/codemirror_grammar.min.js"></script>
+<script src="../common/js/codemirror/grammar/regexp.js"></script>
 
     <script type="text/javascript" src="../common/js/require.js"></script>
     <script type="text/javascript" src="../common/js/require-config.js"></script>
@@ -484,6 +486,7 @@ new RegexComposer( )
         
         
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
+<div class="showcase">Regular Expression Grammar highlight mode by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
 <div class="showcase">Regular Expressions Documentation by <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank">MDN</a></div>
 
         <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
@@ -508,7 +511,7 @@ require(['jQuery', 'ModelView', 'RegexComposer'],
     ModelView.jquery( $ );
     
     oEditor = CodeMirror.fromTextArea(regex, {
-        mode: "text",
+        mode: "regexp",
         lineWrapping: true,
         lineNumbers : true,
         indentUnit: 4,
