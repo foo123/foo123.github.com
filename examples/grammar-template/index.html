@@ -23,6 +23,7 @@
     <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
     
 <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
+<link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
 <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
 <link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
 <style type="text/css">
@@ -91,12 +92,14 @@
     
 <script src="../common/js/codemirror/codemirror.min.js"></script>
 <script src="../common/js/codemirror/mode/javascript.js"></script>
+<script src="../common/js/codemirror/addon/lint/lint.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
 <script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
 <script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
 <script src="../common/js/codemirror_grammar.min.js"></script>
 <script src="../common/js/codemirror/grammar/grammartemplate.js"></script>
+<script src="../common/js/codemirror/grammar/grammartemplate_postop.js"></script>
 
     <script type="text/javascript" src="../common/js/require.js"></script>
     <script type="text/javascript" src="../common/js/require-config.js"></script>
@@ -241,14 +244,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'GrammarTemplate'],
     $MV.jquery( $ );
     
     iEditor = CodeMirror.fromTextArea(input, {
-        mode: "grammartemplate",
+        mode: "grammar-template",
         lineWrapping: true,
         lineNumbers : true,
         indentUnit: 4,
         indentWithTabs: false,
         theme: 'lesser-dark',
         foldGutter: true,
-        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+        lint: true,  // enable lint validation
+        gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     iEditor.setSize( iwidth, iheight );
     
@@ -327,7 +331,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'GrammarTemplate'],
             setMode: function(evt, el) {
                 prevmode = postop; postop = el.checked ? true : false;
                 if ( prevmode !== postop )
-                    iEditor.setOption( "mode", postop ? "grammartemplate-post" : "grammartemplate" );
+                    iEditor.setOption( "mode", postop ? "grammar-template-postop" : "grammar-template" );
             },
             render: function(evt, $el, data) {
                 location.hash = '#' + appRouter.glue({

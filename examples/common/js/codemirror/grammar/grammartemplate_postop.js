@@ -1,4 +1,4 @@
-// 1. JSON grammar for Regular Expressions
+// 1. JSON grammar for GrammarTemplate Engine ( https://github.com/foo123/GrammarTemplate )
 // to be used with CodeMirrorGrammar add-on (https://github.com/foo123/codemirror-grammar)
 !function( language, grammar, options ){
 "use strict";
@@ -55,7 +55,7 @@ if ( ("undefined" !== typeof CodeMirror) && ("undefined" !== typeof CodeMirrorGr
         };
     }*/
 }
-}("regexp", {
+}("grammar-template-postop", {
         
 // prefix ID for regular expressions used in the grammar
 "RegExpID"                      : "RE::",
@@ -63,42 +63,37 @@ if ( ("undefined" !== typeof CodeMirror) && ("undefined" !== typeof CodeMirrorGr
 // Style model
 "Style"                         : {
 
-     "SPECIAL"                  : "keyword"
+     "KEYWORD"                  : "keyword"
+    ,"IDENT"                    : "keyword"
     ,"BUILTIN"                  : "builtin"
-    ,"STRING"                   : "string"
-    ,"ATOM"                     : "atom"
-    ,"CLASS"                    : "variable"
+    ,"ATOM"                     : "string"
 
 },
 
 // Lexical model
 "Lex"                           : {
      "<escaped>"                : "RE::/\\\\(\\\\\\\\)*/"
-    ,"<escapes>"                : "RE::/(\\\\\\\\)+/"
-    ,"<repeater>"               : "RE::/[\\+\\*\\?]|\\{\\d+(,\\d*)?\\}/"
-    ,"<reserved>"               : "RE::/[\\.\\^\\$\\|]/"
-    ,"<class>"                  : "RE::/\\\\[dDwWsStnvr]/"
-    ,"<start_re>"               : "/"
-    ,"<end_re>"                 : "RE::#/[gmiy]{0,4}#"
-    ,"<literal>"                : "RE::/(\\\\)?[^\\s]/"
-    ,"<notbracket>"             : "RE::#[^\\]]#"
-    ,"<text>"                   : "RE::#[^\\s/]#"
-    ,"<bracket>"                : "RE::/\\[\\^?/"
-    ,"<paren>"                  : "RE::/\\((\\?[!=:])?/"
-    ,"@open_bra@:action"        : {"push":"]"}
-    ,"@close_bra@:action"       : {"pop":"]","msg":"Brackets do not match"}
-    ,"@open_par@:action"        : {"push":")"}
-    ,"@close_par@:action"       : {"pop":")","msg":"Parentheses do not match"}
+    ,"<modifier>"               : "RE::/(\\?!|\\*|\\?|\\{\\d+(,\\d*)?\\})/"
+    ,"<ident>"                  : "RE::/[_$A-Za-z0-9]+(\\.[_$A-Za-z0-9]+)?/"
+    ,"<renderer>"               : "RE::/:[_$A-Za-z0-9]+/"
+    ,"<default_value>"          : "RE::/[\\s\\S]*?(?=>|&gt;)/"
+    ,"<text>"                   : "RE::/[^\\s]/"
+    ,"<open>"                   : "RE::/(<|&lt;)/"
+    ,"<close>"                  : "RE::/(>|&gt;)/"
+    ,"<close_def>"              : "RE::/(>|&gt;)(?=:=)/"
+    ,"<close_mod>"              : "RE::/(>|&gt;)(?=\\?!|\\*|\\?|\\{\\d+(,\\d*)?\\})/"
+    ,"<close_mod_def>"          : "RE::/(>|&gt;)(?=(\\?!|\\*|\\?|\\{\\d+(,\\d*)?\\})(:=))/"
+    ,"@open_block@:action"      : {"push":"]"}
+    ,"@close_block@:action"     : {"pop":"]","msg":"Block delimiters do not match"}
 },
 
 "Syntax"                        : {
-     "<chargroup>"              : "<bracket>.BUILTIN @open_bra@ (<escaped>& <escapes>.ATOM? (<class>.CLASS | <literal>.ATOM) | <notbracket>.ATOM)* ']'.BUILTIN @close_bra@"
-    ,"<regexp>"                 : "(<escaped>& <escapes>.STRING? (<class>.CLASS | <literal>.STRING) | <reserved>.SPECIAL | <repeater>.BUILTIN | <paren>.BUILTIN @open_par@ | ')'.BUILTIN @close_par@ | <chargroup> | ']'.BUILTIN @close_bra@ | <text>.STRING)*"
-    ,"<js-regexp>"              : "<start_re> <regexp> <end_re>"
+     "<nonterminal>"            : "<open>.KEYWORD '' (<ident>.IDENT '')? (<renderer>.BUILTIN '')? ('|'.BUILTIN <default_value>.ATOM)? (<close_mod_def>.KEYWORD '' <modifier>.BUILTIN '' ':='.KEYWORD '' '['.BUILTIN @open_block@ | <close_mod>.KEYWORD '' <modifier>.BUILTIN | <close_def>.KEYWORD '' ':='.KEYWORD '' '['.BUILTIN @open_block@ | <close>.KEYWORD)"
+    ,"<template>"               : "(<escaped> <text> | '['.BUILTIN @open_block@ | ']'.BUILTIN @close_block@ | <nonterminal> | <text>)*"
 },
 
 // what to parse and in what order
-"Parser"                        : [ ["<js-regexp>"] ]
+"Parser"                        : [ ["<template>"] ]
 
 }, {
 

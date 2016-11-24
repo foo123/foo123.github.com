@@ -122,8 +122,8 @@
 <script src="../common/js/codemirror/addon/hint/show-hint.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
-<script src="../common/js/codemirror/grammar/json.js"></script>
 <script src="../common/js/codemirror_grammar.min.js"></script>
+<script src="../common/js/codemirror/grammar/json.js"></script>
 
     <script type="text/javascript" src="../common/js/require.js"></script>
     <script type="text/javascript" src="../common/js/require-config.js"></script>
@@ -384,7 +384,7 @@ require(['jQuery', 'ModelView'],
     
         var $w = $(window), $screen = $('#screen'), 
             code = $('#code'), grammar = $('#grammar'), apply = $('#apply'), 
-            lang = "customLang", i = 0, json_mode, grammar_mode = null,
+            lang = "customLang", i = 0, /*json_mode,*/ grammar_mode = null,
             codeEditor, grammarEditor, width, height,
             log = (console && console.log) ? function(s){console.log(s);} : function(){}
         ;
@@ -393,7 +393,7 @@ require(['jQuery', 'ModelView'],
         $('#grammar-version').text(CodeMirrorGrammar.VERSION);
         ModelView.jquery( $ );
     
-        json_mode = CodeMirrorGrammar.getMode( json_grammar );
+        /*json_mode = CodeMirrorGrammar.getMode( json_grammar );
         json_mode.supportGrammarAnnotations = true;
         json_mode.supportCodeFolding = true;
         json_mode.supportCodeMatching = true;
@@ -412,7 +412,7 @@ require(['jQuery', 'ModelView'],
                 cm.on( "cursorActivity", json_mode.matcher );
                 json_mode.matcher( cm );
             }
-        });
+        });*/
         
         // enable autocomplete, have a unique cmd to not interfere with any default autocompletes
         CodeMirror.commands.autocomplete_grammar = function( cm ) {

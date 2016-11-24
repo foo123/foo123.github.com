@@ -1,95 +1,103 @@
 // 1. JSON grammar for GrammarTemplate Engine ( https://github.com/foo123/GrammarTemplate )
 // to be used with CodeMirrorGrammar add-on (https://github.com/foo123/codemirror-grammar)
-var grammartemplate_grammar = {
-        
-// prefix ID for regular expressions used in the grammar
-"RegExpID"                      : "RE::",
+!function( language, grammar, options ){
+"use strict";
 
-// Style model
-"Style"                         : {
-
-     "keyword"                  : "keyword"
-    ,"function"                 : "builtin"
-    ,"string"                   : "string"
-    ,"atom"                     : "atom"
-
-},
-
-// Lexical model
-"Lex"                           : {
-     "escaped"                  : "RE::/\\\\(\\\\\\\\)*/"
-    ,"modifier"                 : "RE::/(\\?!|\\*|\\?|\\{\\d+(,\\d*)?\\})/"
-    ,"identifier"               : "RE::/[_A-Za-z][_A-Za-z0-9]*(\\.[_A-Za-z][_A-Za-z0-9]*)?/"
-    ,"renderer"                 : "RE::/[_A-Za-z][_A-Za-z0-9]*/"
-    ,"default_value"            : "RE::/[_A-Za-z0-9]*/"
-    ,"text"                     : "RE::/[^\\s]/"
-    ,"delim1"                   : "RE::/(<|&lt;)/"
-    ,"delim2"                   : "RE::/(>|&gt;)/"
-    ,"delim3"                   : "RE::/(>|&gt;)(:=)/"
-    ,"block"                    : "RE::/[\\[\\]]/"
-},
-
-"Syntax"                        : {
-     "nonterminal"              : "delim1.keyword '' (modifier.function? identifier.keyword '')? (':'.function '' renderer.function '')? ('|'.function '' default_value.string '')? (delim3& delim2.keyword '' ':='.keyword '' '['.function | delim2.keyword)"
-    ,"template"                 : "escaped text | block.function | nonterminal | text"
-},
-
-// what to parse and in what order
-"Parser"                        : [ ["template"] ]
-
-};
-var grammartemplate_postgrammar = {
-        
-// prefix ID for regular expressions used in the grammar
-"RegExpID"                      : "RE::",
-
-// Style model
-"Style"                         : {
-
-     "keyword"                  : "keyword"
-    ,"function"                 : "builtin"
-    ,"string"                   : "string"
-    ,"atom"                     : "atom"
-
-},
-
-// Lexical model
-"Lex"                           : {
-     "escaped"                  : "RE::/\\\\(\\\\\\\\)*/"
-    ,"modifier"                 : "RE::/(\\?!|\\*|\\?|\\{\\d+(,\\d*)?\\})/"
-    ,"identifier"               : "RE::/[_A-Za-z][_A-Za-z0-9]*(\\.[_A-Za-z][_A-Za-z0-9]*)?/"
-    ,"renderer"                 : "RE::/[_A-Za-z][_A-Za-z0-9]*/"
-    ,"default_value"            : "RE::/[_A-Za-z0-9]*/"
-    ,"text"                     : "RE::/[^\\s]/"
-    ,"delim1"                   : "RE::/(<|&lt;)/"
-    ,"delim2"                   : "RE::/(>|&gt;)/"
-    ,"delim3"                   : "RE::/(>|&gt;)(:=)/"
-    ,"delim4"                   : "RE::/(>|&gt;)(\\?!|\\*|\\?|\\{\\d+(,\\d*)?\\})/"
-    ,"delim5"                   : "RE::/(>|&gt;)(\\?!|\\*|\\?|\\{\\d+(,\\d*)?\\})(:=)/"
-    ,"block"                    : "RE::/[\\[\\]]/"
-},
-
-"Syntax"                        : {
-     "nonterminal"              : "delim1.keyword '' (identifier.keyword '')? (':'.function '' renderer.function '')? ('|'.function '' default_value.string '')? (delim5& delim2.keyword '' modifier.function '' ':='.keyword '' '['.function | delim4& delim2.keyword '' modifier.function | delim3& delim2.keyword '' ':='.keyword '' '['.function | delim2.keyword)"
-    ,"template"                 : "escaped text | block.function | nonterminal | text"
-},
-
-// what to parse and in what order
-"Parser"                        : [ ["template"] ]
-
-};
-
-var grammartemplate_mode = null, grammartemplate_postmode = null;
+window[language + "_grammar"] = grammar;
+options = options || {};
+var mode = null;
 
 if ( ("undefined" !== typeof CodeMirror) && ("undefined" !== typeof CodeMirrorGrammar) )
 {
-// 2. parse the grammar into a Codemirror syntax-highlight mode
-grammartemplate_mode = CodeMirrorGrammar.getMode( grammartemplate_grammar );
-grammartemplate_postmode = CodeMirrorGrammar.getMode( grammartemplate_postgrammar );
+    // 2. parse the grammar into a Codemirror syntax-highlight mode
+    mode = CodeMirrorGrammar.getMode( grammar );
+    mode.supportGrammarAnnotations = options.supportGrammarAnnotations ? true : false;
+    mode.supportCodeFolding = options.supportCodeFolding ? true : false;
+    mode.supportCodeMatching = options.supportCodeMatching ? true : false;
+    mode.supportAutoCompletion = options.supportAutoCompletion ? true : false;
 
-// 3. register the mode with Codemirror
-CodeMirror.defineMode("grammartemplate", grammartemplate_mode);
-CodeMirror.defineMIME("text/x-grammartemplate", "grammartemplate");
-CodeMirror.defineMode("grammartemplate-post", grammartemplate_postmode);
-CodeMirror.defineMIME("text/x-grammartemplate-post", "grammartemplate-post");
+    // 3. register the mode with Codemirror
+    CodeMirror.defineMode(language, mode);
+    if ( mode.supportGrammarAnnotations )
+    {
+        CodeMirror.registerHelper("lint", language, mode.validator);
+    }
+    if ( mode.supportCodeFolding )
+    {
+        CodeMirror.registerHelper("fold", /*language+"-mode-fold"*/mode.foldType, mode.folder);
+    }
+    if ( mode.supportCodeMatching )
+    {
+        CodeMirror.defineOption(language+"-mode-match", false, function( cm, val, old ) {
+            if ( old && old != CodeMirror.Init )
+            {
+                cm.off( "cursorActivity", mode.matcher );
+                mode.matcher.clear( cm );
+            }
+            if ( val )
+            {
+                cm.on( "cursorActivity", mode.matcher );
+                mode.matcher( cm );
+            }
+        });
+    }
+    if ( mode.supportAutoCompletion )
+    {
+        mode.autocompleter.options = options.autocompleter || {prefixMatch:true, caseInsensitiveMatch:false, inContext:false};
+        CodeMirror.commands[language+"-mode-autocomplete"] = function( cm ) {
+            CodeMirror.showHint(cm, mode.autocompleter);
+        };
+    }
+    /*if ( options.supportToggleComments )
+    {
+        CodeMirror.commands[language+"-mode-togglecomments"] = function( cm ) {
+            cm.toggleComment( mode )
+        };
+    }*/
 }
+}("grammar-template", {
+        
+// prefix ID for regular expressions used in the grammar
+"RegExpID"                      : "RE::",
+
+// Style model
+"Style"                         : {
+
+     "KEYWORD"                  : "keyword"
+    ,"IDENT"                    : "keyword"
+    ,"BUILTIN"                  : "builtin"
+    ,"ATOM"                     : "string"
+
+},
+
+// Lexical model
+"Lex"                           : {
+     "<escaped>"                : "RE::/\\\\(\\\\\\\\)*/"
+    ,"<modifier>"               : "RE::/(\\?!|\\*|\\?|\\{\\d+(,\\d*)?\\})/"
+    ,"<ident>"                  : "RE::/[_$A-Za-z0-9]+(\\.[_$A-Za-z0-9]+)?/"
+    ,"<renderer>"               : "RE::/:[_$A-Za-z0-9]+/"
+    ,"<default_value>"          : "RE::/[\\s\\S]*?(?=>|&gt;)/"
+    ,"<text>"                   : "RE::/[^\\s]/"
+    ,"<open>"                   : "RE::/(<|&lt;)/"
+    ,"<close>"                  : "RE::/(>|&gt;)/"
+    ,"<close_def>"              : "RE::/(>|&gt;)(?=:=)/"
+    ,"@open_block@:action"      : {"push":"]"}
+    ,"@close_block@:action"     : {"pop":"]","msg":"Block delimiters do not match"}
+},
+
+"Syntax"                        : {
+     "<nonterminal>"            : "<open>.KEYWORD '' (<modifier>.BUILTIN? <ident>.IDENT '')? (<renderer>.BUILTIN '')? ('|'.BUILTIN <default_value>.ATOM)? (<close_def>.KEYWORD '' ':='.KEYWORD '' '['.BUILTIN @open_block@ | <close>.KEYWORD)"
+    ,"<template>"               : "(<escaped> <text> | '['.BUILTIN @open_block@ | ']'.BUILTIN @close_block@ | <nonterminal> | <text>)*"
+},
+
+// what to parse and in what order
+"Parser"                        : [ ["<template>"] ]
+
+}, {
+
+"supportGrammarAnnotations" : true,
+"supportCodeFolding"        : false,
+"supportCodeMatching"       : false,
+"supportAutoCompletion"     : false
+
+});

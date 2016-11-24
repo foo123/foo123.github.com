@@ -23,6 +23,7 @@
     <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
     
 <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
+<link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
 <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
 <link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
 <style type="text/css">
@@ -170,6 +171,7 @@
     
 <script src="../common/js/codemirror/codemirror.min.js"></script>
 <script src="../common/js/codemirror/mode/javascript.js"></script>
+<script src="../common/js/codemirror/addon/lint/lint.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
 <script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
@@ -518,7 +520,8 @@ require(['jQuery', 'ModelView', 'RegexComposer'],
         indentWithTabs: false,
         theme: 'lesser-dark',
         foldGutter: true,
-        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+        lint: true,  // enable lint validation
+        gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     oEditor.setSize(owidth, oheight);
     

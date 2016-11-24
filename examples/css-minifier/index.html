@@ -253,7 +253,7 @@ jQuery(function($){
     
     ModelView.jquery( $ );
     
-    css_mode = CodeMirrorGrammar.getMode(css_grammar);
+    /*css_mode = CodeMirrorGrammar.getMode(css_grammar);
     css_mode.supportGrammarAnnotations = true;
     CodeMirror.registerHelper("lint", 'css', css_mode.validator);                
     css_mode.supportCodeFolding = true;
@@ -271,7 +271,7 @@ jQuery(function($){
             css_mode.matcher( cm );
         }
     });
-    CodeMirror.defineMode('css', css_mode);
+    CodeMirror.defineMode('css', css_mode);*/
     
     // if codemirror activated, enable syntax highlight
     codeEditor = CodeMirror.fromTextArea(code[0], {
