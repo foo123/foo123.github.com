@@ -18,7 +18,7 @@ var regexp_grammar = {
 // Lexical model
 "Lex"                           : {
      "escaped"                  : "RE::/\\\\(\\\\\\\\)*/"
-    ,"repeater"                 : "RE::/[\\+\\*\\?]|\\{\\d+(,\\d*)?\\}/"
+    ,"repeater"                 : "RE::/[\\+\\*\\?\\|]|\\{\\d+(,\\d*)?\\}/"
     ,"reserved"                 : "RE::/[\\.\\^\\$]/"
     ,"cclass"                   : "RE::/[dDwWsStnvr]/"
     ,"start_re"                 : "/"
