@@ -24,14 +24,13 @@ var grammartemplate_grammar = {
     ,"default_value"            : "RE::/[_A-Za-z0-9]*/"
     ,"text"                     : "RE::/[^\\s]/"
     ,"delim1"                   : "RE::/(<|&lt;)/"
-    ,"delim2"                   : "RE::/(>|&gt;)(:=)?/"
+    ,"delim2"                   : "RE::/(>|&gt;)/"
+    ,"delim3"                   : "RE::/(>|&gt;)(:=)/"
     ,"block"                    : "RE::/[\\[\\]]/"
-    ,"opened:action"            : {"push":">","ci":true}
-    ,"closed:action"            : {"pop":">","ci":true,"msg":"Non-Terminal delimiters do not match"}
 },
 
 "Syntax"                        : {
-     "nonterminal"              : "delim1.keyword '' (modifier.function? identifier.keyword '')? (':'.function '' renderer.function '')? ('|'.function '' default_value.string '')? delim2.keyword"
+     "nonterminal"              : "delim1.keyword '' (modifier.function? identifier.keyword '')? (':'.function '' renderer.function '')? ('|'.function '' default_value.string '')? (delim3& delim2.keyword '' ':='.keyword '' '['.function | delim2.keyword)"
     ,"template"                 : "escaped text | block.function | nonterminal | text"
 },
 
@@ -64,13 +63,14 @@ var grammartemplate_postgrammar = {
     ,"text"                     : "RE::/[^\\s]/"
     ,"delim1"                   : "RE::/(<|&lt;)/"
     ,"delim2"                   : "RE::/(>|&gt;)/"
+    ,"delim3"                   : "RE::/(>|&gt;)(:=)/"
+    ,"delim4"                   : "RE::/(>|&gt;)(\\?!|\\*|\\?|\\{\\d+(,\\d*)?\\})/"
+    ,"delim5"                   : "RE::/(>|&gt;)(\\?!|\\*|\\?|\\{\\d+(,\\d*)?\\})(:=)/"
     ,"block"                    : "RE::/[\\[\\]]/"
-    ,"opened:action"            : {"push":">","ci":true}
-    ,"closed:action"            : {"pop":">","ci":true,"msg":"Non-Terminal delimiters do not match"}
 },
 
 "Syntax"                        : {
-     "nonterminal"              : "delim1.keyword '' (identifier.keyword '')? (':'.function '' renderer.function '')? ('|'.function '' default_value.string '')? delim2.keyword modifier.function? ':='.keyword?"
+     "nonterminal"              : "delim1.keyword '' (identifier.keyword '')? (':'.function '' renderer.function '')? ('|'.function '' default_value.string '')? (delim5& delim2.keyword '' modifier.function '' ':='.keyword '' '['.function | delim4& delim2.keyword '' modifier.function | delim3& delim2.keyword '' ':='.keyword '' '['.function | delim2.keyword)"
     ,"template"                 : "escaped text | block.function | nonterminal | text"
 },
 
