@@ -95,13 +95,14 @@
 
     
 <script src="../common/js/codemirror/codemirror.min.js"></script>
-<script src="../common/js/codemirror/mode/javascript.js"></script>
 <script src="../common/js/codemirror/addon/lint/lint.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
 <script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
 <script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
 <script src="../common/js/codemirror_grammar.min.js"></script>
+<script src="../common/js/codemirror/grammar/define_grammar_mode.js"></script>
+<script src="../common/js/codemirror/grammar/json.js"></script>
 <script src="../common/js/codemirror/grammar/regexp.js"></script>
 
     <script type="text/javascript" src="../common/js/require.js"></script>
@@ -148,7 +149,7 @@
         
         
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
-<div class="showcase">Regular Expression Grammar highlight mode by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
+<div class="showcase">JSON &amp; Regular Expression syntax highlight modes by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
 
         <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
         <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
@@ -182,6 +183,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
         indentWithTabs: false,
         theme: 'lesser-dark',
         foldGutter: true,
+        // enable token matching
+        "regexp-mode-match": true,
         lint: true,  // enable lint validation
         gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
@@ -196,7 +199,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
         indentWithTabs: false,
         theme: 'lesser-dark',
         foldGutter: true,
-        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+        // enable token matching
+        "json-mode-match": true,
+        lint: true,  // enable lint validation
+        gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     code.setSize( width, height );
         

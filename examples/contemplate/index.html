@@ -130,6 +130,7 @@
 <script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
 <script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
 <script src="../common/js/codemirror_grammar.min.js"></script>
+<script src="../common/js/codemirror/grammar/define_grammar_mode.js"></script>
 <script src="../common/js/codemirror/grammar/json.js"></script>
 <script src="../common/js/codemirror/grammar/contemplate.js"></script>
 
@@ -199,7 +200,7 @@
         
         
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
-<div class="showcase">Contemplate Grammar highlight mode by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
+<div class="showcase">JSON &amp; Contemplate syntax highlight modes by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
 
         <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
         <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
@@ -218,7 +219,7 @@ jQuery(function($){
     var $w = $(window), $screen = $('#screen'),
         tpl = $('#tpl'), tpl_tmp = $('#tpl_tmp'),  
         data = $('#data'), output = $('#output'),  render = $('#render'), 
-        tplEditor, dataEditor, width, height, json_mode,
+        tplEditor, dataEditor, width, height, /*json_mode,*/
         log = (console && console.log) ? function(s){console.log(s);} : function(){},
         init = true;
     ;
@@ -226,7 +227,7 @@ jQuery(function($){
     ModelView.jquery( $ );
     
     Contemplate.setCompatibilityMode( false );
-    json_mode = CodeMirrorGrammar.getMode(json_grammar);
+    /*json_mode = CodeMirrorGrammar.getMode(json_grammar);
     CodeMirror.defineMode('json', json_mode);
     json_mode.supportGrammarAnnotations = true;
     CodeMirror.registerHelper("lint", 'json', json_mode.validator);                
@@ -244,7 +245,7 @@ jQuery(function($){
             cm.on( "cursorActivity", json_mode.matcher );
             json_mode.matcher( cm );
         }
-    });
+    });*/
     
     // if codemirror activated, enable syntax highlight
     tplEditor = CodeMirror.fromTextArea(tpl[0], {
@@ -257,7 +258,7 @@ jQuery(function($){
     });
     
     dataEditor = CodeMirror.fromTextArea(data[0], {
-        mode: 'json',
+        mode: "application/json",
         lineWrapping: true,
         lineNumbers : true,
         indentUnit: 4,

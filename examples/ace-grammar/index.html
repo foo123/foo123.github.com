@@ -113,6 +113,7 @@
     
 <script src="../common/js/ace/ace.js" type="text/javascript" data-ace-base="../common/js/ace" charset="utf-8"></script>
 <script src="../common/js/ace_grammar.min.js"></script>
+<script src="../common/js/ace/grammar/define_grammar_mode.js"></script>
 <script src="../common/js/ace/grammar/json.js"></script>
 
     <script type="text/javascript" src="../common/js/require.js"></script>
@@ -485,7 +486,7 @@ require(['jQuery', 'ModelView'],
     
         var $w = $(window), $screen = $('#screen'), 
             code = $('#code'), grammar = $('#grammar'), apply = $('#apply'), 
-            _mode = "customMode", json_mode, grammar_mode = null, commands, options,
+            _mode = "customMode", /*json_mode,*/ grammar_mode = null, commands, options,
             Editor, codeEditor, grammarEditor, width, height,
             log = (console && console.log) ? function(s){console.log(s);} : function(){}
         ;
@@ -495,11 +496,11 @@ require(['jQuery', 'ModelView'],
         ModelView.jquery( $ );
     
         Editor = ace.require("ace/editor").Editor;
-        json_mode = AceGrammar.getMode( json_grammar );
+        /*json_mode = AceGrammar.getMode( json_grammar );
         json_mode.supportGrammarAnnotations = true;
         json_mode.supportCodeFolding = true;
         json_mode.supportAutoCompletion = false;
-        json_mode.supportCodeMatching = true;
+        json_mode.supportCodeMatching = true;*/
         
         // editor commands
         commands = {
@@ -606,9 +607,9 @@ require(['jQuery', 'ModelView'],
             codeEditor.setTheme("ace/theme/twilight");
             
             grammarEditor = ace.edit('aceGrammar');
-            json_mode.matcher( grammarEditor );
+            ace.grammar_mode.json.matcher( grammarEditor );
             grammarEditor.setValue( grammar.val(), -1 );
-            grammarEditor.getSession().setMode( json_mode );
+            grammarEditor.getSession().setMode( ace.grammar_mode.json );
             grammarEditor.setTheme("ace/theme/twilight");
             
             $screen.modelview({

@@ -1,5 +1,5 @@
 // 1. a complete json grammar in simple JSON format
-var json_grammar = {
+ace_define_grammar_mode("json", {
         
 // prefix ID for regular expressions used in the grammar
 "RegExpID"                  : "RE::",
@@ -35,10 +35,6 @@ var json_grammar = {
                                 // integers
                                 // hex
                                 "RE::/0x[0-9a-fA-F]+L?/",
-                                // binary
-                                "RE::/0b[01]+L?/",
-                                // octal
-                                "RE::/0o[0-7]+L?/",
                                 // decimal
                                 "RE::/[1-9]\\d*(e[\\+\\-]?\\d+)?L?/",
                                 // just zero
@@ -69,4 +65,11 @@ var json_grammar = {
 // allow comments in json ;)
 "Parser"                        : [ "comment", [ "json" ] ]
 
-};
+}, {
+
+"supportGrammarAnnotations" : true,
+"supportCodeFolding"        : true,
+"supportCodeMatching"       : true,
+"supportAutoCompletion"     : false
+
+});
