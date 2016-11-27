@@ -1,6 +1,6 @@
 // 1. JSON grammar for Contemplate Engine ( https://github.com/foo123/Contemplate )
 // to be used with CodeMirrorGrammar add-on (https://github.com/foo123/codemirror-grammar)
-codemirror_define_grammar_mode("contemplate", {
+codemirror_define_grammar_mode("contemplate-compat", {
         
 // prefix ID for regular expressions used in the grammar
 "RegExpID"                      : "RE::",
@@ -41,19 +41,19 @@ codemirror_define_grammar_mode("contemplate", {
                                 "true", "false", "null"
                                 ]}
     ,"keyword"                  : {"autocomplete":true,"tokens":[
-                                "extends", "block", "endblock", "super", "getblock", "include",
-                                "if", "elseif", "elif", "else", "endif", "fi", 
-                                "for", "elsefor", "endfor", "as", "in",
-                                "set", "unset", "isset", "empty", "iif", "continue", "break", "local_set"
+                                "%extends", "%block", "%endblock", "%super", "%getblock", "%include",
+                                "%if", "%elseif", "%elif", "%else", "%endif", "%fi", 
+                                "%for", "%elsefor", "%endfor", "as", "in",
+                                "%set", "%unset", "%isset", "%empty", "%iif", "%continue", "%break", "%local_set"
                                 ]}
     ,"function"                 : {"autocomplete":true,"tokens":[
-                                "n","s","f","q","qq","dq","addslashes","stripslashes","sprintf",
-                                "concat","cc","ltrim","rtrim","trim","lowercase","uppercase",
-                                "lcfirst","ucfirst","camelcase","snakecase","count","haskey",
-                                "uuid","time","now","date","ldate","locale","l","nlocale","nl","xlocale","xl","nxlocale","nxl",
-                                "inline","tpl","e","url","is_array","in_array","json_encode","json_decode","j","join"
+                                "%n","%s","%f","%q","%qq","%dq","%addslashes","%stripslashes","%sprintf",
+                                "%concat","%cc","%ltrim","%rtrim","%trim","%lowercase","%uppercase",
+                                "%lcfirst","%ucfirst","%camelcase","%snakecase","%count","%haskey",
+                                "%uuid","%time","%now","%date","%ldate","%locale","%l","%nlocale","%nl","%xlocale","%xl","%nxlocale","%nxl",
+                                "%inline","%tpl","%e","%url","%is_array","%in_array","%json_encode","%json_decode","%j","%join"
                                 ]}
-    ,"plugin"                   : "RE::/[a-zA-Z_][a-zA-Z0-9_]*/"
+    ,"plugin"                   : "RE::/%[a-zA-Z_][a-zA-Z0-9_]*/"
 
 },
 
@@ -71,8 +71,8 @@ codemirror_define_grammar_mode("contemplate", {
 
 }, {
 
-"mime"                      : ["text/x-contemplate"],
-"mix"                       : {"mime":"application/x-contemplate","mode":"htmlembedded","start":/^<%/,"end":/^%>/},
+"mime"                      : ["text/x-contemplate-compat"],
+"mix"                       : {"mime":"application/x-contemplate-compat","mode":"htmlembedded","start":/^<%/,"end":/^%>/},
 "supportGrammarAnnotations" : true,
 "supportCodeFolding"        : false,
 "supportCodeMatching"       : false,
