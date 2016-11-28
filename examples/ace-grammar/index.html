@@ -648,7 +648,7 @@ require(['jQuery', 'ModelView'],
                         grammar_mode.supportCodeFolding = true;
                         grammar_mode.supportCodeMatching = true;
                         grammar_mode.supportAutoCompletion = true;
-                        grammar_mode.autocompleter.options = {inContext:true};
+                        grammar_mode.autocompleter.options = {inContext:true, dynamic:true};
                         grammar_mode.supportGrammarAnnotations = model.get('annotate');
                         grammar_mode.matcher( codeEditor );
                         codeEditor.setValue("\n", -1);

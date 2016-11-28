@@ -15,6 +15,7 @@ function ace_define_grammar_mode( language, grammar, options, ace, AceGrammar )
         mode.supportCodeFolding = options.supportCodeFolding ? true : false;
         mode.supportCodeMatching = options.supportCodeMatching ? true : false;
         mode.supportAutoCompletion = options.supportAutoCompletion ? true : false;
+        mode.autocompleter.options = options.autocompleter || {prefixMatch:true, caseInsensitiveMatch:false, inContext:false, dynamic:false};
         ace.grammar_mode = ace.grammar_mode || {};
         ace.grammar_mode[language] = mode;
     }

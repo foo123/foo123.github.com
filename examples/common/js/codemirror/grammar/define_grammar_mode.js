@@ -43,7 +43,7 @@ function codemirror_define_grammar_mode( language, grammar, options, CodeMirror,
         }
         if ( mode.supportAutoCompletion )
         {
-            mode.autocompleter.options = options.autocompleter || {prefixMatch:true, caseInsensitiveMatch:false, inContext:false};
+            mode.autocompleter.options = options.autocompleter || {prefixMatch:true, caseInsensitiveMatch:false, inContext:false, dynamic:false};
             CodeMirror.commands[language+"-mode-autocomplete"] = function( cm ) {
                 CodeMirror.showHint(cm, mode.autocompleter);
             };
