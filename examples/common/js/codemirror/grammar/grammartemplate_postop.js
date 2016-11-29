@@ -19,7 +19,7 @@ codemirror_define_grammar_mode("grammar-template-postop", {
 "Lex"                           : {
      "<escaped>"                : "RE::/\\\\(\\\\\\\\)*/"
     ,"<modifier>"               : "RE::/(\\?!|\\*|\\?|\\{\\d+(,\\d*)?\\})/"
-    ,"<ident>"                  : "RE::/[_$A-Za-z0-9]+(\\.[_$A-Za-z0-9]+)?/"
+    ,"<ident>"                  : "RE::/[_$A-Za-z0-9]+(\\.[_$A-Za-z0-9]+)*/"
     ,"<renderer>"               : "RE::/:[_$A-Za-z0-9]+/"
     ,"<default>"                : "RE::/[\\s\\S]*?(?=>|&gt;)/"
     ,"<text>"                   : "RE::/[^\\s]/"
