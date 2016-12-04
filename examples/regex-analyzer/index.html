@@ -209,7 +209,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
     appTask = {
         analyze: function( input ) {
             if ( ('/' !== input.charAt(0)) && ('/' !== input.charAt(input.length-1)) ) input = '/'+input+'/';
-            analyzer.set( input ).analyze( );
+            analyzer.set( input ).analyze( ).build( );
             
             code.setValue([
             "/*******************************************"
@@ -218,9 +218,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
             ,""
             ,"/******************************************/"
             ,""
-            ,"// Input                    : " + input
-            ,"// Regular Expression       : " + analyzer.re
-            ,"// Regular Expression Flags : " + Object.keys( analyzer.fl ).join(',')
+            ,"// Input                        : " + input
+            ,"// Regular Expression           : " + analyzer.re
+            ,"// Regular Expression Flags     : " + Object.keys( analyzer.fl ).join(',')
+            ,"// Regular Reconstructed Source : " + analyzer.src
             ,""
             ,"/*******************************************/"
             ,"",""
@@ -229,6 +230,11 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
             ,"*******************************************/"
             ,""
             ,toJSON( analyzer.tree(true), null, 4 )
+            ,"/*******************************************"
+            ,"** Regular Expression (Named) Matched Groups **"
+            ,"*******************************************/"
+            ,""
+            ,toJSON( analyzer.grp, null, 4 )
             ].join( "\n" ));
         },
         
@@ -236,7 +242,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
             var re, peek, samples, min, max;
             
             if ( ('/' !== input.charAt(0)) && ('/' !== input.charAt(input.length-1)) ) input = '/'+input+'/';
-            analyzer.set( input ).analyze( );
+            analyzer.set( input ).analyze( ).build( );
             
             peek = analyzer.peek( );
             min = analyzer.minimum( );
@@ -253,9 +259,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
             ,""
             ,"/******************************************/"
             ,""
-            ,"// Input                    : " + input
-            ,"// Regular Expression       : " + analyzer.re
-            ,"// Regular Expression Flags : " + Object.keys( analyzer.fl ).join(',')
+            ,"// Input                        : " + input
+            ,"// Regular Expression           : " + analyzer.re
+            ,"// Regular Expression Flags     : " + Object.keys( analyzer.fl ).join(',')
+            ,"// Regular Reconstructed Source : " + analyzer.src
             ,""
             ,"/*******************************************/"
             ,"",""

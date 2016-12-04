@@ -28,14 +28,14 @@ codemirror_define_grammar_mode("regexp", {
     ,"<escapes>"                : "RE::/(\\\\\\\\)+/"
     ,"<repeater>"               : "RE::/[\\+\\*\\?]|\\{\\d+(,\\d*)?\\}/"
     ,"<reserved>"               : "RE::/[\\.\\^\\$\\|]/"
-    ,"<class>"                  : "RE::/\\\\([dDwWsStnvr]|x[a-fA-F0-9]{2}|u\\d{4})/"
+    ,"<class>"                  : "RE::/\\\\([dDwWsStnvr]|x[a-fA-F0-9]{2}|u\\d{2,4})/"
     ,"<start_re>"               : "/"
     ,"<end_re>"                 : "RE::#/[gmiy]{0,4}#"
     ,"<literal>"                : "RE::/(\\\\)?[^\\s]/"
     ,"<notbracket>"             : "RE::#[^\\]]#"
     ,"<text>"                   : "RE::#[^\\s/]#"
     ,"<bracket>"                : "RE::/\\[\\^?/"
-    ,"<paren>"                  : "RE::/\\((\\?[!=:])?/"
+    ,"<paren>"                  : "RE::/\\((\\?(?:[!=:&^]|(?:&lt;|<)\\w+(?:&gt;|>)))?/"
     ,"@bracket:action"          : {"push":"]"}
     ,"@paren:action"            : {"push":")"}
     ,"@close:action"            : {"pop":"$0","msg":"Brackets do not match"}

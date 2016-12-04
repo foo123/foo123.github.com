@@ -29,14 +29,14 @@ ace_define_grammar_mode("json", {
     ,"atom"                     : {"autocomplete":true,"tokens":["true","false","null"]}
     ,"number"                   : [
                                 // floats
-                                "RE::/\\d*\\.\\d+(e[\\+\\-]?\\d+)?/",
-                                "RE::/\\d+\\.\\d*/",
-                                "RE::/\\.\\d+/",
+                                "RE::/-?\\d*\\.\\d+(e[\\+\\-]?\\d+)?/",
+                                "RE::/-?\\d+\\.\\d*/",
+                                "RE::/-?\\.\\d+/",
                                 // integers
                                 // hex
-                                "RE::/0x[0-9a-fA-F]+L?/",
+                                "RE::/-?0x[0-9a-fA-F]+L?/",
                                 // decimal
-                                "RE::/[1-9]\\d*(e[\\+\\-]?\\d+)?L?/",
+                                "RE::/-?[1-9]\\d*(e[\\+\\-]?\\d+)?L?/",
                                 // just zero
                                 "RE::/0(?![\\dx])/"
                                 ]
