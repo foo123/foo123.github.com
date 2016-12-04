@@ -15,6 +15,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     ,Classy: "classy.min"
     ,Asynchronous: "asynchronous.min"
     ,RT: "RT.min"
+    ,XRegExp: "xregexp"
     ,RegexAnalyzer: "RegexAnalyzer.min"
     ,RegexComposer: "RegexComposer.min"
     ,RegExpX: "RegExpX.min"
