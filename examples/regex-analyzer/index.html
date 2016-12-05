@@ -133,7 +133,7 @@
         &nbsp;&nbsp;<input type="button" class="button" id="analyze" data-bind='{"click":"analyze"}' value="Syntax Tree" />
         &nbsp;&nbsp;<input type="button" class="button" id="statistics" data-bind='{"click":"statistics"}' value="Statistics" />
         <br />
-        <textarea id="regex">/[abc]+/gi</textarea>
+        <textarea id="regex">/[abc]+/i</textarea>
     </div>
     
     <div class="fluid col-1-1" style="margin-top:10px">
@@ -209,7 +209,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
     appTask = {
         analyze: function( input ) {
             if ( ('/' !== input.charAt(0)) && ('/' !== input.charAt(input.length-1)) ) input = '/'+input+'/';
-            analyzer.set( input ).analyze( ).build( );
+            analyzer.input( input ).analyze( );
             
             code.setValue([
             "/*******************************************"
@@ -218,10 +218,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
             ,""
             ,"/******************************************/"
             ,""
-            ,"// Input                        : " + input
-            ,"// Regular Expression           : " + analyzer.re
-            ,"// Regular Expression Flags     : " + Object.keys( analyzer.fl ).join(',')
-            ,"// Regular Reconstructed Source : " + analyzer.src
+            ,"// Input                            : " + input
+            ,"// Regular Expression               : " + analyzer.input()
+            ,"// Regular Expression Flags         : " + Object.keys( analyzer.fl ).join(',')
+            ,"// Reconstructed Regular Expression : " + analyzer.source()
             ,""
             ,"/*******************************************/"
             ,"",""
@@ -234,23 +234,28 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
             ,"** Regular Expression (Named) Matched Groups **"
             ,"*******************************************/"
             ,""
-            ,toJSON( analyzer.grp, null, 4 )
+            ,toJSON( analyzer.groups(), null, 4 )
             ].join( "\n" ));
         },
         
         statistics: function( input ) {
-            var re, peek, samples, min, max;
+            var re, peek, samples, groups, min, max;
             
             if ( ('/' !== input.charAt(0)) && ('/' !== input.charAt(input.length-1)) ) input = '/'+input+'/';
-            analyzer.set( input ).analyze( ).build( );
+            analyzer.input( input ).analyze( );
             
             peek = analyzer.peek( );
             min = analyzer.minimum( );
             max = analyzer.maximum( );
+            groups = analyzer.groups( );
             samples = analyzer.sample( (min||1)+10, 10 );
             re = analyzer.compile( analyzer.fl.i?{i:1}:{} );
             for(var i=0; i<10; i++)
-                samples[i] = {sample: samples[i], match:re.test(samples[i]) ? 'yes' : 'no'};
+            {
+                var m = samples[i].match(re);
+                samples[i] = {sample: samples[i], match:m ? 'yes' : 'no', groups:{}};
+                for(var g in groups) if ( groups.hasOwnProperty(g) ) samples[i].groups[g] = m[re.group(g)];
+            }
             
             code.setValue([
             "/********************************************"
@@ -259,10 +264,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
             ,""
             ,"/******************************************/"
             ,""
-            ,"// Input                        : " + input
-            ,"// Regular Expression           : " + analyzer.re
-            ,"// Regular Expression Flags     : " + Object.keys( analyzer.fl ).join(',')
-            ,"// Regular Reconstructed Source : " + analyzer.src
+            ,"// Input                            : " + input
+            ,"// Regular Expression               : " + analyzer.input()
+            ,"// Regular Expression Flags         : " + Object.keys( analyzer.fl ).join(',')
+            ,"// Reconstructed Regular Expression : " + analyzer.source()
             ,""
             ,"/*******************************************/"
             ,"",""
