@@ -254,7 +254,11 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
             {
                 var m = samples[i].match(re);
                 samples[i] = {sample: samples[i], match:m ? 'yes' : 'no', groups:{}};
-                for(var g in groups) if ( groups.hasOwnProperty(g) ) samples[i].groups[g] = m[re.group(g)];
+                if ( m )
+                {
+                    for(var g in groups)
+                        if ( groups.hasOwnProperty(g) ) samples[i].groups[g] = m[re.group(g)];
+                }
             }
             
             code.setValue([

@@ -14,7 +14,8 @@ codemirror_define_grammar_mode("regexp", {
 // Style model
 "Style"                         : {
 
-     "SPECIAL"                  : "keyword"
+     "COMMENT"                  : "comment"
+    ,"SPECIAL"                  : "keyword"
     ,"BUILTIN"                  : "builtin"
     ,"STRING"                   : "string"
     ,"ATOM"                     : "atom"
@@ -24,9 +25,10 @@ codemirror_define_grammar_mode("regexp", {
 
 // Lexical model
 "Lex"                           : {
-     "<escaped>"                : "RE::/\\\\(\\\\\\\\)*/"
+     "<comment>:comment"        : ["(?#", ")"]
+    ,"<escaped>"                : "RE::/\\\\(\\\\\\\\)*/"
     ,"<escapes>"                : "RE::/(\\\\\\\\)+/"
-    ,"<repeater>"               : "RE::/[\\+\\*\\?]|\\{\\d+(,\\d*)?\\}/"
+    ,"<repeater>"               : "RE::/(?:[\\+\\*\\?]|\\{\\d+(,\\d*)?\\})\\??/"
     ,"<reserved>"               : "RE::/[\\.\\^\\$\\|]/"
     ,"<class>"                  : "RE::/\\\\([dDwWsStnvr]|x[a-fA-F0-9]{2}|u\\d{2,4})/"
     ,"<start_re>"               : "/"
@@ -35,7 +37,8 @@ codemirror_define_grammar_mode("regexp", {
     ,"<notbracket>"             : "RE::#[^\\]]#"
     ,"<text>"                   : "RE::#[^\\s/]#"
     ,"<bracket>"                : "RE::/\\[\\^?/"
-    ,"<paren>"                  : "RE::/\\((\\?(?:[!=:&^]|(?:&lt;|<)\\w+(?:&gt;|>)))?/"
+    ,"<paren>"                  : "RE::/\\((\\?(?:&lt;=|&lt;!|<=|<!|=|!|:|P?(?:&lt;|<)\\w+(?:&gt;|>)))?/"
+    ,"<backref>"                : "RE::/\\\\[1-9][0-9]*|\\(\\?P=[^\\)]+\\)/"
     ,"@bracket:action"          : {"push":"]"}
     ,"@paren:action"            : {"push":")"}
     ,"@close:action"            : {"pop":"$0","msg":"Brackets do not match"}
@@ -43,7 +46,7 @@ codemirror_define_grammar_mode("regexp", {
 
 "Syntax"                        : {
      "<chargroup>"              : "<bracket>.BUILTIN @bracket (<escaped>& <escapes>.ATOM? (<class>.CLASS | <literal>.ATOM) | <notbracket>.ATOM)* ']'.BUILTIN @close"
-    ,"<regexp>"                 : "(<escaped>& <escapes>.STRING? (<class>.CLASS | <literal>.STRING) | <reserved>.SPECIAL | <repeater>.BUILTIN | <paren>.BUILTIN @paren | ')'.BUILTIN @close | <chargroup> | ']'.BUILTIN @close | <text>.STRING)*"
+    ,"<regexp>"                 : "(<escaped>& <escapes>.STRING? (<class>.CLASS | <literal>.STRING) | <comment>.COMMENT | <backref>.SPECIAL | <reserved>.SPECIAL | <repeater>.BUILTIN | <paren>.BUILTIN @paren | ')'.BUILTIN @close | <chargroup> | ']'.BUILTIN @close | <text>.STRING)*"
     ,"<js-regexp>"              : "<start_re> <regexp> <end_re>"
 },
 
