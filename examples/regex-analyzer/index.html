@@ -257,7 +257,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
                 if ( m )
                 {
                     for(var g in groups)
-                        if ( groups.hasOwnProperty(g) ) samples[i].groups[g] = m[re.group(g)];
+                        if ( Object.prototype.hasOwnProperty.call(groups,g) ) samples[i].groups[g] = m[groups[g]];
                 }
             }
             

@@ -32,7 +32,7 @@ codemirror_define_grammar_mode("regexp", {
     ,"<escapes>"                : "RE::/(\\\\\\\\)+/"
     ,"<repeater>"               : "RE::/(?:[\\+\\*\\?]|\\{\\d+(,\\d*)?\\})\\??/"
     ,"<reserved>"               : "RE::/[\\.\\^\\$\\|]/"
-    ,"<class>"                  : "RE::/\\\\([dDwWsStnvr]|x[a-fA-F0-9]{2}|u\\d{2,4})/"
+    ,"<class>"                  : "RE::/\\\\([dDwWsStnvr]|x[a-fA-F0-9]{2}|u[a-fA-F0-9]{2,4})/"
     ,"<start_re>"               : "/"
     ,"<end_re>"                 : "RE::#/[gmiy]{0,4}#"
     ,"<literal>"                : "RE::/(\\\\)?[^\\s]/"
