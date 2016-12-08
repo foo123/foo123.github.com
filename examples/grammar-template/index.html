@@ -142,10 +142,15 @@ HAVING (<required.having:EXPR>?) AND (<condition.having:EXPR>?)][
 HAVING <required.having:EXPR>?<condition.having:EXPR>?!][
 HAVING <required.having:EXPR>?!<condition.having:EXPR>?][
 ORDER BY <order>?[, <order>*]][
-LIMIT <offset|0>, <count>?]
-<:FACTOR>:=[<lhs>[ <op>? <rhs|NULL>]]
-<:TERM>:=[(<factor:FACTOR>[ AND <factor:FACTOR>*])]
-<:EXPR>:=[<term:TERM>[ OR <term:TERM>*]]
+LIMIT <offset|0>, <count>?][#
+    ** recursive sub-templates **
+#][#
+    single factor sub-template
+#]<:FACTOR>:=[<lhs>[ <op>? <rhs|NULL>]][#
+    foreach term:factors as factor sub-template
+#]<:TERM>:=[(<factor:FACTOR>[ AND <factor:FACTOR>*])][#
+    foreach expr:terms as term sub-template
+#]<:EXPR>:=[<term:TERM>[ OR <term:TERM>*]]
 -->
         <textarea id="input">SELECT &lt;column.select&gt;[, &lt;*column.select&gt;]
 FROM &lt;table.from&gt;[, &lt;*table.from&gt;][
@@ -157,10 +162,15 @@ HAVING (&lt;?required.having:EXPR&gt;) AND (&lt;?condition.having:EXPR&gt;)][
 HAVING &lt;?required.having:EXPR&gt;&lt;?!condition.having:EXPR&gt;][
 HAVING &lt;?!required.having:EXPR&gt;&lt;?condition.having:EXPR&gt;][
 ORDER BY &lt;?order&gt;[, &lt;*order&gt;]][
-LIMIT &lt;offset|0&gt;, &lt;?count&gt;]
-&lt;:FACTOR&gt;:=[&lt;lhs&gt;[ &lt;?op&gt; &lt;rhs|NULL&gt;]]
-&lt;:TERM&gt;:=[(&lt;factor:FACTOR&gt;[ AND &lt;*factor:FACTOR&gt;])]
-&lt;:EXPR&gt;:=[&lt;term:TERM&gt;[ OR &lt;*term:TERM&gt;]]</textarea>
+LIMIT &lt;offset|0&gt;, &lt;?count&gt;][#
+    ** recursive sub-templates **
+#][#
+    single factor sub-template
+#]&lt;:FACTOR&gt;:=[&lt;lhs&gt;[ &lt;?op&gt; &lt;rhs|NULL&gt;]][#
+    foreach term:factors as factor sub-template
+#]&lt;:TERM&gt;:=[(&lt;factor:FACTOR&gt;[ AND &lt;*factor:FACTOR&gt;])][#
+    foreach expr:terms as term sub-template
+#]&lt;:EXPR&gt;:=[&lt;term:TERM&gt;[ OR &lt;*term:TERM&gt;]]</textarea>
     </div>
     <div class="fluid col-1-1" style="margin-bottom:10px">
     
