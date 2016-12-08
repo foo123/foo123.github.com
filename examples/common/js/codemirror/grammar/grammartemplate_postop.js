@@ -8,7 +8,8 @@ codemirror_define_grammar_mode("grammar-template-postop", {
 // Style model
 "Style"                         : {
 
-     "KEYWORD"                  : "keyword"
+     "COMMENT"                  : "comment"
+    ,"KEYWORD"                  : "keyword"
     ,"IDENT"                    : "keyword"
     ,"BUILTIN"                  : "builtin"
     ,"ATOM"                     : "string"
@@ -17,9 +18,10 @@ codemirror_define_grammar_mode("grammar-template-postop", {
 
 // Lexical model
 "Lex"                           : {
-     "<escaped>"                : "RE::/\\\\(\\\\\\\\)*/"
+     "<comment>:comment"        : ["[#", "#]"]
+    ,"<escaped>"                : "RE::/\\\\(\\\\\\\\)*/"
     ,"<modifier>"               : "RE::/(\\?!|\\*|\\?|\\{\\d+(,\\d*)?\\})/"
-    ,"<ident>"                  : "RE::/[_$A-Za-z0-9]+(\\.[_$A-Za-z0-9]+)*/"
+    ,"<ident>"                  : "RE::/(?:@?\\.?)[_$A-Za-z0-9]+(?:\\.[_$A-Za-z0-9]+)*/"
     ,"<renderer>"               : "RE::/:[_$A-Za-z0-9]+/"
     ,"<default>"                : "RE::/[\\s\\S]*?(?=>|&gt;)/"
     ,"<text>"                   : "RE::/[^\\s]/"

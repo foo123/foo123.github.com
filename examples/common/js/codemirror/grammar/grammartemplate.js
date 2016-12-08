@@ -8,7 +8,8 @@ codemirror_define_grammar_mode("grammar-template", {
 // Style model
 "Style"                         : {
 
-     "KEYWORD"                  : "keyword"
+     "COMMENT"                  : "comment"
+    ,"KEYWORD"                  : "keyword"
     ,"IDENT"                    : "keyword"
     ,"BUILTIN"                  : "builtin"
     ,"ATOM"                     : "string"
@@ -17,9 +18,10 @@ codemirror_define_grammar_mode("grammar-template", {
 
 // Lexical model
 "Lex"                           : {
-     "<escaped>"                : "RE::/\\\\(\\\\\\\\)*/"
+     "<comment>:comment"        : ["[#", "#]"]
+    ,"<escaped>"                : "RE::/\\\\(\\\\\\\\)*/"
     ,"<modifier>"               : "RE::/(\\?!|\\*|\\?|\\{\\d+(,\\d*)?\\})/"
-    ,"<ident>"                  : "RE::/[_$A-Za-z0-9]+(\\.[_$A-Za-z0-9]+)*/"
+    ,"<ident>"                  : "RE::/(?:@?\\.?)[_$A-Za-z0-9]+(?:\\.[_$A-Za-z0-9]+)*/"
     ,"<renderer>"               : "RE::/:[_$A-Za-z0-9]+/"
     ,"<default>"                : "RE::/[\\s\\S]*?(?=>|&gt;)/"
     ,"<text>"                   : "RE::/[^\\s]/"
@@ -32,7 +34,7 @@ codemirror_define_grammar_mode("grammar-template", {
 
 "Syntax"                        : {
      "<nonterminal>"            : "<open>.KEYWORD '' (<modifier>.BUILTIN? <ident>.IDENT '')? (<renderer>.BUILTIN '')? ('|'.BUILTIN <default>.ATOM)? (<close_def>.KEYWORD '' ':='.KEYWORD '' '['.BUILTIN @open | <close>.KEYWORD)"
-    ,"<template>"               : "(<escaped> <text> | '['.BUILTIN @open | ']'.BUILTIN @close | <nonterminal> | <text>)*"
+    ,"<template>"               : "(<escaped> <text> | <comment>.COMMENT | '['.BUILTIN @open | ']'.BUILTIN @close | <nonterminal> | <text>)*"
 },
 
 // what to parse and in what order
