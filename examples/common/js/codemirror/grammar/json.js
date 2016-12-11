@@ -43,8 +43,8 @@ codemirror_define_grammar_mode("json", {
     ,"<other>"                  : "RE::/\\S+/"
     
     ,"@ctx:action"              : {"context":true}
-    ,"\\@ctx:action"            : {"context":false}
-    ,"@unique:action"           : {"unique":["prop","$1"],"msg":"Duplicate object property \"$0\"","in-context":true}
+    ,"ctx@:action"            : {"context":false}
+    ,"@unique:action"           : {"unique":["prop","$1"],"msg":"Duplicate object property \"$0\"","mode":"hash","in-context":true}
     ,"@invalid:error"           : "Invalid JSON"
     
 },
@@ -52,7 +52,7 @@ codemirror_define_grammar_mode("json", {
 // Syntax model (optional)
 "Syntax"                        : {
     
-     "<literal_object>"         : "'{' @ctx (<literal_property_value> (',' <literal_property_value>)*)? '}' \\@ctx"
+     "<literal_object>"         : "'{' @ctx (<literal_property_value> (',' <literal_property_value>)*)? '}' ctx@"
     ,"<literal_array>"          : "'[' (<literal_value> (',' <literal_value>)*)? ']'"
     // grammar recursion here
     ,"<literal_value>"          : "<atom>.ATOM | <string>.STRING | <number>.NUM | <literal_array> | <literal_object>"
