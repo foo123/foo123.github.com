@@ -12,16 +12,16 @@
 <html lang="en" class="no-ie">
 <!--<![endif]-->
 <head>
-    <title>Regex Composer</title>
-    
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <meta name="description" content="Regex Composer" />
-    
-    
-    <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-    
+<title>Regex Composer</title>
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="description" content="Regex Composer" />
+
+
+<link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+
 <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
 <link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
 <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
@@ -166,9 +166,9 @@
 }
 </style>
 
-    
 
-    
+
+
 <script src="../common/js/codemirror/codemirror.min.js"></script>
 <script src="../common/js/codemirror/mode/javascript.js"></script>
 <script src="../common/js/codemirror/addon/lint/lint.js"></script>
@@ -180,21 +180,19 @@
 <script src="../common/js/codemirror/grammar/define_grammar_mode.js"></script>
 <script src="../common/js/codemirror/grammar/regexp.js"></script>
 
-    <script type="text/javascript" src="../common/js/require.js"></script>
-    <script type="text/javascript" src="../common/js/require-config.js"></script>
-    
-    
+<script type="text/javascript" src="../common/js/require.js"></script>
+<script type="text/javascript" src="../common/js/require-config.js"></script>
+
 
 
 </head>
-
 <body class="responsive-864-container">
     <span id="forkongithub"><a href="https://github.com/foo123/RegexAnalyzer">Play on GitHub</a></span>
     
     
 <header id="header">
     <h1>Regex Composer</h1>
-    <i>An intuitive Regular Expression Composer for PHP, Python, Node/XPCOM/JS</i>
+    <i>A generic &amp; simple Regular Expression Analyzer &amp; Composer for PHP, Python, Node/XPCOM/JS</i>
 </header>
 
 <br /><br />
@@ -203,7 +201,7 @@
     
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
-        <strong>Composed Regular Expression:</strong>
+        <strong>Composed Regular Expression ($(regex_version)):</strong>
         &nbsp;&nbsp;<input type="button" class="button" id="compose" data-bind='{"click":"compose"}' value="Compose" />
         <br />
         <textarea id="regex"></textarea>
@@ -213,32 +211,30 @@
         <div class="fluid col-3-5">
             <strong>Code:</strong><br /><br />
 <textarea id="code">
-new RegexComposer( )
+.SOL( )
 
-    .startOfLine( )
+.nonCaptureGroup( ).either( )
 
-    .either( )
-
-        .charGroup( false )
-            .chars( 'a', 'b', 'c', '.' )
-            .range( 'd', 'f' )
-        .end( )
-
-        .literal( '**aabb**', true )
-
-        .any( )
-
-        .space( )
-
-        .digit( false ).oneOrMore( )
-
+    .charGroup( false )
+        .chars( 'a', 'b', 'c', '.' )
+        .range( 'd', 'f' )
     .end( )
 
-    .zeroOrMore( false )
+    .namedGroup( 'token' ).literal( '**aabb**' ).end( )
 
-    .endOfLine( )
+    .any( )
 
-    .compose( 'i' );
+    .space( )
+
+    .digit( false ).oneOrMore( )
+
+.end( 2 ).zeroOrMore( false )
+
+.backReference( 'token' )
+
+.EOL( )
+
+.compose( 'i' )
 </textarea>
         </div>
         <div class="fluid col-2-5 float-right autofloat-none">
@@ -246,7 +242,7 @@ new RegexComposer( )
             <div class="fluid col-1-1 accordion vertical">
             <input class="accordion-ctrl" type="radio" name="accordeon" id="start-of-input-ctrl" value="start-of-input" />
             <section id="start-of-input" class="fluid col-1-1 float-left">
-                <label class="heading" for="start-of-input-ctrl">startOfInput / startOfLine</label>
+                <label class="heading" for="start-of-input-ctrl">SOF, startOfInput / SOL, startOfLine</label>
                 <p>
                     <strong>&quot;^&quot;</strong> Matches beginning of input. If the multiline flag is set to true, also matches immediately after a line break character.
                     <br /><br />
@@ -254,17 +250,17 @@ new RegexComposer( )
                     <br /><br />
                     The <strong>&quot;^&quot;</strong> has a different meaning when it appears as the first character in a character set pattern.
                     <br /><br />
-                    Example: <code>composer.startOfInput();</code>
+                    Example: <code>composer.SOL();</code>
                 </p>
             </section>
             <input class="accordion-ctrl" type="radio" name="accordeon" id="end-of-input-ctrl" value="end-of-input" />
             <section id="end-of-input" class="fluid col-1-1 float-left">
-                <label class="heading" for="end-of-input-ctrl">endOfInput / endOfLine</label>
+                <label class="heading" for="end-of-input-ctrl">EOF, endOfInput / EOL, endOfLine</label>
                 <p>
                     <strong>&quot;$&quot;</strong> Matches end of input. If the multiline flag is set to true, also matches immediately before a line break character.
                     <br /><br />
                     For example, <code>/t$/</code> does not match the 't' in "eater", but does match it in "eat".
-                    Example: <code>composer.endOfInput();</code>
+                    Example: <code>composer.EOL();</code>
                 </p>
             </section>
             <input class="accordion-ctrl" type="radio" name="accordeon" id="any-ctrl" value="any" />
@@ -319,13 +315,11 @@ new RegexComposer( )
             </section>
             <input class="accordion-ctrl" type="radio" name="accordeon" id="literal-ctrl" value="literal" />
             <section id="literal" class="fluid col-1-1 float-left">
-                <label class="heading" for="literal-ctrl">literal / match</label>
+                <label class="heading" for="literal-ctrl">literal</label>
                 <p>
-                    Matches a literal string.
+                    Matches a literal string (escaped appropriately).
                     <br /><br />
-                    Example: <code>composer.literal("**aabb**", wrapInParenthesis=false);</code>
-                    <br /><br />
-                    Example: <code>composer.match("**aabb**", wrapInParenthesis=false);</code>
+                    Example: <code>composer.literal("**aabb**");</code>
                 </p>
             </section>
             <input class="accordion-ctrl" type="radio" name="accordeon" id="zero-or-more-ctrl" value="zero-or-more" />
@@ -390,7 +384,7 @@ new RegexComposer( )
             </section>
             <input class="accordion-ctrl" type="radio" name="accordeon" id="group-ctrl" value="group" />
             <section id="group" class="fluid col-1-1 float-left">
-                <label class="heading" for="group-ctrl">group / subGroup / subgroup</label>
+                <label class="heading" for="group-ctrl">group / subGroup</label>
                 <p>
                     <strong>&quot;(x)&quot;</strong> Matches 'x' and remembers the match, as the following example shows. The parentheses are called capturing parentheses.
                     <br /><br />
@@ -401,20 +395,38 @@ new RegexComposer( )
                     Example: <code>composer.end();</code> (end of group)
                 </p>
             </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="named-group-ctrl" value="named-group" />
+            <section id="named-group" class="fluid col-1-1 float-left">
+                <label class="heading" for="named-group-ctrl">namedGroup</label>
+                <p>
+                    <strong>&quot;(?P&lt;y&gt;x)&quot;</strong> Matches 'x' and remembers the match as group name 'y' (alogn with its group number), as the following example shows. The parentheses are called capturing parentheses.
+                    <br /><br />
+                    The '(?P&lt;foo&gt;foo)' and '(?P&lt;bar&gt;bar)' in the pattern <code>/(?P&lt;foo&gt;foo) (?P&lt;bar&gt;bar) \1 (?P=bar)/</code> match and remember the first two words in the string "foo bar foo bar" with group names &quot;foo&quot; and &quot;bar&quot; respectively.  Note that <code>(?P=bar)</code> are is used in the matching part of the regex as a named back-reference (see below)..
+                    <br /><br />
+                    Example: <code>composer.namedGroup(name);</code> (start of named group)
+                    <br /><br />
+                    Example: <code>composer.group({'name':name});</code> (start of named group)
+                    <br /><br />
+                    Example: <code>composer.end();</code> (end of named group)
+                    <br /><br />
+                </p>
+            </section>
             <input class="accordion-ctrl" type="radio" name="accordeon" id="non-capturing-group-ctrl" value="non-capturing-group" />
             <section id="non-capturing-group" class="fluid col-1-1 float-left">
-                <label class="heading" for="non-capturing-group-ctrl">nonCaptureGroup / nonCaptureSubGroup</label>
+                <label class="heading" for="non-capturing-group-ctrl">nonCaptureGroup</label>
                 <p>
                     <strong>&quot;(?:x)&quot;</strong> Matches 'x' but does not remember the match. The parentheses are called non-capturing parentheses, and let you define subexpressions for regular expression operators to work with. Consider the sample expression <code>/(?:foo){1,2}/</code>. Without the non-capturing parentheses, the {1,2} characters would apply only to the last 'o' in 'foo'. With the capturing parentheses, the {1,2} applies to the entire word 'foo'.
                     <br /><br />
                     Example: <code>composer.nonCaptureGroup();</code> (start of group)
+                    <br /><br />
+                    Example: <code>composer.group({'nocapture':true});</code> (start of group)
                     <br /><br />
                     Example: <code>composer.end();</code> (end of group)
                 </p>
             </section>
             <input class="accordion-ctrl" type="radio" name="accordeon" id="lookahead-group-ctrl" value="lookahead-group" />
             <section id="lookahead-group" class="fluid col-1-1 float-left">
-                <label class="heading" for="lookahead-group-ctrl">lookAheadGroup / lookAheadSubGroup</label>
+                <label class="heading" for="lookahead-group-ctrl">lookAheadGroup</label>
                 <p>
                     <strong>&quot;x(?=y)&quot;</strong> Matches 'x' only if 'x' is followed by 'y'. This is called a lookahead.
                     <br /><br />
@@ -424,22 +436,59 @@ new RegexComposer( )
                     <br /><br />
                     For example, <code>/\d+(?!\.)/</code> matches a number only if it is not followed by a decimal point. The regular expression <code>/\d+(?!\.)/.exec("3.141")</code> matches '141' but not '3.141'.
                     <br /><br />
-                    Example: <code>composer.lookAheadGroup();</code> (start of group)
+                    Example: <code>composer.lookAheadGroup(true|false);</code> (start of group)
+                    <br /><br />
+                    Example: <code>composer.group({'lookahead':true|false});</code> (start of group)
                     <br /><br />
                     Example: <code>composer.end();</code> (end of group)
                 </p>
             </section>
-            <input class="accordion-ctrl" type="radio" name="accordeon" id="alternate-group-ctrl" value="alternate-group" />
-            <section id="alternate-group" class="fluid col-1-1 float-left">
-                <label class="heading" for="alternate-group-ctrl">alternate / either</label>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="lookabehind-group-ctrl" value="lookabehind-group" />
+            <section id="lookabehind-group" class="fluid col-1-1 float-left">
+                <label class="heading" for="lookabehind-group-ctrl">lookBehindGroup</label>
                 <p>
-                    <strong>&quot;(x|y)&quot;</strong> Matches either 'x' or 'y' (as a group).
+                    <strong>&quot;x(?&lt;=y)&quot;</strong> Matches 'x' only if 'x' is preceded by 'y'. This is called a lookabehind.
                     <br /><br />
-                    For example, <code>/(green|red)/</code> matches 'green' in "green apple" and 'red' in "red apple."
+                    For example, <code>/Jack(&lt;?=Sprat)/</code> matches 'Jack' only if it is preceded by 'Sprat'. 
                     <br /><br />
-                    Example: <code>composer.either();</code> (start of group)
+                    <strong>&quot;x(?&lt;!y)&quot;</strong> Matches 'x' only if 'x' is not preceded by 'y'. This is called a negated lookabehind.
+                    <br /><br />
+                    For example, <code>/\d+(?&lt;!0)/</code> matches a number only if it is not preceded by a zero.
+                    <br /><br />
+                    <b>Note that JavaScript Regular Expressions do not currently support lookbehinds!</b><br />
+                    Example: <code>composer.lookBehindGroup(true|false);</code> (start of group)
+                    <br /><br />
+                    Example: <code>composer.group({'lookbehind':true|false});</code> (start of group)
                     <br /><br />
                     Example: <code>composer.end();</code> (end of group)
+                </p>
+            </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="back-reference-ctrl" value="back-reference" />
+            <section id="back-reference" class="fluid col-1-1 float-left">
+                <label class="heading" for="back-reference-ctrl">backReference</label>
+                <p>
+                    <strong>&quot;\n&quot;</strong> Literaly matches a previous group identified by group number <code>n</code>. This is an indexed back reference to an already parsed and matched result that is grouped.
+                    <br /><br />
+                    <strong>&quot;(?P=name)&quot;</strong> Literaly matches a previous group identified by group name <code>name</code>. This is an named back reference to an already parsed and matched result that is grouped.
+                    <br /><br />
+                    For example, <code>/(a*)b+\1/</code> matches 'bbbb' and 'aaabbaaa' with an indexed back reference.
+                    <br /><br />
+                    For example, <code>/(?P&lt;alpha&gt;a*)b+(?P=alpha)/</code> matches 'bbbb' and 'aaabbaaa' with a named back reference.
+                    <br /><br />
+                    Example: <code>composer.backReference( n );</code> (insert back reference)
+                </p>
+            </section>
+            <input class="accordion-ctrl" type="radio" name="accordeon" id="alternate-ctrl" value="alternate" />
+            <section id="alternate" class="fluid col-1-1 float-left">
+                <label class="heading" for="alternate-ctrl">alternate / either</label>
+                <p>
+                    <strong>&quot;x|y&quot;</strong> Matches either 'x' or 'y' (without wrapping in a group).
+                    <br /><br />
+                    For example, <code>/green|red/</code> matches 'green' in "green apple" and 'red' in "red apple."
+                    <br /><br />
+                    Example: <code>composer.either();</code> (start of alternation)
+                    <br /><br />
+                    Example: <code>composer.end();</code> (end of alternation)
                 </p>
             </section>
             <input class="accordion-ctrl" type="radio" name="accordeon" id="character-set-ctrl" value="character-set" />
@@ -454,7 +503,9 @@ new RegexComposer( )
                     <br /><br />
                     For example, <code>[^abc]</code> is the same as <code>[^a-c]</code>. They initially match 'r' in "brisket" and 'h' in "chop."
                     <br /><br />
-                    Example: <code>composer.characterGroup();</code> (start of group)
+                    Example: <code>composer.characterGroup(true|false);</code> (start of group)
+                    <br /><br />
+                    Example: <code>composer.group({'characters':true|false});</code> (start of group)
                     <br /><br />
                     Example: <code>composer.end();</code> (end of group)
                 </p>
@@ -485,25 +536,24 @@ new RegexComposer( )
     
     
     <footer id="footer">
-        <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net/#contact_tab" class="donate">hire me for a job</a></div>
-        
-        
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net/#contact_tab" class="donate">hire me for a job</a></div>
+    
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 <div class="showcase">Regular Expression syntax highlight mode by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
 <div class="showcase">Regular Expressions Documentation by <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank">MDN</a></div>
 
-        <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
-        <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
-        <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
-        <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
+    <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
+    <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
+    <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
+    <div class="showcase">Widgets by <a href="https://github.com/foo123/HtmlWidget" target="_blank">HtmlWidget</a></div>
+    <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
     </footer>
     <br /><br />
     
     
-    
 <script>//<![CDATA[
-require(['jQuery', 'ModelView', 'RegexComposer'],
-    function($, ModelView, RegexComposer) {
+require(['jQuery', 'ModelView', 'Regex'],
+    function($, ModelView, Regex) {
     var $screen = $('#screen'),
         oEditor, regex = document.getElementById('regex'),
         codeEditor, code = document.getElementById('code'),
@@ -541,12 +591,14 @@ require(['jQuery', 'ModelView', 'RegexComposer'],
     codeEditor.setSize(width, height);
         
     $screen.modelview({
-        autobind: true
+        //autobind: true
+        livebind: '$(__KEY__)'
         ,bindAttribute: 'data-bind'
         
         ,model: {
             id: 'model'
             ,data: { 
+                regex_version: 'v.'+Regex.VERSION
                 //regex: ""
             }
             ,types: { 
@@ -568,10 +620,10 @@ require(['jQuery', 'ModelView', 'RegexComposer'],
                 var regex, e, model = this.$model;
                 
                 try{
-                    regex = new Function("RegexComposer", "\"use strict\"; return "+codeEditor.getValue( )+";")( RegexComposer );
+                    regex = new Function("Composer", "\"use strict\"; return new Composer()"+codeEditor.getValue( )+";")( Regex.Composer ).pattern.toString();
                 } catch (e) { 
-                    regex = "Error Occured!";
-                    //console.error(e.toString());
+                    regex = '/(?# '+e.toString()+' )/';//"Error Occured!";
+                    console.error(e.toString());
                 }
                 model.set('regex', regex, true);
             }

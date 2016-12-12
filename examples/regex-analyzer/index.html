@@ -12,16 +12,16 @@
 <html lang="en" class="no-ie">
 <!--<![endif]-->
 <head>
-    <title>Regex Analyzer</title>
-    
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <meta name="description" content="Regex Analyzer" />
-    
-    
-    <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-    
+<title>Regex Analyzer</title>
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="description" content="Regex Analyzer" />
+
+
+<link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+
 <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
 <link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
 <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
@@ -91,9 +91,9 @@
 }
 </style>
 
-    
 
-    
+
+
 <script src="../common/js/codemirror/codemirror.min.js"></script>
 <script src="../common/js/codemirror/addon/lint/lint.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
@@ -105,21 +105,19 @@
 <script src="../common/js/codemirror/grammar/json.js"></script>
 <script src="../common/js/codemirror/grammar/regexp.js"></script>
 
-    <script type="text/javascript" src="../common/js/require.js"></script>
-    <script type="text/javascript" src="../common/js/require-config.js"></script>
-    
-    
+<script type="text/javascript" src="../common/js/require.js"></script>
+<script type="text/javascript" src="../common/js/require-config.js"></script>
+
 
 
 </head>
-
 <body class="responsive-864-container">
     <span id="forkongithub"><a href="https://github.com/foo123/RegexAnalyzer">Match me on GitHub</a></span>
     
     
 <header id="header">
     <h1>Regex Analyzer</h1>
-    <i>A simple Regular Expression Analyzer for PHP, Python, Node/XPCOM/JS</i>
+    <i>A generic &amp; simple Regular Expression Analyzer &amp; Composer for PHP, Python, Node/XPCOM/JS</i>
 </header>
 
 <br /><br />
@@ -128,7 +126,7 @@
     
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
-        <strong>Regular Expression ($(regexanalyser_version)):</strong>
+        <strong>Regular Expression ($(regex_version)):</strong>
         <br />(wrap the expression in <code>/../[flags]</code> and optionaly add flags)
         &nbsp;&nbsp;<input type="button" class="button" id="analyze" data-bind='{"click":"analyze"}' value="Syntax Tree" />
         &nbsp;&nbsp;<input type="button" class="button" id="statistics" data-bind='{"click":"statistics"}' value="Statistics" />
@@ -145,30 +143,29 @@
     
     
     <footer id="footer">
-        <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net/#contact_tab" class="donate">hire me for a job</a></div>
-        
-        
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net/#contact_tab" class="donate">hire me for a job</a></div>
+    
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 <div class="showcase">JSON &amp; Regular Expression syntax highlight modes by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
 
-        <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
-        <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
-        <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
-        <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
+    <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
+    <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
+    <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
+    <div class="showcase">Widgets by <a href="https://github.com/foo123/HtmlWidget" target="_blank">HtmlWidget</a></div>
+    <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
     </footer>
     <br /><br />
     
     
-    
 <script type="text/javascript">//<![CDATA[
-require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
-    function( $, $R, $MV, RegexAnalyzer ) {
+require(['jQuery', 'Dromeo', 'ModelView', 'Regex'],
+    function( $, $R, $MV, Regex ) {
     "use strict";
     
     var undef=undefined, $window = $(window), $screen = $('#screen'),
         input = document.getElementById('regex'),
         output = document.getElementById('output'),
-        appTask, appModel, appView, appRouter, analyzer = new RegexAnalyzer(), regex, code,
+        appTask, appModel, appView, appRouter, analyzer = new Regex.Analyzer(), regex, code,
         width = output.clientWidth, height, toJSON = JSON.stringify
     ;
     
@@ -344,7 +341,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'RegexAnalyzer'],
         ,model: {
             id: 'model'
             ,data: { 
-                regexanalyser_version: 'v.'+RegexAnalyzer.VERSION
+                regex_version: 'v.'+Regex.VERSION
                 //regex: "/[abc]+/gi"
             }
             ,types: { 
