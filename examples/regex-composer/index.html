@@ -202,7 +202,7 @@
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
         <strong>Composed Regular Expression ($(regex_version)):</strong>
-        &nbsp;&nbsp;<input type="button" class="button" id="compose" data-bind='{"click":"compose"}' value="Compose" />
+        &nbsp;&nbsp;<button class="button" id="compose" data-bind='{"click":"compose"}'>Compose</button>&nbsp;&nbsp;<a href="../regex-analyzer/#$(regex_code)" target="_blank" class="button" id="analyze">Analyze</a>
         <br />
         <textarea id="regex"></textarea>
     </div>
@@ -552,13 +552,14 @@
     
     
 <script>//<![CDATA[
-require(['jQuery', 'ModelView', 'Regex'],
-    function($, ModelView, Regex) {
+require(['jQuery', 'ModelView', 'Regex', 'Dromeo'],
+    function($, ModelView, Regex, Router) {
     var $screen = $('#screen'),
         oEditor, regex = document.getElementById('regex'),
         codeEditor, code = document.getElementById('code'),
         owidth = regex.clientWidth, oheight = regex.clientHeight,
-        width = code.clientWidth, height = code.clientHeight
+        width = code.clientWidth, height = code.clientHeight,
+        router = new Router()
     ;
     
     ModelView.jquery( $ );
@@ -598,7 +599,8 @@ require(['jQuery', 'ModelView', 'Regex'],
         ,model: {
             id: 'model'
             ,data: { 
-                regex_version: 'v.'+Regex.VERSION
+                regex_version: 'v.'+Regex.VERSION,
+                regex_code: ''
                 //regex: ""
             }
             ,types: { 
@@ -626,6 +628,10 @@ require(['jQuery', 'ModelView', 'Regex'],
                     console.error(e.toString());
                 }
                 model.set('regex', regex, true);
+                model.set('regex_code', router.glue({
+                    action: 'analyze',
+                    regex: regex
+                }), true);
             }
         }
     });
