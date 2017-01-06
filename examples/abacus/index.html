@@ -151,6 +151,8 @@ div.sepa {
         </select>
         <label for="type">SubType:</label><select id="type" name="model[type]">
         <option value="permutation">Permutation (Permutation)</option>
+        <option value="cyclic">Cyclic (Permutation)</option>
+        <option value="multiset">Multiset (Permutation)</option>
         <option value="derangement">Derangement (Permutation)</option>
         <option value="unordered">Unordered (Combination)</option>
         <option value="unordered_binary">Unordered Binary (Combination)</option>
@@ -172,8 +174,8 @@ div.sepa {
         <option value="colex,reversed">Co-Lexicographic Reversed</option>
         </select>
         <div class="sepa"></div>
-        <label for="N">N =</label><input id="N"  name="model[N]"size="5" type="text" value="1" />
-        <label for="K">K =</label><input id="K"  name="model[K]"size="5" type="text" value="1" />
+        <label for="N">N =</label><input id="N"  name="model[N]" size="5" type="text" value="1" />
+        <label for="K">K =</label><input id="K"  name="model[K]" size="8" type="text" value="1" />
         <button class="button" style="margin-left:10px" id="produce" data-bind='{"click":"produce"}'>Produce</button>
     </div>
     
@@ -268,16 +270,25 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     
     function produce( model )
     {
-        var comb = null, sep = ',', N = model.get('N')|0, K = model.get('K')|0,
+        var comb = null, sep = ',', N = model.get('N')|0, K = model.get('K'),
             object = model.get('object'), type = model.get('type'), order = model.get('order');
         
         if ( "tuple" === object )
         {
-            comb = Abacus.Tensor([K, N], {order:order,type:"tuple"});
+            comb = Abacus.Tensor([+K, N], {order:order,type:"tuple"});
         }
         else if ( "permutation" === object )
         {
-            if ( "derangement"===type )
+            if ( "cyclic"===type )
+            {
+                type = 'cyclic';
+            }
+            else if ( "multiset"===type )
+            {
+                type = 'multiset';
+                K = String(K).split(',').map(Number);
+            }
+            else if ( "derangement"===type )
             {
                 type = 'derangement';
             }
@@ -285,7 +296,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             {
                 type = 'permutation';
             }
-            comb = Abacus.Permutation(N, {order:order,type:type});
+            comb = Abacus.Permutation(N, {order:order,type:type,multiplicity:K});
         }
         else if ( "combination" === object )
         {
@@ -310,7 +321,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             {
                 type = 'unordered';
             }
-            comb = Abacus.Combination([N, K], {order:order,type:type});
+            comb = Abacus.Combination([N, +K], {order:order,type:type});
         }
         else if ( "subset" === object )
         {
@@ -328,9 +339,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         else if ( "partition" === object )
         {
             if ( "partition_max" === type )
-                comb = Abacus.Partition(N, {order:order,"max=":K});
+                comb = Abacus.Partition(N, {order:order,"max=":+K});
             else if ( "partition_parts" === type )
-                comb = Abacus.Partition(N, {order:order,"parts=":K});
+                comb = Abacus.Partition(N, {order:order,"parts=":+K});
             else
                 comb = Abacus.Partition(N, {order:order});
         }
@@ -388,8 +399,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 K: 1
             }
             ,types: {
-                N: $MV.Type.Cast.INT,
-                K: $MV.Type.Cast.INT
+                N: $MV.Type.Cast.INT
             }
         }
         ,actions: { 
