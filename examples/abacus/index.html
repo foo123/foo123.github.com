@@ -153,6 +153,7 @@ div.sepa {
         <option value="permutation">Permutation (Permutation)</option>
         <option value="derangement">Derangement (Permutation)</option>
         <option value="unordered">Unordered (Combination)</option>
+        <option value="unordered_binary">Unordered Binary (Combination)</option>
         <option value="ordered">Ordered (Combination)</option>
         <option value="repeated">Unordered+Repeated (Combination)</option>
         <option value="ordered_repeated">Ordered+Repeated (Combination)</option>
@@ -267,7 +268,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     
     function produce( model )
     {
-        var comb = null, N = model.get('N')|0, K = model.get('K')|0,
+        var comb = null, sep = ',', N = model.get('N')|0, K = model.get('K')|0,
             object = model.get('object'), type = model.get('type'), order = model.get('order');
         
         if ( "tuple" === object )
@@ -276,15 +277,53 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         }
         else if ( "permutation" === object )
         {
-            comb = Abacus.Permutation(N, {order:order,type:"derangement"===type?"derangement":"permutation"});
+            if ( "derangement"===type )
+            {
+                type = 'derangement';
+            }
+            else
+            {
+                type = 'permutation';
+            }
+            comb = Abacus.Permutation(N, {order:order,type:type});
         }
         else if ( "combination" === object )
         {
-            comb = Abacus.Combination([N, K], {order:order,type:"ordered"===type?"ordered":("repeated"===type?"repeated":("ordered_repeated"===type?"ordered+repeated":"unordered"))});
+            if ( "ordered"===type )
+            {
+                type = 'ordered';
+            }
+            else if ( "repeated"===type )
+            {
+                type = 'repeated';
+            }
+            else if ( "ordered_repeated"===type )
+            {
+                type = 'ordered+repeated';
+            }
+            else if ( "unordered_binary"===type )
+            {
+                sep = '';
+                type = 'binary';
+            }
+            else
+            {
+                type = 'unordered';
+            }
+            comb = Abacus.Combination([N, K], {order:order,type:type});
         }
         else if ( "subset" === object )
         {
-            comb = Abacus.Subset(N, {order:order,type:"subset_binary"===type?"binary":"subset"});
+            if ( "subset_binary"===type )
+            {
+                sep = '';
+                type = 'binary';
+            }
+            else
+            {
+                type = 'subset';
+            }
+            comb = Abacus.Subset(N, {order:order,type:type});
         }
         else if ( "partition" === object )
         {
@@ -310,7 +349,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         while((count<MAXITEMS) && comb.hasNext())
         {
             if ( 0 < count ) output += "\n";
-            output += comb.next().join(',');
+            output += comb.next().join(sep);
             count++;
         }
         out.setValue(output);
