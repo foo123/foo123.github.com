@@ -107,6 +107,164 @@ div.sepa {
     height: 1px;
     margin-bottom: 1.2em;
 }
+.ui-delayable-overlay
+{
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    top: 0;
+    left: 0;
+    display: block;
+    visibility: visible;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    background: none;
+    background-color: rgba(255,255,255,.4);
+    background-repeat: no-repeat;
+    background-position: center center;
+    z-index: -10;
+    opacity: 0;
+    transition-property: z-index, opacity;
+    transition-duration: .02s, .6s;
+    transition-delay: 0s, .04s;
+    cursor: inherit;
+}
+.ui-delayed  > .ui-delayable-overlay
+{
+    z-index: 500;
+    opacity: 1;
+    cursor: progress;
+}
+.ui-undelayed  > .ui-delayable-overlay
+{
+    transition-delay: .65s, 0s;
+}
+.ui-spinner
+{
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -ms-box-sizing:border-box;
+    -o-box-sizing:border-box;
+    box-sizing:border-box;
+    position: relative;  display: block;
+    padding: 0;  margin: 0;
+    z-index: 1; overflow: visible;
+    font-size: 1em;
+    visibility: hidden;
+    width: 20%; height: 1px; padding-bottom: 20%; /* 1:1 */
+    top: 50%; left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+/* http://frayd.us/blog/pure-css-loading-animation/ */
+.ui-spinner:before
+{
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -ms-box-sizing:border-box;
+    -o-box-sizing:border-box;
+    box-sizing:border-box;
+    position: absolute;
+    z-index:1; overflow: visible;
+    padding: 0; margin: 0;
+    content: " ";
+    display: block; visibility: hidden;
+    background: none; border: none;
+    -webkit-animation-name: none;
+    animation-name: none;
+}
+/* adapted from https://github.com/lukehaas/css-loaders */
+.ui-spinner.ui-spinner-dots
+{
+    width: 20%; height: 1px; padding-bottom: 20%; /* 1:1 */
+}
+.ui-spinner.ui-spinner-dots:before 
+{
+    position: relative;
+    font-size: 25px;
+    margin: 0 auto;
+    width: 1em; height: 1em;
+    border-radius: 50%;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation-duration: 1.1s;
+    animation-duration: 1.1s;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease;
+    animation-timing-function: ease;
+}
+.ui-delayed .ui-spinner
+{
+    visibility: visible;
+    /*display: block;*/
+}
+.ui-delayed .ui-spinner.ui-spinner-dots:before
+{
+    visibility: visible;
+    -webkit-animation-name: ui-spin-dots;
+    animation-name: ui-spin-dots;
+}
+
+@-webkit-keyframes ui-spin-dots {
+  0%,
+  100% {
+    box-shadow: 0em -2.6em 0em 0em #808080, 1.8em -1.8em 0 0em rgba(128,128,128, 0.2), 2.5em 0em 0 0em rgba(128,128,128, 0.2), 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.2), -1.8em 1.8em 0 0em rgba(128,128,128, 0.2), -2.6em 0em 0 0em rgba(128,128,128, 0.5), -1.8em -1.8em 0 0em rgba(128,128,128, 0.7);
+  }
+  12.5% {
+    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.7), 1.8em -1.8em 0 0em #808080, 2.5em 0em 0 0em rgba(128,128,128, 0.2), 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.2), -1.8em 1.8em 0 0em rgba(128,128,128, 0.2), -2.6em 0em 0 0em rgba(128,128,128, 0.2), -1.8em -1.8em 0 0em rgba(128,128,128, 0.5);
+  }
+  25% {
+    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.5), 1.8em -1.8em 0 0em rgba(128,128,128, 0.7), 2.5em 0em 0 0em #808080, 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.2), -1.8em 1.8em 0 0em rgba(128,128,128, 0.2), -2.6em 0em 0 0em rgba(128,128,128, 0.2), -1.8em -1.8em 0 0em rgba(128,128,128, 0.2);
+  }
+  37.5% {
+    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.2), 1.8em -1.8em 0 0em rgba(128,128,128, 0.5), 2.5em 0em 0 0em rgba(128,128,128, 0.7), 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.2), -1.8em 1.8em 0 0em rgba(128,128,128, 0.2), -2.6em 0em 0 0em rgba(128,128,128, 0.2), -1.8em -1.8em 0 0em rgba(128,128,128, 0.2);
+  }
+  50% {
+    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.2), 1.8em -1.8em 0 0em rgba(128,128,128, 0.2), 2.5em 0em 0 0em rgba(128,128,128, 0.5), 1.75em 1.75em 0 0em rgba(128,128,128, 0.7), 0em 2.5em 0 0em #808080, -1.8em 1.8em 0 0em rgba(128,128,128, 0.2), -2.6em 0em 0 0em rgba(128,128,128, 0.2), -1.8em -1.8em 0 0em rgba(128,128,128, 0.2);
+  }
+  62.5% {
+    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.2), 1.8em -1.8em 0 0em rgba(128,128,128, 0.2), 2.5em 0em 0 0em rgba(128,128,128, 0.2), 1.75em 1.75em 0 0em rgba(128,128,128, 0.5), 0em 2.5em 0 0em rgba(128,128,128, 0.7), -1.8em 1.8em 0 0em #808080, -2.6em 0em 0 0em rgba(128,128,128, 0.2), -1.8em -1.8em 0 0em rgba(128,128,128, 0.2);
+  }
+  75% {
+    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.2), 1.8em -1.8em 0 0em rgba(128,128,128, 0.2), 2.5em 0em 0 0em rgba(128,128,128, 0.2), 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.5), -1.8em 1.8em 0 0em rgba(128,128,128, 0.7), -2.6em 0em 0 0em #808080, -1.8em -1.8em 0 0em rgba(128,128,128, 0.2);
+  }
+  87.5% {
+    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.2), 1.8em -1.8em 0 0em rgba(128,128,128, 0.2), 2.5em 0em 0 0em rgba(128,128,128, 0.2), 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.2), -1.8em 1.8em 0 0em rgba(128,128,128, 0.5), -2.6em 0em 0 0em rgba(128,128,128, 0.7), -1.8em -1.8em 0 0em #808080;
+  }
+}
+@keyframes ui-spin-dots {
+  0%,
+  100% {
+    box-shadow: 0em -2.6em 0em 0em #808080, 1.8em -1.8em 0 0em rgba(128,128,128, 0.2), 2.5em 0em 0 0em rgba(128,128,128, 0.2), 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.2), -1.8em 1.8em 0 0em rgba(128,128,128, 0.2), -2.6em 0em 0 0em rgba(128,128,128, 0.5), -1.8em -1.8em 0 0em rgba(128,128,128, 0.7);
+  }
+  12.5% {
+    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.7), 1.8em -1.8em 0 0em #808080, 2.5em 0em 0 0em rgba(128,128,128, 0.2), 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.2), -1.8em 1.8em 0 0em rgba(128,128,128, 0.2), -2.6em 0em 0 0em rgba(128,128,128, 0.2), -1.8em -1.8em 0 0em rgba(128,128,128, 0.5);
+  }
+  25% {
+    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.5), 1.8em -1.8em 0 0em rgba(128,128,128, 0.7), 2.5em 0em 0 0em #808080, 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.2), -1.8em 1.8em 0 0em rgba(128,128,128, 0.2), -2.6em 0em 0 0em rgba(128,128,128, 0.2), -1.8em -1.8em 0 0em rgba(128,128,128, 0.2);
+  }
+  37.5% {
+    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.2), 1.8em -1.8em 0 0em rgba(128,128,128, 0.5), 2.5em 0em 0 0em rgba(128,128,128, 0.7), 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.2), -1.8em 1.8em 0 0em rgba(128,128,128, 0.2), -2.6em 0em 0 0em rgba(128,128,128, 0.2), -1.8em -1.8em 0 0em rgba(128,128,128, 0.2);
+  }
+  50% {
+    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.2), 1.8em -1.8em 0 0em rgba(128,128,128, 0.2), 2.5em 0em 0 0em rgba(128,128,128, 0.5), 1.75em 1.75em 0 0em rgba(128,128,128, 0.7), 0em 2.5em 0 0em #808080, -1.8em 1.8em 0 0em rgba(128,128,128, 0.2), -2.6em 0em 0 0em rgba(128,128,128, 0.2), -1.8em -1.8em 0 0em rgba(128,128,128, 0.2);
+  }
+  62.5% {
+    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.2), 1.8em -1.8em 0 0em rgba(128,128,128, 0.2), 2.5em 0em 0 0em rgba(128,128,128, 0.2), 1.75em 1.75em 0 0em rgba(128,128,128, 0.5), 0em 2.5em 0 0em rgba(128,128,128, 0.7), -1.8em 1.8em 0 0em #808080, -2.6em 0em 0 0em rgba(128,128,128, 0.2), -1.8em -1.8em 0 0em rgba(128,128,128, 0.2);
+  }
+  75% {
+    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.2), 1.8em -1.8em 0 0em rgba(128,128,128, 0.2), 2.5em 0em 0 0em rgba(128,128,128, 0.2), 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.5), -1.8em 1.8em 0 0em rgba(128,128,128, 0.7), -2.6em 0em 0 0em #808080, -1.8em -1.8em 0 0em rgba(128,128,128, 0.2);
+  }
+  87.5% {
+    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.2), 1.8em -1.8em 0 0em rgba(128,128,128, 0.2), 2.5em 0em 0 0em rgba(128,128,128, 0.2), 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.2), -1.8em 1.8em 0 0em rgba(128,128,128, 0.5), -2.6em 0em 0 0em rgba(128,128,128, 0.7), -1.8em -1.8em 0 0em #808080;
+  }
+}
 </style>
 
 
@@ -151,7 +309,7 @@ div.sepa {
         </select>
         <label for="type">SubType:</label><select id="type" name="model[type]">
         <option value="permutation">Permutation (Permutation)</option>
-        <option value="cyclic">Cyclic (Permutation)</option>
+        <option value="cyclic">Cyclic Shift (Permutation)</option>
         <option value="multiset">Multiset (Permutation)</option>
         <option value="derangement">Derangement (Permutation)</option>
         <option value="unordered">Unordered (Combination)</option>
@@ -160,8 +318,8 @@ div.sepa {
         <option value="repeated">Unordered+Repeated (Combination)</option>
         <option value="ordered_repeated">Ordered+Repeated (Combination)</option>
         <option value="subset_binary">Binary (Subset)</option>
-        <option value="partition_max">Fixed Maximum Value (Partition)</option>
-        <option value="partition_parts">Fixed Parts (Partition)</option>
+        <option value="partition_max">Fixed Maximum Part (Partition)</option>
+        <option value="partition_parts">Fixed Number of Parts (Partition)</option>
         </select>
         <label for="order">Order:</label><select id="order" name="model[order]">
         <option value="lex">Lexicographic</option>
@@ -184,6 +342,7 @@ div.sepa {
         <div class="fluid col-1-1" style="margin-bottom:10px;font-family:consolas,monospace">$(summary)</div>
         <textarea id="output"></textarea>
     </div>
+<div class="ui-delayable-overlay"><div class="ui-spinner ui-spinner-dots"></div></div>
 </div>
 
     
@@ -191,6 +350,7 @@ div.sepa {
     <footer id="footer">
     <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net/#contact_tab" class="donate">hire me for a job</a></div>
     
+<div class="showcase">Big Integer Arithmetic plugin by <a href="https://github.com/peterolson/BigInteger.js" target="_blank">BigInteger.js</a></div>
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 
     <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
@@ -250,7 +410,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     var undef=undefined, $window = $(window), $screen = $('#screen'),
         output = document.getElementById('output'), out,
         appModel, appView, appRouter, width = output.clientWidth, height, toJSON = JSON.stringify,
-        MAXITEMS = 100000
+        MAXITEMS = 10000
     ;
     
     $MV.jquery( $ );
@@ -345,25 +505,37 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             else
                 comb = Abacus.Partition(N, {order:order});
         }
+        
+        out.setValue('');
+        
         if ( !comb )
         {
             model.set('summary', '', true);
-            out.setValue('');
             return;
         }
         
-        var count = 0, output = "";
+        var count = 0, chunk = 1000;
+        
+        $screen.addClass('ui-delayed').removeClass('ui-undelayed');
+        
         model.set('summary', (
         "Abacus."+comb.name+"("+(comb.n.join?comb.n.join(','):comb.n)+",{order:\""+order+"\",type:\""+comb.$.type+"\"})" +
         "       total = " + String(comb.total())+" (max "+MAXITEMS+" shown)"
         ), true);
-        while((count<MAXITEMS) && comb.hasNext())
-        {
-            if ( 0 < count ) output += "\n";
-            output += comb.next().join(sep);
-            count++;
-        }
-        out.setValue(output);
+        
+        setTimeout(function next(){
+            var cnt = 0, output="";
+            while( (cnt<chunk) && (count<MAXITEMS) && comb.hasNext() )
+            {
+                if ( 0 < count ) output += "\n";
+                output += comb.next().join(sep);
+                count++; cnt++;
+            }
+            out.setValue(out.getValue()+output);
+            if ( (count<MAXITEMS) && comb.hasNext() ) setTimeout(next, 160);
+            else $screen.addClass('ui-undelayed').removeClass('ui-delayed');
+        }, 100);
+        
     }
     
     appRouter = new $R( );
