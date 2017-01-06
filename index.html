@@ -159,6 +159,33 @@
     transition: opacity .3s ease;
 }
 
+#controller_page_math:target ~ #wrapper #panel #page_math
+{
+    position: relative;
+    
+    -webkit-transform: translateX(0px);
+    -moz-transform: translateX(0px);
+    -o-transform: translateX(0px);
+    -ms-transform: translateX(0px);
+    transform: translateX(0px);
+    
+    -webkit-transition: -webkit-transform .3s ease;
+    -moz-transition: -moz-transform .3s ease;
+    -o-transition: -o-transform .3s ease;
+    -ms-transition: -ms-transform .3s ease;
+    transition: transform .3s ease;
+}
+#controller_page_math:target ~ #wrapper #title_page_math.page-title
+{
+    position: relative;
+    opacity: 1;
+    -webkit-transition: opacity .3s ease;
+    -moz-transition: opacity .3s ease;
+    -o-transition: opacity .3s ease;
+    -ms-transition: opacity .3s ease;
+    transition: opacity .3s ease;
+}
+
 #controller_page_graphics:target ~ #wrapper #panel #page_graphics
 {
     position: relative;
@@ -340,6 +367,8 @@
 
 <span id="controller_page_processors" class="controller"></span>
 
+<span id="controller_page_math" class="controller"></span>
+
 <span id="controller_page_graphics" class="controller"></span>
 
 <span id="controller_page_plugins" class="controller"></span>
@@ -402,6 +431,8 @@
         
         <strong id="title_page_processors" class="page-title">Page:&nbsp;&nbsp;Engines / Processors / Pattern Processing</strong>
         
+        <strong id="title_page_math" class="page-title">Page:&nbsp;&nbsp;Mathematics / Combinatorics / Logic / Optimisation</strong>
+        
         <strong id="title_page_graphics" class="page-title">Page:&nbsp;&nbsp;Graphics / 3D / Animation</strong>
         
         <strong id="title_page_plugins" class="page-title">Page:&nbsp;&nbsp;Plugins / Add-Ons</strong>
@@ -456,6 +487,19 @@
                         </p>
                         <div class="fluid col-1-1 img-loader animated fadeOut">
                             <img src="thumbs/yo-regex.jpg" alt="Pattern Processing, Parsers, Processors, Template Engines, Grammars, etc.." />
+                        </div>
+                    </a>
+                </li>
+                
+                
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link demo-group-link" href="#controller_page_math">
+                        <p class="demo-description animated fadeIn">
+                            Combinatorics, Discrete Mathematics, Logic, Constraints, Optimisation, etc..
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/abacus.jpg" alt="Combinatorics, Discrete Mathematics, Logic, Constraints, Optimisation, etc.." />
                         </div>
                     </a>
                 </li>
@@ -681,12 +725,12 @@
                 </li>
                 
                 <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
-                    <a class="demo-link" href="https://github.com/foo123/Abacus">
+                    <a class="demo-link" href="examples/abacus">
                         <p class="demo-description animated fadeIn">
-                            Abacus, a combinatorics computation library for Node/XPCOM/JS, PHP, Python, ActionScript
+                            Abacus, a combinatorics computation library for Node/XPCOM/JS, PHP, Python, Java, C/C++
                         </p>
                         <div class="fluid col-1-1 img-loader animated fadeOut">
-                            <img src="thumbs/abacus.jpg" alt="Abacus, a combinatorics computation library for Node/XPCOM/JS, PHP, Python, ActionScript" />
+                            <img src="thumbs/abacus.jpg" alt="Abacus, a combinatorics computation library for Node/XPCOM/JS, PHP, Python, Java, C/C++" />
                         </div>
                     </a>
                 </li>
@@ -972,6 +1016,17 @@
                 </li>
                 
                 <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="examples/abacus">
+                        <p class="demo-description animated fadeIn">
+                            Abacus, a combinatorics computation library for Node/XPCOM/JS, PHP, Python, Java, C/C++
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/abacus.jpg" alt="Abacus, a combinatorics computation library for Node/XPCOM/JS, PHP, Python, Java, C/C++" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
                     <a class="demo-link" href="examples/grammar-template">
                         <p class="demo-description animated fadeIn">
                             GrammarTemplate, versatile and intuitive grammar-based templating for PHP, Python, Node/XPCOM/JS, ActionScript
@@ -1106,6 +1161,201 @@
             </ul>
         </section>
         <!-- /processors page -->
+        
+        <!-- math page -->
+        <section id="page_math" class="fluid col-1-1 page">
+            <ul id="math" class="demos demos-group fluid col-1-1">
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="examples/filter/">
+                        <p class="demo-description animated fadeIn">
+                            Filter.js, a pure JavaScript Library for real-time Video and Image Processing, Filtering and Computer Vision (browser &amp; node.js)
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/filter.jpg" alt="Filter.js, a pure JavaScript Library for real-time Video and Image Processing, Filtering and Computer Vision (browser &amp; node.js)" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="examples/xpresion">
+                        <p class="demo-description animated fadeIn">
+                            Xpresion, a simple eXpression parser engine / rewrite system with variables &amp; custom functions support, for PHP, Python, Node/XPCOM/JS, ActionScript
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/xpresion.jpg" alt="Xpresion, a simple eXpression parser engine / rewrite system with variables &amp; custom functions support, for PHP, Python, Node/XPCOM/JS, ActionScript" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="examples/abacus">
+                        <p class="demo-description animated fadeIn">
+                            Abacus, a combinatorics computation library for Node/XPCOM/JS, PHP, Python, Java, C/C++
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/abacus.jpg" alt="Abacus, a combinatorics computation library for Node/XPCOM/JS, PHP, Python, Java, C/C++" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="https://github.com/foo123/FunctionalLogic">
+                        <p class="demo-description animated fadeIn">
+                            FunctionalLogic, where functional programming meets logic programming (IN PROGRESS)
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/functionallogic.jpg" alt="FunctionalLogic, where functional programming meets logic programming (IN PROGRESS)" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="examples/grammar-template">
+                        <p class="demo-description animated fadeIn">
+                            GrammarTemplate, versatile and intuitive grammar-based templating for PHP, Python, Node/XPCOM/JS, ActionScript
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/grammtpl.jpg" alt="GrammarTemplate, versatile and intuitive grammar-based templating for PHP, Python, Node/XPCOM/JS, ActionScript" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="https://github.com/foo123/GrammarPattern">
+                        <p class="demo-description animated fadeIn">
+                            GrammarPattern, intuitive and flexible grammar-based pattern processing and matching for Node/XPCOM/JS (IN PROGRESS)
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/grammarpattern.jpg" alt="GrammarPattern, intuitive and flexible grammar-based pattern processing and matching for Node/XPCOM/JS (IN PROGRESS)" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="https://github.com/foo123/RhoLambda">
+                        <p class="demo-description animated fadeIn">
+                            RhoLambda, a generic rewrite system synthesizing logic, grammar-patterns &amp; grammar-templates in pure JavaScript (IN PROGRESS)
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/rho-lambda.jpg" alt="RhoLambda, a generic rewrite system synthesizing logic, grammar-patterns &amp; grammar-templates in pure JavaScript (IN PROGRESS)" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="examples/regex-analyzer">
+                        <p class="demo-description animated fadeIn">
+                            A simple Regular Expression Analyser for PHP, Python, Node/XPCOM/JS, ActionScript
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/yo-regex.jpg" alt="A simple Regular Expression Analyser for PHP, Python, Node/XPCOM/JS, ActionScript" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="examples/regex-composer">
+                        <p class="demo-description animated fadeIn">
+                            An intuitive Regular Expression Composer for PHP, Python, Node/XPCOM/JS, ActionScript
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/yo-regex-composer.jpg" alt="An intuitive Regular Expression Composer for PHP, Python, Node/XPCOM/JS, ActionScript" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="examples/filter-video/">
+                        <p class="demo-description animated fadeIn">
+                            Real-time Video Processing with Filter.js
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/filter-video.jpg" alt="Real-time Video Processing with Filter.js" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="https://github.com/foo123/Simulacra">
+                        <p class="demo-description animated fadeIn">
+                            Simulacra, a combinatorics, probability &amp; simulation PHP package
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/simulacra.jpg" alt="Simulacra, a combinatorics, probability &amp; simulation PHP package" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="examples/rubik3/">
+                        <p class="demo-description animated fadeIn">
+                            Intuitive 3D Rubik Cube with Three.js
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/rubik3.jpg" alt="Intuitive 3D Rubik Cube with Three.js" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="https://github.com/foo123/3DRubikCube">
+                        <p class="demo-description animated fadeIn">
+                            Intuitive 3D Rubik Cube in ActionScript3 with PaperVision3D
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/rubik-as3.jpg" alt="Intuitive 3D Rubik Cube in ActionScript3 with PaperVision3D" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="examples/sorting-algorithms/">
+                        <p class="demo-description animated fadeIn">
+                            Study &amp; analysis of various Sorting Algorithms in JavaScript
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/sorting-algorithms.jpg" alt="Study &amp; analysis of various Sorting Algorithms in JavaScript" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="examples/pattern-matching-algorithms/">
+                        <p class="demo-description animated fadeIn">
+                            Study &amp; analysis of various Pattern Matching Algorithms in JavaScript
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/pattern-matching-algorithms.jpg" alt="Study &amp; analysis of various Pattern Matching Algorithms in JavaScript" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="examples/sudoku/">
+                        <p class="demo-description animated fadeIn">
+                            sudoku.js, Sudoku game, builder &amp; solver in pure JavaScript. Scaled-down version of CrossWord.js a professional Crossword Builder, by same author
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/sudoku.jpg" alt="sudoku.js, Sudoku game, builder &amp; solver in pure JavaScript. Scaled-down version of CrossWord.js a professional Crossword Builder, by same author" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="examples/chess/">
+                        <p class="demo-description animated fadeIn">
+                            Create and practice on a series of chess exercises in your browser (TODO)
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/chess.jpg" alt="Create and practice on a series of chess exercises in your browser (TODO)" />
+                        </div>
+                    </a>
+                </li>
+                
+            </ul>
+        </section>
+        <!-- /math page -->
         
         <!-- graphics page -->
         <section id="page_graphics" class="fluid col-1-1 page">
@@ -1447,12 +1697,34 @@
                 </li>
                 
                 <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="examples/abacus">
+                        <p class="demo-description animated fadeIn">
+                            Abacus, a combinatorics computation library for Node/XPCOM/JS, PHP, Python, Java, C/C++
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/abacus.jpg" alt="Abacus, a combinatorics computation library for Node/XPCOM/JS, PHP, Python, Java, C/C++" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
                     <a class="demo-link" href="examples/regex-analyzer">
                         <p class="demo-description animated fadeIn">
                             A simple Regular Expression Analyser for PHP, Python, Node/XPCOM/JS, ActionScript
                         </p>
                         <div class="fluid col-1-1 img-loader animated fadeOut">
                             <img src="thumbs/yo-regex.jpg" alt="A simple Regular Expression Analyser for PHP, Python, Node/XPCOM/JS, ActionScript" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="examples/regex-composer">
+                        <p class="demo-description animated fadeIn">
+                            An intuitive Regular Expression Composer for PHP, Python, Node/XPCOM/JS, ActionScript
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/yo-regex-composer.jpg" alt="An intuitive Regular Expression Composer for PHP, Python, Node/XPCOM/JS, ActionScript" />
                         </div>
                     </a>
                 </li>
@@ -1744,6 +2016,17 @@
                         </p>
                         <div class="fluid col-1-1 img-loader animated fadeOut">
                             <img src="thumbs/xpresion.jpg" alt="Xpresion, a simple eXpression parser engine / rewrite system with variables &amp; custom functions support, for PHP, Python, Node/XPCOM/JS, ActionScript" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-4 autocol-1-3-960 autocol-1-2-864">
+                    <a class="demo-link" href="examples/abacus">
+                        <p class="demo-description animated fadeIn">
+                            Abacus, a combinatorics computation library for Node/XPCOM/JS, PHP, Python, Java, C/C++
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="thumbs/abacus.jpg" alt="Abacus, a combinatorics computation library for Node/XPCOM/JS, PHP, Python, Java, C/C++" />
                         </div>
                     </a>
                 </li>

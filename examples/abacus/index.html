@@ -1,0 +1,386 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie lt-ie9">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" class="no-ie">
+<!--<![endif]-->
+<head>
+<title>Abacus</title>
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="description" content="Abacus" />
+
+
+<link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+
+<link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
+<link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
+<link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
+<link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
+<style type="text/css">
+#regex,#output {
+    position:relative;
+    padding:2px;
+    width: 90%;
+    height: 500px;
+}
+#regex {
+    height: 30px;
+}
+
+
+.button {
+    -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    box-shadow:inset 0px 1px 0px 0px #ffffff;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+    background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+    background-color:#ededed;
+    -webkit-border-top-left-radius:20px;
+    -moz-border-radius-topleft:20px;
+    border-top-left-radius:20px;
+    -webkit-border-top-right-radius:20px;
+    -moz-border-radius-topright:20px;
+    border-top-right-radius:20px;
+    -webkit-border-bottom-right-radius:20px;
+    -moz-border-radius-bottomright:20px;
+    border-bottom-right-radius:20px;
+    -webkit-border-bottom-left-radius:20px;
+    -moz-border-radius-bottomleft:20px;
+    border-bottom-left-radius:20px;
+    text-indent:0;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    color:#777777;
+    font-family:Arial;
+    font-size:15px;
+    font-weight:bold;
+    font-style:normal;
+    height:50px;
+    line-height:50px;
+    width:86px;
+    text-decoration:none;
+    text-align:center;
+    text-shadow:1px 1px 0px #ffffff;
+}
+.button:hover {
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+    background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+    background-color:#dfdfdf;
+}.button:active {
+    position:relative;
+    top:1px;
+}
+.button {
+    width:120px;
+    height:30px;
+    line-height:30px;
+    cursor:pointer;
+    position:relative;
+}
+button, input, optgroup, select, textarea {
+    color: #121212;
+}
+select, input {
+    display: inline-block;
+    padding: 4px 2px;
+}
+label {
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 6px;
+}
+div.sepa {
+    display: block;
+    height: 1px;
+    margin-bottom: 1.2em;
+}
+</style>
+
+
+
+
+<script src="../common/js/codemirror/codemirror.min.js"></script>
+<script src="../common/js/codemirror/addon/lint/lint.js"></script>
+<script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
+<script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
+<script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
+<script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
+
+<script type="text/javascript" src="../common/js/require.js"></script>
+<script type="text/javascript" src="../common/js/require-config.js"></script>
+
+
+
+</head>
+<body class="responsive-864-container">
+    <span id="forkongithub"><a href="https://github.com/foo123/Abacus">Permute me on GitHub</a></span>
+    
+    
+<header id="header">
+    <h1>Abacus</h1>
+    <i>A simple, fast &amp; versatile combinatorics library for Node/XPCOM/JS, PHP, Python, Java, C/C++</i>
+</header>
+
+<br /><br />
+
+    
+    
+<div id="screen" class="fluid col-1-1">
+    <div class="fluid col-1-1">
+        <strong>Abacus ($(abacus_version)):</strong>
+        <div class="sepa"></div>
+        <label style="text-"for="object">Type:</label><select id="object" name="model[object]">
+        <option value="tuple">Tuple</option>
+        <option value="permutation">Permutation</option>
+        <option value="combination">Combination</option>
+        <option value="subset">Subset</option>
+        <option value="partition">Partition</option>
+        </select>
+        <label for="type">SubType:</label><select id="type" name="model[type]">
+        <option value="permutation">Permutation (Permutation)</option>
+        <option value="derangement">Derangement (Permutation)</option>
+        <option value="unordered">Unordered (Combination)</option>
+        <option value="ordered">Ordered (Combination)</option>
+        <option value="repeated">Unordered+Repeated (Combination)</option>
+        <option value="ordered_repeated">Ordered+Repeated (Combination)</option>
+        </select>
+        <label for="order">Order:</label><select id="order" name="model[order]">
+        <option value="lex">Lexicographic</option>
+        <option value="colex">Co-Lexicographic</option>
+        <option value="random">Random</option>
+        <option value="lex,reflected">Lexicographic Reflected</option>
+        <option value="colex,reflected">Co-Lexicographic Reflected</option>
+        <option value="random,reflected">Random Reflected</option>
+        <option value="lex,reversed">Lexicographic Reversed</option>
+        <option value="colex,reversed">Co-Lexicographic Reversed</option>
+        </select>
+        <div class="sepa"></div>
+        <label for="N">N =</label><input id="N"  name="model[N]"size="5" type="text" value="1" />
+        <label for="K">K =</label><input id="K"  name="model[K]"size="5" type="text" value="1" />
+        <button class="button" style="margin-left:10px" id="produce" data-bind='{"click":"produce"}'>Produce</button>
+    </div>
+    
+    <div class="fluid col-1-1" style="margin-top:10px">
+        <strong>Output:</strong><br />
+        <div class="fluid col-1-1" style="margin-bottom:10px;font-family:consolas,monospace">$(summary)</div>
+        <textarea id="output"></textarea>
+    </div>
+</div>
+
+    
+    
+    <footer id="footer">
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net/#contact_tab" class="donate">hire me for a job</a></div>
+    
+<div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
+
+    <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
+    <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
+    <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
+    <div class="showcase">Widgets by <a href="https://github.com/foo123/HtmlWidget" target="_blank">HtmlWidget</a></div>
+    <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
+    </footer>
+    <br /><br />
+    
+<script type="text/javascript">//<![CDATA[
+require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
+    function( $, $R, $MV, bigInt, Abacus ) {
+    "use strict";
+    
+    !function use_biginteger_arithmetic( Abacus, bigInt )
+    {
+        // plug-in bigInteger arithmetic routines
+        var Arithmetic = Abacus.Arithmetic;
+        
+        Arithmetic.O = bigInt.zero;
+        Arithmetic.I = bigInt.one;
+        Arithmetic.J = bigInt.minusOne;
+        
+        Arithmetic.equ = function( a, b ){ return a.eq( b ); };
+        Arithmetic.gte = function( a, b ){ return a.geq( b ); };
+        Arithmetic.lte = function( a, b ){ return a.leq( b ); };
+        Arithmetic.gt = function( a, b ){ return a.gt( b ); };
+        Arithmetic.lt = function( a, b ){ return a.lt( b ); };
+        
+        Arithmetic.inside = function( a, m, M, closed ){ return closed ? (a.geq( m )) && (a.leq( M )) : (a.gt( m )) && (a.lt( M ));
+        };
+        Arithmetic.clamp = function( a, m, M ){ return a.lt( m ) ? m : (a.gt( M ) ? M : a); };
+        Arithmetic.wrap = function( a, m, M ){ return a.lt( m ) ? M : (a.gt( M ) ? m : a); };
+        Arithmetic.wrapR = function( a, M ){ return a.lt( bigInt.zero ) ? a.plus( M ) : a; };
+        
+        Arithmetic.add = function( a, b ){ return a.plus( b ); };
+        Arithmetic.sub = function( a, b ){ return a.minus( b ); };
+        Arithmetic.mul = function( a, b ){ return a.times( b ); };
+        Arithmetic.div = function( a, b ){ return a.over( b ); };
+        Arithmetic.mod = function( a, b ){ return a.mod( b ); };
+        Arithmetic.pow = function( a, b ){ return a.pow( b ); };
+        
+        Arithmetic.shl = function( a, b ){ return a.shiftLeft( b ); };
+        Arithmetic.shr = function( a, b ){ return a.shiftRight( b ); };
+        Arithmetic.bor = function( a, b ){ return a.or( b ); };
+        Arithmetic.band = function( a, b ){ return a.and( b ); };
+        Arithmetic.xor = function( a, b ){ return a.xor( b ); };
+        
+        Arithmetic.rnd = bigInt.randBetween;
+        Arithmetic.min = bigInt.min;
+        Arithmetic.max = bigInt.max;
+        
+        Arithmetic.num = function( a ){ return bigInt( a ); };
+    }( Abacus, bigInt );
+    
+    var undef=undefined, $window = $(window), $screen = $('#screen'),
+        output = document.getElementById('output'), out,
+        appModel, appView, appRouter, width = output.clientWidth, height, toJSON = JSON.stringify,
+        MAXITEMS = 100000
+    ;
+    
+    $MV.jquery( $ );
+    
+    height = output.clientHeight;
+    out = CodeMirror.fromTextArea(output, {
+        mode: "text",
+        lineWrapping: true,
+        lineNumbers : true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        theme: 'lesser-dark',
+        foldGutter: true,
+        gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+    });
+    out.setSize( width, height );
+    
+    function produce( model )
+    {
+        var comb = null, N = model.get('N')|0, K = model.get('K')|0,
+            object = model.get('object'), type = model.get('type'), order = model.get('order');
+        
+        if ( "tuple" === object )
+        {
+            comb = Abacus.Tensor([K, N], {order:order,type:"tuple"});
+        }
+        else if ( "permutation" === object )
+        {
+            comb = Abacus.Permutation(N, {order:order,type:"derangement"===type?"derangement":"permutation"});
+        }
+        else if ( "combination" === object )
+        {
+            comb = Abacus.Combination([N, K], {order:order,type:"ordered"===type?"ordered":("repeated"===type?"repeated":("ordered_repeated"===type?"ordered+repeated":"unordered"))});
+        }
+        else if ( "subset" === object )
+        {
+            comb = Abacus.Subset(N, {order:order});
+        }
+        else if ( "partition" === object )
+        {
+            comb = Abacus.Partition(N, {order:order});
+        }
+        if ( !comb )
+        {
+            model.set('summary', '', true);
+            out.setValue('');
+            return;
+        }
+        
+        var count = 0, output = "";
+        model.set('summary', (
+        "Abacus."+comb.name+"("+(comb.n.join?comb.n.join(','):comb.n)+",{order:\""+order+"\",type:\""+comb.$.type+"\"})" +
+        "       total = " + String(comb.total())+" (max "+MAXITEMS+" shown)"
+        ), true);
+        while((count<MAXITEMS) && comb.hasNext())
+        {
+            if ( 0 < count ) output += "\n";
+            output += comb.next().join(',');
+            count++;
+        }
+        out.setValue(output);
+    }
+    
+    appRouter = new $R( );
+    appRouter.one({route:'#{%ALL%:hash}', handler:function( params ){
+        params = params.data;
+        params = params && params.hash ? appRouter.unglue( params.hash ) : null;
+        if ( params && ("produce"===params.action) )
+        {
+            var model = $screen.modelview('model');
+            model.set('object', params.object, true);
+            model.set('type', params.type, true);
+            model.set('order', params.order, true);
+            model.set('N', params.N, true);
+            model.set('K', params.K, true);
+            produce( model );
+        }
+    }});
+    
+    $screen.modelview({
+        autobind: true
+        ,livebind: '$(__KEY__)'
+        ,bindAttribute: 'data-bind'
+        
+        ,model: {
+            id: 'model'
+            ,data: { 
+                abacus_version: 'v.'+Abacus.VERSION,
+                summary: "",
+                object: 'permutation',
+                type: 'permutation',
+                order: 'lex',
+                N: 2,
+                K: 1
+            }
+            ,types: {
+                N: $MV.Type.Cast.INT,
+                K: $MV.Type.Cast.INT
+            }
+        }
+        ,actions: { 
+            produce: function(evt, $el, data) {
+                var model = this.$model,
+                    data = {
+                        action: 'produce',
+                        object: model.get('object'),
+                        type: model.get('type'),
+                        order: model.get('order'),
+                        N: model.get('N'),
+                        K: model.get('K')
+                    };
+                location.hash = '#' + appRouter.glue(data);
+                produce( model );
+            }
+        }
+    });
+        
+    $window
+        .on('resize', function( evt ) {
+            var v = output.style.visibility,
+                d = output.style.display;
+            output.style.visibility = 'hidden';
+            output.style.display = 'block';
+            width = output.clientWidth; 
+            height = output.clientHeight;
+            output.style.display = d;
+            output.style.visibility = v;
+            out.setSize( width, height );
+        })
+        .one('hashchange', function( evt ) {
+            appRouter.route( location.hash );
+        })
+        .trigger( 'hashchange' )
+    ;
+});
+//]]></script>
+
+</body>
+</html>

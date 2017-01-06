@@ -7,6 +7,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     ,Snippets: "snippets"
     ,AreaSelect: "areaselect.min"
     ,utils: "utils.min"
+    ,BigInteger: "BigInteger"
     ,jQuery: "jquery"
     ,jQueryUI: "jquery-ui-1.10.4.custom.min"
     ,lodash: "lodash.min"
@@ -14,6 +15,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     ,Benchmark: "benchmark.min"
     ,Classy: "classy.min"
     ,Asynchronous: "asynchronous.min"
+    ,Abacus: "Abacus.min"
     ,RT: "RT.min"
     ,XRegExp: "xregexp"
     ,Regex: "Regex.min"
@@ -73,6 +75,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     }
     ,Stats: { exports: 'Stats' }
     ,DatGUI: { exports: 'DAT' }
+    ,BigInteger: { exports: 'bigInt' }
     ,Parallel: { exports: 'Parallel' }
     ,CodeMirror: { exports: 'CodeMirror' }
     ,Prism: { exports: 'Prism' }
