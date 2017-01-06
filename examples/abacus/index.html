@@ -156,6 +156,9 @@ div.sepa {
         <option value="ordered">Ordered (Combination)</option>
         <option value="repeated">Unordered+Repeated (Combination)</option>
         <option value="ordered_repeated">Ordered+Repeated (Combination)</option>
+        <option value="subset_binary">Binary (Subset)</option>
+        <option value="partition_max">Fixed Maximum Value (Partition)</option>
+        <option value="partition_parts">Fixed Parts (Partition)</option>
         </select>
         <label for="order">Order:</label><select id="order" name="model[order]">
         <option value="lex">Lexicographic</option>
@@ -281,11 +284,16 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         }
         else if ( "subset" === object )
         {
-            comb = Abacus.Subset(N, {order:order});
+            comb = Abacus.Subset(N, {order:order,type:"subset_binary"===type?"binary":"subset"});
         }
         else if ( "partition" === object )
         {
-            comb = Abacus.Partition(N, {order:order});
+            if ( "partition_max" === type )
+                comb = Abacus.Partition(N, {order:order,"max=":K});
+            else if ( "partition_parts" === type )
+                comb = Abacus.Partition(N, {order:order,"parts=":K});
+            else
+                comb = Abacus.Partition(N, {order:order});
         }
         if ( !comb )
         {
