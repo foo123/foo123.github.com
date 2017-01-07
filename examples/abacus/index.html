@@ -439,111 +439,123 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     function produce( model )
     {
         var comb = null, sep = ',', N = model.get('N')|0, K = model.get('K'),
-            object = model.get('object'), type = model.get('type'), order = model.get('order');
+            object = model.get('object'), type = model.get('type'), order = model.get('order'),
+            $ = {order:order}, $$, n, nn, klass = null;
         
         if ( "tuple" === object )
         {
-            comb = Abacus.Tensor([+K, N], {order:order,type:"tuple"});
+            klass = "Tensor";
+            n = [+K, N];
+            $.type = "tuple";
         }
         else if ( "permutation" === object )
         {
+            klass = "Permutation";
+            n = N;
             if ( "cyclic"===type )
             {
-                type = 'cyclic';
+                $.type = "cyclic";
             }
             else if ( "multiset"===type )
             {
-                type = 'multiset';
-                K = String(K).split(',').map(Number);
+                $.type = "multiset";
+                $.multiplicity = String(K).split(',').map(Number);
             }
             else if ( "derangement"===type )
             {
-                type = 'derangement';
+                $.type = "derangement";
             }
             else
             {
-                type = 'permutation';
+                $.type = "permutation";
             }
-            comb = Abacus.Permutation(N, {order:order,type:type,multiplicity:K});
         }
         else if ( "combination" === object )
         {
+            klass = "Combination";
+            n = [N, +K];
             if ( "ordered"===type )
             {
-                type = 'ordered';
+                $.type = "ordered";
             }
             else if ( "repeated"===type )
             {
-                type = 'repeated';
+                $.type = "repeated";
             }
             else if ( "ordered_repeated"===type )
             {
-                type = 'ordered+repeated';
+                $.type = "ordered+repeated";
             }
             else if ( "unordered_binary"===type )
             {
                 sep = '';
-                type = 'binary';
+                $.type = "binary";
             }
             else
             {
-                type = 'unordered';
+                $.type = "unordered";
             }
-            comb = Abacus.Combination([N, +K], {order:order,type:type});
         }
         else if ( "subset" === object )
         {
+            klass = "Subset";
+            n = N;
             if ( "subset_binary"===type )
             {
                 sep = '';
-                type = 'binary';
+                $.type = "binary";
             }
             else
             {
-                type = 'subset';
+                $.type = "subset";
             }
-            comb = Abacus.Subset(N, {order:order,type:type});
         }
         else if ( "partition" === object )
         {
+            klass = "Partition";
+            n = N;
             if ( "partition_max" === type )
-                comb = Abacus.Partition(N, {order:order,"max=":+K});
+                $["max="] = +K;
             else if ( "partition_parts" === type )
-                comb = Abacus.Partition(N, {order:order,"parts=":+K});
-            else
-                comb = Abacus.Partition(N, {order:order});
+                $["parts="] = +K;
         }
         
         out.setValue('');
         
-        if ( !comb )
+        if ( !klass )
         {
             model.set('summary', '', true);
             return;
         }
         
-        var count = 0, chunk = 1000;
+        nn = n.join?n.join(','):String(n); $$ = toJSON($);
         
         $screen.addClass('ui-delayed').removeClass('ui-undelayed');
         
-        model.set('summary', (
-        "Abacus."+comb.name+"("+(comb.n.join?comb.n.join(','):comb.n)+",{order:\""+order+"\",type:\""+comb.$.type+"\"})" +
-        "       total = " + String(comb.total())+" (max "+MAXITEMS+" shown)"
-        ), true);
+        var count = 0, chunk = 1000;
         
-        setTimeout(function next(){
-            var cnt = 0, output="";
-            while( (cnt<chunk) && (count<MAXITEMS) && comb.hasNext() )
-            {
-                if ( 0 < count ) output += "\n";
-                output += comb.next().join(sep);
-                count++; cnt++;
-            }
-            out.setValue(out.getValue()+output);
-            if ( (count<MAXITEMS) && comb.hasNext() ) setTimeout(next, 160);
-            else $screen.addClass('ui-undelayed').removeClass('ui-delayed');
-        }, 100);
-        
+        setTimeout(function(){
+            comb = Abacus[klass](n, $);
+            
+            model.set('summary', (
+            "Abacus."+klass+"("+nn+","+$$+")" +
+            "       total = " + String(comb.total())+" (max "+MAXITEMS+" shown)"
+            ), true);
+            
+            setTimeout(function next(){
+                var cnt = 0, output="";
+                while( (cnt<chunk) && (count<MAXITEMS) && comb.hasNext() )
+                {
+                    if ( 0 < count ) output += "\n";
+                    output += comb.next().join(sep);
+                    count++; cnt++;
+                }
+                out.setValue(out.getValue()+output);
+                
+                if ( (count<MAXITEMS) && comb.hasNext() ) setTimeout(next, 160);
+                else $screen.addClass('ui-undelayed').removeClass('ui-delayed');
+            }, 100);
+        }, 60);
     }
     
     appRouter = new $R( );
