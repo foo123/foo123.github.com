@@ -284,7 +284,7 @@ div.sepa {
 
 </head>
 <body class="responsive-864-container">
-    <span id="forkongithub"><a href="https://github.com/foo123/Abacus">Permute me on GitHub</a></span>
+    <span id="forkongithub"><a href="https://github.com/foo123/Abacus">Count me on GitHub</a></span>
     
     
 <header id="header">
@@ -307,6 +307,7 @@ div.sepa {
         <option value="combination">Combination</option>
         <option value="subset">Subset</option>
         <option value="partition">Partition</option>
+        <option value="composition">Composition (TO BE ADDED)</option>
         </select>
         </div>
         <div style="display:inline-block;margin-bottom:10px">
@@ -315,6 +316,7 @@ div.sepa {
         <option value="cyclic" data-bind='{"show":"object.permutation"}'>Cyclic Shift</option>
         <option value="multiset" data-bind='{"show":"object.permutation"}'>Multiset</option>
         <option value="derangement" data-bind='{"show":"object.permutation"}'>Derangement</option>
+        <option value="k-permutation" data-bind='{"show":"object.permutation"}'>k-Permutation</option>
         <option value="unordered_binary" data-bind='{"show":"object.combination"}'>Binary (Unordered)</option>
         <option value="ordered" data-bind='{"show":"object.combination"}'>Ordered</option>
         <option value="repeated" data-bind='{"show":"object.combination"}'>Unordered+Repeated</option>
@@ -327,13 +329,13 @@ div.sepa {
         <div style="display:inline-block;margin-bottom:10px">
         <label for="order">Order:</label><select id="order" name="model[order]">
         <option value="lex">Lexicographic</option>
-        <option value="colex">Co-Lexicographic</option>
+        <option value="colex">CoLexicographic</option>
+        <option value="lex,reversed">Reverse Lexicographic</option>
+        <option value="colex,reversed">Reverse CoLexicographic</option>
+        <option value="lex,reflected">Reflected Lexicographic</option>
+        <option value="colex,reflected">Reflected CoLexicographic</option>
         <option value="random">Random</option>
-        <option value="lex,reflected">Lexicographic Reflected</option>
-        <option value="colex,reflected">Co-Lexicographic Reflected</option>
         <option value="random,reflected">Random Reflected</option>
-        <option value="lex,reversed">Lexicographic Reversed</option>
-        <option value="colex,reversed">Co-Lexicographic Reversed</option>
         </select>
         </div>
         <div class="sepa"></div>
@@ -416,7 +418,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     var undef=undefined, $window = $(window), $screen = $('#screen'),
         output = document.getElementById('output'), out,
         appModel, appView, appRouter, width = output.clientWidth, height, toJSON = JSON.stringify,
-        MAXITEMS = 10000
+        MAXITEMS = 100000
     ;
     
     $MV.jquery( $ );
@@ -462,6 +464,12 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             else if ( "derangement"===type )
             {
                 $.type = "derangement";
+            }
+            else if ( "k-permutation"===type )
+            {
+                klass = "Combination";
+                $.type = "ordered";
+                n = [N, +K];
             }
             else
             {
@@ -517,6 +525,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             else if ( "partition_parts" === type )
                 $["parts="] = +K;
         }
+        else if ( "composition" === object )
+        {
+            // to be added, next update
+        }
         
         out.setValue('');
         
@@ -533,7 +545,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         var count = 0, chunk = 1000;
         
         setTimeout(function(){
-            comb = Abacus[klass](n, $);
+            comb = new Abacus[klass](n, $);
             
             model.set('summary', (
             "Abacus."+klass+"("+nn+","+$$+")" +
@@ -550,10 +562,21 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 }
                 out.setValue(out.getValue()+output);
                 
-                if ( (count<MAXITEMS) && comb.hasNext() ) setTimeout(next, 160);
-                else $screen.addClass('ui-undelayed').removeClass('ui-delayed');
+                if ( (count<MAXITEMS) && comb.hasNext() )
+                {
+                    setTimeout(next, 100);
+                }
+                else
+                {
+                    if ( comb )
+                    {
+                        comb.dispose();
+                        comb = null;
+                    }
+                    $screen.addClass('ui-undelayed').removeClass('ui-delayed');
+                }
             }, 100);
-        }, 60);
+        }, 10);
     }
     
     appRouter = new $R( );
@@ -600,12 +623,16 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             ,getters: {
                 "object.default": function(){
                     var obj = this.$data.object;
+                    if ( "tuple" === obj ) return "Tuple";
                     if ( "permutation" === obj ) return "Permutation";
                     if ( "combination" === obj ) return "Unordered";
-                    if ( "tuple" === obj ) return "Tuple";
                     if ( "subset" === obj ) return "Subset";
                     if ( "partition" === obj ) return "Unrestricted";
+                    if ( "composition" === obj ) return "Unrestricted";
                     return "Default";
+                },
+                "object.tuple": function(){
+                    return this.$data.object === "tuple";
                 },
                 "object.permutation": function(){
                     return this.$data.object === "permutation";
@@ -619,16 +646,12 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 "object.partition": function(){
                     return this.$data.object === "partition";
                 },
-                "object.tuple": function(){
-                    return this.$data.object === "tuple";
+                "object.composition": function(){
+                    return this.$data.object === "composition";
                 },
                 "hasK": function(){
                     var obj = this.$data.object, type = this.$data.type;
-                    if ( "combination" === obj || "tuple" === obj ) return true;
-                    if ( "permutation" === obj && "multiset" === type ) return true;
-                    if ( "partition" === obj && "partition_max" === type ) return true;
-                    if ( "partition" === obj && "partition_parts" === type ) return true;
-                    return false;
+                    return ("combination"===obj || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type)) || ("partition"===obj && ("partition_max"===type||"partition_parts"===type));
                 },
                 "labelK": function(){
                     var obj = this.$data.object, type = this.$data.type;
