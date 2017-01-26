@@ -302,12 +302,13 @@ div.sepa {
         <div class="sepa"></div>
         <div style="display:inline-block;margin-bottom:10px">
         <label style="text-"for="object">Type:</label><select id="object" name="model[object]">
+        <option value="tensor">Tensor</option>
         <option value="tuple">Tuple</option>
         <option value="permutation">Permutation</option>
         <option value="combination">Combination</option>
         <option value="subset">Subset</option>
         <option value="partition">Partition</option>
-        <option value="composition">Composition (TO BE ADDED)</option>
+        <option value="composition">Composition</option>
         </select>
         </div>
         <div style="display:inline-block;margin-bottom:10px">
@@ -317,30 +318,33 @@ div.sepa {
         <option value="multiset" data-bind='{"show":"object.permutation"}'>Multiset</option>
         <option value="derangement" data-bind='{"show":"object.permutation"}'>Derangement</option>
         <option value="k-permutation" data-bind='{"show":"object.permutation"}'>k-Permutation</option>
-        <option value="unordered_binary" data-bind='{"show":"object.combination"}'>Binary (Unordered)</option>
+        <option value="unordered_binary" data-bind='{"show":"object.combination"}'>Unordered (Binary)</option>
         <option value="ordered" data-bind='{"show":"object.combination"}'>Ordered</option>
         <option value="repeated" data-bind='{"show":"object.combination"}'>Unordered+Repeated</option>
         <option value="ordered_repeated" data-bind='{"show":"object.combination"}'>Ordered+Repeated</option>
-        <option value="subset_binary" data-bind='{"show":"object.subset"}'>Binary (Subset)</option>
-        <option value="partition_max" data-bind='{"show":"object.partition"}'>Fixed Maximum Part</option>
-        <option value="partition_parts" data-bind='{"show":"object.partition"}'>Fixed Number of Parts</option>
+        <option value="subset_binary" data-bind='{"show":"object.subset"}'>Subset (Binary)</option>
+        <option value="partition_max" data-bind='{"show":"object.partition"}'>Maximum Part = M</option>
+        <option value="partition_parts" data-bind='{"show":"object.partition"}'>Number of Parts = K</option>
+        <option value="composition_max" data-bind='{"show":"object.composition"}'>Maximum Part = M</option>
+        <option value="composition_parts" data-bind='{"show":"object.composition"}'>Number of Parts = K</option>
         </select>
         </div>
         <div style="display:inline-block;margin-bottom:10px">
         <label for="order">Order:</label><select id="order" name="model[order]">
-        <option value="lex">Lexicographic</option>
-        <option value="colex">CoLexicographic</option>
-        <option value="lex,reversed">Reverse Lexicographic</option>
-        <option value="colex,reversed">Reverse CoLexicographic</option>
-        <option value="lex,reflected">Reflected Lexicographic</option>
-        <option value="colex,reflected">Reflected CoLexicographic</option>
-        <option value="random">Random</option>
-        <option value="random,reflected">Random Reflected</option>
+        <option value="lex" data-bind='{"show":"haslex"}'>Lexicographic</option>
+        <option value="colex" data-bind='{"show":"hascolex"}'>CoLexicographic</option>
+        <option value="lex,reversed" data-bind='{"show":"haslex"}'>Reverse Lexicographic</option>
+        <option value="colex,reversed" data-bind='{"show":"hascolex"}'>Reverse CoLexicographic</option>
+        <option value="lex,reflected" data-bind='{"show":"haslex"}'>Reflected Lexicographic</option>
+        <option value="colex,reflected" data-bind='{"show":"hascolex"}'>Reflected CoLexicographic</option>
+        <option value="random" data-bind='{"show":"hasrand"}'>Random</option>
+        <option value="random,reflected" data-bind='{"show":"hasrand"}'>Random Reflected</option>
         </select>
         </div>
         <div class="sepa"></div>
+        <div style="display:inline-block" data-bind='{"show":"hasN"}'>
         <label for="N">N =</label><input id="N"  name="model[N]" size="5" type="text" value="1" />
-        <div style="display:inline-block" data-bind='{"show":"hasK"}'>
+        </div><div style="display:inline-block" data-bind='{"show":"hasK"}'>
         <label for="K">$(labelK)</label><input id="K"  name="model[K]" size="8" type="text" value="1" />
         </div>
     </div>
@@ -442,7 +446,12 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             object = model.get('object'), type = model.get('type'), order = model.get('order'),
             $ = {order:order}, $$, n, nn, klass = null;
         
-        if ( "tuple" === object )
+        if ( "tensor" === object )
+        {
+            klass = "Tensor";
+            n = String(K).split(',').map(Number);
+        }
+        else if ( "tuple" === object )
         {
             klass = "Tensor";
             n = [+K, N];
@@ -527,7 +536,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         }
         else if ( "composition" === object )
         {
-            // to be added, next update
+            klass = "Partition";
+            n = N;
+            $.type = "composition";
+            if ( "composition_parts" === type )
+                $["parts="] = +K;
+            else if ( "composition_max" === type )
+                $["max="] = +K;
         }
         
         out.setValue('');
@@ -618,11 +633,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 "object": function( key, val/*, pub*/ ){
                     this.$data.object = val;
                     this.set("type","default", true);
+                    this.set("order", "lex", true);
                 }
             }
             ,getters: {
                 "object.default": function(){
                     var obj = this.$data.object;
+                    if ( "tensor" === obj ) return "Tensor";
                     if ( "tuple" === obj ) return "Tuple";
                     if ( "permutation" === obj ) return "Permutation";
                     if ( "combination" === obj ) return "Unordered";
@@ -630,6 +647,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     if ( "partition" === obj ) return "Unrestricted";
                     if ( "composition" === obj ) return "Unrestricted";
                     return "Default";
+                },
+                "object.tensor": function(){
+                    return this.$data.object === "tensor";
                 },
                 "object.tuple": function(){
                     return this.$data.object === "tuple";
@@ -649,22 +669,42 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 "object.composition": function(){
                     return this.$data.object === "composition";
                 },
+                "haslex": function(){
+                    return true;
+                },
+                "hascolex": function(){
+                    return "composition"!==this.$data.object && "partition"!==this.$data.object;
+                },
+                "hasrand": function(){
+                    return true;
+                },
+                "hasN": function(){
+                    return "tensor"!==this.$data.object;
+                },
                 "hasK": function(){
                     var obj = this.$data.object, type = this.$data.type;
-                    return ("combination"===obj || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type)) || ("partition"===obj && ("partition_max"===type||"partition_parts"===type));
+                    return ("combination"===obj || "tensor"===obj || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type)) || ("partition"===obj && ("partition_max"===type||"partition_parts"===type)) || ("composition"===obj && ("composition_max"===type||"composition_parts"===type));
                 },
                 "labelK": function(){
                     var obj = this.$data.object, type = this.$data.type;
+                    if ( "tensor" === obj ) return "Dimensions(.. , ..) = ";
                     if ( "permutation" === obj && "multiset" === type ) return "Multiplicities(.. , ..) = ";
                     if ( "partition" === obj && "partition_max" === type ) return "Max = ";
                     if ( "partition" === obj && "partition_parts" === type ) return "Parts = ";
+                    if ( "composition" === obj && "composition_max" === type ) return "Max = ";
+                    if ( "composition" === obj && "composition_parts" === type ) return "Parts = ";
                     return "K =";
                 }
             },
             dependencies: {
                 //"default": ["object"],
+                //"default_order": ["object","type"],
+                "hasN": ["object"],
                 "hasK": ["object","type"],
-                "labelK": ["object","type"]
+                "labelK": ["object","type"],
+                "haslex": ["object","type"],
+                "hascolex": ["object","type"],
+                "hasrand": ["object","type"]
             }
         }
         ,actions: { 
