@@ -318,6 +318,8 @@ div.sepa {
         <option value="multiset" data-bind='{"show":"object.permutation"}'>Multiset</option>
         <option value="derangement" data-bind='{"show":"object.permutation"}'>Derangement</option>
         <option value="k-permutation" data-bind='{"show":"object.permutation"}'>k-Permutation</option>
+        <option value="involution" data-bind='{"show":"object.permutation"}'>Involution</option>
+        <option value="connected" data-bind='{"show":"object.permutation"}'>Connected</option>
         <option value="unordered_binary" data-bind='{"show":"object.combination"}'>Unordered (Binary)</option>
         <option value="ordered" data-bind='{"show":"object.combination"}'>Ordered</option>
         <option value="repeated" data-bind='{"show":"object.combination"}'>Unordered+Repeated</option>
@@ -473,6 +475,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             else if ( "derangement"===type )
             {
                 $.type = "derangement";
+            }
+            else if ( "involution"===type )
+            {
+                $.type = "involution";
+            }
+            else if ( "connected"===type )
+            {
+                $.type = "connected";
             }
             else if ( "k-permutation"===type )
             {
@@ -673,7 +683,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     return true;
                 },
                 "hascolex": function(){
-                    return "composition"!==this.$data.object && "partition"!==this.$data.object;
+                    return true; //"composition"!==this.$data.object && "partition"!==this.$data.object;
                 },
                 "hasrand": function(){
                     return true;
