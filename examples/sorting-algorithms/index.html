@@ -28,6 +28,9 @@ body {
     color:#aaa;
     position:relative;
 }
+input,select,textarea {
+    color: #121212;
+}
 .showcase {
     margin:5px 2px;
     color:white;
@@ -167,6 +170,7 @@ body {
             <option value="InsertionSort">InsertionSort</option>
             <option value="CycleSort">CycleSort</option>
             <option value="LibrarySort">LibrarySort</option>
+            <option value="TreeSort">TreeSort</option>
             <option value="RecursiveMergeSort">RecursiveMergeSort</option>
             <option value="MergeSort">MergeSort</option>
             <option value="RecursiveQuickSort">RecursiveQuickSort</option>
@@ -304,10 +308,10 @@ require([/*'Benchmark',*/ 'jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Sort'
     $MV.jquery( $ );
     
     // some extra array methods used in the tests
-    Array.prototype.nsort = function() { return this.sort($S.utils.asNumbers); }
-    Array.prototype.shuffle = function() { return $S.Shuffle(this); }
-    Array.prototype.isSorted = function() { return $S.isSorted(this, true); }
-    Array.prototype.toString = function() { return '[ ' + this.join(', ') + ' ]'; }
+    Array.prototype.nsort = function( ){ this.sort($S.utils.asNumbers); return this; };
+    Array.prototype.shuffle = function( ){ return $S.Shuffle(this); };
+    Array.prototype.isSorted = function( desc ){ return $S.isSorted(this, true===desc); };
+    Array.prototype.toString = function( ){ return '[ ' + this.join(', ') + ' ]'; };
         
     // prepare test data
     function prepareTestData($S, N, dtype, stype)
