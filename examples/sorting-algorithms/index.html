@@ -159,6 +159,7 @@ input,select,textarea {
     
 <section id="panel" class="fluid col-1-1" style="padding: 20px;">
 <div id="controls" class="fluid col-1-4">
+    <strong>Sort.js ($(sort_version))</strong><br />
     <strong>Select Sorting Algorithm: </strong><br />
     <div class="cont"><select name="model[algorithm][selected]">
         <optgroup label="Comparison-based:">
@@ -173,8 +174,10 @@ input,select,textarea {
             <option value="TreeSort">TreeSort</option>
             <option value="RecursiveMergeSort">RecursiveMergeSort</option>
             <option value="MergeSort">MergeSort</option>
+            <option value="NaturalMergeSort">NaturalMergeSort</option>
             <option value="RecursiveQuickSort">RecursiveQuickSort</option>
             <option value="QuickSort">QuickSort</option>
+            <option value="IntroSort">IntroSort</option>
         </optgroup>
         <optgroup label="Arithmetic-based:">
             <option value="PermutationSort (custom)">PermutationSort (custom)</option>
@@ -546,14 +549,15 @@ require([/*'Benchmark',*/ 'jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Sort'
             id: 'model',
             
             data: {
+                sort_version: 'v.'+$S.VERSION,
                 algorithm: {
                     selected: 'BuiltinSort',
                     data_size: 5,
                     data_type: 'range',
                     pre_sort_state: 'shuffled',
-                    name: '',
-                    reflink: '#',
-                    desc: ''
+                    name: 'BuiltinSort',
+                    reflink: $S.BuiltinSort.reference,
+                    desc: $S.BuiltinSort.description
                 },
                 result: {
                     showData: false,
