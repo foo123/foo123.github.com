@@ -345,7 +345,7 @@ div.sepa {
         </div>
         <div class="sepa"></div>
         <div style="display:inline-block" data-bind='{"show":"hasN"}'>
-        <label for="N">N =</label><input id="N"  name="model[N]" size="5" type="text" value="1" />
+        <label for="N">$(labelN)</label><input id="N"  name="model[N]" size="5" type="text" value="1" />
         </div><div style="display:inline-block" data-bind='{"show":"hasK"}'>
         <label for="K">$(labelK)</label><input id="K"  name="model[K]" size="8" type="text" value="1" />
         </div>
@@ -456,7 +456,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         else if ( "tuple" === object )
         {
             klass = "Tensor";
-            n = [+K, N];
+            n = [N, +K];
             $.type = "tuple";
         }
         else if ( "permutation" === object )
@@ -695,8 +695,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     var obj = this.$data.object, type = this.$data.type;
                     return ("combination"===obj || "tensor"===obj || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type)) || ("partition"===obj && ("partition_max"===type||"partition_parts"===type)) || ("composition"===obj && ("composition_max"===type||"composition_parts"===type));
                 },
+                "labelN": function(){
+                    var obj = this.$data.object, type = this.$data.type;
+                    if ( "tuple" === obj ) return "Dimension = ";
+                    return "N =";
+                },
                 "labelK": function(){
                     var obj = this.$data.object, type = this.$data.type;
+                    if ( "tuple" === obj ) return "Base = ";
                     if ( "tensor" === obj ) return "Dimensions(.. , ..) = ";
                     if ( "permutation" === obj && "multiset" === type ) return "Multiplicities(.. , ..) = ";
                     if ( "partition" === obj && "partition_max" === type ) return "Max = ";
@@ -711,6 +717,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 //"default_order": ["object","type"],
                 "hasN": ["object"],
                 "hasK": ["object","type"],
+                "labelN": ["object","type"],
                 "labelK": ["object","type"],
                 "haslex": ["object","type"],
                 "hascolex": ["object","type"],
