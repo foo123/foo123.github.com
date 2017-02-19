@@ -318,6 +318,7 @@ div.sepa {
         <option value="multiset" data-bind='{"show":"object.permutation"}'>Multiset</option>
         <option value="derangement" data-bind='{"show":"object.permutation"}'>Derangement</option>
         <option value="k-permutation" data-bind='{"show":"object.permutation"}'>k-Permutation</option>
+        <option value="k-derangement" data-bind='{"show":"object.permutation"}'>k-Derangement</option>
         <option value="involution" data-bind='{"show":"object.permutation"}'>Involution</option>
         <option value="connected" data-bind='{"show":"object.permutation"}'>Connected</option>
         <option value="unordered_binary" data-bind='{"show":"object.combination"}'>Unordered (Binary)</option>
@@ -424,7 +425,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     var undef=undefined, $window = $(window), $screen = $('#screen'),
         output = document.getElementById('output'), out,
         appModel, appView, appRouter, width = output.clientWidth, height, toJSON = JSON.stringify,
-        MAXITEMS = 100000
+        MAXITEMS = 100000, sub_re = /"sub":"(.+)"/, quot_re = /\\"/g
     ;
     
     $MV.jquery( $ );
@@ -446,7 +447,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     {
         var comb = null, sep = ',', N = model.get('N')|0, K = model.get('K'),
             object = model.get('object'), type = model.get('type'), order = model.get('order'),
-            $ = {order:order}, $$, n, nn, klass = null;
+            $ = {order:order}, $$, n, nn, klass = null, subklass = null, sub$ = null, subn = null;
         
         if ( "tensor" === object )
         {
@@ -489,6 +490,16 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 klass = "Combination";
                 $.type = "ordered";
                 n = [N, +K];
+            }
+            else if ( "k-derangement"===type )
+            {
+                klass = "Combination";
+                n = [N, +K];
+                $.type = "unordered";
+                $.submethod = "combine";
+                subklass = "Permutation";
+                sub$ = {order:order,type:"derangement"};
+                subn = N-(+K);
             }
             else
             {
@@ -563,13 +574,24 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             return;
         }
         
+        if ( subklass )
+        {
+            $.sub = "Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+")";
+        }
         nn = n.join?n.join(','):String(n); $$ = toJSON($);
+        if ( subklass )
+        {
+            $$ = $$.replace(sub_re, function(m, g){
+                return '"sub":'+g.split("\\\"").join("\"");
+            });
+        }
         
         $screen.addClass('ui-delayed').removeClass('ui-undelayed');
         
         var count = 0, chunk = 1000;
         
         setTimeout(function(){
+            if ( subklass ) $.sub = new Abacus[subklass](subn, sub$);
             comb = new Abacus[klass](n, $);
             
             model.set('summary', (
@@ -693,7 +715,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 },
                 "hasK": function(){
                     var obj = this.$data.object, type = this.$data.type;
-                    return ("combination"===obj || "tensor"===obj || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type)) || ("partition"===obj && ("partition_max"===type||"partition_parts"===type)) || ("composition"===obj && ("composition_max"===type||"composition_parts"===type));
+                    return ("combination"===obj || "tensor"===obj || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type || "k-derangement"===type)) || ("partition"===obj && ("partition_max"===type||"partition_parts"===type)) || ("composition"===obj && ("composition_max"===type||"composition_parts"===type));
                 },
                 "labelN": function(){
                     var obj = this.$data.object, type = this.$data.type;
@@ -705,10 +727,11 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     if ( "tuple" === obj ) return "Base = ";
                     if ( "tensor" === obj ) return "Dimensions(.. , ..) = ";
                     if ( "permutation" === obj && "multiset" === type ) return "Multiplicities(.. , ..) = ";
+                    if ( "permutation" === obj && "k-derangement" === type ) return "#Fixed = ";
                     if ( "partition" === obj && "partition_max" === type ) return "Max = ";
-                    if ( "partition" === obj && "partition_parts" === type ) return "Parts = ";
+                    if ( "partition" === obj && "partition_parts" === type ) return "#Parts = ";
                     if ( "composition" === obj && "composition_max" === type ) return "Max = ";
-                    if ( "composition" === obj && "composition_parts" === type ) return "Parts = ";
+                    if ( "composition" === obj && "composition_parts" === type ) return "#Parts = ";
                     return "K =";
                 }
             },
