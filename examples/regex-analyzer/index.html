@@ -128,8 +128,8 @@
     <div class="fluid col-1-1">
         <strong>Regular Expression ($(regex_version)):</strong>
         <br />(wrap the expression in <code>/../[flags]</code> and optionaly add flags)
-        &nbsp;&nbsp;<input type="button" class="button" id="analyze" data-bind='{"click":"analyze"}' value="Syntax Tree" />
-        &nbsp;&nbsp;<input type="button" class="button" id="statistics" data-bind='{"click":"statistics"}' value="Statistics" />
+        &nbsp;&nbsp;<button class="button" id="analyze" data-bind='{"click":"analyze"}'>Syntax Tree</button>
+        &nbsp;&nbsp;<button class="button" id="statistics" data-bind='{"click":"statistics"}'>Statistics</button>&nbsp;&nbsp;<a href="../regex-composer/#$(regex_ast)" target="_blank" class="button" id="compose">Compose</a>
         <br />
         <textarea id="regex">/[abc]+/i</textarea>
     </div>
@@ -155,7 +155,6 @@
     <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
     </footer>
     <br /><br />
-    
     
 <script type="text/javascript">//<![CDATA[
 require(['jQuery', 'Dromeo', 'ModelView', 'Regex'],
@@ -202,11 +201,18 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Regex'],
         gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     code.setSize( width, height );
-        
+    
     appTask = {
         analyze: function( input ) {
             if ( ('/' !== input.charAt(0)) && ('/' !== input.charAt(input.length-1)) ) input = '/'+input+'/';
             analyzer.input( input ).analyze( );
+            
+            var ast = analyzer.tree(true), fl = Object.keys( analyzer.fl ).join(',');
+            appModel.set('regex_ast', appRouter.glue({
+                action: 'compose',
+                ast: toJSON(ast),
+                fl: fl
+            }), true);
             
             code.setValue([
             "/*******************************************"
@@ -217,7 +223,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Regex'],
             ,""
             ,"// Input                            : " + input
             ,"// Regular Expression               : " + analyzer.input()
-            ,"// Regular Expression Flags         : " + Object.keys( analyzer.fl ).join(',')
+            ,"// Regular Expression Flags         : " + fl
             ,"// Reconstructed Regular Expression : " + analyzer.source()
             ,""
             ,"/*******************************************/"
@@ -226,7 +232,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Regex'],
             ,"** Regular Expression Syntax Tree **"
             ,"*******************************************/"
             ,""
-            ,toJSON( analyzer.tree(true), null, 4 )
+            ,toJSON( ast, null, 4 )
             ,"/*******************************************"
             ,"** Regular Expression (Named) Matched Groups **"
             ,"*******************************************/"
@@ -240,6 +246,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Regex'],
             
             if ( ('/' !== input.charAt(0)) && ('/' !== input.charAt(input.length-1)) ) input = '/'+input+'/';
             analyzer.input( input ).analyze( );
+            
+            var ast = analyzer.tree(true), fl = Object.keys( analyzer.fl ).join(',');
+            appModel.set('regex_ast', appRouter.glue({
+                action: 'compose',
+                ast: toJSON(ast),
+                fl: fl
+            }), true);
             
             peek = analyzer.peek( );
             min = analyzer.minimum( );
@@ -267,7 +280,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Regex'],
             ,""
             ,"// Input                            : " + input
             ,"// Regular Expression               : " + analyzer.input()
-            ,"// Regular Expression Flags         : " + Object.keys( analyzer.fl ).join(',')
+            ,"// Regular Expression Flags         : " + fl
             ,"// Reconstructed Regular Expression : " + analyzer.source()
             ,""
             ,"/*******************************************/"
@@ -341,7 +354,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Regex'],
         ,model: {
             id: 'model'
             ,data: { 
-                regex_version: 'v.'+Regex.VERSION
+                regex_version: 'v.'+Regex.VERSION,
+                regex_ast: ''
                 //regex: "/[abc]+/gi"
             }
             ,types: { 
@@ -386,6 +400,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Regex'],
             }
         }
     });
+    appModel = $screen.modelview('model');
         
     $window
         .on('resize', function( evt ) {
