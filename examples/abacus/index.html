@@ -425,7 +425,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     var undef=undefined, $window = $(window), $screen = $('#screen'),
         output = document.getElementById('output'), out,
         appModel, appView, appRouter, width = output.clientWidth, height, toJSON = JSON.stringify,
-        MAXITEMS = 100000, sub_re = /"sub":"(.+)"/, quot_re = /\\"/g
+        MAXITEMS = 100000, sub_re = /"@@([^@]+)@@"/, quot_re = /\\/g
     ;
     
     $MV.jquery( $ );
@@ -576,14 +576,12 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         
         if ( subklass )
         {
-            $.sub = "Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+")";
+            $.sub = "@@Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+")@@";
         }
         nn = n.join?n.join(','):String(n); $$ = toJSON($);
         if ( subklass )
         {
-            $$ = $$.replace(sub_re, function(m, g){
-                return '"sub":'+g.split("\\\"").join("\"");
-            });
+            $$ = $$.replace(sub_re, function(m,g){return g.replace(quot_re, '');});
         }
         
         $screen.addClass('ui-delayed').removeClass('ui-undelayed');
@@ -595,8 +593,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             comb = new Abacus[klass](n, $);
             
             model.set('summary', (
-            "Abacus."+klass+"("+nn+","+$$+")" +
-            "       total = " + String(comb.total())+" (max "+MAXITEMS+" shown)"
+            "Abacus."+klass+"("+nn+","+$$+")" + "<br />" +
+            "total = " + String(comb.total())+" (max "+MAXITEMS+" shown)"
             ), true);
             
             setTimeout(function next(){

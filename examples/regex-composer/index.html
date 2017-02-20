@@ -559,49 +559,41 @@ require(['jQuery', 'ModelView', 'Regex', 'Dromeo'],
         codeEditor, code = document.getElementById('code'),
         owidth = regex.clientWidth, oheight = regex.clientHeight,
         width = code.clientWidth, height = code.clientHeight,
-        appRouter, fromJSON = JSON.parse
+        appRouter, fromJSON = JSON.parse, TAB = "    "
     ;
     
+    function esc_quote( s/*, q*/ )
+    {
+        var q = '"';
+        return q+s.split(q).join('\\'+q)+q;
+    }
     function ast2code( node, tab )
     {
-        if ( !node ) return '';
-        var code = '',
-            type = String(node.type||"").toLowerCase(),
-            fl = node.flags||{},
-            i, l = node.value.length, q, g, tab2;
+        if ( !node || !node.type ) return '';
+        if ( null == tab ) tab = "";
         
-        tab = tab || ""; tab2 = tab + "    ";
+        var code = '', type = node.type, fl = node.flags||{},
+            i, l = node.value.length, q, g, tab2 = tab + TAB;
         
-        if ( "sequence" === type )
+        if ( "Sequence" === type )
         {
-            for(i=0; i<l; i++) code += ast2code(node.value[i], tab);
+            for(i=0; i<l; i++)
+            {
+                if ( (''!==code) && ("Comment"!==node.value[i].type) ) code += "\n";
+                code += ast2code(node.value[i], tab);
+            }
         }
-        else if ( "alternation" === type )
+        else if ( "Alternation" === type )
         {
-            code += "\n" + tab + '.either()';
-            for(i=0; i<l; i++) code += ast2code(node.value[i], tab2);
+            code += tab + '.either()';
+            for(i=0; i<l; i++)
+            {
+                if ( "Comment"!==node.value[i].type ) code += "\n";
+                code += ast2code(node.value[i], tab2);
+            }
             code += "\n" + tab + '.end()';
         }
-        else if ( "group" === type )
-        {
-            if ( 1 === fl.NotCaptured )
-                code += "\n" + tab + '.nonCaptureGroup()';
-            else if ( 1 === fl.LookAhead )
-                code += "\n" + tab + '.lookAheadGroup()';
-            else if ( 1 === fl.NegativeLookAhead )
-                code += "\n" + tab + '.lookAheadGroup(false)';
-            else if ( 1 === fl.LookBehind )
-                code += "\n" + tab + '.lookBehindGroup()';
-            else if ( 1 === fl.NegativeLookBehind )
-                code += "\n" + tab + '.lookBehindGroup(false)';
-            else if ( 1 === fl.NamedGroup )
-                code += "\n" + tab + '.namedGroup("'+fl.GroupName+'")';
-            else
-                code += "\n" + tab + '.group()';
-            code += ast2code(node.value, tab2);
-            code += "\n" + tab + '.end()';
-        }
-        else if ( "quantifier" === type )
+        else if ( "Quantifier" === type )
         {
             code += ast2code(node.value, tab);
             g = null != fl.isGreedy ? !!fl.isGreedy : true;
@@ -610,68 +602,99 @@ require(['jQuery', 'ModelView', 'Regex', 'Dromeo'],
             else if ( 1 === fl.MatchOneOrMore )
                 code += '.oneOrMore('+(g?'':'false')+')';
             else if ( null != fl.MatchMinimum && null != fl.MatchMaximum )
-                code += '.repeat('+(fl.min||0)+','+(null==fl.max||-1===fl.max||!isFinite(fl.max)?null:fl.max)+(g?'':',false')+')';
+                code += '.repeat('+(fl.min||0)+','+(-1===fl.max||!isFinite(fl.max)?'""':fl.max)+(g?'':',false')+')';
             else //if ( 1 === fl.MatchZeroOrMore )
                 code += '.zeroOrMore('+(g?'':'false')+')';
         }
-        else if ( "charactergroup" === type )
+        else if ( "Group" === type )
         {
-            code += "\n" + tab + '.charGroup('+(1===fl.NegativeMatch?'false':'')+')';
-            for(i=0; i<l; i++) code += ast2code(node.value[i], tab2);
+            if ( 1 === fl.NotCaptured )
+                code += tab + '.nonCaptureGroup()';
+            else if ( 1 === fl.LookAhead )
+                code += tab + '.lookAheadGroup()';
+            else if ( 1 === fl.NegativeLookAhead )
+                code += tab + '.lookAheadGroup(false)';
+            else if ( 1 === fl.LookBehind )
+                code += tab + '.lookBehindGroup()';
+            else if ( 1 === fl.NegativeLookBehind )
+                code += tab + '.lookBehindGroup(false)';
+            else if ( 1 === fl.NamedGroup )
+                code += tab + '.namedGroup("'+fl.GroupName+'")';
+            else
+                code += tab + '.group()';
+            code += "\n" + ast2code(node.value, tab2);
             code += "\n" + tab + '.end()';
         }
-        else if ( "characterrange" === type )
+        else if ( "CharacterGroup" === type )
         {
-            code += "\n" + tab + '.range("'+node.value[0]+'","'+node.value[1]+'")';
+            code += tab + '.charGroup('+(1===fl.NegativeMatch?'false':'')+')';
+            for(i=0; i<l; i++) code += "\n" + ast2code(node.value[i], tab2);
+            code += "\n" + tab + '.end()';
         }
-        else if ( "characters" === type )
+        else if ( "CharacterRange" === type )
         {
-            code += "\n" + tab + '.chars("'+node.value.join('","')+'")';
+            code += tab + '.range('+esc_quote(node.value[0])+','+esc_quote(node.value[1])+')';
         }
-        else if ( "string" === type )
+        else if ( "Characters" === type )
         {
-            code += "\n" + tab + '.literal("'+node.value.split('"').join('\\"')+'")';
+            code += tab + '.chars('+node.value.map(esc_quote).join(',')+')';
         }
-        else if ( "special" === type )
+        else if ( "String" === type )
         {
-            if ( 1 === fl.MatchEnd )
-                code += "\n" + tab + '.EOL()';
+            code += tab + '.literal('+esc_quote(node.value)+')';
+        }
+        else if ( "HexChar" === type )
+        {
+            code += tab + '.HEX('+fl.Code+')';
+        }
+        else if ( "UnicodeChar" === type )
+        {
+            code += tab + '.UNICODE('+fl.Code+')';
+        }
+        else if ( "Special" === type )
+        {
+            if ( 1 === fl.BackReference )
+                code += tab + '.backReference('+(null!=fl.GroupName?esc_quote(fl.GroupName):fl.GroupIndex)+')';
             else if ( 1 === fl.MatchStart )
-                code += "\n" + tab + '.SOL()';
-            else if ( 1 === fl.BackReference )
-                code += "\n" + tab + '.backReference('+(fl.GroupName?'"'+fl.GroupName+'"':fl.GroupIndex)+')';
+                code += tab + '.SOL()';
+            else if ( 1 === fl.MatchEnd )
+                code += tab + '.EOL()';
             else if ( 1 === fl.MatchDigitChar )
-                code += "\n" + tab + '.digit()';
+                code += tab + '.digit()';
             else if ( 1 === fl.MatchNonDigitChar )
-                code += "\n" + tab + '.digit(false)';
+                code += tab + '.digit(false)';
             else if ( 1 === fl.MatchWordChar )
-                code += "\n" + tab + '.word()';
+                code += tab + '.word()';
             else if ( 1 === fl.MatchNonWordChar )
-                code += "\n" + tab + '.word(false)';
+                code += tab + '.word(false)';
             else if ( 1 === fl.MatchSpaceChar )
-                code += "\n" + tab + '.space()';
+                code += tab + '.space()';
             else if ( 1 === fl.MatchNonSpaceChar )
-                code += "\n" + tab + '.space(false)';
+                code += tab + '.space(false)';
             else if ( 1 === fl.MatchAnyChar )
-                code += "\n" + tab + '.any()';
+                code += tab + '.any()';
             else if ( 1 === fl.MatchWordBoundary )
-                code += "\n" + tab + '.boundary()';
+                code += tab + '.boundary()';
             else if ( 1 === fl.MatchNonWordBoundary )
-                code += "\n" + tab + '.boundary(false)';
+                code += tab + '.boundary(false)';
+            /*
+            else if ( 1 === fl.LineFeed )
+                code += tab + '.LN()';
+            else if ( 1 === fl.CarriageReturn )
+                code += tab + '.CR()';
+            else if ( 1 === fl.HorizontalTab )
+                code += tab + '.TAB()';
+            else if ( 1 === fl.VerticalTab )
+                code += tab + '.VTAB()';
+            else if ( 1 === fl.FormFeed )
+                code += tab + '.FF()';
+            */
             else
-                code += "\n" + tab + '.literal("'+node.value+'")';
+                code += tab + '.token("\\\\'+('\\'===node.value?'\\\\':node.value)+'")';
         }
-        else if ( "hexchar" === type )
+        else if ( "Comment" === type )
         {
-            code += "\n" + tab + '.HEX('+fl.Code+')';
-        }
-        else if ( "unicodechar" === type )
-        {
-            code += "\n" + tab + '.UNICODE('+fl.Code+')';
-        }
-        else if ( "comment" === type )
-        {
-            code += "\n" + tab + '/*'+node.value+'*/';
+            code += '/*'+node.value+'*/';
         }
         return code;
     }
@@ -711,7 +734,7 @@ require(['jQuery', 'ModelView', 'Regex', 'Dromeo'],
         params = params && params.hash ? appRouter.unglue( params.hash ) : null;
         if ( params && params.action && ('compose' === params.action) && !!params.ast )
         {
-            codeEditor.setValue( ast2code(fromJSON(params.ast)) + "\n" + '.compose("'+(params.fl||'')+'")' );
+            codeEditor.setValue( ast2code(fromJSON(params.ast)) + "\n\n" + '.compose("'+(params.fl||'')+'")' );
             $('#compose').trigger('click');
         }
     }});

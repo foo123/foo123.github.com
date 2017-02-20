@@ -207,11 +207,11 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Regex'],
             if ( ('/' !== input.charAt(0)) && ('/' !== input.charAt(input.length-1)) ) input = '/'+input+'/';
             analyzer.input( input ).analyze( );
             
-            var ast = analyzer.tree(true), fl = Object.keys( analyzer.fl ).join(',');
+            var ast = analyzer.tree(true), fl = Object.keys( analyzer.fl );
             appModel.set('regex_ast', appRouter.glue({
                 action: 'compose',
                 ast: toJSON(ast),
-                fl: fl
+                fl: fl.join('')
             }), true);
             
             code.setValue([
@@ -223,7 +223,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Regex'],
             ,""
             ,"// Input                            : " + input
             ,"// Regular Expression               : " + analyzer.input()
-            ,"// Regular Expression Flags         : " + fl
+            ,"// Regular Expression Flags         : " + fl.join(',')
             ,"// Reconstructed Regular Expression : " + analyzer.source()
             ,""
             ,"/*******************************************/"
@@ -247,11 +247,11 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Regex'],
             if ( ('/' !== input.charAt(0)) && ('/' !== input.charAt(input.length-1)) ) input = '/'+input+'/';
             analyzer.input( input ).analyze( );
             
-            var ast = analyzer.tree(true), fl = Object.keys( analyzer.fl ).join(',');
+            var ast = analyzer.tree(true), fl = Object.keys( analyzer.fl );
             appModel.set('regex_ast', appRouter.glue({
                 action: 'compose',
                 ast: toJSON(ast),
-                fl: fl
+                fl: fl.join('')
             }), true);
             
             peek = analyzer.peek( );
@@ -280,7 +280,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Regex'],
             ,""
             ,"// Input                            : " + input
             ,"// Regular Expression               : " + analyzer.input()
-            ,"// Regular Expression Flags         : " + fl
+            ,"// Regular Expression Flags         : " + fl.join(',')
             ,"// Reconstructed Regular Expression : " + analyzer.source()
             ,""
             ,"/*******************************************/"
