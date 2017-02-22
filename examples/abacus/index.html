@@ -105,7 +105,7 @@ label {
 div.sepa {
     display: block;
     height: 1px;
-    margin-bottom: 1.2em;
+    margin-bottom: 1.6em;
 }
 .ui-delayable-overlay
 {
@@ -295,7 +295,6 @@ div.sepa {
 <br /><br />
 
     
-    
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
         <strong>Abacus ($(abacus_version)):</strong>
@@ -321,6 +320,7 @@ div.sepa {
         <option value="k-derangement" data-bind='{"show":"object.permutation"}'>k-Derangement</option>
         <option value="involution" data-bind='{"show":"object.permutation"}'>Involution</option>
         <option value="connected" data-bind='{"show":"object.permutation"}'>Connected</option>
+        <option value="conditional-permutation" data-bind='{"show":"object.permutation"}'>Conditional Permutation</option>
         <option value="unordered_binary" data-bind='{"show":"object.combination"}'>Unordered (Binary)</option>
         <option value="ordered" data-bind='{"show":"object.combination"}'>Ordered</option>
         <option value="repeated" data-bind='{"show":"object.combination"}'>Unordered+Repeated</option>
@@ -350,6 +350,10 @@ div.sepa {
         </div><div style="display:inline-block" data-bind='{"show":"hasK"}'>
         <label for="K">$(labelK)</label><input id="K"  name="model[K]" size="8" type="text" value="1" />
         </div>
+        <div style="display:inline-block;position:relative;vertical-align:top;margin-left:5px;margin-top:-1.6em" data-bind='{"show":"hasConditions"}'>
+        <table id="conditions" style="position:relative;max-width:100%;border-spacing:2">
+        <thead><tr><th>Position</th><th>&nbsp;Op&nbsp;</th><th>Value(s)</th><th>&nbsp;<button title="Add New" data-bind='{"click":"add_condition"}'>+</button></th></tr></thead><tbody></tbody></table>
+        </div>
     </div>
     
     <div class="fluid col-1-1" style="margin-top:10px">
@@ -359,6 +363,18 @@ div.sepa {
     </div>
 <div class="ui-delayable-overlay"><div class="ui-spinner ui-spinner-dots"></div></div>
 </div>
+<script type="text/tpl" id="condition_tpl">
+<tr>
+<td><input type="text" name="pos" value="" size="2" title="Position number (0..N-1)" /></td>
+<td>&nbsp;<select name="op" title="Type of Values or Algebraic Expression">
+<option value="IN">IN</option>
+<option value="NOT_IN">NOT IN</option>
+<option value="EXPR">=EXPR</option>
+</select>&nbsp;</td>
+<td><input type="text" name="dat" value="" size="6" title="Values or Expression. Eg Value Set: 0 or 1 or 2 = {0,1,2}. Value at pos &quot;1&quot; plus 4 = [1]+4" /></td>
+<td>&nbsp;<button title="Remove" data-bind='{"click":"remove_condition"}'>x</button></td>
+</tr>
+</script>
 
     
     
@@ -447,7 +463,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     {
         var comb = null, sep = ',', N = model.get('N')|0, K = model.get('K'),
             object = model.get('object'), type = model.get('type'), order = model.get('order'),
-            $ = {order:order}, $$, n, nn, klass = null, subklass = null, sub$ = null, subn = null;
+            $ = {order:order}, $$=null, n, nn=null, klass = null, subklass = null, subklass_code = '', sub$ = null, subn = null, submethod = null, conditions;
         
         if ( "tensor" === object )
         {
@@ -496,10 +512,29 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 klass = "Combination";
                 n = [N, +K];
                 $.type = "unordered";
-                $.submethod = "combine";
                 subklass = "Permutation";
                 sub$ = {order:order,type:"derangement"};
                 subn = N-(+K);
+                submethod = "completeWith";
+                subklass_code = ".completeWith(Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+"))";
+            }
+            else if ( "conditional-permutation"===type )
+            {
+                conditions = model.get('conditions');
+                if ( conditions )
+                {
+                    klass = "Partial";
+                    n = [N,[],conditions.pos];
+                    for(var i=0,l=conditions.data.length; i<conditions.data.length; i++)
+                        n[1].push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
+                    n[1].push("<>");
+                    nn = [String(n[0]), toJSON(n[1]), toJSON(n[2])].join(',')
+                    subklass = "Permutation";
+                    sub$ = {order:order};
+                    subn = N-conditions.data.length;
+                    submethod = "completeWith";
+                    subklass_code = ".completeWith(Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+"))";
+                }
             }
             else
             {
@@ -574,26 +609,32 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             return;
         }
         
-        if ( subklass )
+        /*if ( subklass )
         {
             $.sub = "@@Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+")@@";
-        }
-        nn = n.join?n.join(','):String(n); $$ = toJSON($);
-        if ( subklass )
+        }*/
+        if ( null == nn ) nn = n.join?n.join(','):String(n);
+        if ( null == $$ ) $$ = toJSON($);
+        /*if ( subklass )
         {
             $$ = $$.replace(sub_re, function(m,g){return g.replace(quot_re, '');});
-        }
+        }*/
         
         $screen.addClass('ui-delayed').removeClass('ui-undelayed');
         
         var count = 0, chunk = 1000;
         
         setTimeout(function(){
-            if ( subklass ) $.sub = new Abacus[subklass](subn, sub$);
+            //if ( subklass ) $.sub = new Abacus[subklass](subn, sub$);
             comb = new Abacus[klass](n, $);
+            if ( subklass )
+            {
+                if ( "conditional-permutation"===type ) subn = N-comb.$.pos.length;
+                comb[submethod](new Abacus[subklass](subn, sub$)).rewind();
+            }
             
             model.set('summary', (
-            "Abacus."+klass+"("+nn+","+$$+")" + "<br />" +
+            "Abacus."+klass+"("+nn+","+$$+")"+subklass_code + "<br />" +
             "total = " + String(comb.total())+" (max "+MAXITEMS+" shown)"
             ), true);
             
@@ -630,13 +671,29 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         params = params && params.hash ? appRouter.unglue( params.hash ) : null;
         if ( params && ("produce"===params.action) )
         {
+            if ( params.conditions && params.conditions.data && !params.conditions.data.length )
+            {
+                // make them arrays
+                var len, tmp, i;
+                len = Object.keys(params.conditions.data).length;
+                tmp = params.conditions.data; params.conditions.data = new Array(len);
+                for(i=0; i<len; i++) params.conditions.data[i] = String(tmp[i]);
+                len = Object.keys(params.conditions.pos).length;
+                tmp = params.conditions.pos; params.conditions.pos = new Array(len);
+                for(i=0; i<len; i++) params.conditions.pos[i] = +tmp[i];
+                len = Object.keys(params.conditions.type).length;
+                tmp = params.conditions.type; params.conditions.type = new Array(len);
+                for(i=0; i<len; i++) params.conditions.type[i] = String(tmp[i]);
+            }
             var model = $screen.modelview('model');
+            model.set('conditions_dom', params.conditions);
+            model.set('conditions', params.conditions);
             model.set('object', params.object, true);
             model.set('type', params.type, true);
             model.set('order', params.order, true);
             model.set('N', params.N, true);
             model.set('K', params.K, true);
-            produce( model );
+            setTimeout(function(){ produce( model ); }, 100);
         }
     }});
     
@@ -654,12 +711,28 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 type: 'default',
                 order: 'lex',
                 N: 2,
-                K: 1
+                K: 1,
+                conditions: null
             }
             ,types: {
                 N: $MV.Type.Cast.INT
             }
             ,setters: {
+                "conditions_dom": function( key, cond ){
+                    var table = $('#conditions>tbody').empty(), tpl, node;
+                    if ( cond && cond.data )
+                    {
+                        tpl = $('#condition_tpl').html();
+                        for(var i=0,l=cond.data.length; i<l; i++)
+                        {
+                            table.append(node=$(tpl));
+                            //node = $(table[0].lastChild);
+                            node.find('[name=pos]').val(cond.pos[i]);
+                            node.find('[name=op]').val(cond.type[i]);
+                            node.find('[name=dat]').val(cond.data[i]);
+                        }
+                    }
+                },
                 "object": function( key, val/*, pub*/ ){
                     this.$data.object = val;
                     this.set("type","default", true);
@@ -667,6 +740,24 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 }
             }
             ,getters: {
+                "conditions_dom": function(){
+                    var cond = {data:[],pos:[],type:[]};
+                    $('#conditions>tbody>tr').each(function(){
+                        var tr = $(this), op,
+                            p = $.trim(tr.find('[name=pos]').val()),
+                            d = $.trim(tr.find('[name=dat]').val())
+                        ;
+                        if ( !d.length || !p.length ) return;
+                        op = tr.find('[name=op]').val();
+                        cond.pos.push(parseInt(p,10));
+                        cond.type.push(tr.find('[name=op]').val());
+                        cond.data.push(d);
+                        /*if ( 'EXPR' === op ) data.push(d);
+                        else if ( 'NOT_IN' === op ) data.push('!{'+d+'}');
+                        else data.push('{'+d+'}');*/
+                    });
+                    return cond.data.length ? cond : null;
+                },
                 "object.default": function(){
                     var obj = this.$data.object;
                     if ( "tensor" === obj ) return "Tensor";
@@ -715,6 +806,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     var obj = this.$data.object, type = this.$data.type;
                     return ("combination"===obj || "tensor"===obj || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type || "k-derangement"===type)) || ("partition"===obj && ("partition_max"===type||"partition_parts"===type)) || ("composition"===obj && ("composition_max"===type||"composition_parts"===type));
                 },
+                "hasConditions": function(){
+                    var obj = this.$data.object, type = this.$data.type;
+                    return ("permutation"===obj && "conditional-permutation"===type);
+                },
                 "labelN": function(){
                     var obj = this.$data.object, type = this.$data.type;
                     if ( "tuple" === obj ) return "Dimension = ";
@@ -738,6 +833,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 //"default_order": ["object","type"],
                 "hasN": ["object"],
                 "hasK": ["object","type"],
+                "hasConditions": ["object","type"],
                 "labelN": ["object","type"],
                 "labelK": ["object","type"],
                 "haslex": ["object","type"],
@@ -746,16 +842,26 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
         }
         ,actions: { 
+            add_condition: function(evt, $el){
+                var table = $('#conditions>tbody');
+                table.append($('#condition_tpl').html());
+            },
+            remove_condition: function(evt, $el){
+                $($el).closest('tr').remove();
+            },
             produce: function(evt, $el, data) {
                 var model = this.$model,
+                    conditions = model.get('conditions_dom'),
                     data = {
                         action: 'produce',
                         object: model.get('object'),
                         type: model.get('type'),
                         order: model.get('order'),
                         N: model.get('N'),
-                        K: model.get('K')
+                        K: model.get('K'),
+                        conditions: conditions
                     };
+                model.set('conditions',conditions);
                 location.hash = '#' + appRouter.glue(data);
                 produce( model );
             }
