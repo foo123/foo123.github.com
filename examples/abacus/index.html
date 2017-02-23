@@ -352,7 +352,7 @@ div.sepa {
         </div>
         <div style="display:inline-block;position:relative;vertical-align:top;margin-left:5px;margin-top:-1.6em" data-bind='{"show":"hasConditions"}'>
         <table id="conditions" style="position:relative;max-width:100%;border-spacing:2">
-        <thead><tr><th>Position</th><th>&nbsp;Op&nbsp;</th><th>Value(s)</th><th>&nbsp;<button title="Add New" data-bind='{"click":"add_condition"}'>+</button></th></tr></thead><tbody></tbody></table>
+        <thead><tr><th>Position</th><th>&nbsp;Op&nbsp;</th><th>Value(s)</th><th>&nbsp;<button title="Add New" style="font-weight:bold" data-bind='{"click":"add_condition"}'>+</button></th></tr></thead><tbody></tbody></table>
         </div>
     </div>
     
@@ -372,7 +372,7 @@ div.sepa {
 <option value="EXPR">=EXPR</option>
 </select>&nbsp;</td>
 <td><input type="text" name="dat" value="" size="6" title="Values or Expression. Eg Value Set: 0 or 1 or 2 = {0,1,2}. Value at pos &quot;1&quot; plus 4 = [1]+4" /></td>
-<td>&nbsp;<button title="Remove" data-bind='{"click":"remove_condition"}'>x</button></td>
+<td>&nbsp;<button title="Remove" style="font-weight:bold" data-bind='{"click":"remove_condition"}'>-</button></td>
 </tr>
 </script>
 
@@ -441,7 +441,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     var undef=undefined, $window = $(window), $screen = $('#screen'),
         output = document.getElementById('output'), out,
         appModel, appView, appRouter, width = output.clientWidth, height, toJSON = JSON.stringify,
-        MAXITEMS = 100000, sub_re = /"@@([^@]+)@@"/, quot_re = /\\/g
+        MAXITEMS = 100000, $conditions = $('#conditions>tbody'), $condition_tpl = $('#condition_tpl')
+        /*, sub_re = /"@@([^@]+)@@"/, quot_re = /\\/g*/
     ;
     
     $MV.jquery( $ );
@@ -528,7 +529,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     for(var i=0,l=conditions.data.length; i<conditions.data.length; i++)
                         n[1].push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
                     n[1].push("<>");
-                    nn = [String(n[0]), toJSON(n[1]), toJSON(n[2])].join(',')
+                    nn = [String(n[0]), toJSON(n[1]).split("<>").join("&lt;&gt;"), toJSON(n[2])].join(',')
                     subklass = "Permutation";
                     sub$ = {order:order};
                     subn = N-conditions.data.length;
@@ -629,8 +630,16 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             comb = new Abacus[klass](n, $);
             if ( subklass )
             {
-                if ( "conditional-permutation"===type ) subn = N-comb.$.pos.length;
-                comb[submethod](new Abacus[subklass](subn, sub$)).rewind();
+                if ( "conditional-permutation"===type )
+                {
+                    subn = N-comb.dimension();
+                    if ( 0 < subn ) comb[submethod](new Abacus[subklass](subn, sub$));
+                    else subklass_code = '';
+                }
+                else
+                {
+                    comb[submethod](new Abacus[subklass](subn, sub$));
+                }
             }
             
             model.set('summary', (
@@ -639,16 +648,18 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             ), true);
             
             setTimeout(function next(){
-                var cnt = 0, output="";
+                var cnt = 0, output="", nxt = null;
                 while( (cnt<chunk) && (count<MAXITEMS) && comb.hasNext() )
                 {
+                    nxt = comb.next();
+                    if ( null == nxt ) {nxt=false; break;}
                     if ( 0 < count ) output += "\n";
-                    output += comb.next().join(sep);
+                    output += nxt.join(sep);
                     count++; cnt++;
                 }
                 out.setValue(out.getValue()+output);
                 
-                if ( (count<MAXITEMS) && comb.hasNext() )
+                if ( (count<MAXITEMS) && comb.hasNext() && (false!==nxt) )
                 {
                     setTimeout(next, 100);
                 }
@@ -693,7 +704,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             model.set('order', params.order, true);
             model.set('N', params.N, true);
             model.set('K', params.K, true);
-            setTimeout(function(){ produce( model ); }, 100);
+            setTimeout(function(){ produce( model ); }, 40);
         }
     }});
     
@@ -719,14 +730,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             ,setters: {
                 "conditions_dom": function( key, cond ){
-                    var table = $('#conditions>tbody').empty(), tpl, node;
+                    $conditions.empty();
                     if ( cond && cond.data )
                     {
-                        tpl = $('#condition_tpl').html();
+                        var tpl = $condition_tpl.html(), node;
                         for(var i=0,l=cond.data.length; i<l; i++)
                         {
-                            table.append(node=$(tpl));
-                            //node = $(table[0].lastChild);
+                            $conditions.append(node=$(tpl));
                             node.find('[name=pos]').val(cond.pos[i]);
                             node.find('[name=op]').val(cond.type[i]);
                             node.find('[name=dat]').val(cond.data[i]);
@@ -742,19 +752,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             ,getters: {
                 "conditions_dom": function(){
                     var cond = {data:[],pos:[],type:[]};
-                    $('#conditions>tbody>tr').each(function(){
-                        var tr = $(this), op,
-                            p = $.trim(tr.find('[name=pos]').val()),
-                            d = $.trim(tr.find('[name=dat]').val())
+                    $conditions.children('tr').each(function(){
+                        var node = $(this),
+                            p = $.trim(node.find('[name=pos]').val()),
+                            d = $.trim(node.find('[name=dat]').val())
                         ;
                         if ( !d.length || !p.length ) return;
-                        op = tr.find('[name=op]').val();
                         cond.pos.push(parseInt(p,10));
-                        cond.type.push(tr.find('[name=op]').val());
+                        cond.type.push(node.find('[name=op]').val());
                         cond.data.push(d);
-                        /*if ( 'EXPR' === op ) data.push(d);
-                        else if ( 'NOT_IN' === op ) data.push('!{'+d+'}');
-                        else data.push('{'+d+'}');*/
                     });
                     return cond.data.length ? cond : null;
                 },
@@ -807,8 +813,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     return ("combination"===obj || "tensor"===obj || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type || "k-derangement"===type)) || ("partition"===obj && ("partition_max"===type||"partition_parts"===type)) || ("composition"===obj && ("composition_max"===type||"composition_parts"===type));
                 },
                 "hasConditions": function(){
-                    var obj = this.$data.object, type = this.$data.type;
-                    return ("permutation"===obj && "conditional-permutation"===type);
+                    var ret = "permutation"===this.$data.object && "conditional-permutation"===this.$data.type;
+                    if ( ret && !$conditions.children('tr').length )
+                        $conditions.append($condition_tpl.html());
+                    return ret;
                 },
                 "labelN": function(){
                     var obj = this.$data.object, type = this.$data.type;
@@ -843,8 +851,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         }
         ,actions: { 
             add_condition: function(evt, $el){
-                var table = $('#conditions>tbody');
-                table.append($('#condition_tpl').html());
+                $conditions.append($condition_tpl.html());
             },
             remove_condition: function(evt, $el){
                 $($el).closest('tr').remove();
