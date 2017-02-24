@@ -468,7 +468,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     {
         var comb = null, sep = ',', N = model.get('N')|0, K = model.get('K'),
             object = model.get('object'), type = model.get('type'), order = model.get('order'),
-            $ = {order:order}, $$=null, n, nn=null, klass = null, subklass = null, subklass_code = '', sub$ = null, subn = null, submethod = null, conditions;
+            $ = {order:order}, $$=null, n, nn=null, klass = null, subklass = null, subklass_code = '', sub$ = null, subn = null, submethod = null, conditions, data;
         
         if ( "tensor" === object )
         {
@@ -485,15 +485,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 conditions = model.get('conditions');
                 if ( conditions )
                 {
-                    klass = "Partial";
-                    delete $.type;
-                    n = [+K,[],conditions.pos];
+                    klass = "Tensor"; $.type = "partial";
+                    n = +K; data = [];
                     for(var i=0,l=conditions.data.length; i<conditions.data.length; i++)
-                        n[1].push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
-                    nn = [String(n[0]), toJSON(n[1]), toJSON(n[2])].join(',')
+                        data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
+                    $.data = data; $.position = conditions.pos;
                     subklass = "Tensor";
                     sub$ = {order:order,type:"tuple"};
-                    subn = [N-conditions.data.length, +K];
+                    subn = [N-data.length, +K];
                     submethod = "interleaveWith";
                     subklass_code = ".interleaveWith(Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+"))";
                 }
@@ -546,15 +545,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 conditions = model.get('conditions');
                 if ( conditions )
                 {
-                    klass = "Partial";
-                    n = [N,[],conditions.pos];
+                    klass = "Tensor"; $.type = "partial";
+                    n = N; data = [];
                     for(var i=0,l=conditions.data.length; i<conditions.data.length; i++)
-                        n[1].push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
-                    n[1].push("<>");
-                    nn = [String(n[0]), toJSON(n[1]).split("<>").join("&lt;&gt;"), toJSON(n[2])].join(',')
+                        data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
+                    $.data = data; $.ordering = "<>"; $.position = conditions.pos;
                     subklass = "Permutation";
                     sub$ = {order:order};
-                    subn = N-conditions.data.length;
+                    subn = N-data.length;
                     submethod = "completeWith";
                     subklass_code = ".completeWith(Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+"))";
                 }
@@ -564,15 +562,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 conditions = model.get('conditions');
                 if ( conditions )
                 {
-                    klass = "Partial";
-                    n = [N,[],conditions.pos];
+                    klass = "Tensor"; $.type = "partial";
+                    n = N; data = [];
                     for(var i=0,l=conditions.data.length; i<conditions.data.length; i++)
-                        n[1].push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
-                    n[1].push("<>");
-                    nn = [String(n[0]), toJSON(n[1]).split("<>").join("&lt;&gt;"), toJSON(n[2])].join(',')
+                        data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
+                    $.data = data; $.ordering = "<>"; $.position = conditions.pos;
                     subklass = "Combination";
                     sub$ = {order:order,type:"ordered"};
-                    subn = [N-conditions.data.length, (+K)-conditions.data.length];
+                    subn = [N-data.length, (+K)-data.length];
                     submethod = "completeWith";
                     subklass_code = ".completeWith(Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+"))";
                 }
@@ -601,15 +598,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 conditions = model.get('conditions');
                 if ( conditions )
                 {
-                    klass = "Partial";
-                    n = [N,[],conditions.pos];
+                    klass = "Tensor"; $.type = "partial";
+                    n = N; data = [];
                     for(var i=0,l=conditions.data.length; i<conditions.data.length; i++)
-                        n[1].push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
-                    n[1].push("<>");
-                    nn = [String(n[0]), toJSON(n[1]).split("<>").join("&lt;&gt;"), toJSON(n[2])].join(',')
+                        data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
+                    $.data = data; $.ordering = "<>"; $.position = conditions.pos;
                     subklass = "Combination";
                     sub$ = {order:order,type:"ordered"};
-                    subn = [N-conditions.data.length, (+K)-conditions.data.length];
+                    subn = [N-data.length, (+K)-data.length];
                     submethod = "completeWith";
                     subklass_code = ".completeWith(Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+"))";
                 }
@@ -631,14 +627,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 conditions = model.get('conditions');
                 if ( conditions )
                 {
-                    klass = "Partial";
-                    n = [N,[],conditions.pos];
+                    klass = "Tensor"; $.type = "partial";
+                    n = N; data = [];
                     for(var i=0,l=conditions.data.length; i<conditions.data.length; i++)
-                        n[1].push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
-                    nn = [String(n[0]), toJSON(n[1]), toJSON(n[2])].join(',')
+                        data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
+                    $.data = data; $.position = conditions.pos;
                     subklass = "Combination";
                     sub$ = {order:order,type:"ordered+repeated"};
-                    subn = [N, (+K)-conditions.data.length];
+                    subn = [N, (+K)-data.length];
                     submethod = "interleaveWith";
                     subklass_code = ".interleaveWith(Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+"))";
                 }
@@ -750,7 +746,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             
             model.set('summary', (
-            "Abacus."+klass+"("+nn+","+$$+")"+subklass_code + "<br />" +
+            ("Abacus."+klass+"("+nn+","+$$+")"+subklass_code).split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;") + "<br />" +
             "total = " + String(comb.total())+(comb.total().gt(MAXITEMS)?" (max "+MAXITEMS+" shown)":"")
             ), true);
             
