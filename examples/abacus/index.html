@@ -316,14 +316,15 @@ div.sepa {
         <option value="conditional-tuple" data-bind='{"show":"object.tuple"}'>Conditional Tuple</option>
         <option value="cyclic" data-bind='{"show":"object.permutation"}'>Cyclic Shift</option>
         <option value="multiset" data-bind='{"show":"object.permutation"}'>Multiset</option>
-        <option value="derangement" data-bind='{"show":"object.permutation"}'>Derangement</option>
         <option value="k-permutation" data-bind='{"show":"object.permutation"}'>k-Permutation</option>
-        <!--<option value="k-derangement" data-bind='{"show":"object.permutation"}'>k-Derangement</option>-->
+        <option value="derangement" data-bind='{"show":"object.permutation"}'>Derangement</option>
         <option value="involution" data-bind='{"show":"object.permutation"}'>Involution</option>
-        <option value="connected" data-bind='{"show":"object.permutation"}'>Connected</option>
+        <option value="k-derangement" data-bind='{"show":"object.permutation"}'>k-Derangement</option>
+        <option value="connected" data-bind='{"show":"object.permutation"}'>Connected (1-Cycle)</option>
+        <option value="k-cycle-permutation" data-bind='{"show":"object.permutation"}'>k-Cycle</option>
         <option value="conditional-permutation" data-bind='{"show":"object.permutation"}'>Conditional Permutation</option>
         <option value="conditional-k-permutation" data-bind='{"show":"object.permutation"}'>Conditional k-Permutation</option>
-        <option value="unordered_binary" data-bind='{"show":"object.combination"}'>Unordered (Binary)</option>
+        <option value="unordered_01" data-bind='{"show":"object.combination"}'>Binary Output</option>
         <option value="ordered" data-bind='{"show":"object.combination"}'>Ordered</option>
         <option value="repeated" data-bind='{"show":"object.combination"}'>Unordered+Repeated</option>
         <option value="ordered_repeated" data-bind='{"show":"object.combination"}'>Ordered+Repeated</option>
@@ -331,6 +332,7 @@ div.sepa {
         <option value="conditional-ordered_repeated" data-bind='{"show":"object.combination"}'>Conditional Ordered+Repeated</option>
         <option value="subset_binary" data-bind='{"show":"object.subset"}'>Subset (Binary)</option>
         <option value="subset_combination" data-bind='{"show":"object.subset"}'>Subset (Combination)</option>
+        <option value="subset_01" data-bind='{"show":"object.subset"}'>Binary Output</option>
         <option value="partition_max" data-bind='{"show":"object.partition"}'>Maximum Part = M</option>
         <option value="partition_parts" data-bind='{"show":"object.partition"}'>Number of Parts = K</option>
         <option value="composition_max" data-bind='{"show":"object.composition"}'>Maximum Part = M</option>
@@ -539,17 +541,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 $.type = "ordered";
                 n = [N, +K];
             }
-            /*else if ( "k-derangement"===type )
+            else if ( "k-derangement"===type )
             {
-                klass = "Combination";
-                n = [N, +K];
-                $.type = "unordered";
-                subklass = "Permutation";
-                sub$ = {order:order,type:"derangement"};
-                subn = N-(+K);
-                submethod = "completeWith";
-                subklass_code = ".completeWith(Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+"))";
-            }*/
+                $.type = "derangement";
+                $["fixed="] = +K;
+            }
+            else if ( "k-cycle-permutation"===type )
+            {
+                $["cycles="] = +K;
+            }
             else if ( "conditional-permutation"===type )
             {
                 conditions = model.get('conditions');
@@ -590,14 +590,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     n = [N, +K];
                 }
             }
-            else
-            {
-                $.type = "permutation";
-            }
         }
         else if ( "combination" === object )
         {
-            klass = "Combination";
+            klass = "Combination"; $.type = "unordered";
             n = [N, +K];
             if ( "ordered"===type )
             {
@@ -653,14 +649,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     $.type = "ordered+repeated";
                 }
             }
-            else if ( "unordered_binary"===type )
+            else if ( "unordered_01"===type )
             {
                 sep = '';
-                $.type = "binary";
-            }
-            else
-            {
-                $.type = "unordered";
+                $.output = "binary";
             }
         }
         else if ( "subset" === object )
@@ -671,7 +663,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             {
                 klass = "CombinatorialIterator";
                 n = []; nn = [];
-                for(var i=1; i<=N; i++)
+                for(var i=0; i<=N; i++)
                 {
                     n.push(["Combination",[N,i]]);
                     nn.push("Abacus.Combination("+[N,i].join(',')+")");
@@ -680,12 +672,12 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             else if ( "subset_binary"===type )
             {
-                sep = '';
                 $.type = "binary";
             }
-            else
+            else if ( "subset_01"===type )
             {
-                $.type = "subset";
+                sep = '';
+                $.output = "binary";
             }
         }
         else if ( "partition" === object )
@@ -725,7 +717,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         
         setTimeout(function(){
             if ( "CombinatorialIterator"===klass )
+            {
+                // sequence iterator, init every iterator
                 for(var i=0; i<n.length; i++) n[i] = new Abacus[n[i][0]](n[i][1]);
+            }
             comb = new Abacus[klass](n, $);
             
             if ( subklass )
@@ -759,11 +754,11 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     comb[submethod](new Abacus[subklass](subn, sub$));
                 }
             }
-            var total = comb.total();
             
+            var total = comb.total();
             model.set('summary', (
-            esc_html("Abacus."+klass+"("+nn+","+$$+")"+subklass_code) + "<br />" +
-            "total = " + String(total) + (total.gt(MAXITEMS)?" (max "+MAXITEMS+" shown)":"")
+            esc_html("Abacus."+klass+"("+nn+","+$$+")"+subklass_code) +
+            "<br />" + "total = " + String(total) + (total.gt(MAXITEMS) ? " (max "+MAXITEMS+" shown)" : "")
             ), true);
             
             setTimeout(function next_chunk(){
@@ -812,8 +807,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 params.conditions.type = Array.prototype.slice.call(params.conditions.type).map(String);
             }
             var model = $screen.modelview('model');
-            model.set('conditions_dom', params.conditions);
-            model.set('conditions', params.conditions);
+            model.set('conditions_dom', params.conditions||null);
+            model.set('conditions', params.conditions||null);
             model.set('object', String(params.object), true);
             model.set('type', String(params.type), true);
             model.set('N', String(params.N), true);
@@ -833,9 +828,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             ,data: { 
                 abacus_version: 'v.'+Abacus.VERSION,
                 summary: "",
-                object: 'permutation',
-                type: 'default',
-                order: '',
+                object: "permutation",
+                type: "default",
+                order: "", // default
                 N: 2,
                 K: 1,
                 conditions: null
@@ -925,7 +920,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 },
                 "hasK": function(){
                     var obj = this.$data.object, type = this.$data.type;
-                    return ("combination"===obj || "tensor"===obj || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type || "conditional-k-permutation"===type /*|| "k-derangement"===type*/)) || ("partition"===obj && ("partition_max"===type||"partition_parts"===type)) || ("composition"===obj && ("composition_max"===type||"composition_parts"===type));
+                    return ("combination"===obj || "tensor"===obj || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type || "conditional-k-permutation"===type || "k-derangement"===type || "k-cycle-permutation"===type)) || ("partition"===obj && ("partition_max"===type||"partition_parts"===type)) || ("composition"===obj && ("composition_max"===type||"composition_parts"===type));
                 },
                 "hasConditions": function(){
                     var ret = "conditional-"===this.$data.type.substr(0,12);
@@ -943,7 +938,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     if ( "tuple" === obj ) return "Base = ";
                     if ( "tensor" === obj ) return "Dimensions(.. , ..) = ";
                     if ( "permutation" === obj && "multiset" === type ) return "Multiplicities(.. , ..) = ";
-                    //if ( "permutation" === obj && "k-derangement" === type ) return "#Fixed = ";
+                    if ( "permutation" === obj && "k-derangement" === type ) return "#Fixed = ";
+                    if ( "permutation" === obj && "k-cycle-permutation" === type ) return "#Cycles = ";
                     if ( "partition" === obj && "partition_max" === type ) return "Max = ";
                     if ( "partition" === obj && "partition_parts" === type ) return "#Parts = ";
                     if ( "composition" === obj && "composition_max" === type ) return "Max = ";
