@@ -338,6 +338,7 @@ div.sepa {
         </div>
         <div style="display:inline-block;margin-bottom:10px">
         <label for="order">Order:</label><select id="order" name="model[order]">
+        <option value="" >Default</option>
         <option value="lex" data-bind='{"show":"haslex"}'>Lexicographic</option>
         <option value="colex" data-bind='{"show":"hascolex"}'>CoLexicographic</option>
         <option value="lex,reversed" data-bind='{"show":"haslex"}'>Reverse Lexicographic</option>
@@ -370,7 +371,7 @@ div.sepa {
 <script type="text/tpl" id="condition_tpl">
 <tr>
 <td><input type="text" name="pos" value="" size="2" title="Position number (0..N-1)" /></td>
-<td>&nbsp;<select name="op" title="Type of Values or Algebraic Expression">
+<td>&nbsp;<select name="op" title="Values or Algebraic Expression">
 <option value="IN">IN</option>
 <option value="NOT_IN">NOT IN</option>
 <option value="EXPR">=EXPR</option>
@@ -445,9 +446,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     var undef=undefined, $window = $(window), $screen = $('#screen'),
         output = document.getElementById('output'), out,
         appModel, appView, appRouter, width = output.clientWidth, height, toJSON = JSON.stringify,
-        MAXITEMS = 100000, $conditions = $('#conditions>tbody'), $condition_tpl = $('#condition_tpl')
-        /*, sub_re = /"@@([^@]+)@@"/, quot_re = /\\/g*/
-    ;
+        MAXITEMS = 100000, $conditions = $('#conditions>tbody'), $condition_tpl = $('#condition_tpl'),
+        html_esc_re = /[&<>]/g;
+    
+    function esc_html( s )
+    {
+        return s.replace(html_esc_re, function(m){
+            return '&'===m ? '&amp;' : ('<'===m ? '&lt;' : '&gt;');
+        });
+    }
     
     $MV.jquery( $ );
     
@@ -695,23 +702,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             return;
         }
         
-        /*if ( subklass )
-        {
-            $.sub = "@@Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+")@@";
-        }*/
-        if ( null == nn ) nn = n.join?n.join(','):String(n);
-        if ( null == $$ ) $$ = toJSON($);
-        /*if ( subklass )
-        {
-            $$ = $$.replace(sub_re, function(m,g){return g.replace(quot_re, '');});
-        }*/
+        nn = n.join?n.join(','):String(n);
+        $$ = toJSON($);
         
         $screen.addClass('ui-delayed').removeClass('ui-undelayed');
         
         var count = 0, chunk = 1000;
         
         setTimeout(function(){
-            //if ( subklass ) $.sub = new Abacus[subklass](subn, sub$);
             comb = new Abacus[klass](n, $);
             if ( subklass )
             {
@@ -744,27 +742,28 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     comb[submethod](new Abacus[subklass](subn, sub$));
                 }
             }
+            var total = comb.total();
             
             model.set('summary', (
-            ("Abacus."+klass+"("+nn+","+$$+")"+subklass_code).split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;") + "<br />" +
-            "total = " + String(comb.total())+(comb.total().gt(MAXITEMS)?" (max "+MAXITEMS+" shown)":"")
+            esc_html("Abacus."+klass+"("+nn+","+$$+")"+subklass_code) + "<br />" +
+            "total = " + String(total) + (total.gt(MAXITEMS)?" (max "+MAXITEMS+" shown)":"")
             ), true);
             
-            setTimeout(function next(){
-                var cnt = 0, output="", nxt = null;
+            setTimeout(function next_chunk(){
+                var cnt = 0, output="", next = null;
                 while( (cnt<chunk) && (count<MAXITEMS) && comb.hasNext() )
                 {
-                    nxt = comb.next();
-                    if ( null == nxt ) {nxt=false; break;}
+                    next = comb.next();
+                    if ( null == next ) {next=false; break;}
                     if ( 0 < count ) output += "\n";
-                    output += nxt.join(sep);
+                    output += next.join(sep);
                     count++; cnt++;
                 }
                 out.setValue(out.getValue()+output);
                 
-                if ( (count<MAXITEMS) && comb.hasNext() && (false!==nxt) )
+                if ( (count<MAXITEMS) && comb.hasNext() && (false!==next) )
                 {
-                    setTimeout(next, 100);
+                    setTimeout(next_chunk, 40);
                 }
                 else
                 {
@@ -775,7 +774,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     }
                     $screen.addClass('ui-undelayed').removeClass('ui-delayed');
                 }
-            }, 100);
+            }, 10);
         }, 10);
     }
     
@@ -785,29 +784,25 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         params = params && params.hash ? appRouter.unglue( params.hash ) : null;
         if ( params && ("produce"===params.action) )
         {
-            if ( params.conditions && params.conditions.data && !params.conditions.data.length )
+            if ( params.conditions && params.conditions.data && null==params.conditions.data.length )
             {
                 // make them arrays
-                var len, tmp, i;
-                len = Object.keys(params.conditions.data).length;
-                tmp = params.conditions.data; params.conditions.data = new Array(len);
-                for(i=0; i<len; i++) params.conditions.data[i] = String(tmp[i]);
-                len = Object.keys(params.conditions.pos).length;
-                tmp = params.conditions.pos; params.conditions.pos = new Array(len);
-                for(i=0; i<len; i++) params.conditions.pos[i] = +tmp[i];
-                len = Object.keys(params.conditions.type).length;
-                tmp = params.conditions.type; params.conditions.type = new Array(len);
-                for(i=0; i<len; i++) params.conditions.type[i] = String(tmp[i]);
+                params.conditions.data.length = Object.keys(params.conditions.data).length;
+                params.conditions.data = Array.prototype.slice.call(params.conditions.data).map(String);
+                params.conditions.pos.length = Object.keys(params.conditions.pos).length;
+                params.conditions.pos = Array.prototype.slice.call(params.conditions.pos).map(Number);
+                params.conditions.type.length = Object.keys(params.conditions.type).length;
+                params.conditions.type = Array.prototype.slice.call(params.conditions.type).map(String);
             }
             var model = $screen.modelview('model');
             model.set('conditions_dom', params.conditions);
             model.set('conditions', params.conditions);
-            model.set('object', params.object, true);
-            model.set('type', params.type, true);
-            model.set('order', params.order, true);
-            model.set('N', params.N, true);
-            model.set('K', params.K, true);
-            setTimeout(function(){ produce( model ); }, 40);
+            model.set('object', String(params.object), true);
+            model.set('type', String(params.type), true);
+            model.set('N', String(params.N), true);
+            model.set('K', String(params.K), true);
+            model.set('order', String(params.order||""), true);
+            setTimeout(function(){ produce( model ); }, 10);
         }
     }});
     
@@ -823,7 +818,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 summary: "",
                 object: 'permutation',
                 type: 'default',
-                order: 'lex',
+                order: '',
                 N: 2,
                 K: 1,
                 conditions: null
@@ -849,7 +844,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 "object": function( key, val/*, pub*/ ){
                     this.$data.object = val;
                     this.set("type","default", true);
-                    this.set("order", "lex", true);
+                    this.set("order", "", true);
                 }
             }
             ,getters: {
