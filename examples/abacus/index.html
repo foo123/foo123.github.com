@@ -313,6 +313,8 @@ div.sepa {
         <div style="display:inline-block;margin-bottom:10px">
         <label for="type">SubType:</label><select id="type" name="model[type]">
         <option value="default" selected>$(object.default)</option>
+        <option value="gray" data-bind='{"show":"object.tuple"}'>(n,k)-Gray Code</option>
+        <option value="word" data-bind='{"show":"object.tuple"}'>Word</option>
         <option value="conditional-tuple" data-bind='{"show":"object.tuple"}'>Conditional Tuple</option>
         <option value="cyclic" data-bind='{"show":"object.permutation"}'>Cyclic Shift</option>
         <option value="multiset" data-bind='{"show":"object.permutation"}'>Multiset</option>
@@ -324,7 +326,7 @@ div.sepa {
         <option value="k-cycle-permutation" data-bind='{"show":"object.permutation"}'>k-Cycle</option>
         <option value="conditional-permutation" data-bind='{"show":"object.permutation"}'>Conditional Permutation</option>
         <option value="conditional-k-permutation" data-bind='{"show":"object.permutation"}'>Conditional k-Permutation</option>
-        <option value="unordered_01" data-bind='{"show":"object.combination"}'>Binary Output</option>
+        <option value="unordered_01" data-bind='{"show":"object.combination"}'>Zero/One</option>
         <option value="ordered" data-bind='{"show":"object.combination"}'>Ordered</option>
         <option value="repeated" data-bind='{"show":"object.combination"}'>Unordered+Repeated</option>
         <option value="ordered_repeated" data-bind='{"show":"object.combination"}'>Ordered+Repeated</option>
@@ -332,7 +334,7 @@ div.sepa {
         <option value="conditional-ordered_repeated" data-bind='{"show":"object.combination"}'>Conditional Ordered+Repeated</option>
         <option value="subset_binary" data-bind='{"show":"object.subset"}'>Subset (Binary)</option>
         <option value="subset_combination" data-bind='{"show":"object.subset"}'>Subset (Combination)</option>
-        <option value="subset_01" data-bind='{"show":"object.subset"}'>Binary Output</option>
+        <option value="subset_01" data-bind='{"show":"object.subset"}'>Zero/One</option>
         <option value="partition_max" data-bind='{"show":"object.partition"}'>Maximum Part = M</option>
         <option value="partition_parts" data-bind='{"show":"object.partition"}'>Number of Parts = K</option>
         <option value="composition_max" data-bind='{"show":"object.composition"}'>Maximum Part = M</option>
@@ -344,10 +346,13 @@ div.sepa {
         <option value="" >Default</option>
         <option value="lex" data-bind='{"show":"haslex"}'>Lexicographic</option>
         <option value="colex" data-bind='{"show":"hascolex"}'>CoLexicographic</option>
+        <option value="minimal" data-bind='{"show":"hasminimal"}'>Minimal</option>
         <option value="lex,reversed" data-bind='{"show":"haslex"}'>Reverse Lexicographic</option>
         <option value="colex,reversed" data-bind='{"show":"hascolex"}'>Reverse CoLexicographic</option>
+        <option value="minimal,reversed" data-bind='{"show":"hasminimal"}'>Reverse Minimal</option>
         <option value="lex,reflected" data-bind='{"show":"haslex"}'>Reflected Lexicographic</option>
         <option value="colex,reflected" data-bind='{"show":"hascolex"}'>Reflected CoLexicographic</option>
+        <option value="minimal,reflected" data-bind='{"show":"hasminimal"}'>Reflected Minimal</option>
         <option value="random" data-bind='{"show":"hasrand"}'>Random</option>
         <option value="random,reflected" data-bind='{"show":"hasrand"}'>Random Reflected</option>
         </select>
@@ -357,6 +362,8 @@ div.sepa {
         <label for="N">$(labelN)</label><input id="N"  name="model[N]" size="5" type="text" value="1" />
         </div><div style="display:inline-block" data-bind='{"show":"hasK"}'>
         <label for="K">$(labelK)</label><input id="K"  name="model[K]" size="8" type="text" value="1" />
+        </div><div style="display:inline-block" data-bind='{"show":"hasAlphabet"}'>
+        <label for="alphabet">Alphabet = </label><input id="alphabet" name="model[alphabet]" size="12" type="text" value="" title="Alphabet" />
         </div>
         <div style="display:inline-block;position:relative;vertical-align:top;margin-left:5px;margin-top:-1.6em" data-bind='{"show":"hasConditions"}'>
         <table id="conditions" style="position:relative;max-width:100%;border-spacing:2">
@@ -492,7 +499,16 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             klass = "Tensor";
             n = [N, +K];
             $.type = "tuple";
-            if ( "conditional-tuple" === type )
+            if ( "word" === type )
+            {
+                var alphabet = model.get("alphabet");
+                if ( !!alphabet ) $.output = alphabet;
+            }
+            else if ( "gray" === type )
+            {
+                $.output = "gray";
+            }
+            else if ( "conditional-tuple" === type )
             {
                 conditions = model.get('conditions');
                 if ( conditions )
@@ -685,9 +701,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             klass = "Partition";
             n = N;
             if ( "partition_max" === type )
+            {
                 $["max="] = +K;
+            }
             else if ( "partition_parts" === type )
-                $["parts="] = +K;
+            {
+                //$["parts="] = +K;
+                $["max="] = +K;
+                $.output = "conjugate";
+            }
         }
         else if ( "composition" === object )
         {
@@ -713,7 +735,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         
         $screen.addClass('ui-delayed').removeClass('ui-undelayed');
         
-        var count = 0, chunk = 1000;
+        var count = 0, chunk = 5000;
         
         setTimeout(function(){
             if ( "CombinatorialIterator"===klass )
@@ -768,7 +790,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     next = comb.next();
                     if ( null == next ) {next=false; break;}
                     if ( 0 < count ) output += "\n";
-                    output += next.join(sep);
+                    output += next.join ? next.join(sep) : String(next);
                     count++; cnt++;
                 }
                 out.setValue(out.getValue()+output);
@@ -813,6 +835,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             model.set('type', String(params.type), true);
             model.set('N', String(params.N), true);
             model.set('K', String(params.K), true);
+            model.set('alphabet', String(params.alphabet||""), true);
             model.set('order', String(params.order||""), true);
             setTimeout(function(){ produce( model ); }, 10);
         }
@@ -833,10 +856,12 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 order: "", // default
                 N: 2,
                 K: 1,
+                alphabet: "",
                 conditions: null
             }
             ,types: {
-                N: $MV.Type.Cast.INT
+                N: $MV.Type.Cast.INT,
+                alphabet: $MV.Type.Cast.STR
             }
             ,setters: {
                 "conditions_dom": function( key, cond ){
@@ -912,6 +937,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 "hascolex": function(){
                     return true; //"composition"!==this.$data.object && "partition"!==this.$data.object;
                 },
+                "hasminimal": function(){
+                    return true;
+                },
                 "hasrand": function(){
                     return true;
                 },
@@ -921,6 +949,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 "hasK": function(){
                     var obj = this.$data.object, type = this.$data.type;
                     return ("combination"===obj || "tensor"===obj || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type || "conditional-k-permutation"===type || "k-derangement"===type || "k-cycle-permutation"===type)) || ("partition"===obj && ("partition_max"===type||"partition_parts"===type)) || ("composition"===obj && ("composition_max"===type||"composition_parts"===type));
+                },
+                "hasAlphabet": function(){
+                    return "word"===this.$data.type;
                 },
                 "hasConditions": function(){
                     var ret = "conditional-"===this.$data.type.substr(0,12);
@@ -952,11 +983,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 //"default_order": ["object","type"],
                 "hasN": ["object"],
                 "hasK": ["object","type"],
+                "hasAlphabet": ["object","type"],
                 "hasConditions": ["object","type"],
                 "labelN": ["object","type"],
                 "labelK": ["object","type"],
                 "haslex": ["object","type"],
                 "hascolex": ["object","type"],
+                "hasminimal": ["object","type"],
                 "hasrand": ["object","type"]
             }
         }
@@ -977,6 +1010,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                         order: model.get('order'),
                         N: model.get('N'),
                         K: model.get('K'),
+                        alphabet: model.get('alphabet'),
                         conditions: conditions
                     };
                 model.set('conditions',conditions);
