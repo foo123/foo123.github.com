@@ -700,6 +700,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         {
             klass = "Partition";
             n = N;
+            sep = '+';
             if ( "partition_max" === type )
             {
                 $["max="] = +K;
@@ -715,6 +716,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         {
             klass = "Partition";
             n = N;
+            sep = '+';
             $.type = "composition";
             if ( "composition_parts" === type )
                 $["parts="] = +K;
