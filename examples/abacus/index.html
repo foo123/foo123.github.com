@@ -387,7 +387,7 @@ div.sepa {
 <option value="NOT_IN">NOT IN</option>
 <option value="EXPR">=EXPR</option>
 </select>&nbsp;</td>
-<td><input type="text" name="dat" value="" size="6" title="Values or Expression. Eg Value Set: 0 or 1 or 2 = {0,1,2}. Value at pos &quot;1&quot; plus 4 = [1]+4" /></td>
+<td><input type="text" name="dat" value="" size="6" title="Values or Expression. Eg Value Set: 0 or 1 or 2 = 0,1,2. Value at pos &quot;1&quot; plus 4 = [1]+4" /></td>
 <td>&nbsp;<button title="Remove" style="font-weight:bold" data-bind='{"click":"remove_condition"}'>-</button></td>
 </tr>
 </script>
@@ -466,6 +466,19 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             return '&'===m ? '&amp;' : ('<'===m ? '&lt;' : '&gt;');
         });
     }
+    function number( x )
+    {
+        return Number(x);
+    }
+    function string( x )
+    {
+        return String(x);
+    }
+    function toArray( o )
+    {
+        o.length = Object.keys(o).length;
+        return Array.prototype.slice.call(o);
+    }
     
     $MV.jquery( $ );
     
@@ -493,7 +506,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         if ( "tensor" === object )
         {
             klass = "Tensor";
-            n = String(K).split(',').map(Number);
+            n = string(K).split(',').map(number);
         }
         else if ( "tuple" === object )
         {
@@ -523,7 +536,6 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     sub$ = {order:order,type:"tuple"};
                     subn = [N-data.length, +K];
                     submethod = "interleaveWith";
-                    subklass_code = ".interleaveWith(Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+"))";
                 }
             }
         }
@@ -538,7 +550,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             else if ( "multiset"===type )
             {
                 $.type = "multiset";
-                $.multiplicity = String(K).split(',').map(Number);
+                $.multiplicity = string(K).split(',').map(number);
             }
             else if ( "derangement"===type )
             {
@@ -552,6 +564,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             {
                 klass = "Tensor";
                 n = Abacus.Util.array(n, n, -1);
+                nn = toJSON(n);
             }
             else if ( "connected"===type )
             {
@@ -586,7 +599,6 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     sub$ = {order:order};
                     subn = N-data.length;
                     submethod = "completeWith";
-                    subklass_code = ".completeWith(Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+"))";
                 }
             }
             else if ( "conditional-k-permutation"===type )
@@ -603,7 +615,6 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     sub$ = {order:order,type:"ordered"};
                     subn = [N-data.length, (+K)-data.length];
                     submethod = "completeWith";
-                    subklass_code = ".completeWith(Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+"))";
                 }
                 else
                 {
@@ -635,7 +646,6 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     sub$ = {order:order,type:"ordered"};
                     subn = [N-data.length, (+K)-data.length];
                     submethod = "completeWith";
-                    subklass_code = ".completeWith(Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+"))";
                 }
                 else
                 {
@@ -664,7 +674,6 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     sub$ = {order:order,type:"ordered+repeated"};
                     subn = [N, (+K)-data.length];
                     submethod = "interleaveWith";
-                    subklass_code = ".interleaveWith(Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+"))";
                 }
                 else
                 {
@@ -758,30 +767,31 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 if ( "conditional-permutation"===type )
                 {
                     subn = N-comb.dimension();
-                    if ( 0 < subn ) comb[submethod](new Abacus[subklass](subn, sub$));
-                    else subklass_code = '';
+                    if ( 0 >= subn ) subklass = null;
                 }
                 else if ( "conditional-k-permutation"===type || "conditional-ordered"===type )
                 {
                     subn[0] = N-comb.dimension(); subn[1] = (+K)-comb.dimension();
-                    if ( 0 < subn[0] && 0 < subn[1] ) comb[submethod](new Abacus[subklass](subn, sub$));
-                    else subklass_code = '';
+                    if ( 0 >= subn[0] || 0 >= subn[1] ) subklass = null;
                 }
                 else if ( "conditional-ordered_repeated"===type )
                 {
                     subn[1] = (+K)-comb.dimension();
-                    if ( 0 < subn[1] ) comb[submethod](new Abacus[subklass](subn, sub$));
-                    else subklass_code = '';
+                    if ( 0 >= subn[1] ) subklass = null;
                 }
                 else if ( "conditional-tuple"===type )
                 {
                     subn[0] = N-comb.dimension();
-                    if ( 0 < subn[0] ) comb[submethod](new Abacus[subklass](subn, sub$));
-                    else subklass_code = '';
+                    if ( 0 >= subn[0] ) subklass = null;
+                }
+                if ( subklass )
+                {
+                    subklass_code = "."+submethod+"(Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+"))";
+                    comb[submethod](new Abacus[subklass](subn, sub$));
                 }
                 else
                 {
-                    comb[submethod](new Abacus[subklass](subn, sub$));
+                    subklass_code = "";
                 }
             }
             
@@ -798,7 +808,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     next = comb.next();
                     if ( null == next ) {next=false; break;}
                     if ( 0 < count ) output += "\n";
-                    output += next.join ? next.join(sep) : String(next);
+                    output += next.join ? next.join(sep) : string(next);
                     count++; cnt++;
                 }
                 out.setValue(out.getValue()+output);
@@ -829,22 +839,19 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             if ( params.conditions && params.conditions.data && null==params.conditions.data.length )
             {
                 // make them arrays
-                params.conditions.data.length = Object.keys(params.conditions.data).length;
-                params.conditions.data = Array.prototype.slice.call(params.conditions.data).map(String);
-                params.conditions.pos.length = Object.keys(params.conditions.pos).length;
-                params.conditions.pos = Array.prototype.slice.call(params.conditions.pos).map(Number);
-                params.conditions.type.length = Object.keys(params.conditions.type).length;
-                params.conditions.type = Array.prototype.slice.call(params.conditions.type).map(String);
+                params.conditions.data = toArray(params.conditions.data).map(string);
+                params.conditions.pos = toArray(params.conditions.pos).map(number);
+                params.conditions.type = toArray(params.conditions.type).map(string);
             }
             var model = $screen.modelview('model');
             model.set('conditions_dom', params.conditions||null);
             model.set('conditions', params.conditions||null);
-            model.set('object', String(params.object), true);
-            model.set('type', String(params.type), true);
-            model.set('N', String(params.N), true);
-            model.set('K', String(params.K), true);
-            model.set('alphabet', String(params.alphabet||""), true);
-            model.set('order', String(params.order||""), true);
+            model.set('object', string(params.object), true);
+            model.set('type', string(params.type), true);
+            model.set('N', string(params.N), true);
+            model.set('K', string(params.K), true);
+            model.set('alphabet', string(params.alphabet||""), true);
+            model.set('order', string(params.order||""), true);
             setTimeout(function(){ produce( model ); }, 10);
         }
     }});
