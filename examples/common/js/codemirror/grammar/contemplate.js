@@ -47,11 +47,15 @@ codemirror_define_grammar_mode("contemplate", {
                                 "set", "unset", "isset", "empty", "iif", "continue", "break", "local_set"
                                 ]}
     ,"function"                 : {"autocomplete":true,"tokens":[
-                                "n","s","f","q","qq","dq","addslashes","stripslashes","sprintf",
-                                "concat","cc","ltrim","rtrim","trim","lowercase","uppercase",
-                                "lcfirst","ucfirst","camelcase","snakecase","count","haskey",
-                                "uuid","time","now","date","ldate","locale","l","nlocale","nl","xlocale","xl","nxlocale","nxl",
-                                "inline","tpl","e","url","is_array","in_array","json_encode","json_decode","j","join"
+                                's', 'n', 'f', 'q', 'qq', 
+                                'echo', 'time', 'count',
+                                'lowercase', 'uppercase', 'ucfirst', 'lcfirst', 'sprintf',
+                                'date', 'ldate', 'locale', 'xlocale',
+                                'inline', 'tpl', 'uuid', 'haskey',
+                                'concat', 'ltrim', 'rtrim', 'trim', 'addslashes', 'stripslashes',
+                                'is_array', 'in_array', 'json_encode', 'json_decode',
+                                'camelcase', 'snakecase', 'e', 'url', 'nlocale', 'nxlocale', 'join', 'queryvar', 'striptags',
+                                'l','xl','nl','nxl','cc','j','dq','now','template'
                                 ]}
     ,"plugin"                   : "RE::/[a-zA-Z_][a-zA-Z0-9_]*/"
 
