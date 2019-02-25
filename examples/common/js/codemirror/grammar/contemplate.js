@@ -49,7 +49,7 @@ codemirror_define_grammar_mode("contemplate", {
     ,"function"                 : {"autocomplete":true,"tokens":[
                                 's', 'n', 'f', 'q', 'qq', 
                                 'echo', 'time', 'count',
-                                'lowercase', 'uppercase', 'ucfirst', 'lcfirst', 'sprintf',
+                                'lowercase', 'uppercase', 'ucfirst', 'lcfirst', 'sprintf', 'vsprintf',
                                 'date', 'ldate', 'locale', 'xlocale',
                                 'inline', 'tpl', 'uuid', 'haskey',
                                 'concat', 'ltrim', 'rtrim', 'trim', 'addslashes', 'stripslashes',
