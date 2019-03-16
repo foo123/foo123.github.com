@@ -32,6 +32,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     ,GrammarTemplate: "GrammarTemplate.min"
     ,GrammarPattern: "GrammarPattern.min"
     ,Xpresion: "Xpresion.min"
+    ,Unicache: "Unicache.min"
     ,HAAR: "haar-detector.min"
     ,cascades: "../cascades"
     //,FilterBundle: "filter.bundle",
