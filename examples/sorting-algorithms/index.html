@@ -28,9 +28,6 @@ body {
     color:#aaa;
     position:relative;
 }
-input,select,textarea {
-    color: #121212;
-}
 .showcase {
     margin:5px 2px;
     color:white;
@@ -159,7 +156,6 @@ input,select,textarea {
     
 <section id="panel" class="fluid col-1-1" style="padding: 20px;">
 <div id="controls" class="fluid col-1-4">
-    <strong>Sort.js ($(sort_version))</strong><br />
     <strong>Select Sorting Algorithm: </strong><br />
     <div class="cont"><select name="model[algorithm][selected]">
         <optgroup label="Comparison-based:">
@@ -171,13 +167,10 @@ input,select,textarea {
             <option value="InsertionSort">InsertionSort</option>
             <option value="CycleSort">CycleSort</option>
             <option value="LibrarySort">LibrarySort</option>
-            <option value="TreeSort">TreeSort</option>
             <option value="RecursiveMergeSort">RecursiveMergeSort</option>
             <option value="MergeSort">MergeSort</option>
-            <option value="NaturalMergeSort">NaturalMergeSort</option>
             <option value="RecursiveQuickSort">RecursiveQuickSort</option>
             <option value="QuickSort">QuickSort</option>
-            <option value="IntroSort">IntroSort</option>
         </optgroup>
         <optgroup label="Arithmetic-based:">
             <option value="PermutationSort (custom)">PermutationSort (custom)</option>
@@ -285,7 +278,7 @@ input,select,textarea {
     
     
     <footer id="footer">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net/#contact_tab" class="donate">hire me for a job</a></div>
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-development.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
     
 <div class="showcase">DOM abstraction by <a href="http://jquery.com/" target="_blank">jQuery</a></div>
 
@@ -311,10 +304,10 @@ require([/*'Benchmark',*/ 'jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Sort'
     $MV.jquery( $ );
     
     // some extra array methods used in the tests
-    Array.prototype.nsort = function( ){ this.sort($S.utils.asNumbers); return this; };
-    Array.prototype.shuffle = function( ){ return $S.Shuffle(this); };
-    Array.prototype.isSorted = function( desc ){ return $S.isSorted(this, true===desc); };
-    Array.prototype.toString = function( ){ return '[ ' + this.join(', ') + ' ]'; };
+    Array.prototype.nsort = function() { return this.sort($S.utils.asNumbers); }
+    Array.prototype.shuffle = function() { return $S.Shuffle(this); }
+    Array.prototype.isSorted = function() { return $S.isSorted(this, true); }
+    Array.prototype.toString = function() { return '[ ' + this.join(', ') + ' ]'; }
         
     // prepare test data
     function prepareTestData($S, N, dtype, stype)
@@ -549,15 +542,14 @@ require([/*'Benchmark',*/ 'jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Sort'
             id: 'model',
             
             data: {
-                sort_version: 'v.'+$S.VERSION,
                 algorithm: {
                     selected: 'BuiltinSort',
                     data_size: 5,
                     data_type: 'range',
                     pre_sort_state: 'shuffled',
-                    name: 'BuiltinSort',
-                    reflink: $S.BuiltinSort.reference,
-                    desc: $S.BuiltinSort.description
+                    name: '',
+                    reflink: '#',
+                    desc: ''
                 },
                 result: {
                     showData: false,

@@ -111,7 +111,7 @@
     
 <header id="header">
     <h1>Xpresion</h1>
-    <i>A simple and flexible Expression Parser Engine for PHP, Python, Node.js and Browser</i>
+    <i>A simple and flexible Expression Parser Engine for PHP, Python, Node/XPCOM/JS</i>
 </header>
 
 <br /><br />
@@ -142,7 +142,7 @@
     
     
     <footer id="footer">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="http://nikos-web-development.netai.net/#contact_tab" class="donate">hire me for a job</a></div>
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-development.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
     
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 
@@ -159,6 +159,8 @@
 require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
     function( $, $R, $MV, Xpresion ) {
     "use strict";
+    
+    Xpresion.defaultConfiguration( );
     
     var undef=undefined, $window = $(window), $screen = $('#screen'), 
         input = document.getElementById('input'),
@@ -213,56 +215,26 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
         
     appTask = {
         debug: function( appModel ) {
-            var input = appModel.get('expr'), err = null;
-            if ( !expr || expr.source !== input )
-            {
-                try {
-                    expr = Xpresion(input);
-                } catch(e) {
-                    err = e;
-                    expr = null;
-                }
-            }
+            var input = appModel.get('expr');
+            if ( !expr || expr.source !== input ) expr = Xpresion(input);
             
-            if ( err )
-            {
-                oEditor.setValue(err.toString());
-            }
-            else
-            {
-                oEditor.setValue([
-                    "Debug Information"
-                    ,"Input Expression: " + input
-                    ,"Debug Output: "
-                    ,expr.debug(fromJSON(vEditor.getValue()))
-                ].join( "\n\n" ));
-            }
+            oEditor.setValue([
+                "Debug Information"
+                ,"Input Expression: " + input
+                ,"Debug Output: "
+                ,expr.debug(fromJSON(vEditor.getValue()))
+            ].join( "\n\n" ));
         },
         
         evaluate: function( appModel ) {
-            var input = appModel.get('expr'), err = null;
-            if ( !expr || expr.source !== input )
-            {
-                try {
-                    expr = Xpresion(input);
-                } catch(e) {
-                    err = e;
-                    expr = null;
-                }
-            }
+            var input = appModel.get('expr');
+            if ( !expr || expr.source !== input ) expr = Xpresion(input);
             
-            if ( err )
-            {
-                oEditor.setValue(err.toString());
-            }
-            else
-            {
-                oEditor.setValue([
-                    "Evaluation"
-                    ,"Input Expression: " + input
-                    ,"Result: " + expr.evaluate(fromJSON(vEditor.getValue()))
-                ].join( "\n\n" ));
-            }
+            oEditor.setValue([
+                "Evaluation"
+                ,"Input Expression: " + input
+                ,"Result: " + expr.evaluate(fromJSON(vEditor.getValue()))
+            ].join( "\n\n" ));
         }
     };
     
