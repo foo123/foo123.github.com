@@ -854,12 +854,21 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         params = params && params.hash ? appRouter.unglue( params.hash ) : null;
         if ( params && ("produce"===params.action) )
         {
-            if ( params.conditions && params.conditions.data && null==params.conditions.data.length )
+            if ( params.conditions && params.conditions.data )
             {
-                // make them arrays
-                params.conditions.data = toArray(params.conditions.data).map(string);
-                params.conditions.pos = toArray(params.conditions.pos).map(number);
-                params.conditions.type = toArray(params.conditions.type).map(string);
+                if ( null==params.conditions.data.length )
+                {
+                    // make them arrays
+                    params.conditions.data = toArray(params.conditions.data).map(string);
+                    params.conditions.pos = toArray(params.conditions.pos).map(number);
+                    params.conditions.type = toArray(params.conditions.type).map(string);
+                }
+                else
+                {
+                    params.conditions.data = params.conditions.data.map(string);
+                    params.conditions.pos = params.conditions.pos.map(number);
+                    params.conditions.type = params.conditions.type.map(string);
+                }
             }
             var model = $screen.modelview('model');
             model.set('conditions_dom', params.conditions||null);

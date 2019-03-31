@@ -215,26 +215,63 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
         
     appTask = {
         debug: function( appModel ) {
-            var input = appModel.get('expr');
-            if ( !expr || expr.source !== input ) expr = Xpresion(input);
-            
-            oEditor.setValue([
-                "Debug Information"
-                ,"Input Expression: " + input
-                ,"Debug Output: "
-                ,expr.debug(fromJSON(vEditor.getValue()))
-            ].join( "\n\n" ));
+            var input = appModel.get('expr'), error;
+            if ( !expr || expr.source !== input )
+            {
+                try {
+                    expr = Xpresion(input);
+                } catch(err) {
+                    expr = null;
+                    error = err;
+                }
+            }
+            if ( expr && !error )
+            {
+                oEditor.setValue([
+                    "Debug Information"
+                    ,"Input Expression: " + input
+                    ,"Debug Output: "
+                    ,expr.debug(fromJSON(vEditor.getValue()))
+                ].join( "\n\n" ));
+            }
+            else if ( error )
+            {
+                oEditor.setValue(error.toString());
+            }
+            else
+            {
+                oEditor.setValue("");
+            }
         },
         
         evaluate: function( appModel ) {
-            var input = appModel.get('expr');
-            if ( !expr || expr.source !== input ) expr = Xpresion(input);
+            var input = appModel.get('expr'), error;
+            if ( !expr || expr.source !== input )
+            {
+                try {
+                    expr = Xpresion(input);
+                } catch(err) {
+                    expr = null;
+                    error = err;
+                }
+            }
             
-            oEditor.setValue([
-                "Evaluation"
-                ,"Input Expression: " + input
-                ,"Result: " + expr.evaluate(fromJSON(vEditor.getValue()))
-            ].join( "\n\n" ));
+            if ( expr && !error )
+            {
+                oEditor.setValue([
+                    "Evaluation"
+                    ,"Input Expression: " + input
+                    ,"Result: " + expr.evaluate(fromJSON(vEditor.getValue()))
+                ].join( "\n\n" ));
+            }
+            else if ( error )
+            {
+                oEditor.setValue(error.toString());
+            }
+            else
+            {
+                oEditor.setValue("");
+            }
         }
     };
     
@@ -246,6 +283,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
         {
             var appModel = $screen.modelview( 'model' );
             if ( params.expr ) appModel.set('expr', params.expr, 1);
+            if ( params.data && params.data.length ) vEditor.setValue(params.data);
             appTask[ params.action ]( appModel );
         }
     }});
@@ -280,7 +318,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
                 var model=this.$model;
                 location.hash = '#' + appRouter.glue({
                     action: 'debug',
-                    expr: model.get( 'expr' )
+                    expr: model.get( 'expr' ),
+                    data: vEditor.getValue()
                 });
                 appTask.debug( model );
             },
@@ -289,7 +328,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
                 var model=this.$model;
                 location.hash = '#' + appRouter.glue({
                     action: 'evaluate',
-                    expr: model.get( 'expr' )
+                    expr: model.get( 'expr' ),
+                    data: vEditor.getValue()
                 });
                 appTask.evaluate( model );
             }
