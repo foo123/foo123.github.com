@@ -25,7 +25,7 @@ codemirror_define_grammar_mode("contemplate", {
 "Lex"                           : {
 
      "variable"                 : "RE::/\\$[_A-Za-z][_A-Za-z0-9]*/"
-    ,"property"                 : "RE::/\\.[_A-Za-z][_A-Za-z0-9]*/"
+    ,"property"                 : "RE::/(?:\\.|->)[_A-Za-z][_A-Za-z0-9]*/"
     ,"number"                   : [
                                 // floats
                                 "RE::/\\d*\\.\\d+(e[\\+\\-]?\\d+)?/",
@@ -55,7 +55,7 @@ codemirror_define_grammar_mode("contemplate", {
                                 'concat', 'ltrim', 'rtrim', 'trim', 'addslashes', 'stripslashes',
                                 'is_array', 'in_array', 'json_encode', 'json_decode',
                                 'camelcase', 'snakecase', 'e', 'url', 'nlocale', 'nxlocale', 'join', 'queryvar', 'striptags',
-                                'l','xl','nl','nxl','cc','j','dq','now','template'
+                                'l','xl','nl','nxl','cc','j','dq','now','template','keys','values','buildquery','parsequery'
                                 ]}
     ,"plugin"                   : "RE::/[a-zA-Z_][a-zA-Z0-9_]*/"
 
