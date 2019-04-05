@@ -488,6 +488,8 @@
                     <br /><br />
                     Example: <code>composer.either();</code> (start of alternation)
                     <br /><br />
+                    <code>composer.or_();</code> (add new alternation sequence)
+                    <br /><br />
                     Example: <code>composer.end();</code> (end of alternation)
                 </p>
             </section>
@@ -573,7 +575,7 @@ require(['jQuery', 'ModelView', 'Regex', 'Dromeo'],
         if ( null == tab ) tab = "";
         
         var code = '', type = node.type, fl = node.flags||{},
-            i, l = node.value.length, q, g, tab2 = tab + TAB;
+            i, l = node.value.length, q, g, tab2 = tab + TAB, check;
         
         if ( "Sequence" === type )
         {
@@ -586,10 +588,12 @@ require(['jQuery', 'ModelView', 'Regex', 'Dromeo'],
         else if ( "Alternation" === type )
         {
             code += tab + '.either()';
+            check = 0;
             for(i=0; i<l; i++)
             {
-                if ( "Comment"!==node.value[i].type ) code += "\n";
+                if ( "Comment"!==node.value[i].type ) code += "\n" + (check ? tab + ".or_( )\n" : '');
                 code += ast2code(node.value[i], tab2);
+                check = 1;
             }
             code += "\n" + tab + '.end()';
         }
