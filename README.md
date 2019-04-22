@@ -1,7 +1,7 @@
 foo123.github.com
 =================
 
-[Demos and Showcases](http://foo123.github.com/)
+[Demos and Showcases](https://foo123.github.io/)
 
 __foo__ : _An term used for unimportant variables in programming when the programmer is too lazy to think of an actual name._  [Urban Dictionary](http://www.urbandictionary.com/define.php?term=foo)
 
