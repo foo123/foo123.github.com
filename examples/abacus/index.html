@@ -12,7 +12,7 @@
 <html lang="en" class="no-ie">
 <!--<![endif]-->
 <head>
-<title>Abacus</title>
+<title>Abacus - advanced combinatorics library for Node.js / Browser / Javascript</title>
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
@@ -289,7 +289,7 @@ div.sepa {
     
 <header id="header">
     <h1>Abacus</h1>
-    <i>A simple, fast &amp; versatile combinatorics library for Node/XPCOM/JS, PHP, Python, Java, C/C++</i>
+    <i>A simple, fast &amp; versatile combinatorics library for Node.js / Browser / XPCOM Javascript, PHP, Python, Java, C/C++</i>
 </header>
 
 <br /><br />
@@ -308,6 +308,8 @@ div.sepa {
         <option value="subset">Subset</option>
         <option value="partition">Partition</option>
         <option value="composition">Composition</option>
+        <option value="latin_square">Latin Square</option>
+        <option value="magic_square">Magic Square</option>
         </select>
         </div>
         <div style="display:inline-block;margin-bottom:10px">
@@ -482,6 +484,25 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         return Array.prototype.slice.call(o);
     }
     
+    function format_num( n, L )
+    {
+        var s = String(n), l = s.length;
+        return l < L ? (new Array(L-l+1).join(' '))+s : s; 
+    }
+    
+    function print_square( s, len )
+    {
+        if ( null == s )
+        {
+            return('null');
+            return;
+        }
+        var i, n = s.length, /*len = String(n*n).length,*/ out = '';
+        for(i=0; i<n; i++)
+            out += s[i].map(function(x){ return format_num(x, len); }).join(' ') + "\n"; 
+        return(out);
+    }
+
     $MV.jquery( $ );
     
     height = output.clientHeight;
@@ -505,7 +526,19 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             subklass=null, subklass_code='', sub$ = null, subn=null, submethod=null,
             conditions, data;
         
-        if ( "tensor" === object )
+        if ( "latin_square" === object )
+        {
+            model.set('summary', esc_html("Abacus.LatinSquare.make("+N+")"), true);
+            out.setValue(print_square(Abacus.LatinSquare.make(N), String(N).length));
+            return;
+        }
+        else if ( "magic_square" === object )
+        {
+            model.set('summary', esc_html("Abacus.MagicSquare.make("+N+")"), true);
+            out.setValue(print_square(Abacus.MagicSquare.make(N), String(N*N).length));
+            return;
+        }
+        else if ( "tensor" === object )
         {
             klass = "Tensor";
             n = string(K).split(',').map(number);
@@ -974,16 +1007,16 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     return this.$data.object === "composition";
                 },
                 "haslex": function(){
-                    return true;
+                    return this.$data.object.slice(-7) !== "_square";
                 },
                 "hascolex": function(){
-                    return true; //"composition"!==this.$data.object && "partition"!==this.$data.object;
+                    return this.$data.object.slice(-7) !== "_square"; //"composition"!==this.$data.object && "partition"!==this.$data.object;
                 },
                 "hasminimal": function(){
-                    return true;
+                    return this.$data.object.slice(-7) !== "_square";
                 },
                 "hasrand": function(){
-                    return true;
+                    return this.$data.object.slice(-7) !== "_square";
                 },
                 "hasN": function(){
                     return "tensor"!==this.$data.object;
