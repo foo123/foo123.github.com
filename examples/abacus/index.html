@@ -12,12 +12,12 @@
 <html lang="en" class="no-ie">
 <!--<![endif]-->
 <head>
-<title>Abacus - advanced combinatorics library for Node.js / Browser / Javascript</title>
+<title>Abacus - Advanced Combinatorics Library for Node.js / Browser / XPCOM Javascript</title>
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-<meta name="description" content="Abacus" />
+<meta name="description" content="Abacus - Advanced Combinatorics Library for Node.js / Browser / XPCOM Javascript" />
 
 
 <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
@@ -494,13 +494,12 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     {
         if ( null == s )
         {
-            return('null');
-            return;
+            return 'null';
         }
         var i, n = s.length, /*len = String(n*n).length,*/ out = '';
         for(i=0; i<n; i++)
             out += s[i].map(function(x){ return format_num(x, len); }).join(' ') + "\n"; 
-        return(out);
+        return out;
     }
 
     $MV.jquery( $ );
@@ -613,8 +612,12 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             else if ( "k-derangement"===type )
             {
-                $.type = "derangement";
-                $["fixed="] = +K;
+                klass = "Combination"; $.type = "unordered";
+                n = [N, +K];
+                subklass = "Permutation";
+                sub$ = {order:order,type:"derangement"};
+                subn = N-(+K);
+                submethod = "combineWith";
             }
             else if ( "k-cycle-permutation"===type )
             {
