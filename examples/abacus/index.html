@@ -182,7 +182,7 @@ div.sepa {
 {
     width: 20%; height: 1px; padding-bottom: 20%; /* 1:1 */
 }
-.ui-spinner.ui-spinner-dots:before 
+.ui-spinner.ui-spinner-dots:before
 {
     position: relative;
     font-size: 25px;
@@ -285,8 +285,8 @@ div.sepa {
 </head>
 <body class="responsive-864-container">
     <span id="forkongithub"><a href="https://github.com/foo123/Abacus">Count me on GitHub</a></span>
-    
-    
+
+
 <header id="header">
     <h1>Abacus</h1>
     <i>A simple, fast &amp; versatile combinatorics library for Node.js / Browser / XPCOM Javascript, PHP, Python, Java, C/C++</i>
@@ -294,7 +294,7 @@ div.sepa {
 
 <br /><br />
 
-    
+
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
         <strong>Abacus ($(abacus_version)):</strong>
@@ -330,20 +330,22 @@ div.sepa {
         <option value="conditional-permutation" data-bind='{"show":"object.permutation"}'>Conditional Permutation</option>
         <option value="conditional-k-permutation" data-bind='{"show":"object.permutation"}'>Conditional k-Permutation</option>
         <option value="unordered_01" data-bind='{"show":"object.combination"}'>Zero/One</option>
-        <option value="ordered" data-bind='{"show":"object.combination"}'>Ordered</option>
-        <option value="repeated" data-bind='{"show":"object.combination"}'>Unordered+Repeated</option>
-        <option value="ordered_repeated" data-bind='{"show":"object.combination"}'>Ordered+Repeated</option>
-        <option value="conditional-ordered" data-bind='{"show":"object.combination"}'>Conditional Ordered</option>
-        <option value="conditional-ordered_repeated" data-bind='{"show":"object.combination"}'>Conditional Ordered+Repeated</option>
+        <option value="ordered" data-bind='{"show":"object.combination"}'>Variation</option>
+        <option value="repeated" data-bind='{"show":"object.combination"}'>Combination+Repeated</option>
+        <option value="ordered_repeated" data-bind='{"show":"object.combination"}'>Variation+Repeated</option>
+        <option value="conditional-ordered" data-bind='{"show":"object.combination"}'>Conditional Variation</option>
+        <option value="conditional-ordered_repeated" data-bind='{"show":"object.combination"}'>Conditional Variation+Repeated</option>
         <option value="subset_binary" data-bind='{"show":"object.subset"}'>Subset (Binary)</option>
         <option value="subset_combination" data-bind='{"show":"object.subset"}'>Subset (Combination)</option>
         <option value="subset_01" data-bind='{"show":"object.subset"}'>Zero/One</option>
         <option value="partition_max" data-bind='{"show":"object.partition"}'>Fixed Max. Part</option>
         <option value="partition_parts" data-bind='{"show":"object.partition"}'>Fixed Num. Parts</option>
         <option value="partition_max_parts" data-bind='{"show":"object.partition"}'>Fixed Max. Part &amp; Num. Parts</option>
+        <option value="partition_distinct" data-bind='{"show":"object.partition"}'>Distinct Parts</option>
         <option value="composition_max" data-bind='{"show":"object.composition"}'>Fixed Max. Part</option>
         <option value="composition_parts" data-bind='{"show":"object.composition"}'>Fixed Num. Parts</option>
         <option value="composition_max_parts" data-bind='{"show":"object.composition"}'>Fixed Max. Part &amp; Num. Parts</option>
+        <option value="composition_distinct" data-bind='{"show":"object.composition"}'>Distinct Parts</option>
         </select>
         </div>
         <div style="display:inline-block;margin-bottom:10px">
@@ -375,7 +377,7 @@ div.sepa {
         <thead><tr><th>Position</th><th>&nbsp;Op&nbsp;</th><th>Value(s)</th><th>&nbsp;<button title="Add New" style="font-weight:bold" data-bind='{"click":"add_condition"}'>+</button></th></tr></thead><tbody></tbody></table>
         </div>
     </div>
-    
+
     <div class="fluid col-1-1" style="margin-top:10px">
         <strong>Output:</strong>&nbsp;&nbsp;<button class="button" style="margin-left:10px" id="produce" data-bind='{"click":"produce"}'>Produce</button><br />
         <div class="fluid col-1-1" style="margin-top:10px;margin-bottom:15px;font-family:consolas,monospace" data-bind='{"html":"summary"}'></div>
@@ -396,11 +398,11 @@ div.sepa {
 </tr>
 </script>
 
-    
-    
+
+
     <footer id="footer">
     <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-development.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
-    
+
 <div class="showcase">Big Integer Arithmetic plugin by <a href="https://github.com/peterolson/BigInteger.js" target="_blank">BigInteger.js</a></div>
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 
@@ -411,59 +413,59 @@ div.sepa {
     <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
     </footer>
     <br /><br />
-    
+
 <script type="text/javascript">//<![CDATA[
 require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     function( $, $R, $MV, bigInt, Abacus ) {
     "use strict";
-    
+
     !function use_biginteger_arithmetic( Abacus, bigInt )
     {
         // plug-in bigInteger arithmetic routines
         var Arithmetic = Abacus.Arithmetic;
-        
+
         Arithmetic.O = bigInt.zero;
         Arithmetic.I = bigInt.one;
         Arithmetic.J = bigInt.minusOne;
-        
+
         Arithmetic.equ = function( a, b ){ return a.eq( b ); };
         Arithmetic.gte = function( a, b ){ return a.geq( b ); };
         Arithmetic.lte = function( a, b ){ return a.leq( b ); };
         Arithmetic.gt = function( a, b ){ return a.gt( b ); };
         Arithmetic.lt = function( a, b ){ return a.lt( b ); };
-        
+
         Arithmetic.inside = function( a, m, M, closed ){ return closed ? (a.geq( m )) && (a.leq( M )) : (a.gt( m )) && (a.lt( M ));
         };
         Arithmetic.clamp = function( a, m, M ){ return a.lt( m ) ? m : (a.gt( M ) ? M : a); };
         Arithmetic.wrap = function( a, m, M ){ return a.lt( m ) ? M : (a.gt( M ) ? m : a); };
         Arithmetic.wrapR = function( a, M ){ return a.lt( bigInt.zero ) ? a.plus( M ) : a; };
-        
+
         Arithmetic.add = function( a, b ){ return a.plus( b ); };
         Arithmetic.sub = function( a, b ){ return a.minus( b ); };
         Arithmetic.mul = function( a, b ){ return a.times( b ); };
         Arithmetic.div = function( a, b ){ return a.over( b ); };
         Arithmetic.mod = function( a, b ){ return a.mod( b ); };
         Arithmetic.pow = function( a, b ){ return a.pow( b ); };
-        
+
         Arithmetic.shl = function( a, b ){ return a.shiftLeft( b ); };
         Arithmetic.shr = function( a, b ){ return a.shiftRight( b ); };
         Arithmetic.bor = function( a, b ){ return a.or( b ); };
         Arithmetic.band = function( a, b ){ return a.and( b ); };
         Arithmetic.xor = function( a, b ){ return a.xor( b ); };
-        
+
         Arithmetic.rnd = bigInt.randBetween;
         Arithmetic.min = bigInt.min;
         Arithmetic.max = bigInt.max;
-        
+
         Arithmetic.num = function( a ){ return bigInt( a ); };
     }( Abacus, bigInt );
-    
+
     var undef=undefined, $window = $(window), $screen = $('#screen'),
         output = document.getElementById('output'), out,
         appModel, appView, appRouter, width = output.clientWidth, height, toJSON = JSON.stringify,
         MAXITEMS = 100000, $conditions = $('#conditions>tbody'), $condition_tpl = $('#condition_tpl'),
         html_esc_re = /[&<>]/g;
-    
+
     function esc_html( s )
     {
         return s.replace(html_esc_re, function(m){
@@ -483,13 +485,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         o.length = Object.keys(o).length;
         return Array.prototype.slice.call(o);
     }
-    
+
     function format_num( n, L )
     {
         var s = String(n), l = s.length;
-        return l < L ? (new Array(L-l+1).join(' '))+s : s; 
+        return l < L ? (new Array(L-l+1).join(' '))+s : s;
     }
-    
+
     function print_square( s, len )
     {
         if ( null == s )
@@ -498,12 +500,12 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         }
         var i, n = s.length, /*len = String(n*n).length,*/ out = '';
         for(i=0; i<n; i++)
-            out += s[i].map(function(x){ return format_num(x, len); }).join(' ') + "\n"; 
+            out += s[i].map(function(x){ return format_num(x, len); }).join(' ') + (i+1<n ? "\n" : "");
         return out;
     }
 
     $MV.jquery( $ );
-    
+
     height = output.clientHeight;
     out = CodeMirror.fromTextArea(output, {
         mode: "text",
@@ -516,15 +518,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     out.setSize( width, height );
-    
+
     function produce( model )
     {
         var comb=null, sep=',', N=model.get('N')|0, K=model.get('K'),
             object = model.get('object'), type = model.get('type'), order = model.get('order'),
-            $={order:order}, $$=null, n, nn=null, klass=null,
+            $={order:order}, $$=null, n, nn=null, klass=null, filter=null, filter_code=null,
             subklass=null, subklass_code='', sub$ = null, subn=null, submethod=null,
             conditions, data;
-        
+
         if ( "latin_square" === object )
         {
             model.set('summary', esc_html("Abacus.LatinSquare.make("+N+")"), true);
@@ -592,7 +594,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             else if ( "involution"===type )
             {
-                $.type = "involution";
+                //$.type = "involution";
+                filter = Abacus.Permutation.is_involution;
+                filter_code = 'Abacus.Permutation.is_involution';
             }
             else if ( "inversion"===type )
             {
@@ -767,8 +771,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             else if ( "partition_max_parts" === type )
             {
                 K = string(K).split(',').map(number);
-                $["max="] = K[0];
-                $["parts="] = K[1];
+                /*$["max="] = K[0];
+                $["parts="] = K[1];*/
+                filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MAX(K[0]));
+                filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MAX('+K[0]+'))';
+            }
+            else if ( "partition_distinct" === type )
+            {
+                filter = Abacus.Filter.UNIQUE();
+                filter_code = 'Abacus.Filter.UNIQUE()';
             }
         }
         else if ( "composition" === object )
@@ -788,26 +799,33 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             else if ( "composition_max_parts" === type )
             {
                 K = string(K).split(',').map(number);
-                $["max="] = K[0];
-                $["parts="] = K[1];
+                /*$["max="] = K[0];
+                $["parts="] = K[1];*/
+                filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MAX(K[0]));
+                filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MAX('+K[0]+'))';
+            }
+            else if ( "composition_distinct" === type )
+            {
+                filter = Abacus.Filter.UNIQUE();
+                filter_code = 'Abacus.Filter.UNIQUE()';
             }
         }
-        
+
         out.setValue('');
-        
+
         if ( !klass )
         {
             model.set('summary', '', true);
             return;
         }
-        
+
         if ( null === nn ) nn = n.join?n.join(','):String(n);
         if ( null === $$ ) $$ = toJSON($);
-        
+
         $screen.addClass('ui-delayed').removeClass('ui-undelayed');
-        
+
         var count = 0, chunk = 5000;
-        
+
         setTimeout(function(){
             if ( "CombinatorialIterator"===klass )
             {
@@ -815,7 +833,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 for(var i=0; i<n.length; i++) n[i] = new Abacus[n[i][0]](n[i][1]);
             }
             comb = new Abacus[klass](n, $);
-            
+
             if ( subklass )
             {
                 if ( "conditional-permutation"===type )
@@ -848,13 +866,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     subklass_code = "";
                 }
             }
-            
+            if ( filter ) comb.filterBy(filter);
+
             var total = comb.total();
             model.set('summary', (
-            esc_html("Abacus."+klass+"("+nn+","+$$+")"+subklass_code) +
-            "<br />" + "total = " + String(total) + (total.gt(MAXITEMS) ? " (max "+MAXITEMS+" shown)" : "")
+            esc_html("Abacus."+klass+"("+nn+","+$$+")"+subklass_code+(filter ? '.filterBy('+filter_code+')' : '')) +
+            "<br />" + (filter ? "(filtered from) " : "") + "total = " + String(total) + (total.gt(MAXITEMS) ? " (max "+MAXITEMS+" shown)" : "")
             ), true);
-            
+
             setTimeout(function next_chunk(){
                 var cnt = 0, output="", next = null;
                 while( (cnt<chunk) && (count<MAXITEMS) && comb.hasNext() )
@@ -866,7 +885,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     count++; cnt++;
                 }
                 out.setValue(out.getValue()+output);
-                
+
                 if ( (count<MAXITEMS) && comb.hasNext() && (false!==next) )
                 {
                     setTimeout(next_chunk, 40);
@@ -883,7 +902,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }, 10);
         }, 10);
     }
-    
+
     appRouter = new $R( );
     appRouter.one({route:'#{%ALL%:hash}', handler:function( params ){
         params = params.data;
@@ -918,15 +937,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             setTimeout(function(){ produce( model ); }, 10);
         }
     }});
-    
+
     $screen.modelview({
         autobind: true
         ,livebind: '$(__KEY__)'
         ,bindAttribute: 'data-bind'
-        
+
         ,model: {
             id: 'model'
-            ,data: { 
+            ,data: {
                 abacus_version: 'v.'+Abacus.VERSION,
                 summary: "",
                 object: "permutation",
@@ -982,7 +1001,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     if ( "tensor" === obj ) return "Tensor";
                     if ( "tuple" === obj ) return "Tuple";
                     if ( "permutation" === obj ) return "Permutation";
-                    if ( "combination" === obj ) return "Unordered";
+                    if ( "combination" === obj ) return "Combination";
                     if ( "subset" === obj ) return "Subset";
                     if ( "partition" === obj ) return "Unrestricted";
                     if ( "composition" === obj ) return "Unrestricted";
@@ -1073,7 +1092,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 "hasrand": ["object","type"]
             }
         }
-        ,actions: { 
+        ,actions: {
             add_condition: function(evt, $el){
                 $conditions.append($condition_tpl.html());
             },
@@ -1099,14 +1118,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
         }
     });
-        
+
     $window
         .on('resize', function( evt ) {
             var v = output.style.visibility,
                 d = output.style.display;
             output.style.visibility = 'hidden';
             output.style.display = 'block';
-            width = output.clientWidth; 
+            width = output.clientWidth;
             height = output.clientHeight;
             output.style.display = d;
             output.style.visibility = v;
