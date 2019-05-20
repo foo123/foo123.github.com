@@ -335,6 +335,7 @@ div.sepa {
         <option value="ordered_repeated" data-bind='{"show":"object.combination"}'>Variation+Repeated</option>
         <option value="conditional-ordered" data-bind='{"show":"object.combination"}'>Conditional Variation</option>
         <option value="conditional-ordered_repeated" data-bind='{"show":"object.combination"}'>Conditional Variation+Repeated</option>
+        <option value="conditional-combination" data-bind='{"show":"object.combination"}'>Conditional Combination</option>
         <option value="subset_binary" data-bind='{"show":"object.subset"}'>Subset (Binary)</option>
         <option value="subset_combination" data-bind='{"show":"object.subset"}'>Subset (Combination)</option>
         <option value="subset_01" data-bind='{"show":"object.subset"}'>Zero/One</option>
@@ -611,12 +612,12 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             else if ( "k-permutation"===type )
             {
                 klass = "Combination";
-                $.type = "ordered";
+                $.type = "variation";
                 n = [N, +K];
             }
             else if ( "k-derangement"===type )
             {
-                klass = "Combination"; $.type = "unordered";
+                klass = "Combination"; $.type = "combination";
                 n = [N, +K];
                 subklass = "Permutation";
                 sub$ = {order:order,type:"derangement"};
@@ -654,25 +655,25 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                         data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
                     $.data = data; $.ordering = "<>"; $.position = conditions.pos;
                     subklass = "Combination";
-                    sub$ = {order:order,type:"ordered"};
+                    sub$ = {order:order,type:"variation"};
                     subn = [N-data.length, (+K)-data.length];
                     submethod = "completeWith";
                 }
                 else
                 {
                     klass = "Combination";
-                    $.type = "ordered";
+                    $.type = "variation";
                     n = [N, +K];
                 }
             }
         }
         else if ( "combination" === object )
         {
-            klass = "Combination"; $.type = "unordered";
+            klass = "Combination"; $.type = "combination";
             n = [N, +K];
             if ( "ordered"===type )
             {
-                $.type = "ordered";
+                $.type = "vairation";
             }
             else if ( "conditional-ordered"===type )
             {
@@ -685,13 +686,38 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                         data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
                     $.data = data; $.ordering = "<>"; $.position = conditions.pos;
                     subklass = "Combination";
-                    sub$ = {order:order,type:"ordered"};
+                    sub$ = {order:order,type:"variation"};
                     subn = [N-data.length, (+K)-data.length];
                     submethod = "completeWith";
                 }
                 else
                 {
-                    $.type = "ordered";
+                    $.type = "variation";
+                }
+            }
+            else if ( "conditional-combination"===type )
+            {
+                conditions = model.get('conditions');
+                if ( conditions )
+                {
+                    klass = "Tensor"; $.type = "partial";
+                    n = N; data = [];
+                    for(var i=0,l=conditions.data.length; i<conditions.data.length; i++)
+                        data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
+                    $.data = data; $.ordering = "<"; $.position = conditions.pos;
+                    subklass = "Combination";
+                    sub$ = {order:order,type:"combination"};
+                    subn = [N-data.length, (+K)-data.length];
+                    submethod = "completeWith";
+                    // completing with partial data is not enough for combinations
+                    // since some duplicates or out-of-order items still exist (few though)
+                    // thus extra filtering is needed to finally reject these invalid combinations
+                    filter = Abacus.Filter.SORTED("<");
+                    filter_code = 'Abacus.Filter.SORTED("<")';
+                }
+                else
+                {
+                    $.type = "combination";
                 }
             }
             else if ( "repeated"===type )
@@ -700,7 +726,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             else if ( "ordered_repeated"===type )
             {
-                $.type = "ordered+repeated";
+                $.type = "variation+repeated";
             }
             else if ( "conditional-ordered_repeated"===type )
             {
@@ -713,13 +739,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                         data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
                     $.data = data; $.position = conditions.pos;
                     subklass = "Combination";
-                    sub$ = {order:order,type:"ordered+repeated"};
+                    sub$ = {order:order,type:"variation+repeated"};
                     subn = [N, (+K)-data.length];
                     submethod = "interleaveWith";
                 }
                 else
                 {
-                    $.type = "ordered+repeated";
+                    $.type = "variation+repeated";
                 }
             }
             else if ( "unordered_01"===type )
@@ -841,7 +867,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     subn = N-comb.dimension();
                     if ( 0 >= subn ) subklass = null;
                 }
-                else if ( "conditional-k-permutation"===type || "conditional-ordered"===type )
+                else if ( "conditional-k-permutation"===type || "conditional-ordered"===type || "conditional-combination"===type )
                 {
                     subn[0] = N-comb.dimension(); subn[1] = (+K)-comb.dimension();
                     if ( 0 >= subn[0] || 0 >= subn[1] ) subklass = null;
