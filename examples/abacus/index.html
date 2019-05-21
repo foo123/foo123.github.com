@@ -621,12 +621,20 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             else if ( "recursive-permutation"===type )
             {
-                klass = "Tensor";
-                n = N;
-                subklass = "Permutation";
-                sub$ = {order:order};
-                subn = N-1;
-                submethod = "intersperseWith";
+                if ( 1 < N )
+                {
+                    klass = "Tensor";
+                    n = N;
+                    subklass = "Permutation";
+                    sub$ = {order:order};
+                    subn = N-1;
+                    submethod = "intersperseWith";
+                }
+                else
+                {
+                    klass = "Permutation";
+                    n = N;
+                }
             }
             else if ( "k-permutation"===type )
             {
