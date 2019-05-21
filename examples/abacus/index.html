@@ -315,6 +315,7 @@ div.sepa {
         <div style="display:inline-block;margin-bottom:10px">
         <label for="type">SubType:</label><select id="type" name="model[type]">
         <option value="default" selected>$(object.default)</option>
+        <option value="tensor_inversion" data-bind='{"show":"object.tensor"}'>Permutation</option>
         <option value="gray" data-bind='{"show":"object.tuple"}'>(n,k)-Gray Code</option>
         <option value="word" data-bind='{"show":"object.tuple"}'>Word</option>
         <option value="conditional-tuple" data-bind='{"show":"object.tuple"}'>Conditional Tuple</option>
@@ -329,6 +330,7 @@ div.sepa {
         <option value="k-cycle-permutation" data-bind='{"show":"object.permutation"}'>k-Cycle</option>
         <option value="conditional-permutation" data-bind='{"show":"object.permutation"}'>Conditional Permutation</option>
         <option value="conditional-k-permutation" data-bind='{"show":"object.permutation"}'>Conditional k-Permutation</option>
+        <option value="recursive-permutation" data-bind='{"show":"object.permutation"}'>Recursive Permutation</option>
         <option value="unordered_01" data-bind='{"show":"object.combination"}'>Zero/One</option>
         <option value="ordered" data-bind='{"show":"object.combination"}'>Variation</option>
         <option value="repeated" data-bind='{"show":"object.combination"}'>Combination+Repeated</option>
@@ -543,7 +545,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         else if ( "tensor" === object )
         {
             klass = "Tensor";
-            n = string(K).split(',').map(number);
+            if ( "tensor_inversion" === type )
+            {
+                $.output = "inversion";
+                n = Abacus.Util.array(N,1,1);
+            }
+            else
+            {
+                n = string(K).split(',').map(number);
+            }
         }
         else if ( "tuple" === object )
         {
@@ -608,6 +618,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             else if ( "connected"===type )
             {
                 $.type = "connected";
+            }
+            else if ( "recursive-permutation"===type )
+            {
+                klass = "Tensor";
+                n = N;
+                subklass = "Permutation";
+                sub$ = {order:order};
+                subn = N-1;
+                submethod = "intersperseWith";
             }
             else if ( "k-permutation"===type )
             {
@@ -1067,11 +1086,11 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     return this.$data.object.slice(-7) !== "_square";
                 },
                 "hasN": function(){
-                    return "tensor"!==this.$data.object;
+                    return "tensor"!==this.$data.object || "tensor_inversion"===this.$data.type;
                 },
                 "hasK": function(){
                     var obj = this.$data.object, type = this.$data.type;
-                    return ("combination"===obj || "tensor"===obj || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type || "conditional-k-permutation"===type || "k-derangement"===type || "k-cycle-permutation"===type)) || ("partition"===obj && ("partition_max"===type||"partition_parts"===type||"partition_max_parts"===type)) || ("composition"===obj && ("composition_max"===type||"composition_parts"===type||"composition_max_parts"===type));
+                    return ("combination"===obj || ("tensor"===obj && "tensor_inversion"!==type) || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type || "conditional-k-permutation"===type || "k-derangement"===type || "k-cycle-permutation"===type)) || ("partition"===obj && ("partition_max"===type||"partition_parts"===type||"partition_max_parts"===type)) || ("composition"===obj && ("composition_max"===type||"composition_parts"===type||"composition_max_parts"===type));
                 },
                 "hasAlphabet": function(){
                     return "word"===this.$data.type;
@@ -1106,7 +1125,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             dependencies: {
                 //"default": ["object"],
                 //"default_order": ["object","type"],
-                "hasN": ["object"],
+                "hasN": ["object","type"],
                 "hasK": ["object","type"],
                 "hasAlphabet": ["object","type"],
                 "hasConditions": ["object","type"],
