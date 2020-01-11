@@ -12,12 +12,12 @@
 <html lang="en" class="no-ie">
 <!--<![endif]-->
 <head>
-<title>Abacus - Advanced Combinatorics Library for Node.js / Browser / XPCOM Javascript</title>
+<title>Abacus - Advanced Combinatorics &amp; Integer Library for Node.js / Browser / XPCOM Javascript</title>
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-<meta name="description" content="Abacus - Advanced Combinatorics Library for Node.js / Browser / XPCOM Javascript" />
+<meta name="description" content="Abacus - Advanced Combinatorics &amp; Integer Library for Node.js / Browser / XPCOM Javascript" />
 
 
 <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
@@ -27,16 +27,18 @@
 <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
 <link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
 <style type="text/css">
-#regex,#output {
+#output {
     position:relative;
     padding:2px;
     width: 90%;
     height: 500px;
 }
-#regex {
-    height: 30px;
+#math {
+    position:relative;
+    padding:8px 2px;
+    border: 1px solid #888;
+    width: 90%;
 }
-
 
 .button {
     -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
@@ -267,9 +269,6 @@ div.sepa {
 }
 </style>
 
-
-
-
 <script src="../common/js/codemirror/codemirror.min.js"></script>
 <script src="../common/js/codemirror/addon/lint/lint.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
@@ -280,8 +279,15 @@ div.sepa {
 <script type="text/javascript" src="../common/js/require.js"></script>
 <script type="text/javascript" src="../common/js/require-config.js"></script>
 
-
-
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script type="text/javascript">
+window.MathJax = {
+  loader: {
+    typeset: false           // Perform initial typeset?
+    }
+};
+</script>
 </head>
 <body class="responsive-864-container">
     <span id="forkongithub"><a href="https://github.com/foo123/Abacus">Count me on GitHub</a></span>
@@ -289,7 +295,7 @@ div.sepa {
 
 <header id="header">
     <h1>Abacus</h1>
-    <i>A simple, fast &amp; versatile combinatorics library for Node.js / Browser / XPCOM Javascript, PHP, Python, Java, C/C++</i>
+    <i>A simple, fast &amp; versatile <b>combinatorics</b> &amp <b>number theory</b> library for Node.js / Browser / XPCOM Javascript, Python, Java</i>
 </header>
 
 <br /><br />
@@ -301,18 +307,28 @@ div.sepa {
         <div class="sepa"></div>
         <div style="display:inline-block;margin-bottom:10px">
         <label style="text-"for="object">Type:</label><select id="object" name="model[object]">
-        <option value="tensor">Tensor</option>
-        <option value="tuple">Tuple</option>
-        <option value="permutation">Permutation</option>
-        <option value="combination">Combination</option>
-        <option value="subset">Subset</option>
-        <option value="partition">Partition</option>
-        <option value="composition">Composition</option>
-        <option value="latin_square">Latin Square</option>
-        <option value="magic_square">Magic Square</option>
+        <optgroup label="Combinatorics">
+            <option value="tensor">Tensor</option>
+            <option value="tuple">Tuple</option>
+            <option value="permutation">Permutation</option>
+            <option value="combination">Combination</option>
+            <option value="subset">Subset</option>
+            <option value="partition">Partition</option>
+            <option value="composition">Composition</option>
+            <option value="latin_square">Latin Square</option>
+            <option value="magic_square">Magic Square</option>
+        </optgroup>
+        <optgroup label="Number Theory">
+            <option value="prime_sieve">Prime Sieve</option>
+            <option value="is_prime">Primality Test</option>
+            <option value="prime_factors">Prime Factorisation</option>
+            <option value="divisors">Integer Divisors</option>
+            <option value="gcd">(Polynomial) Greatest Common Divisor</option>
+            <option value="diophantines">System of Linear Diophantine Equations</option>
+        </optgroup>
         </select>
         </div>
-        <div style="display:inline-block;margin-bottom:10px">
+        <div style="display:inline-block;margin-bottom:10px" data-bind='{"show":"isCombinatorics"}'>
         <label for="type">SubType:</label><select id="type" name="model[type]">
         <option value="default" selected>$(object.default)</option>
         <option value="tensor_inversion" data-bind='{"show":"object.tensor"}'>Permutation</option>
@@ -351,7 +367,7 @@ div.sepa {
         <option value="composition_distinct" data-bind='{"show":"object.composition"}'>Distinct Parts</option>
         </select>
         </div>
-        <div style="display:inline-block;margin-bottom:10px">
+        <div style="display:inline-block;margin-bottom:10px" data-bind='{"show":"isCombinatorics"}'>
         <label for="order">Order:</label><select id="order" name="model[order]">
         <option value="" >Default</option>
         <option value="lex" data-bind='{"show":"haslex"}'>Lexicographic</option>
@@ -369,11 +385,13 @@ div.sepa {
         </div>
         <div class="sepa"></div>
         <div style="display:inline-block" data-bind='{"show":"hasN"}'>
-        <label for="N">$(labelN)</label><input id="N"  name="model[N]" size="5" type="text" value="1" />
+        <label for="N">$(labelN)</label><input id="N"  name="model[N]" size="8" type="text" value="1" />
         </div><div style="display:inline-block" data-bind='{"show":"hasK"}'>
         <label for="K">$(labelK)</label><input id="K"  name="model[K]" size="8" type="text" value="1" />
         </div><div style="display:inline-block" data-bind='{"show":"hasAlphabet"}'>
         <label for="alphabet">Alphabet = </label><input id="alphabet" name="model[alphabet]" size="12" type="text" value="" title="Alphabet" />
+        </div><div style="display:inline-block;position:relative;width:80%" data-bind='{"show":"hasText"}'>
+        <label for="Text">$(labelText)</label><textarea id="Text" name="model[Text]" placeholder="$(placeholderText)" style="position:relative;display:inline-block;vertical-align:top;padding:4px;height:200px;width:90%"></textarea>
         </div>
         <div style="display:inline-block;position:relative;vertical-align:top;margin-left:5px;margin-top:-1.6em" data-bind='{"show":"hasConditions"}'>
         <table id="conditions" style="position:relative;max-width:100%;border-spacing:2">
@@ -383,7 +401,8 @@ div.sepa {
 
     <div class="fluid col-1-1" style="margin-top:10px">
         <strong>Output:</strong>&nbsp;&nbsp;<button class="button" style="margin-left:10px" id="produce" data-bind='{"click":"produce"}'>Produce</button><br />
-        <div class="fluid col-1-1" style="margin-top:10px;margin-bottom:15px;font-family:consolas,monospace" data-bind='{"html":"summary"}'></div>
+        <div class="fluid col-1-1" style="margin-top:10px;font-family:consolas,monospace" data-bind='{"html":"summary"}'></div>
+        <div id="math" style="margin-top:10px;margin-bottom:15px;"></div>
         <textarea id="output"></textarea>
     </div>
 <div class="ui-delayable-overlay"><div class="ui-spinner ui-spinner-dots"></div></div>
@@ -407,9 +426,10 @@ div.sepa {
     <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-development.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
 
 <div class="showcase">Big Integer Arithmetic plugin by <a href="https://github.com/peterolson/BigInteger.js" target="_blank">BigInteger.js</a></div>
-<div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
+<div class="showcase">Syntax Highlight by <a href="https://codemirror.net/" target="_blank">Codemirror</a></div>
+<div class="showcase">Mathematics Rendering by <a href="https://www.mathjax.org/" target="_blank">MathJax</a></div>
 
-    <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
+    <div class="showcase">Module management by <a href="https://requirejs.org/" target="_blank">RequireJS</a></div>
     <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
     <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
     <div class="showcase">Widgets by <a href="https://github.com/foo123/HtmlWidget" target="_blank">HtmlWidget</a></div>
@@ -430,6 +450,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         Arithmetic.O = bigInt.zero;
         Arithmetic.I = bigInt.one;
         Arithmetic.J = bigInt.minusOne;
+        Arithmetic.II = bigInt(2);
 
         Arithmetic.equ = function( a, b ){ return a.eq( b ); };
         Arithmetic.gte = function( a, b ){ return a.geq( b ); };
@@ -457,13 +478,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         Arithmetic.xor = function( a, b ){ return a.xor( b ); };
 
         Arithmetic.rnd = bigInt.randBetween;
+        Arithmetic.abs = function( a ){ return a.abs( ); };
         Arithmetic.min = bigInt.min;
         Arithmetic.max = bigInt.max;
 
-        Arithmetic.num = function( a ){ return bigInt( a ); };
+        Arithmetic.num = function( a ){ return bigInt.isInstance( a ) ? a : bigInt( a ); };
     }( Abacus, bigInt );
 
-    var undef=undefined, $window = $(window), $screen = $('#screen'),
+    var undef=undefined, $window = $(window), $screen = $('#screen'), math = $('#math'),
         output = document.getElementById('output'), out,
         appModel, appView, appRouter, width = output.clientWidth, height, toJSON = JSON.stringify,
         MAXITEMS = 100000, $conditions = $('#conditions>tbody'), $condition_tpl = $('#condition_tpl'),
@@ -474,6 +496,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         return s.replace(html_esc_re, function(m){
             return '&'===m ? '&amp;' : ('<'===m ? '&lt;' : '&gt;');
         });
+    }
+    function trim( s )
+    {
+        return String(s).trim();
     }
     function number( x )
     {
@@ -506,6 +532,41 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             out += s[i].map(function(x){ return format_num(x, len); }).join(' ') + (i+1<n ? "\n" : "");
         return out;
     }
+    function tex_matrix( a )
+    {
+        return '\\begin{bmatrix}'+a.map(function(x){return x.map&&x.join ? x.map(function(xi){return String(xi);}).join(' & '): String(x);}).join(' \\\\ ')+'\\end{bmatrix}';
+    }
+    
+    /*var promise = Promise.resolve();  // Used to hold chain of typesetting calls
+    function typeset(code)
+    {
+        promise = promise.then(function(){
+            return MathJax.typesetPromise(code());
+        }).catch(function(err){
+            console.log('Typeset failed: ' + err.message)
+        });
+      return promise;
+    }*/
+    function print_math( tex )
+    {
+        /*typeset(function(){
+            math.html(tex);
+            return [math[0]];
+        });*/
+        math.html(tex);
+        setTimeout(function(){
+            MathJax.typeset([math[0]]); // synchronous
+        }, 100);
+    }
+    function clear_math( )
+    {
+        math.html('');
+        MathJax.typesetClear([math[0]]);
+    }
+    function factor( f, as_tex )
+    {
+        return '(' + String(f[0]) + (Abacus.Arithmetic.lt(Abacus.Arithmetic.I, f[1]) ? ('^' + (as_tex ? '{' : '') + String(f[1]) + (as_tex ? '}' : '')) : '') + ')';
+    }
 
     $MV.jquery( $ );
 
@@ -524,12 +585,95 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
 
     function produce( model )
     {
-        var comb=null, sep=',', N=model.get('N')|0, K=model.get('K'),
+        var comb=null, sep=',', N=model.get('N'), K=model.get('K'), Text=model.get('Text'),
             object = model.get('object'), type = model.get('type'), order = model.get('order'),
             $={order:order}, $$=null, n, nn=null, klass=null, filter=null, filter_code=null,
             subklass=null, subklass_code='', sub$ = null, subn=null, submethod=null,
-            conditions, data;
+            conditions, data, res, r, sol;
 
+        clear_math();
+        
+        if ( 'divisors' === object )
+        {
+            klass = "divisors";
+            model.set('summary', esc_html("Abacus.Math.divisors(\""+String(N)+"\", true)"), true);
+        }
+        else if ( 'prime_sieve' === object )
+        {
+            klass = "PrimeSieve"; res = Abacus.Arithmetic.gt(Abacus.Arithmetic.num(N), MAXITEMS);
+            N = res ? MAXITEMS : +N;
+            model.set('summary', esc_html("Abacus.PrimeSieve().get("+N+")"+(res ? ' (max '+MAXITEMS+' shown)' : '')), true);
+        }
+        else if ( 'is_prime' === object )
+        {
+            model.set('summary', esc_html("Abacus.Math.isProbablePrime(\""+N+"\") && Abacus.Math.isPrime(\""+N+"\")"), true);
+            N = Abacus.Arithmetic.num(N);
+            res = Abacus.Math.isProbablePrime(N) && Abacus.Math.isPrime(N);
+            out.setValue(String(N) + ' is ' + (res ? 'PRIME' : 'COMPOSITE'));
+            print_math('\\['+String(N)+(res ? ' \\in ' : ' \\notin ')+'\\mathbb{P}\\]')
+            return;
+        }
+        else if ( 'prime_factors' === object )
+        {
+            model.set('summary', esc_html("Abacus.Math.factorize(\""+String(N)+"\")"), true);
+            res = Abacus.Math.factorize(N);
+            out.setValue(String(N)+'='+res.map(function(p){return factor(p);}).join(''));
+            print_math('\\['+String(N)+'='+res.map(function(p){return factor(p,true);}).join('')+'\\]')
+            return;
+        }
+        else if ( 'gcd' === object )
+        {
+            res = [];
+            trim(Text).split("\n").forEach(function(entry){
+                entry = trim(entry);
+                if ( !entry.length ) return;
+                res.push(Abacus.Polynomial(Abacus.Arithmetic.nums(entry.split(" ").map(trim))));
+            });
+            if ( 1 < res.length )
+            {
+                r = Abacus.Math.polyxgcd(res);
+                model.set('summary', esc_html("Abacus.Math.polyxgcd("+res.map(function(p){return 'Abacus.Polynomial(Abacus.Arithmetic.nums(['+p.coeff.map(function(c){return'"'+String(c)+'"';}).join(',')+']))'}).join(',')+")"), true);
+                out.setValue(r[0].toString()+'='+r.slice(1).map(function(g, i){
+                    return '('+g.toString()+')*('+res[i].toString()+')'
+                }).join('+'));
+                print_math('\\['+r[0].toTex()+'='+r.slice(1).map(function(g, i){
+                    return '('+g.toTex()+')('+res[i].toTex()+')'
+                }).join('+')+'\\]')
+            }
+            else
+            {
+                model.set('summary', '', true);
+                out.setValue('Please provide at least two entries!');
+            }
+            return;
+        }
+        else if ( 'diophantines' === object )
+        {
+            res = []; r = [];
+            trim(Text).split("\n").forEach(function(entry){
+                entry = trim(entry);
+                if ( !entry.length ) return;
+                entry = entry.split('=');
+                res.push(trim(entry[0]).split(' ').map(trim));
+                r.push(1<entry.length ? trim(entry[1]) : 0);
+            });
+            if ( 0 < res.length )
+            {
+                sol = Abacus.Math.diophantines(res, r, "i");
+                model.set('summary', esc_html("Abacus.Math.diophantines(["+res.map(function(row){return '['+row.map(function(c){return'"'+String(c)+'"';}).join(',')+']';}).join(',')+"], ["+r.map(function(c){return'"'+String(c)+'"';}).join(',')+"], \"i\")"), true);
+                out.setValue(sol ? sol.map(function(x, i){return 'x_'+(i+1)+'='+x.toString();}).join("\n")+"\ni_k's any integer(s)" : 'No solution in integers');
+                print_math('\\['+tex_matrix(res)+tex_matrix(Abacus.Util.array(res[0].length, function(i){return 'x_{'+(i+1)+'}';}))+'='+tex_matrix(r)+'\\]'+"\n\n"+(sol ? sol.map(function(x, i){return '\\[x_{'+(i+1)+'} = '+x.toTex()+'\\]';}).join("\n")+'\\[i_{k} \\in \\mathbb{Z}\\]' : '\\[\\text{No solution in }\\mathbb{Z}\\]'))
+            }
+            else
+            {
+                model.set('summary', '', true);
+                out.setValue('Please provide at least one equation!');
+            }
+            return;
+        }
+        
+        if ( "divisors"!==object ) N = (+N)|0;
+        
         if ( "latin_square" === object )
         {
             model.set('summary', esc_html("Abacus.LatinSquare.make("+N+")"), true);
@@ -872,20 +1016,34 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             return;
         }
 
-        if ( null === nn ) nn = n.join?n.join(','):String(n);
-        if ( null === $$ ) $$ = toJSON($);
+        if ( "prime_sieve" !== object && "divisors" !== object )
+        {
+            if ( null === nn ) nn = n.join?n.join(','):String(n);
+            if ( null === $$ ) $$ = toJSON($);
+        }
 
         $screen.addClass('ui-delayed').removeClass('ui-undelayed');
 
         var count = 0, chunk = 5000;
 
         setTimeout(function(){
-            if ( "CombinatorialIterator"===klass )
+            if ( "PrimeSieve"===klass )
             {
-                // sequence iterator, init every iterator
-                for(var i=0; i<n.length; i++) n[i] = new Abacus[n[i][0]](n[i][1]);
+                comb = new Abacus.PrimeSieve();
             }
-            comb = new Abacus[klass](n, $);
+            else if ( "divisors"===klass )
+            {
+                comb = Abacus.Math.divisors(N, true);
+            }
+            else
+            {
+                if ( "CombinatorialIterator"===klass )
+                {
+                    // sequence iterator, init every iterator
+                    for(var i=0; i<n.length; i++) n[i] = new Abacus[n[i][0]](n[i][1]);
+                }
+                comb = new Abacus[klass](n, $);
+            }
 
             if ( subklass )
             {
@@ -921,15 +1079,23 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             if ( filter ) comb.filterBy(filter);
 
-            var total = comb.total();
-            model.set('summary', (
-            esc_html("Abacus."+klass+"("+nn+","+$$+")"+subklass_code+(filter ? '.filterBy('+filter_code+')' : '')) +
-            "<br />" + (filter ? "(filtered from) " : "") + "total = " + String(total) + (total.gt(MAXITEMS) ? " (max "+MAXITEMS+" shown)" : "")
-            ), true);
+            var total, MAX = MAXITEMS;
+            if ( "PrimeSieve"!==klass && "divisors"!==klass )
+            {
+                total = comb.total();
+                model.set('summary', (
+                esc_html("Abacus."+klass+"("+nn+","+$$+")"+subklass_code+(filter ? '.filterBy('+filter_code+')' : '')) +
+                "<br />" + (filter ? "(filtered from) " : "") + "total = " + String(total) + (total.gt(MAXITEMS) ? " (max "+MAXITEMS+" shown)" : "")
+                ), true);
+            }
+            else if ( "PrimeSieve"===klass )
+            {
+                MAX = Math.min(N, MAXITEMS);
+            }
 
             setTimeout(function next_chunk(){
                 var cnt = 0, output="", next = null;
-                while( (cnt<chunk) && (count<MAXITEMS) && comb.hasNext() )
+                while( (cnt<chunk) && (count<MAX) && comb.hasNext() )
                 {
                     next = comb.next();
                     if ( null == next ) {next=false; break;}
@@ -939,7 +1105,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 }
                 out.setValue(out.getValue()+output);
 
-                if ( (count<MAXITEMS) && comb.hasNext() && (false!==next) )
+                if ( (count<MAX) && comb.hasNext() && (false!==next) )
                 {
                     setTimeout(next_chunk, 40);
                 }
@@ -986,6 +1152,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             model.set('N', string(params.N), true);
             model.set('K', string(params.K), true);
             model.set('alphabet', string(params.alphabet||""), true);
+            model.set('Text', string(params.Text||""), true);
             model.set('order', string(params.order||""), true);
             setTimeout(function(){ produce( model ); }, 10);
         }
@@ -1007,10 +1174,11 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 N: 2,
                 K: 1,
                 alphabet: "",
+                Text: "",
                 conditions: null
             }
             ,types: {
-                N: $MV.Type.Cast.INT,
+                //N: $MV.Type.Cast.INT,
                 alphabet: $MV.Type.Cast.STR
             }
             ,setters: {
@@ -1030,8 +1198,11 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 },
                 "object": function( key, val/*, pub*/ ){
                     this.$data.object = val;
-                    this.set("type","default", true);
-                    this.set("order", "", true);
+                    if ( val !== 'prime_sieve' && val !== 'is_prime' && val !== 'prime_factors' && val !== 'divisors' && val !== 'gcd' && val !== 'diophantines' )
+                    {
+                        this.set("type","default", true);
+                        this.set("order", "", true);
+                    }
                 }
             }
             ,getters: {
@@ -1081,6 +1252,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 "object.composition": function(){
                     return this.$data.object === "composition";
                 },
+                "isCombinatorics": function(){
+                    var o = this.$data.object;
+                    return o!=="prime_sieve" && o!=="is_prime" && o!=="gcd" && o!=="diophantines" && o!=="prime_factors" && o!=="divisors";
+                },
                 "haslex": function(){
                     return this.$data.object.slice(-7) !== "_square";
                 },
@@ -1094,7 +1269,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     return this.$data.object.slice(-7) !== "_square";
                 },
                 "hasN": function(){
-                    return "tensor"!==this.$data.object || "tensor_inversion"===this.$data.type;
+                    return ("tensor"!==this.$data.object || "tensor_inversion"===this.$data.type) && !("gcd"===this.$data.object || "diophantines"===this.$data.object);
                 },
                 "hasK": function(){
                     var obj = this.$data.object, type = this.$data.type;
@@ -1102,6 +1277,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 },
                 "hasAlphabet": function(){
                     return "word"===this.$data.type;
+                },
+                "hasText": function(){
+                    return "gcd"===this.$data.object || "diophantines"===this.$data.object;
                 },
                 "hasConditions": function(){
                     var ret = "conditional-"===this.$data.type.substr(0,12);
@@ -1113,6 +1291,17 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     var obj = this.$data.object, type = this.$data.type;
                     if ( "tuple" === obj ) return "Dimension = ";
                     return "N =";
+                },
+                "labelText": function(){
+                    var obj = this.$data.object;
+                    if ( "gcd" === obj || "diophantines" === obj ) return "Entries = ";
+                    return "";
+                },
+                "placeholderText": function(){
+                    var obj = this.$data.object;
+                    if ( "gcd" === obj ) return "Each row represents a different polynomial (coefficients separated by space) from constant term up to highest term. Eg: x^2+2 as 2 0 1";
+                    if ( "diophantines" === obj ) return "Each row represents a different diophantine equation (coefficients of variables separated by space).\nEg:\nx+y = 2\n2x+3y = 5\nas:\n1 1 = 2\n2 3 = 5";
+                    return "";
                 },
                 "labelK": function(){
                     var obj = this.$data.object, type = this.$data.type;
@@ -1133,11 +1322,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             dependencies: {
                 //"default": ["object"],
                 //"default_order": ["object","type"],
+                "isCombinatorics": ["object"],
                 "hasN": ["object","type"],
+                "hasText": ["object"],
+                "placeholderText": ["object"],
                 "hasK": ["object","type"],
                 "hasAlphabet": ["object","type"],
                 "hasConditions": ["object","type"],
                 "labelN": ["object","type"],
+                "labelText": ["object"],
                 "labelK": ["object","type"],
                 "haslex": ["object","type"],
                 "hascolex": ["object","type"],
@@ -1163,6 +1356,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                         N: model.get('N'),
                         K: model.get('K'),
                         alphabet: model.get('alphabet'),
+                        Text: model.get('Text'),
                         conditions: conditions
                     };
                 model.set('conditions',conditions);
