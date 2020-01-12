@@ -534,29 +534,24 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     }
     function tex_matrix( a )
     {
-        return '\\begin{bmatrix}'+a.map(function(x){return x.map&&x.join ? x.map(function(xi){return String(xi);}).join(' & '): String(x);}).join(' \\\\ ')+'\\end{bmatrix}';
+        return '\\begin{bmatrix}'+a.map(function(x){return x.map&&x.join ? x.map(function(xi){return String(xi);}).join(' & ') : String(x);}).join(' \\\\ ')+'\\end{bmatrix}';
     }
     
-    /*var promise = Promise.resolve();  // Used to hold chain of typesetting calls
-    function typeset(code)
-    {
-        promise = promise.then(function(){
-            return MathJax.typesetPromise(code());
-        }).catch(function(err){
-            console.log('Typeset failed: ' + err.message)
-        });
-      return promise;
-    }*/
+    var promise = Promise.resolve();  // Used to hold chain of typesetting calls
     function print_math( tex )
     {
-        /*typeset(function(){
-            math.html(tex);
-            return [math[0]];
-        });*/
         math.html(tex);
-        setTimeout(function(){
+        
+        promise = promise.then(function(){
+            return MathJax.typesetPromise([math[0]]);
+        }).catch(function(err){
+            console.log('MathJax.Typeset failed: ' + err.message)
+        });
+        return promise;
+        
+        /*setTimeout(function(){
             MathJax.typeset([math[0]]); // synchronous
-        }, 100);
+        }, 40);*/
     }
     function clear_math( )
     {
@@ -589,7 +584,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             object = model.get('object'), type = model.get('type'), order = model.get('order'),
             $={order:order}, $$=null, n, nn=null, klass=null, filter=null, filter_code=null,
             subklass=null, subklass_code='', sub$ = null, subn=null, submethod=null,
-            conditions, data, res, r, sol;
+            conditions, data, res, r, sol, NL = /\r\n|\r|\n/;
 
         clear_math();
         
@@ -624,10 +619,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         else if ( 'gcd' === object )
         {
             res = [];
-            trim(Text).split("\n").forEach(function(entry){
+            trim(Text).split(NL).forEach(function(entry){
                 entry = trim(entry);
                 if ( !entry.length ) return;
-                res.push(Abacus.Polynomial(Abacus.Arithmetic.nums(entry.split(" ").map(trim))));
+                res.push(Abacus.Polynomial(Abacus.Arithmetic.nums(entry.split(" ").map(trim).filter(function(n){return 0<n.length;}))));
             });
             if ( 1 < res.length )
             {
@@ -649,20 +644,27 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         }
         else if ( 'diophantines' === object )
         {
-            res = []; r = [];
-            trim(Text).split("\n").forEach(function(entry){
+            res = []; r = []; var max = 0;
+            trim(Text).split(NL).forEach(function(entry){
                 entry = trim(entry);
                 if ( !entry.length ) return;
                 entry = entry.split('=');
-                res.push(trim(entry[0]).split(' ').map(trim));
+                res.push(trim(entry[0]).split(' ').map(trim).filter(function(n){return 0<n.length;}));
+                max = Math.max(max, res[res.length-1].length);
                 r.push(1<entry.length ? trim(entry[1]) : 0);
             });
             if ( 0 < res.length )
             {
-                sol = Abacus.Math.diophantines(res, r, "i");
+                res = res.map(function(entry){
+                    if ( max > entry.length ) entry = entry.concat(Abacus.Util.array(max-entry.length, 0));
+                    return entry;
+                });
+                sol = Abacus.Math.diophantines(res, r, "i", true);
+                var free_vars = sol[1];
+                sol = sol[0];
                 model.set('summary', esc_html("Abacus.Math.diophantines(["+res.map(function(row){return '['+row.map(function(c){return'"'+String(c)+'"';}).join(',')+']';}).join(',')+"], ["+r.map(function(c){return'"'+String(c)+'"';}).join(',')+"], \"i\")"), true);
-                out.setValue(sol ? sol.map(function(x, i){return 'x_'+(i+1)+'='+x.toString();}).join("\n")+"\ni_k's any integer(s)" : 'No solution in integers');
-                print_math('\\['+tex_matrix(res)+tex_matrix(Abacus.Util.array(res[0].length, function(i){return 'x_{'+(i+1)+'}';}))+'='+tex_matrix(r)+'\\]'+"\n\n"+(sol ? sol.map(function(x, i){return '\\[x_{'+(i+1)+'} = '+x.toTex()+'\\]';}).join("\n")+'\\[i_{k} \\in \\mathbb{Z}\\]' : '\\[\\text{No solution in }\\mathbb{Z}\\]'))
+                out.setValue(sol ? sol.map(function(x, i){return 'x_'+(i+1)+'='+x.toString();}).join("\n")+(free_vars.length ? ("\ni_1" + (2===free_vars.length ? ",i_2" : (2<free_vars.length ? (",..,i_"+free_vars.length) : "")) + " any integer(s)") : "") : 'No solution in integers');
+                print_math('\\['+tex_matrix(res)+tex_matrix(Abacus.Util.array(res[0].length, function(i){return 'x_{'+(i+1)+'}';}))+'='+tex_matrix(r)+'\\]'+"\n\n"+(sol ? sol.map(function(x, i){return '\\[x_{'+(i+1)+'} = '+x.toTex()+'\\]';}).join("\n")+(free_vars.length ? ('\\[i_{1}' + (2===free_vars.length ? ',i_{2}' : (2<free_vars.length ? (',\\dots,i_{'+free_vars.length+'}') : '')) + ' \\in \\mathbb{Z}\\]') : '') : '\\[\\text{No solution in }\\mathbb{Z}\\]'))
             }
             else
             {
