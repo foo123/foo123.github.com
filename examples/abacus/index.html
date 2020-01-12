@@ -280,7 +280,6 @@ div.sepa {
 <script type="text/javascript" src="../common/js/require-config.js"></script>
 
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script type="text/javascript">
 window.MathJax = {
   loader: {
@@ -288,6 +287,7 @@ window.MathJax = {
     }
 };
 </script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body class="responsive-864-container">
     <span id="forkongithub"><a href="https://github.com/foo123/Abacus">Count me on GitHub</a></span>
@@ -618,16 +618,25 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         }
         else if ( 'gcd' === object )
         {
-            res = [];
+            res = []; var is_const = true;
             trim(Text).split(NL).forEach(function(entry){
                 entry = trim(entry);
                 if ( !entry.length ) return;
-                res.push(Abacus.Polynomial(Abacus.Arithmetic.nums(entry.split(" ").map(trim).filter(function(n){return 0<n.length;}))));
+                res.push(Abacus.Polynomial(entry.split(" ").map(trim).filter(function(n){return 0<n.length;})));
+                if ( 0<res[res.length-1].deg() || !res[res.length-1].isInt() ) is_const = false;
             });
             if ( 1 < res.length )
             {
-                r = Abacus.Math.polyxgcd(res);
-                model.set('summary', esc_html("Abacus.Math.polyxgcd("+res.map(function(p){return 'Abacus.Polynomial(Abacus.Arithmetic.nums(['+p.coeff.map(function(c){return'"'+String(c)+'"';}).join(',')+']))'}).join(',')+")"), true);
+                if ( is_const )
+                {
+                    r = Abacus.Math.xgcd(res.map(function(p){return p.c().num;})).map(function(g){return Abacus.Polynomial([g]);});
+                    model.set('summary', esc_html("Abacus.Math.xgcd("+res.map(function(p){return '"'+String(p.c().num)+'"';}).join(',')+")"), true);
+                }
+                else
+                {
+                    r = Abacus.Math.polyxgcd(res);
+                    model.set('summary', esc_html("Abacus.Math.polyxgcd("+res.map(function(p){return 'Abacus.Polynomial(['+p.coeff.map(function(c){return'"'+String(c)+'"';}).join(',')+'])'}).join(',')+")"), true);
+                }
                 out.setValue(r[0].toString()+'='+r.slice(1).map(function(g, i){
                     return '('+g.toString()+')*('+res[i].toString()+')'
                 }).join('+'));
@@ -660,8 +669,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     return entry;
                 });
                 sol = Abacus.Math.diophantines(res, r, "i", true);
-                var free_vars = sol[1];
-                sol = sol[0];
+                var free_vars = sol ? sol[1] : null;
+                sol = sol ? sol[0] : null;
                 model.set('summary', esc_html("Abacus.Math.diophantines(["+res.map(function(row){return '['+row.map(function(c){return'"'+String(c)+'"';}).join(',')+']';}).join(',')+"], ["+r.map(function(c){return'"'+String(c)+'"';}).join(',')+"], \"i\")"), true);
                 out.setValue(sol ? sol.map(function(x, i){return 'x_'+(i+1)+'='+x.toString();}).join("\n")+(free_vars.length ? ("\ni_1" + (2===free_vars.length ? ",i_2" : (2<free_vars.length ? (",..,i_"+free_vars.length) : "")) + " any integer(s)") : "") : 'No solution in integers');
                 print_math('\\['+tex_matrix(res)+tex_matrix(Abacus.Util.array(res[0].length, function(i){return 'x_{'+(i+1)+'}';}))+'='+tex_matrix(r)+'\\]'+"\n\n"+(sol ? sol.map(function(x, i){return '\\[x_{'+(i+1)+'} = '+x.toTex()+'\\]';}).join("\n")+(free_vars.length ? ('\\[i_{1}' + (2===free_vars.length ? ',i_{2}' : (2<free_vars.length ? (',\\dots,i_{'+free_vars.length+'}') : '')) + ' \\in \\mathbb{Z}\\]') : '') : '\\[\\text{No solution in }\\mathbb{Z}\\]'))
