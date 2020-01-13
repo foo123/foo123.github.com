@@ -618,25 +618,16 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         }
         else if ( 'gcd' === object )
         {
-            res = []; var is_const = true;
+            res = [];
             trim(Text).split(NL).forEach(function(entry){
                 entry = trim(entry);
                 if ( !entry.length ) return;
                 res.push(Abacus.Polynomial(entry.split(" ").map(trim).filter(function(n){return 0<n.length;})));
-                if ( 0<res[res.length-1].deg() || !res[res.length-1].isInt() ) is_const = false;
             });
             if ( 1 < res.length )
             {
-                if ( is_const )
-                {
-                    r = Abacus.Math.xgcd(res.map(function(p){return p.c().num;})).map(function(g){return Abacus.Polynomial([g]);});
-                    model.set('summary', esc_html("Abacus.Math.xgcd("+res.map(function(p){return '"'+String(p.c().num)+'"';}).join(',')+")"), true);
-                }
-                else
-                {
-                    r = Abacus.Math.polyxgcd(res);
-                    model.set('summary', esc_html("Abacus.Math.polyxgcd("+res.map(function(p){return 'Abacus.Polynomial(['+p.coeff.map(function(c){return'"'+String(c)+'"';}).join(',')+'])'}).join(',')+")"), true);
-                }
+                r = Abacus.Math.polyxgcd(res);
+                model.set('summary', esc_html("Abacus.Math.polyxgcd("+res.map(function(p){return 'Abacus.Polynomial(['+p.coeff.map(function(c){return'"'+String(c)+'"';}).join(',')+'])'}).join(',')+")"), true);
                 out.setValue(r[0].toString()+'='+r.slice(1).map(function(g, i){
                     return '('+g.toString()+')*('+res[i].toString()+')'
                 }).join('+'));
