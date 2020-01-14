@@ -321,9 +321,10 @@ window.MathJax = {
         <optgroup label="Number Theory">
             <option value="prime_sieve">Prime Sieve</option>
             <option value="is_prime">Primality Test</option>
-            <option value="prime_factors">Prime Factorisation</option>
+            <option value="prime_factors">Prime Factorization</option>
             <option value="divisors">Integer Divisors</option>
             <option value="gcd">(Polynomial) Greatest Common Divisor</option>
+            <option value="poly_factors">Polynomial Factorization</option>
             <option value="diophantines">System of Linear Diophantine Equations</option>
         </optgroup>
         </select>
@@ -515,26 +516,29 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         return Array.prototype.slice.call(o);
     }
 
-    function format_num( n, L )
-    {
-        var s = String(n), l = s.length;
-        return l < L ? (new Array(L-l+1).join(' '))+s : s;
-    }
-
-    function print_square( s, len )
-    {
-        if ( null == s )
-        {
-            return 'null';
-        }
-        var i, n = s.length, /*len = String(n*n).length,*/ out = '';
-        for(i=0; i<n; i++)
-            out += s[i].map(function(x){ return format_num(x, len); }).join(' ') + (i+1<n ? "\n" : "");
-        return out;
-    }
     function tex_matrix( a )
     {
         return '\\begin{bmatrix}'+a.map(function(x){return x.map&&x.join ? x.map(function(xi){return String(xi);}).join(' & ') : String(x);}).join(' \\\\ ')+'\\end{bmatrix}';
+    }
+    function group_factors_tex( factors, constant )
+    {
+        var out = '', e = {}, i, t;
+        
+        if ( constant.equ(Abacus.Arithmetic.J) ) out = '-';
+        else if ( !constant.equ(Abacus.Arithmetic.I) ) out = '('+constant.toTex()+')';
+        
+        for(i=0; i<factors.length; i++)
+        {
+            t = factors[i].toTex();
+            if ( null==e[t] ) e[t] = 1;
+            else e[t]++;
+        }
+        for(t in e)
+        {
+            if ( !Object.prototype.hasOwnProperty.call(e, t) ) continue;
+            out += '('+t+')'+(1<e[t]?('^{'+String(e[t])+'}'):'');
+        }
+        return out;
     }
     
     var promise = Promise.resolve();  // Used to hold chain of typesetting calls
@@ -629,7 +633,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 r = Abacus.Math.polyxgcd(res);
                 model.set('summary', esc_html("Abacus.Math.polyxgcd("+res.map(function(p){return 'Abacus.Polynomial(['+p.coeff.map(function(c){return'"'+String(c)+'"';}).join(',')+'])'}).join(',')+")"), true);
                 out.setValue(r[0].toString()+'='+r.slice(1).map(function(g, i){
-                    return '('+g.toString()+')*('+res[i].toString()+')'
+                    return '('+g.toString()+')*('+res[i].toString()+')';
                 }).join('+'));
                 print_math('\\['+r[0].toTex()+'='+r.slice(1).map(function(g, i){
                     return '('+g.toTex()+')('+res[i].toTex()+')'
@@ -639,6 +643,28 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             {
                 model.set('summary', '', true);
                 out.setValue('Please provide at least two entries!');
+            }
+            return;
+        }
+        else if ( 'poly_factors' === object )
+        {
+            res = [];
+            trim(Text).split(NL).forEach(function(entry){
+                entry = trim(entry);
+                if ( !entry.length ) return;
+                res.push(Abacus.Polynomial(entry.split(" ").map(trim).filter(function(n){return 0<n.length;})));
+            });
+            if ( 1 <= res.length )
+            {
+                r = Abacus.Math.polyfactorize(res[0]);
+                model.set('summary', esc_html("Abacus.Math.polyfactorize(Abacus.Polynomial(["+res[0].coeff.map(function(c){return'"'+String(c)+'"';}).join(',')+"]))"), true);
+                out.setValue(res[0].toString()+'='+'('+r[1].toString()+')*('+r[0].map(function(p){return p.toString();}).join(')*(')+')');
+                print_math('\\['+res[0].toTex()+'='+group_factors_tex(r[0], r[1])+'\\]')
+            }
+            else
+            {
+                model.set('summary', '', true);
+                out.setValue('Please provide a polynomial entry!');
             }
             return;
         }
@@ -679,13 +705,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         if ( "latin_square" === object )
         {
             model.set('summary', esc_html("Abacus.LatinSquare.make("+N+")"), true);
-            out.setValue(print_square(Abacus.LatinSquare.make(N), String(N).length));
+            out.setValue(Abacus.LatinSquare.toString(Abacus.LatinSquare.make(N)));
             return;
         }
         else if ( "magic_square" === object )
         {
             model.set('summary', esc_html("Abacus.MagicSquare.make("+N+")"), true);
-            out.setValue(print_square(Abacus.MagicSquare.make(N), String(N*N).length));
+            out.setValue(Abacus.MagicSquare.toString(Abacus.MagicSquare.make(N)));
             return;
         }
         else if ( "tensor" === object )
@@ -1200,7 +1226,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 },
                 "object": function( key, val/*, pub*/ ){
                     this.$data.object = val;
-                    if ( val !== 'prime_sieve' && val !== 'is_prime' && val !== 'prime_factors' && val !== 'divisors' && val !== 'gcd' && val !== 'diophantines' )
+                    if ( val !== 'prime_sieve' && val !== 'is_prime' && val !== 'prime_factors' && val !== 'divisors' && val !== 'gcd' && val !== 'diophantines' && val !== 'poly_factors' )
                     {
                         this.set("type","default", true);
                         this.set("order", "", true);
@@ -1256,7 +1282,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 },
                 "isCombinatorics": function(){
                     var o = this.$data.object;
-                    return o!=="prime_sieve" && o!=="is_prime" && o!=="gcd" && o!=="diophantines" && o!=="prime_factors" && o!=="divisors";
+                    return o!=="prime_sieve" && o!=="is_prime" && o!=="gcd" && o!=="diophantines" && o!=="prime_factors" && o!=="divisors" && o!=="poly_factors";
                 },
                 "haslex": function(){
                     return this.$data.object.slice(-7) !== "_square";
@@ -1271,7 +1297,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     return this.$data.object.slice(-7) !== "_square";
                 },
                 "hasN": function(){
-                    return ("tensor"!==this.$data.object || "tensor_inversion"===this.$data.type) && !("gcd"===this.$data.object || "diophantines"===this.$data.object);
+                    return ("tensor"!==this.$data.object || "tensor_inversion"===this.$data.type) && !("gcd"===this.$data.object || "diophantines"===this.$data.object || "poly_factors"===this.$data.object);
                 },
                 "hasK": function(){
                     var obj = this.$data.object, type = this.$data.type;
@@ -1281,7 +1307,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     return "word"===this.$data.type;
                 },
                 "hasText": function(){
-                    return "gcd"===this.$data.object || "diophantines"===this.$data.object;
+                    return "gcd"===this.$data.object || "diophantines"===this.$data.object || "poly_factors"===this.$data.object;
                 },
                 "hasConditions": function(){
                     var ret = "conditional-"===this.$data.type.substr(0,12);
@@ -1297,12 +1323,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 "labelText": function(){
                     var obj = this.$data.object;
                     if ( "gcd" === obj || "diophantines" === obj ) return "Entries = ";
+                    if ( "poly_factors" === obj ) return "Polynomial = ";
                     return "";
                 },
                 "placeholderText": function(){
                     var obj = this.$data.object;
-                    if ( "gcd" === obj ) return "Each row represents a different polynomial (coefficients separated by space) from constant term up to highest term. Eg: x^2+2 as 2 0 1";
-                    if ( "diophantines" === obj ) return "Each row represents a different diophantine equation (coefficients of variables separated by space).\nEg:\nx+y = 2\n2x+3y = 5\nas:\n1 1 = 2\n2 3 = 5";
+                    if ( "gcd" === obj ) return "Each row represents a different polynomial (coefficients separated by space) from constant term up to highest term. \n Eg: \n x^2+2 \n as \n 2 0 1";
+                    if ( "diophantines" === obj ) return "Each row represents a different diophantine equation (coefficients of variables separated by space). \n Eg: \n x+y = 2 \n 2x+3y = 5 \n as: \n 1 1 = 2 \n 2 3 = 5";
+                    if ( "poly_factors" === obj ) return "Enter a polynomial by specifying its coefficients in a row separted by space from lowest up to highest. \n Eg for \n x^2+2 \n write \n 2 0 1";
                     return "";
                 },
                 "labelK": function(){
