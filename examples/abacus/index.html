@@ -541,21 +541,22 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     }
     function group_factors_tex( factors, constant )
     {
-        var out = '', e = {}, i, t;
+        var out = '', i, t;
         
-        if ( constant.equ(Abacus.Arithmetic.J) ) out = '-';
-        else if ( !constant.equ(Abacus.Arithmetic.I) ) out = '('+constant.toTex()+')';
+        if ( factors.length )
+        {
+            if ( constant.equ(Abacus.Arithmetic.J) ) out = '-';
+            else if ( !constant.equ(Abacus.Arithmetic.I) ) out = '('+constant.toTex()+')';
+        }
+        else
+        {
+            out = '('+constant.toTex()+')';
+        }
         
         for(i=0; i<factors.length; i++)
         {
-            t = factors[i].toTex();
-            if ( null==e[t] ) e[t] = 1;
-            else e[t]++;
-        }
-        for(t in e)
-        {
-            if ( !Object.prototype.hasOwnProperty.call(e, t) ) continue;
-            out += '('+t+')'+(1<e[t]?('^{'+String(e[t])+'}'):'');
+            t = factors[i][0].toTex();
+            out += '('+t+')'+(1<factors[i][1]?('^{'+String(factors[i][1])+'}'):'');
         }
         return out;
     }
@@ -585,7 +586,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             object = model.get('object'), type = model.get('type'), order = model.get('order'),
             $={order:order}, $$=null, n, nn=null, klass=null, filter=null, filter_code=null,
             subklass=null, subklass_code='', sub$ = null, subn=null, submethod=null,
-            conditions, data, res, r, sol, free_vars, max, NL = /\r\n|\r|\n/;
+            conditions, data, res, r, sol, free_vars, max, NL = /\r\n|\r|\n/,
+            poly_coeffs_dense_re = /^\-?\d+(?:\s+\-?\d+)*$/;
 
         clear_math();
         
@@ -623,12 +625,21 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             trim(Text).split(NL).forEach(function(entry){
                 entry = trim(entry);
                 if ( !entry.length ) return;
-                res.push(Abacus.Polynomial(entry.split(" ").map(trim).filter(function(n){return 0<n.length;})));
+                if ( poly_coeffs_dense_re.test(entry) )
+                {
+                    // previous array of dense poly coeffs
+                    res.push(Abacus.Polynomial(entry.split(" ").map(trim).filter(function(n){return 0<n.length;})));
+                }
+                else
+                {
+                    // parse from tex format
+                    res.push(Abacus.Polynomial.fromString(entry));
+                }
             });
             if ( 1 < res.length )
             {
                 r = Abacus.Math.polyxgcd(res);
-                model.set('summary', esc_html("Abacus.Math.polyxgcd("+res.map(function(p){return 'Abacus.Polynomial(['+p.coeff.map(function(c){return'"'+String(c)+'"';}).join(',')+'])'}).join(',')+")"), true);
+                model.set('summary', esc_html('Abacus.Math.polyxgcd('+res.map(function(p){return 'Abacus.Polynomial.fromString("'+p.toString()+'")';}).join(',')+')'), true);
                 out.setValue(r[0].toString()+'='+r.slice(1).map(function(g, i){
                     return '('+g.toString()+')*('+res[i].toString()+')';
                 }).join('+'));
@@ -649,13 +660,22 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             trim(Text).split(NL).forEach(function(entry){
                 entry = trim(entry);
                 if ( !entry.length ) return;
-                res.push(Abacus.Polynomial(entry.split(" ").map(trim).filter(function(n){return 0<n.length;})));
+                if ( poly_coeffs_dense_re.test(entry) )
+                {
+                    // previous array of dense poly coeffs
+                    res.push(Abacus.Polynomial(entry.split(" ").map(trim).filter(function(n){return 0<n.length;})));
+                }
+                else
+                {
+                    // parse from tex format
+                    res.push(Abacus.Polynomial.fromString(entry));
+                }
             });
             if ( 1 <= res.length )
             {
                 r = Abacus.Math.polyfactorize(res[0]);
-                model.set('summary', esc_html("Abacus.Math.polyfactorize(Abacus.Polynomial(["+res[0].coeff.map(function(c){return'"'+String(c)+'"';}).join(',')+"]))"), true);
-                out.setValue(res[0].toString()+'='+'('+r[1].toString()+')*('+r[0].map(function(p){return p.toString();}).join(')*(')+')');
+                model.set('summary', esc_html('Abacus.Math.polyfactorize(Abacus.Polynomial.fromString("'+res[0].toString()+'"))'), true);
+                out.setValue(res[0].toString()+'='+'('+r[1].toString()+')*'+r[0].map(function(p){return '('+p[0].toString()+')'+(1<p[1]?('^'+String(p[1])):'');}).join('*'));
                 print_math('\\['+res[0].toTex()+'='+group_factors_tex(r[0], r[1])+'\\]')
             }
             else
@@ -1325,9 +1345,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 },
                 "placeholderText": function(){
                     var obj = this.$data.object;
-                    if ( "gcd" === obj ) return "Each row represents a different polynomial (coefficients separated by space) from constant term up to highest term. \n Eg: \n x^2+2 \n as \n 2 0 1";
+                    if ( "gcd" === obj ) return "Each row represents a different polynomial (in tex format). \n Eg: \n -(3/2)x^2+2 \n as: \n -(3/2)x^2+2";
                     if ( "diophantines" === obj ) return "Each row represents a different diophantine equation (coefficients of variables separated by space). \n Eg: \n x+y = 2 \n 2x+3y = 5 \n as: \n 1 1 = 2 \n 2 3 = 5";
-                    if ( "poly_factors" === obj ) return "Enter a polynomial by specifying its coefficients in a row separted by space from lowest up to highest. \n Eg for \n x^2+2 \n write \n 2 0 1";
+                    if ( "poly_factors" === obj ) return "Enter a polynomial (in tex format). \n Eg: \n -(3/2)x^2+2 \n as: \n -(3/2)x^2+2";
                     return "";
                 },
                 "labelK": function(){
