@@ -402,8 +402,8 @@ window.MathJax = {
 
     <div class="fluid col-1-1" style="margin-top:10px">
         <strong>Output:</strong>&nbsp;&nbsp;<button class="button" style="margin-left:10px" id="produce" data-bind='{"click":"produce"}'>Produce</button><br />
-        <div class="fluid col-1-1" style="margin-top:10px;font-family:consolas,monospace" data-bind='{"html":"summary"}'></div>
-        <div id="math" style="margin-top:10px;margin-bottom:15px;"></div>
+        <div class="fluid col-1-1" style="margin-top:10px;margin-bottom:15px;font-family:consolas,monospace" data-bind='{"html":"summary"}'></div>
+        <div id="math" style="margin-bottom:15px;" data-bind='{"show":"hasMath"}'></div>
         <textarea id="output"></textarea>
     </div>
 <div class="ui-delayable-overlay"><div class="ui-spinner ui-spinner-dots"></div></div>
@@ -707,7 +707,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 sol = sol ? sol[0] : null;
                 model.set('summary', esc_html("Abacus.Math.diophantines(["+res.map(function(row){return '['+row.map(function(c){return'"'+String(c)+'"';}).join(',')+']';}).join(',')+"], ["+r.map(function(c){return'"'+String(c)+'"';}).join(',')+"], \"i\")"), true);
                 out.setValue(sol ? sol.map(function(x, i){return 'x_'+(i+1)+'='+x.toString();}).join("\n")+(free_vars.length ? ("\ni_1" + (2===free_vars.length ? ",i_2" : (2<free_vars.length ? (",..,i_"+free_vars.length) : "")) + " any integer(s)") : "") : 'No solution in integers');
-                print_math('\\['+tex_matrix(res)+tex_matrix(Abacus.Util.array(res[0].length, function(i){return 'x_{'+(i+1)+'}';}))+'='+tex_matrix(r)+'\\]'+"\n\n"+(sol ? sol.map(function(x, i){return '\\[x_{'+(i+1)+'} = '+x.toTex()+'\\]';}).join("\n")+(free_vars.length ? ('\\[i_{1}' + (2===free_vars.length ? ',i_{2}' : (2<free_vars.length ? (',\\dots,i_{'+free_vars.length+'}') : '')) + ' \\in \\mathbb{Z}\\]') : '') : '\\[\\text{No solution in }\\mathbb{Z}\\]'))
+                print_math('\\['+tex_matrix(res)+tex_matrix(Abacus.Util.array(res[0].length, function(i){return 'x_{'+(i+1)+'}';}))+'='+tex_matrix(r)+'\\]'+"\n\n"+(sol ? (sol.map(function(x, i){return '\\[x_{'+(i+1)+'} = '+x.toTex()+'\\]';}).join("\n")+(free_vars.length ? ('\\[i_{1}' + (2===free_vars.length ? ',i_{2}' : (2<free_vars.length ? (',\\dots,i_{'+free_vars.length+'}') : '')) + ' \\in \\mathbb{Z}\\]') : '')) : '\\[\\text{No solution in }\\mathbb{Z}\\]'))
             }
             else
             {
@@ -1301,6 +1301,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     var o = this.$data.object;
                     return o!=="prime_sieve" && o!=="is_prime" && o!=="gcd" && o!=="diophantines" && o!=="prime_factors" && o!=="divisors" && o!=="poly_factors";
                 },
+                "hasMath": function(){
+                    var o = this.$data.object;
+                    return o==="gcd" || o==="diophantines" || o==="is_prime" || o==="prime_factors" || o==="poly_factors";
+                },
                 "haslex": function(){
                     return this.$data.object.slice(-7) !== "_square";
                 },
@@ -1370,6 +1374,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 //"default": ["object"],
                 //"default_order": ["object","type"],
                 "isCombinatorics": ["object"],
+                "hasMath": ["object"],
                 "hasN": ["object","type"],
                 "hasText": ["object"],
                 "placeholderText": ["object"],
