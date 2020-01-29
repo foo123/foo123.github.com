@@ -17,43 +17,24 @@
             color:#aaa;
             margin: 0;
             padding:0;
-            height:100%;
-            min-height:900px; 
-            overflow:scroll;
         }
-        .panel {
-            display:inline-block;
-            max-width:240px;
-            position:relative;
-            margin:0;
-            padding:0;
-            cursor:pointer;
-            vertical-align:top;
-            padding-right:10px;
-            border-right:4px solid #aaa;
+        .image {
+            padding: 10px;
         }
-        #aside {
-            position:absolute;
-            color:#aaa;
-            font-size:12px;
-            z-index:200;
-            width:250px;
-            right:0;
-            top:100px;
-            padding-top:50px;
+        .image > canvas {
+            position: relative;
+            display: block;
+            max-width: 100% !important;
+            width: 100% !important;
+            height: auto !important;
         }
-        #container { max-width:400px; }
-        #filters { max-width:600px; }
-        span  {
-            vertical-aligh:top;
-            position:relative;
-            display:inline-block;
-            width:25px;
-            padding:0;
-            padding-left:10px;
+        .image > .caption {
+            position: relative;
+            margin-top: 10px;
+            display: block;
+            min-height: 50px;
         }
-        #forkongithub
-        {
+        #forkongithub {
             width:100%;
         }
         .button {
@@ -109,37 +90,30 @@
             cursor:pointer;
             margin-bottom: 10px;
         }
-        
-        .img-area-select {
-            border: 2px dotted #79b900;
-            cursor: arrow;
-        }
         #forkongithub a{background:#c83022;color:#fff;}
     </style>
     <script src="../common/js/require.js"></script>
     <script src="../common/js/require-config.js"></script>
     <!--<script src="../common/cascades/haarcascade_frontalface_alt.js"></script>-->
 </head>
-<body class="responsive-864-container">
+<body class="responsive-640-container">
     <span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
     
-    <header id="header">
+    <header id="header" class="fluid col-1-1">
         <h1>Image Processing with Filter.js v.<span id="lib-version">0</span></h1><br /><br />
     </header>
-    <div style="padding:0;margin:0;position:relative;z-index:1000;margin-left:25px">
+    <div class="fluid col-1-1" style="padding:0;margin:0;position:relative;z-index:1000;margin-left:25px">
         <button id="synchronous" class="button">Synchronous</button>
         <button id="parallel" class="button">Parallel</button>
         <button id="applyBt" style="display:none" class="button">Apply</button>
         <button id="restoreBt" style="display:none" class="button">Restore</button>
     </div>
-    <br />
     
+    <div id="container" class="fluid col-1-1 panel"></div>
     
-    <aside id="aside"></aside>
-    
-    <div id="container" class="panel"></div>
-    
-    <div id="filters" class="panel"></div>
+    <footer id="footer" class="fluid col-1-1">
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
+    </footer>
     
     <script>//<![CDATA[
     "use strict";
@@ -155,9 +129,6 @@
     function( haarcascade_frontalface_alt, haarcascade_eye, $, _1, _2, _3, _4, _5, _6, _7, $F ) {
         
         // utils
-        function br() { return $('<br />'); }
-        function span(t) { return $('<span>'+t+'</span>'); }
-        
         var runInThread = /(&|\?)parallel\b/i.test( location.href );
         
         if ( runInThread && !$F.Browser.supportsWorker )
@@ -382,39 +353,36 @@
             location.href = baseUrl + '?synchronous=1';
         });
         
-        container
-        .append(span('1.')).append(im1.domElement)
-        .append(span('2.')).append(im2.domElement)
-        .append(br())
-        .append(span('3.')).append(im3.domElement)
-        .append(span('4.')).append(im4.domElement)
-        .append(br())
-        .append(span('14.')).append(im14.domElement)
-        .append(span('M:')).append(displacemap.domElement)
-        .append(br())
-        .append(span('15.')).append(im15.domElement)
-        .append(span('16.')).append(im16.domElement)
-        ;
-        filters
-        .append(span('5.')).append(im5.domElement)
-        .append(span('6.')).append(im6.domElement)
-        .append(span('7.')).append(im7.domElement)
-        .append(br())
-        .append(span('8.')).append(im8.domElement)
-        .append(span('9.')).append(im9.domElement)
-        .append(span('10.')).append(im10.domElement)
-        .append(br())
-        .append(span('11.')).append(im11.domElement)
-        .append(span('12.')).append(im12.domElement)
-        .append(span('13.')).append(im13.domElement)
-        .append(br())
-        .append(span('17.')).append(im17.domElement)
-        .append(span('18.')).append(im18.domElement)
-        .append(span('19.')).append(im19.domElement)
-        //.append(span('21.')).append(im21.domElement)
-        ;
+        function Img(id, img, text)
+        {
+            id = String(id);
+            var wrapper = $('<div id="img'+id+'" class="fluid col-1-5 autocol-1-4-864 autocol-1-2-640 autocol-1-1-480 autoadjust image"></div>');
+            wrapper.append(img.domElement).append($('<span class="caption">'+id+'. '+String(text)+'</span>'));
+            return wrapper;
+        }
         
-        aside.append("<div><ol><li>Original Image</li><li>Red Channel</li><li>Green Channel</li><li>Blue Channel</li><li>Red Colorized applied to Selection</li><li>Grayscale and Contrast</li><li>Quick Sepia</li><li>Posterize</li><li>HalfTone (Plugin)</li><li>Emboss</li><li>Geometric Twirl Map</li><li>Displace Map</li><li>Grayscale, Sobel Gradient Magnitude (Composite)</li><li>Histogram Equalization (Plugin)</li><li>Perlin Noise Image</li><li>Color Flood Fill (Plugin)</li><li>Seamless Tile (Plugin)</li><li>Canny Edges (Plugin)</li><li>Face and Eyes Composite HAAR Detector (Plugin)</li></ol>M: Displace Map</div>");
+        container
+        .append(Img(1, im1, 'Original Image'))
+        .append(Img(2, im2, 'Red Channel'))
+        .append(Img(3, im3, 'Green Channel'))
+        .append(Img(4, im4, 'Blue Channel'))
+        .append(Img(5, im5, 'Red Colorized applied to Selection'))
+        .append(Img(6, im6, 'Grayscale and Contrast'))
+        .append(Img(7, im7, 'Quick Sepia'))
+        .append(Img(8, im8, 'Posterize'))
+        .append(Img(9, im9, 'HalfTone (Plugin)'))
+        .append(Img(10, im10, 'Emboss'))
+        .append(Img(11, im11, 'Geometric Twirl Map'))
+        .append(Img(12, im12, 'Displace Map'))
+        .append(Img(13, im13, 'Grayscale, Sobel Gradient Magnitude (Composite)'))
+        .append(Img(14, im14, 'Histogram Equalization (Plugin)'))
+        .append(Img(15, im15, 'Perlin Noise Image'))
+        .append(Img(16, im17, 'Seamless Tile (Plugin)'))
+        .append(Img(17, im18, 'Canny Edges (Plugin)'))
+        .append(Img(18, im19, 'Face and Eyes Composite HAAR Detector (Plugin)'))
+        .append(Img(19, im16, 'Color Flood Fill (Plugin)'))
+        .append(Img('M', displacemap, 'Displace Map'))
+        ;
         
         function apply(evt)
         {
