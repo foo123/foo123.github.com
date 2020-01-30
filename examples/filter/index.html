@@ -9,7 +9,7 @@
     
     <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
     <style type="text/css">
-        body {
+        html,body {
             position:relative;
             font-family: Monospace;
             font-size:12px;
@@ -19,7 +19,7 @@
             padding:0;
         }
         .image {
-            padding: 10px;
+            padding: 4px;
         }
         .image > canvas {
             position: relative;
@@ -96,7 +96,7 @@
     <script src="../common/js/require-config.js"></script>
     <!--<script src="../common/cascades/haarcascade_frontalface_alt.js"></script>-->
 </head>
-<body class="responsive-640-container">
+<body class="responsive-640-container" style="max-width: 1600px; margin: 0 auto;">
     <span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
     
     <header id="header" class="fluid col-1-1">
@@ -106,13 +106,14 @@
         <button id="synchronous" class="button">Synchronous</button>
         <button id="parallel" class="button">Parallel</button>
         <button id="applyBt" style="display:none" class="button">Apply</button>
-        <button id="restoreBt" style="display:none" class="button">Restore</button>
+        <button id="restoreBt" style="display:none" class="button">Restore</button><br />
+        <i style="font-size:11px"><b>Note:</b> images may appear as lower quality if scaled from original dimensions due to responsive design</i>
     </div>
     
     <div id="container" class="fluid col-1-1 panel"></div>
     
     <footer id="footer" class="fluid col-1-1">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div><br />
     </footer>
     
     <script>//<![CDATA[
@@ -356,7 +357,7 @@
         function Img(id, img, text)
         {
             id = String(id);
-            var wrapper = $('<div id="img'+id+'" class="fluid col-1-5 autocol-1-4-864 autocol-1-2-640 autocol-1-1-480 autoadjust image"></div>');
+            var wrapper = $('<div id="img'+id+'" class="fluid col-1-5 autocol-1-4-864 autocol-1-2-640 autocol-1-2-480 autoadjust image"></div>');
             wrapper.append(img.domElement).append($('<span class="caption">'+id+'. '+String(text)+'</span>'));
             return wrapper;
         }

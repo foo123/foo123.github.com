@@ -796,9 +796,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             else if ( "involution"===type )
             {
-                //$.type = "involution";
-                filter = Abacus.Permutation.is_involution;
-                filter_code = 'Abacus.Permutation.is_involution';
+                $.type = "involution";
+                //filter = Abacus.Permutation.isInvolution;
+                //filter_code = 'Abacus.Permutation.isInvolution';
             }
             else if ( "inversion"===type )
             {
@@ -1301,7 +1301,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 },
                 "isCombinatorics": function(){
                     var o = this.$data.object;
-                    return o!=="prime_sieve" && o!=="is_prime" && o!=="gcd" && o!=="diophantines" && o!=="prime_factors" && o!=="divisors" && o!=="poly_factors";
+                    return o!=="prime_sieve" && o!=="is_prime" && o!=="gcd" && o!=="diophantines" && o!=="prime_factors" && o!=="divisors" && o!=="poly_factors" && o!=="latin_square" && o!=="magic_square";
                 },
                 "hasMath": function(){
                     var o = this.$data.object;
