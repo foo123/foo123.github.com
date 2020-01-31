@@ -107,7 +107,7 @@
         <button id="parallel" class="button">Parallel</button>
         <button id="applyBt" style="display:none" class="button">Apply</button>
         <button id="restoreBt" style="display:none" class="button">Restore</button><br />
-        <i style="font-size:11px"><b>Note:</b> images may appear as lower quality if scaled from original dimensions due to responsive design</i>
+        <i style="font-size:11px"><b>Note:</b> images may appear as blurred if scaled from original dimensions due to responsive design</i>
     </div>
     
     <div id="container" class="fluid col-1-1 panel"></div>
@@ -177,6 +177,8 @@
                 displacemap.store();
                 
                 im15.createImageData(im1.width, im1.height).perlinNoise(Math.random(), true, true, 80, 50, 4, [[0,0],[10,10], [20,10], [10,20]]);
+                
+                init();
             })
             ,im2 = htmlImage.load( che )
             ,im3 = htmlImage.load( che )
@@ -347,43 +349,53 @@
             }
         ;
         
-        $('#parallel').on( 'click', function( ) {
-            location.href = baseUrl + '?parallel=1';
-        });
-        $('#synchronous').on( 'click', function( ) {
-            location.href = baseUrl + '?synchronous=1';
-        });
-        
         function Img(id, img, text)
         {
             id = String(id);
             var wrapper = $('<div id="img'+id+'" class="fluid col-1-5 autocol-1-4-864 autocol-1-2-640 autocol-1-2-480 autoadjust image"></div>');
             wrapper.append(img.domElement).append($('<span class="caption">'+id+'. '+String(text)+'</span>'));
+            img.domElement.style.position = 'relative';
+            img.domElement.style.maxWidth = '100%';
+            img.domElement.style.width = '100%';
+            img.domElement.style.height = 'auto';
             return wrapper;
         }
         
-        container
-        .append(Img(1, im1, 'Original Image'))
-        .append(Img(2, im2, 'Red Channel'))
-        .append(Img(3, im3, 'Green Channel'))
-        .append(Img(4, im4, 'Blue Channel'))
-        .append(Img(5, im5, 'Red Colorized applied to Selection'))
-        .append(Img(6, im6, 'Grayscale and Contrast'))
-        .append(Img(7, im7, 'Quick Sepia'))
-        .append(Img(8, im8, 'Posterize'))
-        .append(Img(9, im9, 'HalfTone (Plugin)'))
-        .append(Img(10, im10, 'Emboss'))
-        .append(Img(11, im11, 'Geometric Twirl Map'))
-        .append(Img(12, im12, 'Displace Map'))
-        .append(Img(13, im13, 'Grayscale, Sobel Gradient Magnitude (Composite)'))
-        .append(Img(14, im14, 'Histogram Equalization (Plugin)'))
-        .append(Img(15, im15, 'Perlin Noise Image'))
-        .append(Img(16, im17, 'Seamless Tile (Plugin)'))
-        .append(Img(17, im18, 'Canny Edges (Plugin)'))
-        .append(Img(18, im19, 'Face and Eyes Composite HAAR Detector (Plugin)'))
-        .append(Img(19, im16, 'Color Flood Fill (Plugin)'))
-        .append(Img('M', displacemap, 'Displace Map'))
-        ;
+        function init( )
+        {
+            $('#parallel').on( 'click', function( ) {
+                location.href = baseUrl + '?parallel=1';
+            });
+            $('#synchronous').on( 'click', function( ) {
+                location.href = baseUrl + '?synchronous=1';
+            });
+            
+            container
+            .append(Img(1, im1, 'Original Image'))
+            .append(Img(2, im2, 'Red Channel'))
+            .append(Img(3, im3, 'Green Channel'))
+            .append(Img(4, im4, 'Blue Channel'))
+            .append(Img(5, im5, 'Red Colorized applied to Selection'))
+            .append(Img(6, im6, 'Grayscale and Contrast'))
+            .append(Img(7, im7, 'Quick Sepia'))
+            .append(Img(8, im8, 'Posterize'))
+            .append(Img(9, im9, 'HalfTone (Plugin)'))
+            .append(Img(10, im10, 'Emboss'))
+            .append(Img(11, im11, 'Geometric Twirl Map'))
+            .append(Img(12, im12, 'Displace Map'))
+            .append(Img(13, im13, 'Grayscale, Sobel Gradient Magnitude (Composite)'))
+            .append(Img(14, im14, 'Histogram Equalization (Plugin)'))
+            .append(Img(15, im17, 'Seamless Tile (Plugin)'))
+            .append(Img(16, im18, 'Canny Edges (Plugin)'))
+            .append(Img(17, im19, 'Face and Eyes Composite HAAR Detector (Plugin)'))
+            .append(Img(18, im15, 'Perlin Noise Image'))
+            .append(Img(19, im16, 'Color Flood Fill (Plugin)'))
+            .append(Img('M', displacemap, 'Displace Map'))
+            ;
+            
+            applyBt.show().on('click', apply);
+            restoreBt.show().on('click', restore);
+        }
         
         function apply(evt)
         {
@@ -482,9 +494,6 @@
         }*/
         //setTimeout(process, 2000);
         //setTimeout(restore, 5000);
-        
-        applyBt.show().on('click', apply);
-        restoreBt.show().on('click', restore);
     });
     //]]></script>
 </body>

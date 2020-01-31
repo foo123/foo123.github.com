@@ -744,6 +744,9 @@
             stats.begin( );
             
             postVideo.image( video );
+            postVideo.domElement.style.position = 'relative';
+            postVideo.domElement.style.maxWidth = '100%';
+            postVideo.domElement.style.height = 'auto';
             
             vw = postVideo.width; vh = postVideo.height;
             
