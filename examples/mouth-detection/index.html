@@ -132,7 +132,7 @@
     
     
 <header id="header">
-    <h1>Mouth Detection with OpenCV haar cascades in JavaScript</h1>
+    <h1>Mouth Detection with OpenCV haar cascades in JavaScript v.<span id="ver">0.0.0</span></h1>
 </header>
 
     
@@ -214,6 +214,8 @@ require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcasc
         defaultImage = '../common/assets/model1.jpg',  customImageSrc = null
     ;
 
+    $('#ver').text(HAAR.VERSION);
+    
     ModelView.jquery( $ );
     
     function DetectFeature( src )

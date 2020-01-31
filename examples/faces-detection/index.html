@@ -98,7 +98,7 @@ div {
     
     
 <header id="header">
-    <h1>Many Faces Detection with OpenCV haar cascades in JavaScript</h1>
+    <h1>Many Faces Detection with OpenCV haar cascades in JavaScript v.<span id="ver">0.0.0</span></h1>
 </header>
 
     
@@ -162,6 +162,8 @@ require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcasc
         scaling, cannyL, cannyH, basescale, scaleinc, inc, minneighbours,
         defaultImage = '../common/assets/Group_Faces2.jpg',  customImageSrc = null
     ;
+    
+    $('#ver').text(HAAR.VERSION);
     
     ModelView.jquery( $ );
     
