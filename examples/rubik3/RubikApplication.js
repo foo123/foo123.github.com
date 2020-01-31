@@ -1,4 +1,4 @@
-(function(window, $, undef){
+(function(window, undef){
     
 /**
  * Provides requestAnimationFrame in a cross browser way.
@@ -294,7 +294,7 @@ function cs_init()
 
 function updateflatimage()
 {
-    var flat = rubikcube.getFlatImage(flatimage);
+    /*var flat =*/ rubikcube.getFlatImage(flatimage);
 }
 
 function getCubelet( clientX, clientY )
@@ -480,35 +480,35 @@ function onDocumentUp( event, isTouch )
                     {
                         if (nn.z>0) angle=-angle;
                         if (pressed_cub.seenas.name==='right') angle=-angle;
-                        rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     //else if (pressed_cub.seenas.zz==1 && released_cub.seenas.zz==1)
                     else if (range(pressed_cub.seenas.zz,0,N-1) && range(released_cub.seenas.zz,0,N-1))
                     {
                         if (nn.x<0) angle=-angle;
-                        rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     //else if (pressed_cub.seenas.yy==2 && released_cub.seenas.yy==2)
                     else if (pressed_cub.seenas.yy==N-1 && released_cub.seenas.yy==N-1)
                     {
                         if (nn.z>0) angle=-angle;
-                        rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     else if (pressed_cub.seenas.yy==0 && released_cub.seenas.yy==0)
                     {
                         if (nn.z>0) angle=-angle;
-                        rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:-angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     else if (pressed_cub.seenas.zz==0 && released_cub.seenas.zz==0)
                     {
                         if (nn.y>0) angle=-angle;
-                        rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     //else if (pressed_cub.seenas.zz==2 && released_cub.seenas.zz==2)
                     else if (pressed_cub.seenas.zz==N-1 && released_cub.seenas.zz==N-1)
                     {
                         if (nn.y>0) angle=-angle;
-                        rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:-angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     break;
                 case 'top':
@@ -518,38 +518,38 @@ function onDocumentUp( event, isTouch )
                     {
                         if (nn.x>0) angle=-angle;
                         if (pressed_cub.seenas.name==='top') angle=-angle;
-                        rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     //else if (pressed_cub.seenas.xx==1 && released_cub.seenas.xx==1)
                     else if (range(pressed_cub.seenas.xx,0,N-1) && range(released_cub.seenas.xx,0,N-1))
                     {
                         if (nn.z<0) angle=-angle;
                         if (pressed_cub.seenas.name=='bottom') angle=-angle;
-                        rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:-angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     //else if (pressed_cub.seenas.zz==2 && released_cub.seenas.zz==2)
                     else if (pressed_cub.seenas.zz==N-1 && released_cub.seenas.zz==N-1)
                     {
                         if (nn.x<0) angle=-angle;
-                        rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:-angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     else if (pressed_cub.seenas.zz==0 && released_cub.seenas.zz==0)
                     {
                         if (nn.x<0) angle=-angle;
-                        rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     //else if (pressed_cub.seenas.xx==2 && released_cub.seenas.xx==2)
                     else if (pressed_cub.seenas.xx==N-1 && released_cub.seenas.xx==N-1)
                     {
                         if (nn.z<0) angle=-angle;
                         //if (pressed_cub.seenas.name=='bottom') angle=-angle;
-                        rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     else if (pressed_cub.seenas.xx==0 && released_cub.seenas.xx==0)
                     {
                         if (nn.z<0) angle=-angle;
                         //if (pressed_cub.seenas.name=='bottom') angle=-angle;
-                        rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:-angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     break;
                 case 'back':
@@ -559,40 +559,40 @@ function onDocumentUp( event, isTouch )
                     {
                         if (nn.x<0) angle=-angle;
                         if (pressed_cub.seenas.name==='back') angle=-angle;
-                        rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:-angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     //else if (pressed_cub.seenas.xx==1 && released_cub.seenas.xx==1)
                     else if (range(pressed_cub.seenas.xx,0,N-1) && range(released_cub.seenas.xx,0,N-1))
                     {
                         if (nn.y<0) angle=-angle;
                         if (pressed_cub.seenas.name=='back') angle=-angle;
-                        rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     //else if (pressed_cub.seenas.yy==2 && released_cub.seenas.yy==2)
                     else if (pressed_cub.seenas.yy==N-1 && released_cub.seenas.yy==N-1)
                     {
                         if (nn.x>0) angle=-angle;
                         //if (pressed_cub.seenas.name=='back') angle=-angle;
-                        rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:-angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     else if (pressed_cub.seenas.yy==0 && released_cub.seenas.yy==0)
                     {
                         if (nn.x>0) angle=-angle;
                         //if (pressed_cub.seenas.name=='back') angle=-angle;
-                        rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     //else if (pressed_cub.seenas.xx==2 && released_cub.seenas.xx==2)
                     else if (pressed_cub.seenas.xx==N-1 && released_cub.seenas.xx==N-1)
                     {
                         if (nn.y<0) angle=-angle;
                         //if (pressed_cub.seenas.name=='back') angle=-angle;
-                        rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:-angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     else if (pressed_cub.seenas.xx==0 && released_cub.seenas.xx==0)
                     {
                         if (nn.y<0) angle=-angle;
                         //if (pressed_cub.seenas.name=='back') angle=-angle;
-                        rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:angle,duration:2/*,onComplete:updateflatimage*/});
+                        rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     break;
             }
@@ -628,14 +628,13 @@ function animate( )
     camera.lookAt( scene.position );
     TWEEN.update();
     renderer.render( scene, camera );
-    
     requestAnimationFrame( animate );
 }
 
 function setDimensions( )
 {
     w = window.innerWidth-20;
-    h = Math.min(window.innerHeight, 500);
+    h = Math.max(window.innerHeight-80, 500);
     w2 = w/2;
     h2 = h/2;
     container.style.width = w+"px";
@@ -677,7 +676,7 @@ var self = {
         container.addEventListener( 'mousedown', onDocumentMouseDown, false );
         container.addEventListener( 'touchstart', onDocumentTouchStart, false );
         newbt.addEventListener( 'click', function(){
-            scene.remove(rubikcube); 
+            if ( rubikcube ) scene.remove(rubikcube); 
             rubikcube = new Rubik(rubikN.options[rubikN.selectedIndex].value, 200, 0.3, colors); 
             scene.add(rubikcube); 
             rubikcube.onChange = updateflatimage; 
@@ -717,4 +716,4 @@ var self = {
 
 // export it
 window.RubikApplication = self;
-})(window, jQuery);
+})(window);

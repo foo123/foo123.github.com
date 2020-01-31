@@ -37,47 +37,91 @@ var multx = 0.5*Math.PI,
     fl,fr
 ;
 
-function onDocumentMouseDown( event ) 
+function onDocumentMouseDown( event )
+{
+    onDocumentDown( event, false );
+}
+function onDocumentTouchStart( event )
+{
+    onDocumentDown( event, true );
+}
+function onDocumentDown( event, isTouch ) 
 {
     event.preventDefault();
-    mouseX = ( event.clientX / w ) * 2 - 1;
+    
+    var clientX = isTouch ? event.changedTouches[0].clientX : event.clientX,
+        clientY = isTouch ? event.changedTouches[0].clientY : event.clientY;
+        
+    mouseX = ( clientX / w ) * 2 - 1;
     targetRotationY = mouseX;
-    mouseY = ( event.clientY / h ) * 2 - 1;
+    mouseY = ( clientY / h ) * 2 - 1;
     targetRotationX=mouseY;
 
-    container.addEventListener( 'mousemove', onDocumentMouseMove, false );
-    container.addEventListener( 'mouseup', onDocumentMouseUp, false );
-    container.addEventListener( 'mouseout', onDocumentMouseOut, false );
+    if ( isTouch )
+    {
+        container.addEventListener( 'touchmove', onDocumentTouchMove, false );
+        container.addEventListener( 'touchend', onDocumentTouchEnd, false );
+        container.addEventListener( 'touchcancel', onDocumentTouchEnd, false );
+    }
+    else
+    {
+        container.addEventListener( 'mousemove', onDocumentMouseMove, false );
+        container.addEventListener( 'mouseup', onDocumentMouseUp, false );
+        container.addEventListener( 'mouseout', onDocumentMouseUp, false );
+    }
 }
 
-function onDocumentMouseMove( event ) 
+function onDocumentMouseMove( event )
 {
-    /*mouseX = event.clientX - w2;
-    mouseY = event.clientY - h2;
+    onDocumentMove( event, false );
+}
+function onDocumentTouchMove( event )
+{
+    onDocumentMove( event, true );
+}
+function onDocumentMove( event, isTouch ) 
+{
+    event.preventDefault();
+    
+    var clientX = isTouch ? event.changedTouches[0].clientX : event.clientX,
+        clientY = isTouch ? event.changedTouches[0].clientY : event.clientY;
+        
+    /*mouseX = clientX - w2;
+    mouseY = clientY - h2;
 
     targetRotationY = targetRotationOnMouseDownY + ( mouseX - mouseXOnMouseDown ) * 0.02;
     targetRotationX = targetRotationOnMouseDownX + ( mouseY - mouseYOnMouseDown ) * 0.02;*/
     //var target=
     //mouse_path.push(e.seenas.ray);
 
-    mouseX = ( event.clientX / w ) * 2 - 1;
+    mouseX = ( clientX / w ) * 2 - 1;
     targetRotationY = mouseX;
-    mouseY = ( event.clientY / h ) * 2 - 1;
+    mouseY = ( clientY / h ) * 2 - 1;
     targetRotationX = mouseY;
 }
 
-function onDocumentMouseUp( event ) 
+function onDocumentMouseUp( event )
 {
-    container.removeEventListener( 'mousemove', onDocumentMouseMove, false );
-    container.removeEventListener( 'mouseup', onDocumentMouseUp, false );
-    container.removeEventListener( 'mouseout', onDocumentMouseOut, false );
+    onDocumentUp( event, false );
 }
-
-function onDocumentMouseOut( event ) 
+function onDocumentTouchEnd( event )
 {
-    container.removeEventListener( 'mousemove', onDocumentMouseMove, false );
-    container.removeEventListener( 'mouseup', onDocumentMouseUp, false );
-    container.removeEventListener( 'mouseout', onDocumentMouseOut, false );
+    onDocumentUp( event, true );
+}
+function onDocumentUp( event, isTouch ) 
+{
+    if ( isTouch )
+    {
+        container.removeEventListener( 'touchmove', onDocumentTouchMove, false );
+        container.removeEventListener( 'touchend', onDocumentTouchEnd, false );
+        container.removeEventListener( 'touchcancel', onDocumentTouchEnd, false );
+    }
+    else
+    {
+        container.removeEventListener( 'mousemove', onDocumentMouseMove, false );
+        container.removeEventListener( 'mouseup', onDocumentMouseUp, false );
+        container.removeEventListener( 'mouseout', onDocumentMouseUp, false );
+    }
 }
 
 function animate( ) 
@@ -97,29 +141,37 @@ function animate( )
     requestAnimationFrame( animate );
 }
 
+function setDimensions( )
+{
+    w = window.innerWidth-20;
+    h = Math.max(window.innerHeight-80, 500);
+    w2 = w/2;
+    h2 = h/2;
+    container.style.width = w+"px";
+    container.style.height = h+"px";
+    renderer.setSize( w, h );
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+}
+
 var self = {
     init: function( images ) {
         // setup the scene
         container = document.getElementById('container');
-        w = window.innerWidth;
-        h = window.innerHeight;
-        w2 = w/2; h2 = h/2;
-        container.style.width = w+"px";
-        container.style.height = h+"px";
-        container.style.marginTop = 0.5*(window.innerHeight-h)+'px';
 
         scene = new THREE.Scene( );
         projector = new THREE.Projector();
-        camera = new THREE.PerspectiveCamera( 50, w / h, 1, 1000 );
+        camera = new THREE.PerspectiveCamera( 50, 1.0, 1, 1000 );
         camera.position.z = rad;
         scene.add( camera );
 
         // webgl renderer gives better rendering without problems
         renderer = new THREE.WebGLRenderer( );
-        renderer.setSize( w, h );
-
+        setDimensions( );
         container.appendChild( renderer.domElement );
         container.addEventListener( 'mousedown', onDocumentMouseDown, false );
+        container.addEventListener( 'touchstart', onDocumentTouchStart, false );
+        window.addEventListener( 'resize', setDimensions, false );
 
         // create book
         book = new FlipBook3D.Book( );
@@ -152,7 +204,7 @@ var self = {
         });
 
         // start rendering
-        animate( );
+        requestAnimationFrame( animate );
     },
 
     animate : animate

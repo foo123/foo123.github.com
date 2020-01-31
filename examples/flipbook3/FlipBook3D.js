@@ -2,7 +2,7 @@
 /**
 **  FlipBook3D using Three.js, MOD3.js and Tween.js
 **  Author Nikos M.
-**  url http://nikos-web-development.netai.net/
+**  url https://foo123.github.io/
 **/
 
 // 3D Flip Book -------------------------------------------------------------------------------------------

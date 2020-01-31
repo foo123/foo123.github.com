@@ -4,7 +4,7 @@
     *
     * 3D Carousel using Three.js and Tween.js
     *
-    * @author: Nikos M. http://nikos-web-development.netai.net/
+    * @author: Nikos M. https://foo123.github.io/
     * 
     * https://github.com/foo123/Carousel3
     *
