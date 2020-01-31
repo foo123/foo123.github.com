@@ -1,0 +1,65 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie lt-ie9">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" class="no-ie">
+<!--<![endif]-->
+<head>
+<title>Area Select</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="description" content="Area Select" />
+
+<link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+<link type="text/css" rel="stylesheet" href="../common/css/areaselect.min.css" media="all" />
+<script src="../common/js/areaselect.min.js"></script>
+<style type="text/css">
+.container img  {
+    position: relative;
+    max-width: 100%;
+    height: auto;
+}
+</style>
+</head>
+<body class="responsive-864-container">
+    <span id="forkongithub"><a href="https://github.com/foo123/area-select.js">Select me on GitHub</a></span>
+        
+        <header id="header">
+            <h1>Area Select Test</h1><br /><br />
+        </header>
+        
+        <div id="container" class="fluid col-1-1 panel"></div>
+    
+    <footer id="footer">
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div></footer>
+    
+        <script>
+        //<![CDATA[
+        var img = "./img.jpg", image, areaSelect, container = document.getElementById('container');
+        
+        image = new Image();
+        image.onload = function() {
+            container.appendChild( image );
+            areaSelect = new AreaSelect(image, {
+                /*ratioYX: 0.7,*/
+                minHeight: 20,
+                maxHeight: 300,
+                className: 'my-area-select',
+                onSelection: function( el, sel ){
+                    console.log( sel );
+                }
+            });
+        };
+        image.src = img;
+        //]]>
+        </script>
+    </body>
+</html>
