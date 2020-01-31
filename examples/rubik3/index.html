@@ -29,6 +29,7 @@ body {
     padding:0;
     position:relative;
     color:#aaa;
+    overflow: scroll;
 }
 #container {
     background: #121212 url('assets/back.png') no-repeat 50% 50%;
@@ -145,10 +146,7 @@ body {
         A link back to author is appreciated
 -->
 
-<div id="container" style="position:relative;margin:0 auto;padding:0;z-index:0;cursor:pointer;">
-<div id="flatimage" style="position:absolute;z-index:10;bottom:10px;right:5px;"></div>
-</div>
-<div id='controls' class="fluid col-1-1">
+<div id='controls' class="fluid col-1-1" style="margin-top:5px;">
     <div>
         <select style="margin:3px;font-size:16px;padding:5px;color:#121212;" size="1" id="rubik-type">
             <option value="2">2x2x2</option>    
@@ -180,6 +178,10 @@ body {
         <div class='color-class colorSelector'><div id='csinside1'></div></div>
         <div style="float:none;clear:both"></div>
     </div>-->
+</div>
+
+<div id="container" style="position:relative;margin:0 auto;padding:0;border:0;z-index:0;cursor:pointer;">
+<div id="flatimage" style="position:absolute;z-index:10;bottom:10px;right:5px;"></div>
 </div>
 
 <footer id="footer">
