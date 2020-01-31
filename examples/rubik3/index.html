@@ -25,13 +25,13 @@
 <style type="text/css">
 body {
     font-family: Monospace;
-    background: #121212 url('assets/back.png') no-repeat 50% 50%;
-    margin: 0px;
-    overflow: hidden;
+    background: #121212;
     padding:0;
     position:relative;
-    height:100%;
     color:#aaa;
+}
+#container {
+    background: #121212 url('assets/back.png') no-repeat 50% 50%;
 }
 .color-class
 {
@@ -105,18 +105,17 @@ body {
     line-height:30px;
     cursor:pointer;
     position:relative;
-    display:block;
-    margin: 3px 0px;
+    display:inline-block;
+    margin: 3px;
 }
 #forkongithub a, #forkongithub a:hover{background:#fd0002;color:#fff;}
 #footer {
     z-index: 100;
-    position:absolute;
-    left: 10px;
-    bottom: 80px;
+    position:relative;
+    margin-top: 20px;
 }
 </style>
-<link rel="stylesheet" href="../common/css/colorpicker.css" type="text/css" />
+<!--<link rel="stylesheet" href="../common/css/colorpicker.css" type="text/css" />-->
 
 
 
@@ -129,7 +128,7 @@ body {
 <script type="text/javascript" src="./RubikApplication.js"></script>
 
 </head>
-<body class="responsive-864-container">
+<body class="responsive-864-container" style="max-width:1600px; margin:0 auto;">
     <span id="forkongithub"><a href="https://github.com/foo123/Rubik3">Twist me on GitHub</a></span>
     
     
@@ -146,30 +145,27 @@ body {
         A link back to author is appreciated
 -->
 
-<div id='controls' style='position:absolute;z-index:100;top: 0; left: 0; width:200px;margin:0;padding:0'>
-    <div id='pad' style="background-image:url('assets/pad.jpg');width:100px;height:100px;position:relative;cursor:pointer;">
-        <div id='cross' style="position:absolute;width:20px;height:20px;top:40px;left:40px;background:transparent url('assets/cross.png'); no-repeat 0 0"></div>
-    </div>
-    
+<div id="container" style="position:relative;margin:0 auto;padding:0;z-index:0;cursor:pointer;">
+<div id="flatimage" style="position:absolute;z-index:10;bottom:10px;right:5px;"></div>
+</div>
+<div id='controls' class="fluid col-1-1">
     <div>
-        <select style="margin:5px 0;margin-left:5px;font-size:16px" size="1" id="rubik-type">
+        <select style="margin:3px;font-size:16px;padding:5px;color:#121212;" size="1" id="rubik-type">
             <option value="2">2x2x2</option>    
             <option value="3" selected="selected">3x3x3</option>
             <option value="4">4x4x4</option>
         </select>
-        
-        <br />
         
         <input class="button" type='button' id='newrubik' value='New Cube'/>
         <input class="button" type='button' id='scramble' value='Scramble'/>
         <input class="button" type='button' id='undo' value='Undo'/>
         <br />
         
-        <p>Drag Mouse with Button pressed over row or column to rotate sides</p>
+        <p>Click or touch and drag on background to rotate cube. Drag row or column to rotate sides</p>
         
     </div>
     
-    <div id='colors' style="position:relative;">
+    <!--<div id='colors' style="position:relative;">
         <div class='color-class colorSelector'><div id='cstop1'></div></div>
         <div class='color-class colorSelector'><div id='csbottom1'></div></div>
         <div class='color-class colorSelector'><div id='csleft1'></div></div>
@@ -183,25 +179,15 @@ body {
         
         <div class='color-class colorSelector'><div id='csinside1'></div></div>
         <div style="float:none;clear:both"></div>
-    </div>
+    </div>-->
 </div>
 
-<div id="flatimage" style="position:absolute;z-index:10;bottom:50px;right:5px;"></div>
-
-<div id="container" style="position:relative;margin:0 auto;padding:0;z-index:0;cursor:pointer;"></div>
-
-    
-    
-    <footer id="footer">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
-    
-    </footer>
-    <br /><br />
-    
+<footer id="footer">
+<div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a><br /></div>
+</footer>
     
 <script>//<![CDATA[
 RubikApplication.init();
 //]]></script>
-
 </body>
 </html>
