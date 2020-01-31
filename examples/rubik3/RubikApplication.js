@@ -664,7 +664,7 @@ var self = {
         projector = new THREE.Projector();
 
         // Rubik Cube
-        rubikcube = new Rubik(rubikN.options[rubikN.selectedIndex].value, 200, 0.3, colors);
+        rubikcube = new Rubik(rubikN.options[rubikN.selectedIndex].value, 200, 0.1, colors);
         scene.add( rubikcube );
         rubikcube.onChange = updateflatimage;
         
@@ -677,7 +677,7 @@ var self = {
         container.addEventListener( 'touchstart', onDocumentTouchStart, false );
         newbt.addEventListener( 'click', function(){
             if ( rubikcube ) scene.remove(rubikcube); 
-            rubikcube = new Rubik(rubikN.options[rubikN.selectedIndex].value, 200, 0.3, colors); 
+            rubikcube = new Rubik(rubikN.options[rubikN.selectedIndex].value, 200, 0.1, colors); 
             scene.add(rubikcube); 
             rubikcube.onChange = updateflatimage; 
             renderer.render( scene, camera );

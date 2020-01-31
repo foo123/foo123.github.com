@@ -12,7 +12,7 @@
 <html lang="en" class="no-ie">
 <!--<![endif]-->
 <head>
-<title>Sudoku</title>
+<title>Sudoku Game, Builder and Solver</title>
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
@@ -104,8 +104,9 @@ body
     line-height:30px;
     cursor:pointer;
     position:relative;
+    margin-bottom: 10px;
 }
-.button.puzzle-control 
+.button,.button.puzzle-control 
 {
     width: auto;
     font-size: 11px;
@@ -118,9 +119,9 @@ table td
 }
 select
 {
-    font-size: 1.2em !important;
+    font-size: 1.1em !important;
     color: black !important;
-    padding: 0.3em;
+    padding: 0.2em;
 }
 .ui-delayable-overlay
 {
@@ -280,26 +281,25 @@ select
     box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.2), 1.8em -1.8em 0 0em rgba(128,128,128, 0.2), 2.5em 0em 0 0em rgba(128,128,128, 0.2), 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.2), -1.8em 1.8em 0 0em rgba(128,128,128, 0.5), -2.6em 0em 0 0em rgba(128,128,128, 0.7), -1.8em -1.8em 0 0em #808080;
   }
 }
-#game_panel {min-height:600px;}
+#grid {min-height:400px;}
 #forkongithub a{background:#aa0000;color:#fff;text-decoration:none;font-family:arial, sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:0.9rem;line-height:1.4rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#aa0000;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;z-index:100;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:absolute;display:block;z-index:100;top:0;right:0;width:200px;overflow:hidden;height:200px;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}
 </style>
+<link rel="stylesheet" type="text/css" href="./sudoku.min.css" />
 
 <!--<script type="text/javascript" src="../common/js/require.js"></script>
 <script type="text/javascript" src="../common/js/require-config.js"></script>-->
 <script type="text/javascript" src="./jquery.js"></script>
 <!--<script type="text/javascript" src="./jqueryui.js"></script>-->
-<!--<script type="text/javascript" src="../common/js/Contemplate.min.js"></script>-->
 <script type="text/javascript" src="../common/js/modelview.bundle.js"></script>
 <script type="text/javascript" src="./sudoku.bundle.js"></script>
-<link rel="stylesheet" type="text/css" href="./sudoku.min.css" />
 
 </head>
 
-<body class="responsive-864-container">
+<body class="responsive-864-container" style="max-width:1600px; margin:0 auto; overflow-x:hidden;">
 <span id="forkongithub"><a href="https://github.com/foo123/sudoku.js">Play with me on GitHub</a></span>
     
     
-<header id="header" class="fluid col-1-1">
+<header id="header" class="fluid col-1-1" style="padding:10px;">
     <h1>Sudoku Game, Builder and Solver in pure JavaScript</h1>
     <i>a scaled-down version of CrossWord.js, professional Crossword Builder in JavaScript, by same author</i><br />
     <i>A new Sudoku of desired difficulty and symmetry is generated on-the-fly, by <a href="http://stackoverflow.com/a/28699821/3591273" target="_blank">custom algorithm</a> (with Web Workers)</i>
@@ -307,68 +307,69 @@ select
 
 <br />
 
-<section id="panel" class="fluid col-1-1" style="padding: 20px;">
+<section id="panel" class="fluid col-1-1" style="padding:10px;">
 <div class="fluid col-1-4">
     <table class="fluid col-1-1"><tbody>
     <tr>
-    <td>&nbsp;</td>
-    <td><button class="button" id="new_game" data-bind='{"click":"new_game"}'>New Game</button></td>
+        <td>&nbsp;</td>
+        <td><button class="button" id="new_game" data-bind='{"click":"new_game"}'>New Game</button></td>
     </tr>
     <tr>
-    <td><strong>Type:</strong></td>
-    <td><select name="model[type]">
-    <option value="9" selected>9x9 Sudoku</option>
-    <option value="6">6x6 Sudoku</option>
-    <option value="4">4x4 Sudoku</option>
-    <option value="12">12x12 Sudoku</option>
-    <option value="16">16x16 Sudoku</option>
-    </select></td>
+        <td><strong>Type:</strong></td>
+        <td><select name="model[type]">
+        <option value="9" selected>9x9 Sudoku</option>
+        <option value="6">6x6 Sudoku</option>
+        <option value="4">4x4 Sudoku</option>
+        <option value="12">12x12 Sudoku</option>
+        <option value="16">16x16 Sudoku</option>
+        </select></td>
     </tr>
     <tr>
-    <td><strong>Difficulty:</strong></td>
-    <td><select name="model[difficulty]">
-    <option value="1">Very Easy</option>
-    <option value="2">Easy</option>
-    <option value="3" selected>Medium</option>
-    <option value="4">Hard</option>
-    <option value="5">Very Hard</option>
-    </select></td>
+        <td><strong>Difficulty:</strong></td>
+        <td><select name="model[difficulty]">
+        <option value="1">Very Easy</option>
+        <option value="2">Easy</option>
+        <option value="3" selected>Medium</option>
+        <option value="4">Hard</option>
+        <option value="5">Very Hard</option>
+        </select></td>
     </tr>
     <tr>
-    <td><strong>Symmetry:</strong></td>
-    <td><select name="model[symmetry]">
-    <option value="0">None</option>
-    <option value="1">Horizontal</option>
-    <option value="2">Vertical</option>
-    <option value="3">Diagonal</option>
-    <option value="4" selected>Random</option>
-    </select></td>
+        <td><strong>Symmetry:</strong></td>
+        <td><select name="model[symmetry]">
+        <option value="0">None</option>
+        <option value="1">Horizontal</option>
+        <option value="2">Vertical</option>
+        <option value="3">Diagonal</option>
+        <option value="4" selected>Random</option>
+        </select></td>
     </tr>
     </tbody></table>
 </div>
-<div id="game_panel" class="fluid col-3-4 text-center">
-<div id="controls" class="fluid col-1-1">
-<div class="fluid col-3-4" style="margin-bottom:10px;">
-<button class="button puzzle-control puzzle-clear-all">Clear All</button>
-<button class="button puzzle-control puzzle-clear-errors">Clear Errors</button>
-<button class="button puzzle-control puzzle-highlight-errors">Highlight Errors</button>
-<button class="button puzzle-control puzzle-clear-highlighted">Clear Highlighted</button>
-</div>
-<div class="fluid col-3-4" style="margin-bottom:10px;">
-<button class="button puzzle-control puzzle-notes">Notes</button>
-<button class="button puzzle-control puzzle-all-notes">All Notes</button>
-<button class="button puzzle-control puzzle-clear-notes">Clear Notes</button>
-<button class="button puzzle-control puzzle-reveal-symbol">Reveal Symbol</button>
-<button class="button puzzle-control puzzle-reveal-solution">Solve</button>
-</div>
-</div>
-<div id="grid" class="fluid col-3-4" style="padding-top:10px;"></div>
-<div class="ui-delayable-overlay"><div class="ui-spinner ui-spinner-dots"></div></div>
-</div>
-</section>
-<br />
 
-    
+<div id="game_panel" class="fluid col-3-4 text-center">
+    <div id="controls" class="fluid col-1-1">
+        <div class="fluid col-1-1">
+        <button class="button puzzle-control puzzle-clear-all">Clear All</button>
+        <button class="button puzzle-control puzzle-clear-errors">Clear Errors</button>
+        </div><div class="fluid col-1-1">
+        <button class="button puzzle-control puzzle-highlight-errors">Highlight Errors</button>
+        <button class="button puzzle-control puzzle-clear-highlighted">Clear Highlighted</button>
+        </div>
+        <div class="fluid col-1-1">
+        <button class="button puzzle-control puzzle-notes">Notes</button>
+        <button class="button puzzle-control puzzle-all-notes">All Notes</button>
+        <button class="button puzzle-control puzzle-clear-notes">Clear Notes</button>
+        </div><div class="fluid col-1-1">
+        <button class="button puzzle-control puzzle-reveal-symbol">Reveal Symbol</button>
+        <button class="button puzzle-control puzzle-reveal-solution">Solve</button>
+        </div>
+    </div>
+</div>
+
+<div id="grid" class="fluid col-1-1" style="padding-top:10px;"></div>
+<div class="ui-delayable-overlay"><div class="ui-spinner ui-spinner-dots"></div></div>
+</section>
     
 <footer id="footer">
 <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
@@ -597,32 +598,32 @@ $(function(){
                     symmetry = model.get('symmetry');
                 if ( 4 === dimension )
                 {
-                    dimensions = {rows:4, columns:4, subRows:2, subColumns:2, cellSize:70};
+                    dimensions = {rows:4, columns:4, subRows:2, subColumns:2, cellSize:Math.min(Math.floor($grid.width()/4), 70)};
                     alphabet = "1234";
                 }
                 else if ( 6 === dimension )
                 {
-                    dimensions = {rows:6, columns:6, subRows:2, subColumns:3, cellSize:70};
+                    dimensions = {rows:6, columns:6, subRows:2, subColumns:3, cellSize:Math.min(Math.floor($grid.width()/6), 70)};
                     alphabet = "123456";
                 }
                 else if ( 12 === dimension )
                 {
-                    dimensions = {rows:12, columns:12, subRows:3, subColumns:4, cellSize:60};
+                    dimensions = {rows:12, columns:12, subRows:3, subColumns:4, cellSize:Math.min(Math.floor($grid.width()/12), 60)};
                     alphabet = "ABCDEFGHIJKL";
                 }
                 else if ( 16 === dimension )
                 {
-                    dimensions = {rows:16, columns:16, subRows:4, subColumns:4, cellSize:60};
+                    dimensions = {rows:16, columns:16, subRows:4, subColumns:4, cellSize:Math.min(Math.floor($grid.width()/16), 60)};
                     alphabet = "ABCDEFGHIJKLMNOP";
                 }
                 else /*if ( 9 === dimension )*/
                 {
-                    dimensions = {rows:9, columns:9, subRows:3, subColumns:3, cellSize:70};
+                    dimensions = {rows:9, columns:9, subRows:3, subColumns:3, cellSize:Math.min(Math.floor($grid.width()/9), 70)};
                     alphabet = "123456789";
                 }
-                $game_panel.addClass('ui-delayed').removeClass('ui-undelayed');
+                $panel.addClass('ui-delayed').removeClass('ui-undelayed');
                 compile_sudoku(function( ){
-                    $game_panel.addClass('ui-undelayed').removeClass('ui-delayed');
+                    $panel.addClass('ui-undelayed').removeClass('ui-delayed');
                     if ( prev_renderer ) { prev_renderer.dispose(); prev_renderer = null; }
                     renderer = display_sudoku( puzzle, $grid, $controls );
                 }, puzzle = build_sudoku( dimensions ), dimension, difficulty, symmetry, alphabet);
