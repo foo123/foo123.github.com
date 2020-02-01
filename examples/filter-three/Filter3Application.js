@@ -26,12 +26,10 @@ if ( !window.requestAnimationFrame ) {
 
 var 
     $F = FILTER,
-    aside, test, restore, container, mouseXOnMouseDown, windowHalfX,
-    mouseYOnMouseDown, windowHalfY,
+    aside, test, restore, container, mouseXOnMouseDown, mouseYOnMouseDown,
     targetRotationOnMouseDownY = 0, targetRotationY = 0,
     targetRotationOnMouseDownX = 0, targetRotationX = 0,
-    w = window.innerWidth, h = window.innerHeight,
-    w2 = w/2, h2 = h/2,
+    w, h, w2, h2,
     
     scene, camera, renderer, cube,
     sides = {bottom:3,top:2,  right:0,left:1, front:4,back:5},
@@ -67,34 +65,38 @@ var
     dF = new $F.DisplacementMapFilter(displacemap)
 ;
 
-var self={
+function setDimensions( )
+{
+    w = window.innerWidth-20;
+    h = Math.max(window.innerHeight-80, 500);
+    w2 = w/2;
+    h2 = h/2;
+    container.style.width = w+"px";
+    container.style.height = h+"px";
+    renderer.setSize( w, h );
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+}
+
+
+var self = {
 
     init : function() {
         container = document.getElementById('container'),
-        aside = document.getElementById('aside'),
         test = document.getElementById('test'),
         restore = document.getElementById('restore');
         
         test.addEventListener('click', dotest, false);
         restore.addEventListener('click', dorestore, false);
         
-        container.style.width = w+"px";
-        container.style.height = h+"px";
-        //container.style.marginTop=0.5*(window.innerHeight-h)+'px';
-        windowHalfX = w2;
-        windowHalfY = h2;
-        
         scene = new THREE.Scene();
 
-        camera = new THREE.PerspectiveCamera( 70, w / h, 1, 1000 );
+        camera = new THREE.PerspectiveCamera( 70, 1.0, 1, 1000 );
         camera.position.z = 700;
         scene.add( camera );
 
-
-
         renderer = new THREE.CanvasRenderer();
-        renderer.setSize( w, h );
-        THREEx.WindowResize(renderer, camera);
+        setDimensions();
         container.appendChild( renderer.domElement );
 
         cube=new THREE.Object3D();
@@ -207,10 +209,11 @@ var self={
             }
         }
         
+        container.addEventListener( 'touchstart', onDocumentMouseDown, false );
         container.addEventListener( 'mousedown', onDocumentMouseDown, false );
-        container.addEventListener( 'touchstart', onDocumentTouchStart, false );
-        container.addEventListener( 'touchmove', onDocumentTouchMove, false );
-        animate();
+        window.addEventListener( 'resize', setDimensions, false );
+        
+        requestAnimationFrame( animate );
     }
 };
 
@@ -218,7 +221,10 @@ var self={
 function callback(ind) 
 {
     return function() { 
-        texture[ind].needsUpdate=true; 
+        image[ind].domElement.style.position = 'relative';
+        image[ind].domElement.style.maxWidth = '100%';
+        image[ind].domElement.style.height = 'auto';
+        texture[ind].needsUpdate = true; 
         if (ind==7)
         {
             displacemap.createImageData(image[7].width,image[7].height);
@@ -247,98 +253,73 @@ function dotest(event)
     grs.apply(image[5]);
     emboss.apply(image[6]);
     //dF.setInput("map", displacemap);
-    dF.scaleX=100;
-    dF.scaleY=100;
+    dF.scaleX = 100;
+    dF.scaleY = 100;
     dF.apply(image[7]);
     for (var i=1;i<8;i++)
-        texture[i].needsUpdate=true;
+        texture[i].needsUpdate = true;
 }
 function dorestore(event)
 {
     for (var i=1;i<8;i++)
     {
         image[i].restore();
-        texture[i].needsUpdate=true;
+        texture[i].needsUpdate = true;
     }
 }
 
 function onDocumentMouseDown( event ) {
 
     event.preventDefault();
+    var clientX = event.changedTouches && event.changedTouches.length ? event.changedTouches[0].clientX : event.clientX,
+        clientY = event.changedTouches && event.changedTouches.length ? event.changedTouches[0].clientY : event.clientY;
 
+    container.addEventListener( 'touchmove', onDocumentMouseMove, false );
+    container.addEventListener( 'touchend', onDocumentMouseUp, false );
+    container.addEventListener( 'touchcancel', onDocumentMouseUp, false );
     container.addEventListener( 'mousemove', onDocumentMouseMove, false );
     container.addEventListener( 'mouseup', onDocumentMouseUp, false );
-    container.addEventListener( 'mouseout', onDocumentMouseOut, false );
+    container.addEventListener( 'mouseout', onDocumentMouseUp, false );
 
-    mouseXOnMouseDown = event.clientX - windowHalfX;
-    mouseYOnMouseDown = event.clientY - windowHalfY;
+    mouseXOnMouseDown = clientX - w2;
+    mouseYOnMouseDown = clientY - h2;
     targetRotationOnMouseDownY = targetRotationY;
     targetRotationOnMouseDownX = targetRotationX;
 }
 
 function onDocumentMouseMove( event ) {
 
-    var mouseX = event.clientX - windowHalfX;
-    var mouseY = event.clientY - windowHalfY;
+    event.preventDefault();
+    var clientX = event.changedTouches && event.changedTouches.length ? event.changedTouches[0].clientX : event.clientX,
+        clientY = event.changedTouches && event.changedTouches.length ? event.changedTouches[0].clientY : event.clientY,
+        mouseX = clientX - w2, mouseY = clientY - h2;
 
     targetRotationY = targetRotationOnMouseDownY + ( mouseX - mouseXOnMouseDown ) * 0.02;
     targetRotationX = targetRotationOnMouseDownX + ( mouseY - mouseYOnMouseDown ) * 0.02;
 }
 
-function onDocumentMouseUp( event ) {
-
+function onDocumentMouseUp( event )
+{
+    event.preventDefault();
+    container.removeEventListener( 'touchmove', onDocumentMouseMove, false );
+    container.removeEventListener( 'touchend', onDocumentMouseUp, false );
+    container.removeEventListener( 'touchcancel', onDocumentMouseUp, false );
     container.removeEventListener( 'mousemove', onDocumentMouseMove, false );
     container.removeEventListener( 'mouseup', onDocumentMouseUp, false );
-    container.removeEventListener( 'mouseout', onDocumentMouseOut, false );
-}
-
-function onDocumentMouseOut( event ) {
-
-    container.removeEventListener( 'mousemove', onDocumentMouseMove, false );
-    container.removeEventListener( 'mouseup', onDocumentMouseUp, false );
-    container.removeEventListener( 'mouseout', onDocumentMouseOut, false );
-}
-
-function onDocumentTouchStart( event ) {
-
-    if ( event.touches.length == 1 ) {
-
-        event.preventDefault();
-
-        mouseXOnMouseDown = event.clientX - windowHalfX;
-        mouseYOnMouseDown = event.clientY - windowHalfY;
-        targetRotationOnMouseDownY = targetRotationY;
-        targetRotationOnMouseDownX = targetRotationX;
-    }
-}
-
-function onDocumentTouchMove( event ) {
-
-    if ( event.touches.length == 1 ) {
-
-        event.preventDefault();
-
-        mouseXOnMouseDown = event.clientX - windowHalfX;
-        mouseYOnMouseDown = event.clientY - windowHalfY;
-        targetRotationOnMouseDownY = targetRotationY;
-        targetRotationOnMouseDownX = targetRotationX;
-    }
+    container.removeEventListener( 'mouseout', onDocumentMouseUp, false );
 }
 
 //
 
-function animate() {
-    requestAnimationFrame( animate );
-    render();
-}
-
-function render() {
+function animate( )
+{
     cube.rotation.y += ( targetRotationY - cube.rotation.y ) * 0.05;
     cube.rotation.x += ( targetRotationX - cube.rotation.x ) * 0.05;
     renderer.render( scene, camera );
+    requestAnimationFrame( animate );
 }
 
 // export it
-window.Filter3Application=self;
+window.Filter3Application = self;
 
 })(window);
