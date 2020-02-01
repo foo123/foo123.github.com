@@ -36,6 +36,34 @@ var container,
     tapedTwice = null
 ;
 
+function recursive_offset( aobj )
+{
+    var currOffset = {x: 0, y: 0},
+        newOffset = {x: 0, y: 0};
+
+    if ( aobj )
+    {
+        if ( aobj.scrollLeft )
+            currOffset.x = aobj.scrollLeft;
+
+        if ( aobj.scrollTop )
+            currOffset.y = aobj.scrollTop;
+
+        if ( aobj.offsetLeft )
+            currOffset.x -= aobj.offsetLeft;
+
+        if ( aobj.offsetTop )
+            currOffset.y -= aobj.offsetTop;
+
+        if ( aobj.parentNode )
+            newOffset = recursive_offset(aobj.parentNode);   
+
+        currOffset.x += newOffset.x;
+        currOffset.y += newOffset.y; 
+    }
+    return currOffset;
+}
+
 function onDoubleClick( e )
 {
     return onDblClick( e, false );
@@ -58,8 +86,10 @@ function onDblClick( e, isTouch )
     
     e.preventDefault();
     var clientX = isTouch ? e.changedTouches[0].clientX : e.clientX,
-        clientY = isTouch ? e.changedTouches[0].clientY : e.clientY;
+        clientY = isTouch ? e.changedTouches[0].clientY : e.clientY,
+        offset = recursive_offset(e.target);
         
+    clientX += offset.x; clientY += offset.y;
     dblclick = true;
     carouselupdate = false;
     
@@ -91,7 +121,10 @@ function onDocumentDown( e, isTouch )
     e.preventDefault();
 
     var clientX = isTouch ? e.changedTouches[0].clientX : e.clientX,
-        clientY = isTouch ? e.changedTouches[0].clientY : e.clientY;
+        clientY = isTouch ? e.changedTouches[0].clientY : e.clientY,
+        offset = recursive_offset(e.target);
+        
+    clientX += offset.x; clientY += offset.y;
     
     if ( isTouch )
     {
@@ -129,7 +162,10 @@ function onDocumentMove( e, isTouch )
     e.preventDefault();
 
     var clientX = isTouch ? e.changedTouches[0].clientX : e.clientX,
-        clientY = isTouch ? e.changedTouches[0].clientY : e.clientY;
+        clientY = isTouch ? e.changedTouches[0].clientY : e.clientY,
+        offset = recursive_offset(e.target);
+        
+    clientX += offset.x; clientY += offset.y;
     mouseX = clientX - w2;
     mouseY = clientY - h2;
     mouse.x = ( clientX / w ) * 2 - 1;

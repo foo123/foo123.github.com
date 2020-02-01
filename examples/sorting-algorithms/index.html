@@ -131,6 +131,10 @@ body {
 #console:not(.processing) > #loader { display: none; }
 #console:not(.processing) > #result { display: block; }
 
+select {
+    color: #121212;
+    padding: 6px 3px;
+}
 #forkongithub a{background:#aa0000;color:#fff;text-decoration:none;font-family:arial, sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:0.9rem;line-height:1.4rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#aa0000;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;z-index:100;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:absolute;display:block;z-index:100;top:0;right:0;width:200px;overflow:hidden;height:200px;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}
 </style>
 
@@ -142,7 +146,7 @@ body {
 
 
 </head>
-<body class="responsive-864-container">
+<body class="responsive-864-container" style="max-width:1600px; margin:0 auto; overflow-x:hidden;">
     <span id="forkongithub"><a href="https://github.com/foo123/SortingAlgorithms">Check me out on GitHub</a></span>
     
     
@@ -306,7 +310,7 @@ require([/*'Benchmark',*/ 'jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Sort'
     // some extra array methods used in the tests
     Array.prototype.nsort = function() { return this.sort($S.utils.asNumbers); }
     Array.prototype.shuffle = function() { return $S.Shuffle(this); }
-    Array.prototype.isSorted = function() { return $S.isSorted(this, true); }
+    Array.prototype.isSorted = function() { return $S.isSorted(this); }
     Array.prototype.toString = function() { return '[ ' + this.join(', ') + ' ]'; }
         
     // prepare test data
