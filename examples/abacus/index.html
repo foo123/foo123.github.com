@@ -589,7 +589,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             object = model.get('object'), type = model.get('type'), order = model.get('order'),
             $={order:order}, $$=null, n, nn=null, klass=null, filter=null, filter_code=null,
             subklass=null, subklass_code='', sub$ = null, subn=null, submethod=null,
-            conditions, data, res, r, sol, free_vars, max, NL = /\r\n|\r|\n/,
+            conditions, data, res, r, sol, free_vars, ring, max, NL = /\r\n|\r|\n/,
             poly_coeffs_dense_re = /^\-?\d+(?:\s+\-?\d+)*$/;
 
         clear_math();
@@ -624,25 +624,17 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         }
         else if ( 'gcd' === object )
         {
-            res = [];
+            res = []; ring = Abacus.Ring.Q("x");
             trim(Text).split(NL).forEach(function(entry){
                 entry = trim(entry);
                 if ( !entry.length ) return;
-                if ( poly_coeffs_dense_re.test(entry) )
-                {
-                    // previous array of dense poly coeffs
-                    res.push(Abacus.Polynomial(entry.split(" ").map(trim).filter(function(n){return 0<n.length;})));
-                }
-                else
-                {
-                    // parse from tex format
-                    res.push(Abacus.Polynomial.fromString(entry));
-                }
+                // parse from tex format
+                res.push(ring.fromString(entry));
             });
             if ( 1 < res.length )
             {
-                r = Abacus.Polynomial.xgcd(res);
-                model.set('summary', esc_html('Abacus.Polynomial.xgcd('+res.map(function(p){return 'Abacus.Polynomial.fromString("'+p.toString()+'")';}).join(',')+')'), true);
+                r = ring.xgcd(res);
+                model.set('summary', 'PolynomialRing = Abacus.Ring.Q("x")<br />'+esc_html('PolynomialRing.xgcd('+res.map(function(p){return 'PolynomialRing.fromString("'+p.toString()+'")';}).join(',')+')'), true);
                 out.setValue(r[0].toString()+'='+r.slice(1).map(function(g, i){
                     return '('+g.toString()+')*('+res[i].toString()+')';
                 }).join('+'));
@@ -663,16 +655,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             trim(Text).split(NL).forEach(function(entry){
                 entry = trim(entry);
                 if ( !entry.length ) return;
-                if ( poly_coeffs_dense_re.test(entry) )
-                {
-                    // previous array of dense poly coeffs
-                    res.push(Abacus.Polynomial(entry.split(" ").map(trim).filter(function(n){return 0<n.length;})));
-                }
-                else
-                {
-                    // parse from tex format
-                    res.push(Abacus.Polynomial.fromString(entry));
-                }
+                // parse from tex format
+                res.push(Abacus.Polynomial.fromString(entry));
             });
             if ( 1 <= res.length )
             {
@@ -724,17 +708,17 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             res = []; free_vars = trim(model.get('alphabet')); if ( !free_vars.length ) free_vars = 'x';
             free_vars = free_vars.split(',').map(trim).filter(function(x){return x.length;});
             if ( !free_vars.length ) free_vars = ['x']; 
+            ring = Abacus.Ring.Q(free_vars);
             trim(Text).split(NL).forEach(function(entry){
                 entry = trim(entry);
                 if ( !entry.length ) return;
                 // parse from tex format
-                res.push(Abacus.MultiPolynomial.fromString(entry, free_vars));
+                res.push(ring.fromString(entry));
             });
             if ( 1 <= res.length )
             {
-                free_vars = toJSON(free_vars);
                 r = Abacus.Math.groebner(res);
-                model.set('summary', esc_html('Abacus.Math.groebner(['+res.map(function(p){return 'Abacus.MultiPolynomial.fromString("'+p.toString()+'",'+free_vars+')';}).join(',')+'])'), true);
+                model.set('summary', 'PolynomialRing = Abacus.Ring.Q("'+free_vars.join('","')+'")<br />'+esc_html('Abacus.Math.groebner(['+res.map(function(p){return 'PolynomialRing.fromString("'+p.toString()+'")';}).join(',')+'])'), true);
                 out.setValue(r.map(String).join("\n"));
                 print_math('\\['+r.map(function(p){return p.toTex();}).join("\\]\n\\[")+'\\]')
             }
