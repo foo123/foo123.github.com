@@ -634,11 +634,11 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             if ( 1 < res.length )
             {
                 r = ring.xgcd(res);
-                model.set('summary', 'PolynomialRing = Abacus.Ring.Q("x")<br />'+esc_html('PolynomialRing.xgcd('+res.map(function(p){return 'PolynomialRing.fromString("'+p.toString()+'")';}).join(',')+')'), true);
+                model.set('summary', esc_html('PolynomialRing = Abacus.'+ring.toString())+'<br />'+esc_html('PolynomialRing.xgcd('+res.map(function(p){return 'PolynomialRing.fromString("'+p.toString()+'")';}).join(',')+')'), true);
                 out.setValue(r[0].toString()+'='+r.slice(1).map(function(g, i){
                     return '('+g.toString()+')*('+res[i].toString()+')';
                 }).join('+'));
-                print_math('\\['+r[0].toTex()+'='+r.slice(1).map(function(g, i){
+                print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+r[0].toTex()+'='+r.slice(1).map(function(g, i){
                     return '('+g.toTex()+')('+res[i].toTex()+')'
                 }).join('+')+'\\]')
             }
@@ -718,9 +718,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             if ( 1 <= res.length )
             {
                 r = Abacus.Math.groebner(res);
-                model.set('summary', 'PolynomialRing = Abacus.Ring.Q("'+free_vars.join('","')+'")<br />'+esc_html('Abacus.Math.groebner(['+res.map(function(p){return 'PolynomialRing.fromString("'+p.toString()+'")';}).join(',')+'])'), true);
+                model.set('summary', esc_html('PolynomialRing = Abacus.'+ring.toString())+'<br />'+esc_html('Abacus.Math.groebner(['+res.map(function(p){return 'PolynomialRing.fromString("'+p.toString()+'")';}).join(',')+'])'), true);
                 out.setValue(r.map(String).join("\n"));
-                print_math('\\['+r.map(function(p){return p.toTex();}).join("\\]\n\\[")+'\\]')
+                print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+r.map(function(p){return p.toTex();}).join("\\]\n\\[")+'\\]')
             }
             else
             {
