@@ -12,12 +12,12 @@
 <html lang="en" class="no-ie">
 <!--<![endif]-->
 <head>
-<title>Abacus - Advanced Combinatorics &amp; Number Theory Library for Node.js / Browser / XPCOM Javascript</title>
+<title>Abacus - Advanced Combinatorics &amp; Algebraic Number Theory Library for Node.js / Browser / XPCOM Javascript</title>
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-<meta name="description" content="Abacus - Advanced Combinatorics &amp; Number Theory Library for Node.js / Browser / XPCOM Javascript" />
+<meta name="description" content="Abacus - Advanced Combinatorics &amp; Algebraic Number Theory Library for Node.js / Browser / XPCOM Javascript" />
 
 
 <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
@@ -329,6 +329,7 @@ window.MathJax = {
             <option value="poly_factors">Polynomial Factorization</option>
             <option value="diophantines">System of Linear Diophantine Equations</option>
             <option value="groebner">Gröbner Basis</option>
+            <option value="polynomials">(Rational) Solutions of System of Polynomials</option>
         </optgroup>
         </select>
         </div>
@@ -634,7 +635,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             if ( 1 < res.length )
             {
                 r = ring.xgcd(res);
-                model.set('summary', esc_html('PolynomialRing = Abacus.'+ring.toString())+'<br />'+esc_html('PolynomialRing.xgcd('+res.map(function(p){return 'PolynomialRing.fromString("'+p.toString()+'")';}).join(',')+')'), true);
+                model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.xgcd('+res.map(function(p){return 'Ring.fromString("'+p.toString()+'")';}).join(',')+')'), true);
                 out.setValue(r[0].toString()+'='+r.slice(1).map(function(g, i){
                     return '('+g.toString()+')*('+res[i].toString()+')';
                 }).join('+'));
@@ -694,7 +695,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 sol = sol ? sol[0] : null;
                 model.set('summary', esc_html("Abacus.Math.diophantines(["+res.map(function(row){return '['+row.map(function(c){return'"'+String(c)+'"';}).join(',')+']';}).join(',')+"], ["+r.map(function(c){return'"'+String(c)+'"';}).join(',')+"], \"i\")"), true);
                 out.setValue(sol ? sol.map(function(x, i){return 'x_'+(i+1)+'='+x.toString();}).join("\n")+(free_vars.length ? ("\ni_1" + (2===free_vars.length ? ",i_2" : (2<free_vars.length ? (",..,i_"+free_vars.length) : "")) + " any integer(s)") : "") : 'No solution in integers');
-                print_math('\\['+tex_matrix(res)+tex_matrix(Abacus.Util.array(res[0].length, function(i){return 'x_{'+(i+1)+'}';}))+'='+tex_matrix(r)+'\\]'+"\n\n"+(sol ? (sol.map(function(x, i){return '\\[x_{'+(i+1)+'} = '+x.toTex()+'\\]';}).join("\n")+(free_vars.length ? ('\\[i_{1}' + (2===free_vars.length ? ',i_{2}' : (2<free_vars.length ? (',\\dots,i_{'+free_vars.length+'}') : '')) + ' \\in \\mathbb{Z}\\]') : '')) : '\\[\\text{No solution in }\\mathbb{Z}\\]'))
+                print_math('\\['+tex_matrix(res)+tex_matrix(Abacus.Util.array(res[0].length, function(i){return 'x_{'+(i+1)+'}';}))+'='+tex_matrix(r)+'\\]'+"\n\n"+(sol ? (sol.map(function(x, i){return '\\[x_{'+(i+1)+'} = '+x.toTex()+'\\]';}).join("\n")+(free_vars.length ? ('\\[i_{1}' + (2===free_vars.length ? ',i_{2}' : (2<free_vars.length ? (',\\dots,i_{'+free_vars.length+'}') : '')) + ' \\in \\mathbb{Z}\\]') : '')) : '\\[\\text{No solution in }\\mathbb{Z}\\]'));
             }
             else
             {
@@ -718,9 +719,35 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             if ( 1 <= res.length )
             {
                 r = Abacus.Math.groebner(res);
-                model.set('summary', esc_html('PolynomialRing = Abacus.'+ring.toString())+'<br />'+esc_html('Abacus.Math.groebner(['+res.map(function(p){return 'PolynomialRing.fromString("'+p.toString()+'")';}).join(',')+'])'), true);
+                model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Abacus.Math.groebner(['+res.map(function(p){return 'Ring.fromString("'+p.toString()+'")';}).join(',')+'])'), true);
                 out.setValue(r.map(String).join("\n"));
-                print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+r.map(function(p){return p.toTex();}).join("\\]\n\\[")+'\\]')
+                print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+r.map(function(p){return p.toTex();}).join("\\]\n\\[")+'\\]');
+            }
+            else
+            {
+                model.set('summary', '', true);
+                out.setValue('Please provide at least a polynomial entry!');
+            }
+            return;
+        }
+        else if ( 'polynomials' === object )
+        {
+            res = [];
+            ring = Abacus.Ring.Q("x");
+            trim(Text).split(NL).forEach(function(entry){
+                entry = trim(entry);
+                if ( !entry.length ) return;
+                // parse from tex format
+                res.push(ring.fromString(entry));
+            });
+            if ( 1 <= res.length )
+            {
+                r = ring.gcd(Abacus.Math.groebner(res)); sol = r.roots();
+                model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.gcd(Abacus.Math.groebner(['+res.map(function(p){return 'Ring.fromString("'+p.toString()+'")';}).join(',')+'])).roots()'), true);
+                out.setValue('');
+                print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+res.map(function(p){return p.toTex()+' = 0';}).join("\\]\n\\[")+'\\]'+"\n"+'\\[\\Longleftrightarrow\\]'+"\n"+'\\['+r.toTex()+'=0\\]'+"\n"+'\\['+(r.equ(0) ? '\\text{Infinite solutions in } \\mathbb{Q}' : (r.equ(1) ? '\\text{Inconsistent system}' : (sol.length ? sol.map(function(r, i){
+                    return 'x_{'+(i+1)+'} = '+r[0].toTex()+(1<r[1] ? '\\text{, multiplicity:'+String(r[1])+'}' : '');
+                }).join("\\]\n\\[") : '\\text{No solutions in } \\mathbb{Q}')))+'\\]');
             }
             else
             {
@@ -1256,7 +1283,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 },
                 "object": function( key, val/*, pub*/ ){
                     this.$data.object = val;
-                    if ( val !== 'prime_sieve' && val !== 'is_prime' && val !== 'prime_factors' && val !== 'divisors' && val !== 'gcd' && val !== 'diophantines' && val !== 'poly_factors' && val !== 'groebner' )
+                    if ( val !== 'prime_sieve' && val !== 'is_prime' && val !== 'prime_factors' && val !== 'divisors' && val !== 'gcd' && val !== 'diophantines' && val !== 'poly_factors' && val !== 'groebner' && val !== 'polynomials' )
                     {
                         this.set("type","default", true);
                         this.set("order", "", true);
@@ -1312,11 +1339,11 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 },
                 "isCombinatorics": function(){
                     var o = this.$data.object;
-                    return o!=="prime_sieve" && o!=="is_prime" && o!=="gcd" && o!=="diophantines" && o!=="prime_factors" && o!=="divisors" && o!=="poly_factors" && o!=="groebner" && o!=="latin_square" && o!=="magic_square";
+                    return o!=="prime_sieve" && o!=="is_prime" && o!=="gcd" && o!=="diophantines" && o!=="prime_factors" && o!=="divisors" && o!=="poly_factors" && o!=="groebner" && o!=="polynomials" && o!=="latin_square" && o!=="magic_square";
                 },
                 "hasMath": function(){
                     var o = this.$data.object;
-                    return o==="gcd" || o==="diophantines" || o==="is_prime" || o==="prime_factors" || o==="poly_factors" || o==="groebner";
+                    return o==="gcd" || o==="diophantines" || o==="is_prime" || o==="prime_factors" || o==="poly_factors" || o==="groebner" || o==="polynomials";
                 },
                 "haslex": function(){
                     return this.$data.object.slice(-7) !== "_square";
@@ -1331,7 +1358,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     return this.$data.object.slice(-7) !== "_square";
                 },
                 "hasN": function(){
-                    return ("tensor"!==this.$data.object || "tensor_inversion"===this.$data.type) && !("gcd"===this.$data.object || "diophantines"===this.$data.object || "poly_factors"===this.$data.object || "groebner"===this.$data.object);
+                    return ("tensor"!==this.$data.object || "tensor_inversion"===this.$data.type) && !("gcd"===this.$data.object || "diophantines"===this.$data.object || "poly_factors"===this.$data.object || "groebner"===this.$data.object || "polynomials"===this.$data.object);
                 },
                 "hasK": function(){
                     var obj = this.$data.object, type = this.$data.type;
@@ -1341,7 +1368,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     return ("groebner"===this.$data.object) || ("tuple"===this.$data.object && "word"===this.$data.type);
                 },
                 "hasText": function(){
-                    return "gcd"===this.$data.object || "diophantines"===this.$data.object || "poly_factors"===this.$data.object || "groebner"===this.$data.object;
+                    return "gcd"===this.$data.object || "diophantines"===this.$data.object || "poly_factors"===this.$data.object || "groebner"===this.$data.object || "polynomials"===this.$data.object;
                 },
                 "hasConditions": function(){
                     var ret = "conditional-"===this.$data.type.substr(0,12);
@@ -1356,7 +1383,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 },
                 "labelText": function(){
                     var obj = this.$data.object;
-                    if ( "gcd" === obj || "groebner" === obj || "diophantines" === obj ) return "Entries = ";
+                    if ( "gcd" === obj || "groebner" === obj || "diophantines" === obj || "polynomials" === obj ) return "Entries = ";
                     if ( "poly_factors" === obj ) return "Polynomial = ";
                     return "";
                 },
@@ -1368,7 +1395,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 "placeholderText": function(){
                     var obj = this.$data.object;
                     if ( "groebner" === obj ) return "Each row represents a different multivariate polynomial (in tex format). \n Eg: \n x*y-(3/2)x^2+2 \n as: \n x*y-(3/2)x^2+2";
-                    if ( "gcd" === obj ) return "Each row represents a different polynomial (in tex format). \n Eg: \n -(3/2)x^2+2 \n as: \n -(3/2)x^2+2";
+                    if ( "gcd" === obj || "polynomials" === obj ) return "Each row represents a different polynomial (in tex format). \n Eg: \n -(3/2)x^2+2 \n as: \n -(3/2)x^2+2";
                     if ( "diophantines" === obj ) return "Each row represents a different diophantine equation (coefficients of variables separated by space). \n Eg: \n x+y = 2 \n 2x+3y = 5 \n as: \n 1 1 = 2 \n 2 3 = 5";
                     if ( "poly_factors" === obj ) return "Enter a polynomial (in tex format). \n Eg: \n -(3/2)x^2+2 \n as: \n -(3/2)x^2+2";
                     return "";
