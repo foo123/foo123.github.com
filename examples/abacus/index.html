@@ -744,8 +744,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             {
                 r = ring.gcd(Abacus.Math.groebner(res)); sol = r.roots();
                 model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.gcd(Abacus.Math.groebner(['+res.map(function(p){return 'Ring.fromString("'+p.toString()+'")';}).join(',')+'])).roots()'), true);
-                out.setValue('');
-                print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+res.map(function(p){return p.toTex()+' = 0';}).join("\\]\n\\[")+'\\]'+"\n"+'\\[\\Longleftrightarrow\\]'+"\n"+'\\['+r.toTex()+'=0\\]'+"\n"+'\\['+(r.equ(0) ? '\\text{Infinite solutions in } \\mathbb{Q}' : (r.equ(1) ? '\\text{Inconsistent system}' : (sol.length ? sol.map(function(r, i){
+                out.setValue(res.map(function(p){return p.toString()+' = 0';}).join("\n")+"\nis equivalent to\n"+r.toTex()+' = 0'+"\n"+(r.equ(0) ? 'Infinite solutions in Rationals' : (r.equ(1) ? 'Inconsistent system' : (sol.length ? sol.map(function(r, i){
+                    return 'x_'+(i+1)+' = '+r[0].toString()+(1<r[1] ? ', multiplicity:'+String(r[1]) : '');
+                }).join("\n") : 'No solutions in Rationals'))));
+                print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+res.map(function(p){return p.toTex()+' = 0';}).join("\\]\n\\[")+'\\]'+"\n"+'\\[\\Longleftrightarrow\\]'+"\n"+'\\['+r.toTex()+' = 0\\]'+"\n"+'\\['+(r.equ(0) ? '\\text{Infinite solutions in } \\mathbb{Q}' : (r.equ(1) ? '\\text{Inconsistent system}' : (sol.length ? sol.map(function(r, i){
                     return 'x_{'+(i+1)+'} = '+r[0].toTex()+(1<r[1] ? '\\text{, multiplicity:'+String(r[1])+'}' : '');
                 }).join("\\]\n\\[") : '\\text{No solutions in } \\mathbb{Q}')))+'\\]');
             }
