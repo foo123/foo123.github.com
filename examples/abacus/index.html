@@ -500,7 +500,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     function print_math( tex )
     {
         math.html(tex);
-        
+
         promise = promise.then(function(){
             return MathJax.typesetPromise([math[0]]);
         }).catch(function(err){
@@ -530,23 +530,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     {
         return Number(x);
     }
-    function string( x )
-    {
-        return String(x);
-    }
     function toArray( o )
     {
         o.length = Object.keys(o).length;
         return Array.prototype.slice.call(o);
     }
-    function tex_matrix( a )
-    {
-        return '\\begin{bmatrix}'+a.map(function(x){return x.map&&x.join ? x.map(function(xi){return String(xi);}).join(' & ') : String(x);}).join(' \\\\ ')+'\\end{bmatrix}';
-    }
     function group_factors_tex( factors, constant )
     {
         var out = '', i, t;
-        
+
         if ( factors.length )
         {
             if ( constant.equ(Abacus.Arithmetic.J) ) out = '-';
@@ -556,7 +548,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         {
             out = '('+constant.toTex()+')';
         }
-        
+
         for(i=0; i<factors.length; i++)
         {
             t = factors[i][0].toTex();
@@ -568,7 +560,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     {
         return '(' + String(f[0]) + (Abacus.Arithmetic.lt(Abacus.Arithmetic.I, f[1]) ? ('^' + (as_tex ? '{' : '') + String(f[1]) + (as_tex ? '}' : '')) : '') + ')';
     }
-    
+
     $MV.jquery( $ );
 
     height = output.clientHeight;
@@ -594,7 +586,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             poly_coeffs_dense_re = /^\-?\d+(?:\s+\-?\d+)*$/;
 
         clear_math();
-        
+
         if ( 'divisors' === object )
         {
             klass = "divisors";
@@ -645,7 +637,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 sol = sol ? sol[0] : null;
                 model.set('summary', esc_html("Abacus.Math.diophantines(["+res.map(function(row){return '['+row.map(function(c){return'"'+String(c)+'"';}).join(',')+']';}).join(',')+"], ["+r.map(function(c){return'"'+String(c)+'"';}).join(',')+"], \"i\")"), true);
                 out.setValue(sol ? sol.map(function(x, i){return 'x_'+(i+1)+'='+x.toString();}).join("\n")+(free_vars.length ? ("\ni_1" + (2===free_vars.length ? ",i_2" : (2<free_vars.length ? (",..,i_"+free_vars.length) : "")) + " any integer(s)") : "") : 'No solution in integers');
-                print_math('\\['+tex_matrix(res)+tex_matrix(Abacus.Util.array(res[0].length, function(i){return 'x_{'+(i+1)+'}';}))+'='+tex_matrix(r)+'\\]'+"\n\n"+(sol ? (sol.map(function(x, i){return '\\[x_{'+(i+1)+'} = '+x.toTex()+'\\]';}).join("\n")+(free_vars.length ? ('\\[i_{1}' + (2===free_vars.length ? ',i_{2}' : (2<free_vars.length ? (',\\dots,i_{'+free_vars.length+'}') : '')) + ' \\in \\mathbb{Z}\\]') : '')) : '\\[\\text{No solution in }\\mathbb{Z}\\]'));
+                print_math('\\['+Abacus.Matrix.TEX(res)+Abacus.Matrix.TEX(Abacus.Util.array(res[0].length, function(i){return 'x_{'+(i+1)+'}';}))+'='+Abacus.Matrix.TEX(r)+'\\]'+"\n\n"+(sol ? (sol.map(function(x, i){return '\\[x_{'+(i+1)+'} = '+x.toTex()+'\\]';}).join("\n")+(free_vars.length ? ('\\[i_{1}' + (2===free_vars.length ? ',i_{2}' : (2<free_vars.length ? (',\\dots,i_{'+free_vars.length+'}') : '')) + ' \\in \\mathbb{Z}\\]') : '')) : '\\[\\text{No solution in }\\mathbb{Z}\\]'));
             }
             else
             {
@@ -708,7 +700,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         {
             res = []; free_vars = trim(model.get('alphabet')); if ( !free_vars.length ) free_vars = 'x';
             free_vars = free_vars.split(',').map(trim).filter(function(x){return x.length;});
-            if ( !free_vars.length ) free_vars = ['x']; 
+            if ( !free_vars.length ) free_vars = ['x'];
             ring = Abacus.Ring.Q(free_vars);
             trim(Text).split(NL).forEach(function(entry){
                 entry = trim(entry);
@@ -758,9 +750,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             return;
         }
-        
+
         if ( "divisors"!==object ) N = (+N)|0;
-        
+
         if ( "latin_square" === object )
         {
             model.set('summary', esc_html("Abacus.LatinSquare("+N+")"), true);
@@ -783,7 +775,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             else
             {
-                n = string(K).split(',').map(number);
+                n = String(K).split(',').map(number);
             }
         }
         else if ( "tuple" === object )
@@ -828,7 +820,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             else if ( "multiset"===type )
             {
                 $.type = "multiset";
-                $.multiplicity = string(K).split(',').map(number);
+                $.multiplicity = String(K).split(',').map(number);
             }
             else if ( "derangement"===type )
             {
@@ -1054,7 +1046,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             else if ( "partition_max_parts" === type )
             {
-                K = string(K).split(',').map(number);
+                K = String(K).split(',').map(number);
                 /*$["max="] = K[0];
                 $["parts="] = K[1];*/
                 filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MAX(K[0]));
@@ -1082,7 +1074,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             else if ( "composition_max_parts" === type )
             {
-                K = string(K).split(',').map(number);
+                K = String(K).split(',').map(number);
                 /*$["max="] = K[0];
                 $["parts="] = K[1];*/
                 filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MAX(K[0]));
@@ -1187,7 +1179,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     next = comb.next();
                     if ( null == next ) {next=false; break;}
                     if ( 0 < count ) output += "\n";
-                    output += next.join ? next.join(sep) : string(next);
+                    output += next.join ? next.join(sep) : String(next);
                     count++; cnt++;
                 }
                 out.setValue(out.getValue()+output);
@@ -1220,27 +1212,27 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 if ( null==params.conditions.data.length )
                 {
                     // make them arrays
-                    params.conditions.data = toArray(params.conditions.data).map(string);
+                    params.conditions.data = toArray(params.conditions.data).map(String);
                     params.conditions.pos = toArray(params.conditions.pos).map(number);
-                    params.conditions.type = toArray(params.conditions.type).map(string);
+                    params.conditions.type = toArray(params.conditions.type).map(String);
                 }
                 else
                 {
-                    params.conditions.data = params.conditions.data.map(string);
+                    params.conditions.data = params.conditions.data.map(String);
                     params.conditions.pos = params.conditions.pos.map(number);
-                    params.conditions.type = params.conditions.type.map(string);
+                    params.conditions.type = params.conditions.type.map(String);
                 }
             }
             var model = $screen.modelview('model');
             model.set('conditions_dom', params.conditions||null);
             model.set('conditions', params.conditions||null);
-            model.set('object', string(params.object), true);
-            model.set('type', string(params.type), true);
-            model.set('N', string(params.N), true);
-            model.set('K', string(params.K), true);
-            model.set('alphabet', string(params.alphabet||""), true);
-            model.set('Text', string(params.Text||""), true);
-            model.set('order', string(params.order||""), true);
+            model.set('object', String(params.object), true);
+            model.set('type', String(params.type), true);
+            model.set('N', String(params.N), true);
+            model.set('K', String(params.K), true);
+            model.set('alphabet', String(params.alphabet||""), true);
+            model.set('Text', String(params.Text||""), true);
+            model.set('order', String(params.order||""), true);
             setTimeout(function(){ produce( model ); }, 10);
         }
     }});
