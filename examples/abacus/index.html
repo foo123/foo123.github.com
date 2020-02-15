@@ -637,7 +637,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 sol = sol ? sol[0] : null;
                 model.set('summary', esc_html("Abacus.Math.diophantines(["+res.map(function(row){return '['+row.map(function(c){return'"'+String(c)+'"';}).join(',')+']';}).join(',')+"], ["+r.map(function(c){return'"'+String(c)+'"';}).join(',')+"], \"i\")"), true);
                 out.setValue(sol ? sol.map(function(x, i){return 'x_'+(i+1)+'='+x.toString();}).join("\n")+(free_vars.length ? ("\ni_1" + (2===free_vars.length ? ",i_2" : (2<free_vars.length ? (",..,i_"+free_vars.length) : "")) + " any integer(s)") : "") : 'No solution in integers');
-                print_math('\\['+Abacus.Matrix.TEX(res)+Abacus.Matrix.TEX(Abacus.Util.array(res[0].length, function(i){return 'x_{'+(i+1)+'}';}))+'='+Abacus.Matrix.TEX(r)+'\\]'+"\n\n"+(sol ? (sol.map(function(x, i){return '\\[x_{'+(i+1)+'} = '+x.toTex()+'\\]';}).join("\n")+(free_vars.length ? ('\\[i_{1}' + (2===free_vars.length ? ',i_{2}' : (2<free_vars.length ? (',\\dots,i_{'+free_vars.length+'}') : '')) + ' \\in \\mathbb{Z}\\]') : '')) : '\\[\\text{No solution in }\\mathbb{Z}\\]'));
+                print_math('\\['+Abacus.Matrix.toTex(res)+Abacus.Matrix.toTex(Abacus.Util.array(res[0].length, function(i){return 'x_{'+(i+1)+'}';}))+'='+Abacus.Matrix.toTex(r)+'\\]'+"\n\n"+(sol ? (sol.map(function(x, i){return '\\[x_{'+(i+1)+'} = '+x.toTex()+'\\]';}).join("\n")+(free_vars.length ? ('\\[i_{1}' + (2===free_vars.length ? ',i_{2}' : (2<free_vars.length ? (',\\dots,i_{'+free_vars.length+'}') : '')) + ' \\in \\mathbb{Z}\\]') : '')) : '\\[\\text{No solution in }\\mathbb{Z}\\]'));
             }
             else
             {
