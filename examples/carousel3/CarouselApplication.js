@@ -36,32 +36,26 @@ var container,
     tapedTwice = null
 ;
 
-function recursive_offset( aobj )
+function recursive_offset( node )
 {
-    var currOffset = {x: 0, y: 0},
-        newOffset = {x: 0, y: 0};
+    var x = 0, y = 0, nodeStyle;
 
-    if ( aobj )
+    while ( node )
     {
-        if ( aobj.scrollLeft )
-            currOffset.x = aobj.scrollLeft;
-
-        if ( aobj.scrollTop )
-            currOffset.y = aobj.scrollTop;
-
-        if ( aobj.offsetLeft )
-            currOffset.x -= aobj.offsetLeft;
-
-        if ( aobj.offsetTop )
-            currOffset.y -= aobj.offsetTop;
-
-        if ( aobj.parentNode )
-            newOffset = recursive_offset(aobj.parentNode);   
-
-        currOffset.x += newOffset.x;
-        currOffset.y += newOffset.y; 
+        try {
+            nodeStyle = window.getComputedStyle(node);
+        } catch(e) {
+            nodeStyle = null;
+        }
+        if ( node.scrollLeft ) x += node.scrollLeft;
+        if ( node.scrollTop ) y += node.scrollTop;
+        if ( node.offsetLeft ) x -= node.offsetLeft;
+        if ( node.offsetTop ) y -= node.offsetTop;
+        if ( nodeStyle && nodeStyle.marginLeft ) x -= parseInt(nodeStyle.marginLeft, 10);
+        if ( nodeStyle && nodeStyle.marginTop ) y -= parseInt(nodeStyle.marginTop, 10);
+        node = node.parentNode
     }
-    return currOffset;
+    return {x:x, y:y};
 }
 
 function onDoubleClick( e )
@@ -217,7 +211,7 @@ function animate( )
 
 function setDimensions( )
 {
-    w = window.innerWidth-20;
+    w = Math.min(window.innerWidth, 1600)-20;
     h = Math.max(window.innerHeight-80, 500);
     w2 = w/2;
     h2 = h/2;
