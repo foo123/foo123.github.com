@@ -53,14 +53,14 @@ function range( what, min, max, closed )
 {
     return true===closed ? ((what <= max) && (what >= min)) : ((what < max) && (what > min));
 }
-function max( v )
+/*function max( v )
 {
     var xx = Math.abs(v.x), yy = Math.abs(v.y), zz = Math.abs(v.z);
     if ( xx >= yy && xx >= zz ) return 'x';
     else if ( yy >= xx && yy >= zz ) return 'y';
     else if ( zz >= xx && zz >= yy ) return 'z';
     return 'x';
-}
+}*/
 
 /*function toHex(col)
 {
@@ -444,7 +444,7 @@ function onDocumentUp( event, isTouch )
     else
     {
         var target = getCubelet(clientX, clientY), cubeletseenas, f, matname,
-            N, prev_ray, now_ray, angle = -1, nn, maxd;
+            N, prev_ray, now_ray, angle = -1, nn/*, maxd*/;
 
         if ( null == target ) return;
 
@@ -492,12 +492,14 @@ function onDocumentUp( event, isTouch )
                     }
                     else if (pressed_cub.seenas.yy==N-1 && released_cub.seenas.yy==N-1)
                     {
-                        if ( nn.z>0 ) angle=-angle;
+                        if ( nn.x>0 ) angle=-angle;
+                        if ( 'right' === pressed_cub.seenas.name ) angle=-angle;
                         rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     else if (pressed_cub.seenas.yy==0 && released_cub.seenas.yy==0)
                     {
-                        if ( nn.z>0 ) angle=-angle;
+                        if ( nn.x>0 ) angle=-angle;
+                        if ( 'right' === pressed_cub.seenas.name ) angle=-angle;
                         rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     else if (pressed_cub.seenas.zz==0 && released_cub.seenas.zz==0)

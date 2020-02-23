@@ -33,13 +33,17 @@ body {
     overflow-y: scroll;
 }
 #container {
-    background: #121212 url('assets/back.png') no-repeat 50% 50%;
     position: relative;
     margin: 0 auto;
     padding: 0;
     border: 0;
     z-index: 0;
     cursor: pointer;
+    background-color: #121212; /*url('assets/back.png') no-repeat 50% 50%;*/
+    background-image: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.25) 5%, rgba(255,255,255,0) 50%);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: 100% auto;
 }
 #flatimage { 
     position: absolute;
