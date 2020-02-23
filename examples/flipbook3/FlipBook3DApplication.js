@@ -1,4 +1,5 @@
 !function(window){
+"use strict";
 /**
 * Provides requestAnimationFrame in a cross browser way.
 * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
@@ -26,7 +27,7 @@ var multx = 0.5*Math.PI,
     multy = -Math.PI,
     Sin = Math.sin,
     Cos = Math.cos,
-    
+
     container, camera, scene, renderer, projector,
     targetRotationY = 0, targetRotationOnMouseDownY = 0, targetRotationX = 0, targetRotationOnMouseDownX = 0,
     rad=700, mouse={x:0,y:0}, mouseX = 0, mouseXOnMouseDown = 0, mouseY = 0, mouseYOnMouseDown = 0,
@@ -45,13 +46,13 @@ function onDocumentTouchStart( event )
 {
     onDocumentDown( event, true );
 }
-function onDocumentDown( event, isTouch ) 
+function onDocumentDown( event, isTouch )
 {
     event.preventDefault();
-    
+
     var clientX = isTouch ? event.changedTouches[0].clientX : event.clientX,
         clientY = isTouch ? event.changedTouches[0].clientY : event.clientY;
-        
+
     mouseX = ( clientX / w ) * 2 - 1;
     targetRotationY = mouseX;
     mouseY = ( clientY / h ) * 2 - 1;
@@ -79,13 +80,13 @@ function onDocumentTouchMove( event )
 {
     onDocumentMove( event, true );
 }
-function onDocumentMove( event, isTouch ) 
+function onDocumentMove( event, isTouch )
 {
     event.preventDefault();
-    
+
     var clientX = isTouch ? event.changedTouches[0].clientX : event.clientX,
         clientY = isTouch ? event.changedTouches[0].clientY : event.clientY;
-        
+
     /*mouseX = clientX - w2;
     mouseY = clientY - h2;
 
@@ -108,7 +109,7 @@ function onDocumentTouchEnd( event )
 {
     onDocumentUp( event, true );
 }
-function onDocumentUp( event, isTouch ) 
+function onDocumentUp( event, isTouch )
 {
     if ( isTouch )
     {
@@ -124,7 +125,7 @@ function onDocumentUp( event, isTouch )
     }
 }
 
-function animate( ) 
+function animate( )
 {
     // use spherical coordinatess
     // for mouse control viewing
@@ -136,7 +137,7 @@ function animate( )
     // render
     TWEEN.update( );
     renderer.render( scene, camera );
-    
+
     // setup next animation
     requestAnimationFrame( animate );
 }

@@ -1,4 +1,5 @@
 (function(window){
+"use strict";
 
 /**
  * Provides requestAnimationFrame in a cross browser way.
@@ -33,7 +34,7 @@ var container,
     mouse = {x:0, y:0}, prevmouse = {x:0, y:0},
     mouseX = 0, mouseXOnMouseDown = 0, mouseY = 0, mouseYOnMouseDown = 0,
     w, h, w2, h2,
-    tapedTwice = null
+    tapedTwice = null, dblclick = false
 ;
 
 function recursive_offset( node )
@@ -77,16 +78,16 @@ function onDblClick( e, isTouch )
             return false;
         }
     }
-    
+
     e.preventDefault();
     var clientX = isTouch ? e.changedTouches[0].clientX : e.clientX,
         clientY = isTouch ? e.changedTouches[0].clientY : e.clientY,
         offset = recursive_offset(e.target);
-        
+
     clientX += offset.x; clientY += offset.y;
     dblclick = true;
     carouselupdate = false;
-    
+
     mouse.x = ( clientX / w ) * 2 - 1;
     mouse.y = - ( clientY / h ) * 2 + 1;
     var vector = new THREE.Vector3( mouse.x, mouse.y, 1 ), ray, intersects;
@@ -102,24 +103,24 @@ function onDblClick( e, isTouch )
         });
 }
 
-function onDocumentMouseDown( e ) 
+function onDocumentMouseDown( e )
 {
-    onDocumentDown( e, false ) 
+    onDocumentDown( e, false )
 }
-function onDocumentTouchStart( e ) 
+function onDocumentTouchStart( e )
 {
-    onDocumentDown( e, true ) 
+    onDocumentDown( e, true )
 }
-function onDocumentDown( e, isTouch ) 
+function onDocumentDown( e, isTouch )
 {
     e.preventDefault();
 
     var clientX = isTouch ? e.changedTouches[0].clientX : e.clientX,
         clientY = isTouch ? e.changedTouches[0].clientY : e.clientY,
         offset = recursive_offset(e.target);
-        
+
     clientX += offset.x; clientY += offset.y;
-    
+
     if ( isTouch )
     {
         container.addEventListener( 'touchmove', onDocumentTouchMove, false );
@@ -151,14 +152,14 @@ function onDocumentTouchMove( e )
 {
     onDocumentMove( e, true );
 }
-function onDocumentMove( e, isTouch ) 
+function onDocumentMove( e, isTouch )
 {
     e.preventDefault();
 
     var clientX = isTouch ? e.changedTouches[0].clientX : e.clientX,
         clientY = isTouch ? e.changedTouches[0].clientY : e.clientY,
         offset = recursive_offset(e.target);
-        
+
     clientX += offset.x; clientY += offset.y;
     mouseX = clientX - w2;
     mouseY = clientY - h2;
@@ -172,16 +173,16 @@ function onDocumentMove( e, isTouch )
 
 function onDocumentMouseUp( e )
 {
-    onDocumentUp( e, false ); 
+    onDocumentUp( e, false );
 }
 function onDocumentTouchEnd( e )
 {
-    onDocumentUp( e, true ); 
+    onDocumentUp( e, true );
 }
-function onDocumentUp( e, isTouch ) 
+function onDocumentUp( e, isTouch )
 {
     e.preventDefault();
-    
+
     if ( isTouch )
     {
         container.removeEventListener( 'touchmove', onDocumentTouchMove, false );
@@ -196,7 +197,7 @@ function onDocumentUp( e, isTouch )
     }
 }
 
-function animate( ) 
+function animate( )
 {
     if ( carouselupdate )
         carousel.rotation.y += ( targetRotationY - carousel.rotation.y ) * 0.05;
@@ -227,9 +228,9 @@ function setDimensions( )
 var self={
 
     init: function(images)  {
-        
+
         container = document.getElementById('container');
-        
+
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera( 70, 1.0, 1, 1000 );
         camera.position.z = 500;
@@ -248,10 +249,10 @@ var self={
         container.addEventListener( 'touchstart', onDoubleTap, false );
         container.addEventListener( 'mousedown', onDocumentMouseDown, false );
         container.addEventListener( 'touchstart', onDocumentTouchStart, false );
-        
+
         requestAnimationFrame( animate );
     },
-    
+
     animate : animate
 };
 

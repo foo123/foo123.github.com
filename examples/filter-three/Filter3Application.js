@@ -24,13 +24,13 @@ if ( !window.requestAnimationFrame ) {
 
 }
 
-var 
+var
     $F = FILTER,
     aside, test, restore, container, mouseXOnMouseDown, mouseYOnMouseDown,
     targetRotationOnMouseDownY = 0, targetRotationY = 0,
     targetRotationOnMouseDownX = 0, targetRotationX = 0,
     w, h, w2, h2,
-    
+
     scene, camera, renderer, cube,
     sides = {bottom:3,top:2,  right:0,left:1, front:4,back:5},
     side = 400, N = 2, dsp = 0,
@@ -43,11 +43,11 @@ var
         front: 0x2e1c3b,
         back: 0x2e1c3b
     },
-    cubelets = [], xx, yy, zz, 
+    cubelets = [], xx, yy, zz,
     Nz = N, Nx = N, Ny = N,
     sidex = side, sidey = side, sidez = side,
-    cubletsidex = sidex/(Nx+(Nx-1)*dsp), 
-    cubletsidey = sidey/(Ny+(Ny-1)*dsp), 
+    cubletsidex = sidex/(Nx+(Nx-1)*dsp),
+    cubletsidey = sidey/(Ny+(Ny-1)*dsp),
     cubletsidez = sidez/(Nz+(Nz-1)*dsp),
     // build cubelets
     image = [], texture = [], position = [],
@@ -85,10 +85,10 @@ var self = {
         container = document.getElementById('container'),
         test = document.getElementById('test'),
         restore = document.getElementById('restore');
-        
+
         test.addEventListener('click', dotest, false);
         restore.addEventListener('click', dorestore, false);
-        
+
         scene = new THREE.Scene();
 
         camera = new THREE.PerspectiveCamera( 70, 1.0, 1, 1000 );
@@ -111,13 +111,13 @@ var self = {
 
         mat = new THREE.MeshBasicMaterial( { color: colors.inside } );
         mat.name = 'inside';
-        starmat = new THREE.MeshBasicMaterial( { map:THREE.ImageUtils.loadTexture(document.getElementById('RedStar').src) } );    
+        starmat = new THREE.MeshBasicMaterial( { map:THREE.ImageUtils.loadTexture(document.getElementById('RedStar').src) } );
         for (zz=0;zz<Nz;zz++)
         {
             for (xx=0;xx<Nx;xx++)
             {
                 for (yy=0;yy<Ny;yy++)
-                {                       
+                {
                     materials=[];
                     for (var mii=0;mii<6;mii++)
                     {
@@ -208,23 +208,23 @@ var self = {
                 }
             }
         }
-        
+
         container.addEventListener( 'touchstart', onDocumentMouseDown, false );
         container.addEventListener( 'mousedown', onDocumentMouseDown, false );
         window.addEventListener( 'resize', setDimensions, false );
-        
+
         requestAnimationFrame( animate );
     }
 };
 
 // closure
-function callback(ind) 
+function callback(ind)
 {
-    return function() { 
+    return function() {
         image[ind].domElement.style.position = 'relative';
         image[ind].domElement.style.maxWidth = '100%';
         image[ind].domElement.style.height = 'auto';
-        texture[ind].needsUpdate = true; 
+        texture[ind].needsUpdate = true;
         if (ind==7)
         {
             displacemap.createImageData(image[7].width,image[7].height);
