@@ -282,6 +282,8 @@ div.sepa {
 <script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
 <script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
 <script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
+<script src="../common/js/codemirror_grammar.min.js"></script>
+<script src="../common/js/codemirror/grammar/define_grammar_mode.js"></script>
 
 <script type="text/javascript" src="../common/js/require.js"></script>
 <script type="text/javascript" src="../common/js/require-config.js"></script>
@@ -401,7 +403,7 @@ window.MathJax = {
         </div><div style="display:inline-block" data-bind='{"show":"hasAlphabet"}'>
         <label for="alphabet">$(labelAlphabet)</label><input id="alphabet" name="model[alphabet]" size="12" type="text" value="" />
         </div><div style="display:inline-block;position:relative;width:80%" data-bind='{"show":"hasText"}'>
-        <label for="Text">$(labelText)</label><textarea id="Text" name="model[Text]" placeholder="$(placeholderText)" style="position:relative;display:inline-block;vertical-align:top;padding:4px;height:200px;width:90%"></textarea>
+        <div data-bind='{"html":"placeholderText"}'></div><label for="expr">$(labelText)</label><textarea id="expr" style="position:relative;display:inline-block;vertical-align:top;padding:4px;height:200px;width:90%"></textarea>
         </div>
         <div style="display:inline-block;position:relative;vertical-align:top;margin-left:5px;margin-top:-1.6em" data-bind='{"show":"hasConditions"}'>
         <table id="conditions" style="position:relative;max-width:100%;border-spacing:2">
@@ -437,6 +439,7 @@ window.MathJax = {
 
 <div class="showcase">Big Integer Arithmetic plugin by <a href="https://github.com/peterolson/BigInteger.js" target="_blank">BigInteger.js</a></div>
 <div class="showcase">Syntax Highlight by <a href="https://codemirror.net/" target="_blank">Codemirror</a></div>
+<div class="showcase">Syntax Highlight Grammar by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
 <div class="showcase">Mathematics Rendering by <a href="https://www.mathjax.org/" target="_blank">MathJax</a></div>
 
     <div class="showcase">Module management by <a href="https://requirejs.org/" target="_blank">RequireJS</a></div>
@@ -495,8 +498,45 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         Arithmetic.num = function( a ){ return bigInt.isInstance( a ) ? a : bigInt( a ); };
     }( Abacus, bigInt );
 
+    codemirror_define_grammar_mode("expr", {
+            
+    // prefix ID for regular expressions used in the grammar
+    "RegExpID"                      : "RE::",
+
+    // Style model
+    "Style"                         : {
+
+         "TERM"                     : "keyword"
+        ,"NUMBER"                   : "atom"
+        ,"OP"                       : "builtin"
+
+    },
+
+    // Lexical model
+    "Lex"                           : {
+         "<term>"                   : "RE::/[a-zA-Z](?:_\\{?\\d+\\}?)?/"
+        ,"<number>"                 : "RE::/\\d+(?:\\.\\d+)?(?:\\s*\\*?\\s*[ij])?/"
+        ,"<op>"                     : "RE::/[\\+\\-\\*\\/=]/"
+    },
+
+    "Syntax"                        : {
+        "<expr>"                    : "(<number>.NUMBER | <term>.TERM | <op>.OP)*"
+    },
+
+    // what to parse and in what order
+    "Parser"                        : [ ["<expr>"] ]
+
+    }, {
+
+    "supportGrammarAnnotations" : false,
+    "supportCodeFolding"        : false,
+    "supportCodeMatching"       : false,
+    "supportAutoCompletion"     : false
+
+    });
+    
     var undef=undefined, $window = $(window), $screen = $('#screen'), math = $('#math'),
-        output = document.getElementById('output'), out,
+        output = document.getElementById('output'), expr = document.getElementById('expr'), out, exprout,
         appModel, appView, appRouter, width = output.clientWidth, height, toJSON = JSON.stringify,
         MAXITEMS = 100000, $conditions = $('#conditions>tbody'), $condition_tpl = $('#condition_tpl'),
         html_esc_re = /[&<>]/g;
@@ -580,6 +620,16 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     out.setSize( width, height );
+    exprout = CodeMirror.fromTextArea(expr, {
+        mode: "expr",
+        lineWrapping: true,
+        lineNumbers : true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        theme: 'lesser-dark',
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers"]
+    });
 
     function produce( model )
     {
@@ -1045,17 +1095,16 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             else if ( "partition_parts" === type )
             {
-                //$["parts="] = +K;
-                $["max="] = +K;
-                $.output = "conjugate";
+                $["parts="] = +K;
+                //$["max="] = +K;
+                //$.output = "conjugate";
             }
             else if ( "partition_max_parts" === type )
             {
                 K = String(K).split(',').map(number);
-                /*$["max="] = K[0];
-                $["parts="] = K[1];*/
-                filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MAX(K[0]));
-                filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MAX('+K[0]+'))';
+                $["max="] = K[0]; $["parts="] = K[1];
+                //filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MAX(K[0]));
+                //filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MAX('+K[0]+'))';
             }
             else if ( "partition_distinct" === type )
             {
@@ -1080,10 +1129,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             else if ( "composition_max_parts" === type )
             {
                 K = String(K).split(',').map(number);
-                /*$["max="] = K[0];
-                $["parts="] = K[1];*/
-                filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MAX(K[0]));
-                filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MAX('+K[0]+'))';
+                $["max="] = K[0]; $["parts="] = K[1];
+                //filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MAX(K[0]));
+                //filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MAX('+K[0]+'))';
             }
             else if ( "composition_distinct" === type )
             {
@@ -1258,7 +1306,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 N: 2,
                 K: 1,
                 alphabet: "",
-                Text: "",
+                //Text: "",
                 conditions: null
             }
             ,types: {
@@ -1287,6 +1335,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                         this.set("type","default", true);
                         this.set("order", "", true);
                     }
+                },
+                "Text": function( key, val ) {
+                    exprout.setValue(val);
                 }
             }
             ,getters: {
@@ -1393,10 +1444,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 },
                 "placeholderText": function(){
                     var obj = this.$data.object;
-                    if ( "groebner" === obj ) return "Each row represents a different multivariate polynomial (in tex format). \n Eg: \n x*y-(3/2)x^2+2 \n as: \n x*y-(3/2)x^2+2";
-                    if ( "gcd" === obj || "polynomials" === obj ) return "Each row represents a different polynomial (in tex format). \n Eg: \n -(3/2)x^2+2 \n as: \n -(3/2)x^2+2";
-                    if ( "diophantines" === obj ) return "Each row represents a different diophantine equation (coefficients of variables separated by space). \n Eg: \n x+y = 2 \n 2x+3y = 5 \n as: \n 1 1 = 2 \n 2 3 = 5";
-                    if ( "poly_factors" === obj ) return "Enter a polynomial (in tex format). \n Eg: \n -(3/2)x^2+2 \n as: \n -(3/2)x^2+2";
+                    if ( "groebner" === obj ) return "Each row represents a different multivariate polynomial (in tex format). \n<br /> Eg: \n<br /> x*y-(3/2)x^2+2 \n<br /> as: \n<br /> x*y-(3/2)x^2+2";
+                    if ( "gcd" === obj || "polynomials" === obj ) return "Each row represents a different polynomial (in tex format). \n<br /> Eg: \n<br /> -(3/2)x^2+2 \n<br /> as: \n<br /> -(3/2)x^2+2";
+                    if ( "diophantines" === obj ) return "Each row represents a different diophantine equation (coefficients of variables separated by space). \n<br /> Eg: \n<br /> x+y = 2 \n<br /> 2x+3y = 5 \n<br /> as: \n<br /> 1 1 = 2 \n<br /> 2 3 = 5";
+                    if ( "poly_factors" === obj ) return "Enter a polynomial (in tex format). \n<br /> Eg: \n<br /> -(3/2)x^2+2 \n<br /> as: \n<br /> -(3/2)x^2+2";
                     return "";
                 },
                 "labelK": function(){
@@ -1413,6 +1464,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     if ( "composition" === obj && "composition_parts" === type ) return "#Parts = ";
                     if ( "composition" === obj && "composition_max_parts" === type ) return "Max,#Parts = ";
                     return "K =";
+                },
+                "Text": function(){
+                    return exprout.getValue();
                 }
             },
             dependencies: {
