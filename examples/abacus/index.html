@@ -515,8 +515,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     // Lexical model
     "Lex"                           : {
          "<term>"                   : "RE::/[a-zA-Z](?:_\\{?\\d+\\}?)?/"
-        ,"<number>"                 : "RE::/\\d+(?:\\.\\d+)?(?:\\s*\\*?\\s*[ij])?/"
-        ,"<op>"                     : "RE::/[\\+\\-\\*\\/=]/"
+        ,"<number>"                 : "RE::/\\d+(?:\\.\\d+)?(?:\\s*\\*?\\s*[ij])?|[ij]/"
+        ,"<op>"                     : "RE::/[\\+\\-\\*\\/\\^=]/"
     },
 
     "Syntax"                        : {
