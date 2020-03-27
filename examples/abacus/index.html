@@ -324,6 +324,7 @@ window.MathJax = {
             <option value="subset">Subset</option>
             <option value="partition">Partition</option>
             <option value="composition">Composition</option>
+            <option value="set_partition">Set Partition</option>
             <option value="latin_square">Latin Square</option>
             <option value="magic_square">Magic Square</option>
         </optgroup>
@@ -400,7 +401,7 @@ window.MathJax = {
         <label for="N">$(labelN)</label><input id="N"  name="model[N]" size="8" type="text" value="1" />
         </div><div style="display:inline-block" data-bind='{"show":"hasK"}'>
         <label for="K">$(labelK)</label><input id="K"  name="model[K]" size="8" type="text" value="1" />
-        </div><div style="display:inline-block" data-bind='{"show":"hasAlphabet"}'>
+        </div><div style="display:inline-block;vertical-align:top;margin-right:5px;" data-bind='{"show":"hasAlphabet"}'>
         <label for="alphabet">$(labelAlphabet)</label><input id="alphabet" name="model[alphabet]" size="12" type="text" value="" />
         </div><div style="display:inline-block;position:relative;width:80%" data-bind='{"show":"hasText"}'>
         <div data-bind='{"html":"placeholderText"}'></div><label for="expr">$(labelText)</label><textarea id="expr" style="position:relative;display:inline-block;vertical-align:top;padding:4px;height:200px;width:90%"></textarea>
@@ -1139,6 +1140,12 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 filter_code = 'Abacus.Filter.UNIQUE()';
             }
         }
+        else if ( "set_partition" === object )
+        {
+            klass = "SetPartition";
+            n = N;
+            sep = ',';
+        }
 
         out.setValue('');
 
@@ -1232,7 +1239,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     next = comb.next();
                     if ( null == next ) {next=false; break;}
                     if ( 0 < count ) output += "\n";
-                    output += next.join ? next.join(sep) : String(next);
+                    output += next.join ? next.map(function(x){return x.join?('['+x.join(',')+']'):String(x);}).join(sep) : String(next);
                     count++; cnt++;
                 }
                 out.setValue(out.getValue()+output);
@@ -1306,7 +1313,6 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 N: 2,
                 K: 1,
                 alphabet: "",
-                //Text: "",
                 conditions: null
             }
             ,types: {
@@ -1364,6 +1370,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     if ( "subset" === obj ) return "Subset";
                     if ( "partition" === obj ) return "Unrestricted";
                     if ( "composition" === obj ) return "Unrestricted";
+                    if ( "set_partition" === obj ) return "Unrestricted";
                     return "Default";
                 },
                 "object.tensor": function(){
@@ -1399,13 +1406,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     return this.$data.object.slice(-7) !== "_square";
                 },
                 "hascolex": function(){
-                    return this.$data.object.slice(-7) !== "_square"; //"composition"!==this.$data.object && "partition"!==this.$data.object;
+                    return this.$data.object.slice(-7) !== "_square" && this.$data.object!=="set_partition"; //"composition"!==this.$data.object && "partition"!==this.$data.object;
                 },
                 "hasminimal": function(){
-                    return this.$data.object.slice(-7) !== "_square";
+                    return this.$data.object.slice(-7) !== "_square" && this.$data.object!=="set_partition";
                 },
                 "hasrand": function(){
-                    return this.$data.object.slice(-7) !== "_square";
+                    return this.$data.object.slice(-7) !== "_square" && this.$data.object!=="set_partition";
                 },
                 "hasN": function(){
                     return ("tensor"!==this.$data.object || "tensor_inversion"===this.$data.type) && !("gcd"===this.$data.object || "diophantines"===this.$data.object || "poly_factors"===this.$data.object || "groebner"===this.$data.object || "polynomials"===this.$data.object);
