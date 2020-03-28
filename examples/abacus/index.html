@@ -378,6 +378,7 @@ window.MathJax = {
         <option value="composition_parts" data-bind='{"show":"object.composition"}'>Fixed Num. Parts</option>
         <option value="composition_max_parts" data-bind='{"show":"object.composition"}'>Fixed Max. Part &amp; Num. Parts</option>
         <option value="composition_distinct" data-bind='{"show":"object.composition"}'>Distinct Parts</option>
+        <option value="set_partition_parts" data-bind='{"show":"object.set_partition"}'>Fixed Num. Parts</option>
         </select>
         </div>
         <div style="display:inline-block;margin-bottom:10px" data-bind='{"show":"isCombinatorics"}'>
@@ -1145,6 +1146,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             klass = "SetPartition";
             n = N;
             sep = ',';
+            if ( "set_partition_parts" === type )
+            {
+                $["parts="] = +K;
+            }
         }
 
         out.setValue('');
@@ -1394,6 +1399,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 "object.composition": function(){
                     return this.$data.object === "composition";
                 },
+                "object.set_partition": function(){
+                    return this.$data.object === "set_partition";
+                },
                 "isCombinatorics": function(){
                     var o = this.$data.object;
                     return o!=="prime_sieve" && o!=="is_prime" && o!=="gcd" && o!=="diophantines" && o!=="prime_factors" && o!=="divisors" && o!=="poly_factors" && o!=="groebner" && o!=="polynomials" && o!=="latin_square" && o!=="magic_square";
@@ -1419,7 +1427,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 },
                 "hasK": function(){
                     var obj = this.$data.object, type = this.$data.type;
-                    return ("combination"===obj || ("tensor"===obj && "tensor_inversion"!==type) || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type || "conditional-k-permutation"===type || "k-derangement"===type || "k-cycle-permutation"===type)) || ("partition"===obj && ("partition_max"===type||"partition_parts"===type||"partition_max_parts"===type)) || ("composition"===obj && ("composition_max"===type||"composition_parts"===type||"composition_max_parts"===type));
+                    return ("combination"===obj || ("tensor"===obj && "tensor_inversion"!==type) || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type || "conditional-k-permutation"===type || "k-derangement"===type || "k-cycle-permutation"===type)) || ("partition"===obj && ("partition_max"===type||"partition_parts"===type||"partition_max_parts"===type)) || ("composition"===obj && ("composition_max"===type||"composition_parts"===type||"composition_max_parts"===type)) || ("set_partition"===obj && "set_partition_parts"===type);
                 },
                 "hasAlphabet": function(){
                     return ("groebner"===this.$data.object) || ("tuple"===this.$data.object && "word"===this.$data.type);
@@ -1470,6 +1478,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     if ( "composition" === obj && "composition_max" === type ) return "Max = ";
                     if ( "composition" === obj && "composition_parts" === type ) return "#Parts = ";
                     if ( "composition" === obj && "composition_max_parts" === type ) return "Max,#Parts = ";
+                    if ( "set_partition" === obj && "set_partition_parts" === type ) return "#Parts = ";
                     return "K =";
                 },
                 "Text": function(){
