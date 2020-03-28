@@ -325,6 +325,7 @@ window.MathJax = {
             <option value="partition">Partition</option>
             <option value="composition">Composition</option>
             <option value="set_partition">Set Partition</option>
+            <option value="balanced_paren">Balanced Parentheses</option>
             <option value="latin_square">Latin Square</option>
             <option value="magic_square">Magic Square</option>
         </optgroup>
@@ -1151,6 +1152,12 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 $["parts="] = +K;
             }
         }
+        else if ( "balanced_paren" === object )
+        {
+            klass = "CatalanWord";
+            n = N;
+            sep = '';
+        }
 
         out.setValue('');
 
@@ -1402,6 +1409,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 "object.set_partition": function(){
                     return this.$data.object === "set_partition";
                 },
+                "object.balanced_paren": function(){
+                    return this.$data.object === "balanced_paren";
+                },
                 "isCombinatorics": function(){
                     var o = this.$data.object;
                     return o!=="prime_sieve" && o!=="is_prime" && o!=="gcd" && o!=="diophantines" && o!=="prime_factors" && o!=="divisors" && o!=="poly_factors" && o!=="groebner" && o!=="polynomials" && o!=="latin_square" && o!=="magic_square";
@@ -1417,7 +1427,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     return this.$data.object.slice(-7) !== "_square" && this.$data.object!=="set_partition"; //"composition"!==this.$data.object && "partition"!==this.$data.object;
                 },
                 "hasminimal": function(){
-                    return this.$data.object.slice(-7) !== "_square" && this.$data.object!=="set_partition";
+                    return false;
                 },
                 "hasrand": function(){
                     return this.$data.object.slice(-7) !== "_square" && this.$data.object!=="set_partition";
