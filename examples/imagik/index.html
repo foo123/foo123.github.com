@@ -97,6 +97,24 @@ div, a {
 #header {
     text-align: center;
 }
+
+
+/* do an extra animation on static image shown */
+.imagik-show-image .imagik-image-layer
+{
+    animation: kenburns-effect 6s ease-in 0.05s 1 normal both running;
+    transform-origin:0 0;
+}
+@keyframes kenburns-effect {
+    from{
+        background-position:0 0;
+        transform:scale(1);
+    }
+    to{
+        background-position:-10% -10%;
+        transform:scale(1.1);
+    }
+}
 </style>
 
 
@@ -210,6 +228,38 @@ div, a {
         <div>Caption here&hellip;</div>
     </div>
     <div class="transition=flip-vertical rows=5 columns=5 overlap=0.9 ease=ease-out-back order=diagonal-top-left duration=2 delay=4">
+        <img srcset="../common/assets/scape5-500.jpg 500w,
+             ../common/assets/scape5.jpg 1920w"
+            sizes="(max-width: 600px) 500px,
+            1920px"
+            src="../common/assets/scape5.jpg" />
+        <div>Caption here&hellip;</div>
+    </div>
+    <div class="transition=pan-left-right rows=2 columns=1 overlap=1 ease=ease order=rows-first duration=2 delay=4">
+        <img srcset="../common/assets/scape3-500.jpg 500w,
+             ../common/assets/scape3.jpg 1920w"
+            sizes="(max-width: 600px) 500px,
+            1920px"
+            src="../common/assets/scape3.jpg" />
+        <div>Caption here&hellip;</div>
+    </div>
+    <div class="transition=pan-up-down rows=1 columns=2 overlap=1 ease=ease order=columns-first duration=2 delay=4">
+        <img srcset="../common/assets/scape1-500.jpg 500w,
+             ../common/assets/scape1.jpg 1920w"
+            sizes="(max-width: 600px) 500px,
+            1920px"
+            src="../common/assets/scape1.jpg" />
+        <div>Caption here&hellip;</div>
+    </div>
+    <div class="transition=blinds-horizontal rows=5 columns=5 overlap=0.5 ease=ease order=checkerboard duration=2 delay=4">
+        <img srcset="../common/assets/scape2-500.jpg 500w,
+             ../common/assets/scape2.jpg 1920w"
+            sizes="(max-width: 600px) 500px,
+            1920px"
+            src="../common/assets/scape2.jpg" />
+        <div>Caption here&hellip;</div>
+    </div>
+    <div class="transition=blinds-vertical rows=5 columns=5 overlap=0.5 ease=ease order=checkerboard duration=2 delay=4">
         <img srcset="../common/assets/scape5-500.jpg 500w,
              ../common/assets/scape5.jpg 1920w"
             sizes="(max-width: 600px) 500px,
