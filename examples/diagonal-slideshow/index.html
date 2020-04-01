@@ -98,7 +98,7 @@ div, a {
 #slideshow {
     position: relative;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
 }
 </style>
@@ -109,28 +109,29 @@ div, a {
 </head>
 <body class="responsive-864-container">
     <span id="forkongithub"><a href="https://github.com/foo123/jquery-plugins">See me on GitHub</a></span>
-    
-    
+
+
 <header id="header">
-    <h1>Responsive Diagonal Slideshow with jQuery and CSS3</h1>
+    <h1 style="text-align:center">Responsive Diagonal Slideshow with jQuery and CSS3</h1>
 </header>
 
-    
-    
+
+
 <div id="slideshow"></div>
 
-    
-    
+
+
     <footer id="footer">
     <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
-    
+
     </footer>
     <br /><br />
-    
-    
+
+
 <script>//<![CDATA[
 jQuery("#slideshow").diagonalSlideshow({
     aspectRatio: 700/438,
+    size: 0.3,
     images: ['../common/assets/d2.jpg','../common/assets/d3.jpg','../common/assets/d4.jpg']
 });
 //]]></script>
