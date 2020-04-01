@@ -12,14 +12,14 @@
 <html lang="en" class="no-ie">
 <!--<![endif]-->
 <head>
-<title>Diagonal Slideshow with jQuery and CSS3</title>
+<title>Responsive Diagonal Slideshow with jQuery and CSS3</title>
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-<meta name="description" content="Diagonal Slideshow with jQuery and CSS3" />
-<meta property="og:title" content="Diagonal Slideshow with jQuery and CSS3">
-<meta property="og:description" content="Diagonal Slideshow with jQuery and CSS3">
+<meta name="description" content="Responsive Diagonal Slideshow with jQuery and CSS3" />
+<meta property="og:title" content="Responsive Diagonal Slideshow with jQuery and CSS3">
+<meta property="og:description" content="Responsive Diagonal Slideshow with jQuery and CSS3">
 <meta property="og:image" content="https://foo123.github.io/thumbs/diagonal-slideshow.jpg">
 <meta property="og:url" content="https://foo123.github.io/examples/diagonal-slideshow/">
 <meta name="twitter:card" content="summary">
@@ -29,74 +29,79 @@
 
 <link href="./diagonal-slideshow.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
-    body {
-        background-color:#121212;
-        color:#aaa;
-        font-size:12px;
-    }
-    
-    div, a {
-        position:relative;
-    }
-    
-    .block {
-        position:relative;
-        display:inline-block;
-        margin: 10px;
-    }
-    .button {
-        -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
-        -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
-        box-shadow:inset 0px 1px 0px 0px #f5978e;
-        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
-        background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
-        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
-        background-color:#f24537;
-        -webkit-border-top-left-radius:20px;
-        -moz-border-radius-topleft:20px;
-        border-top-left-radius:20px;
-        -webkit-border-top-right-radius:20px;
-        -moz-border-radius-topright:20px;
-        border-top-right-radius:20px;
-        -webkit-border-bottom-right-radius:20px;
-        -moz-border-radius-bottomright:20px;
-        border-bottom-right-radius:20px;
-        -webkit-border-bottom-left-radius:20px;
-        -moz-border-radius-bottomleft:20px;
-        border-bottom-left-radius:20px;
-        text-indent:0;
-        border:1px solid #d02718;
-        display:inline-block;
-        color:#ffffff;
-        font-family:Arial;
-        font-size:15px;
-        font-weight:bold;
-        font-style:normal;
-        height:50px;
-        line-height:50px;
-        width:200px;
-        text-decoration:none;
-        text-align:center;
-        text-shadow:1px 1px 0px #810e05;
-    }
-    .button:hover {
-        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
-        background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
-        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
-        background-color:#c62d1f;
-    }.button:active {
-        position:relative;
-        top:1px;
-    }
-    .button {
-        margin: 3px 2px;
-        position:relative;
-        cursor:pointer;
-    }
-    #forkongithub a{background:#c83022;color:#fff;}
+body {
+    background-color:#121212;
+    color:#aaa;
+    font-size:12px;
+}
+
+div, a {
+    position:relative;
+}
+
+.block {
+    position:relative;
+    display:inline-block;
+    margin: 10px;
+}
+.button {
+    -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
+    box-shadow:inset 0px 1px 0px 0px #f5978e;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
+    background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
+    background-color:#f24537;
+    -webkit-border-top-left-radius:20px;
+    -moz-border-radius-topleft:20px;
+    border-top-left-radius:20px;
+    -webkit-border-top-right-radius:20px;
+    -moz-border-radius-topright:20px;
+    border-top-right-radius:20px;
+    -webkit-border-bottom-right-radius:20px;
+    -moz-border-radius-bottomright:20px;
+    border-bottom-right-radius:20px;
+    -webkit-border-bottom-left-radius:20px;
+    -moz-border-radius-bottomleft:20px;
+    border-bottom-left-radius:20px;
+    text-indent:0;
+    border:1px solid #d02718;
+    display:inline-block;
+    color:#ffffff;
+    font-family:Arial;
+    font-size:15px;
+    font-weight:bold;
+    font-style:normal;
+    height:50px;
+    line-height:50px;
+    width:200px;
+    text-decoration:none;
+    text-align:center;
+    text-shadow:1px 1px 0px #810e05;
+}
+.button:hover {
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
+    background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
+    background-color:#c62d1f;
+}.button:active {
+    position:relative;
+    top:1px;
+}
+.button {
+    margin: 3px 2px;
+    position:relative;
+    cursor:pointer;
+}
+#forkongithub a{background:#c83022;color:#fff;}
+
+#slideshow {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 </style>
-
-
 
 <script type="text/javascript" src="../common/js/jquery.js"></script>
 <script type="text/javascript" src="./diagonal-slideshow.js"></script>
@@ -107,15 +112,12 @@
     
     
 <header id="header">
-    <h1>Diagonal Slideshow with jQuery and CSS3</h1>
+    <h1>Responsive Diagonal Slideshow with jQuery and CSS3</h1>
 </header>
 
     
     
-<div class="block">
-    <div id="wrapper">
-    </div>
-</div>
+<div id="slideshow"></div>
 
     
     
@@ -127,11 +129,9 @@
     
     
 <script>//<![CDATA[
-jQuery("#wrapper").diagonalSlideshow({
-    width:700,
-    height:438,
-    strict:true,
-    images:['../common/assets/d2.jpg','../common/assets/d3.jpg','../common/assets/d4.jpg']
+jQuery("#slideshow").diagonalSlideshow({
+    aspectRatio: 700/438,
+    images: ['../common/assets/d2.jpg','../common/assets/d3.jpg','../common/assets/d4.jpg']
 });
 //]]></script>
 

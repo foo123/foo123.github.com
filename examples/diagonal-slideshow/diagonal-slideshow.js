@@ -1,187 +1,149 @@
-!function( $, undef ){
-    
-    var images, $ul, coords, wl, hl, 
-        duration, overlap, easing, delay, index, timer = null,
-    
-        cutimage = function( img, hl, wl, coords ) {
-            var el = [ ], i, j, hli, $div, coord;
-            for (i=0,hli=0; i<wl; i++,hli+=hl)
-            {
-                for (j=0; j<hl; j++)
-                {
-                    coord = coords[j + hli];
-                    if ( coord.vis )
-                    {
-                        $div = $("<div class='diag-inside' data-coords='"+i+" "+j+"'></div>");
-                        $div.css({
-                            position: "absolute",
-                            "z-index": 100,
-                            left: coord.left+"px",
-                            top: coord.top+"px",
-                            width: coord.side+"px", 
-                            height: coord.side+"px",
-                            "background-position": coord.posx+"px "+coord.posy+"px",
-                            "background-image": "url("+img+")","background-repeat":"no-repeat"
-                        });
-                        el.push({piece: $div, li: coord.li});
-                    }
-                }
-            }
-            return el;
-        },
-    
-        //+ Jonas Raoni Soares Silva
-        //@ http://jsfromhell.com/array/shuffle [v1.0]
-        shuffle = function( o ) { //v1.0
-            for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-            return o;
-        },
-    
-        endTransition = function( ) {
-            if ( null != timer ) clearTimeout( timer );
-            $ul.children("li").children(".diag-remove").remove( );
-            index=(index+1) % images.length;
-            var nextimg = new Image();
-            nextimg.onload = function( ) {
-                setTimeout(function( ){ doTransition(index); }, 1000*delay);
-            };
-            nextimg.onerror = nextimg.onload;
-            nextimg.src = images[index];
-        },
-        
-        doTransition = function( ind ) {
-            var p = cutimage( images[ind], wl, hl, coords );
-            
-            for (var i=0; i<p.length; i++)
-            {
-                //var $li=$ul.children("li[data-coords='"+p[i].coords.i+" "+p[i].coords.j+"']");
-                p[i].li.children("div").css({'z-index':0}).addClass("diag-remove");
-                p[i].piece.css({opacity:0}).appendTo(p[i].li);
-            }
-            var p = shuffle(p);
-            var ngroups = p.length;
-            var d = 1000*duration / (ngroups-(ngroups-1)*overlap);
-            var o = d*overlap;
-            var sd = d-o;
-            for (var i=0;i<p.length;i++)
-            {
-                var animateoptions = {duration:d, easing:easing};
-                var animateoptions2 = {duration:d, easing:easing};
-                if ( i==p.length-1 )
-                    animateoptions2.complete = function(){endTransition();};
-                //p[i].li.children(".diag-remove").delay(i*sd).animate({opacity:0},animateoptions);
-                p[i].piece.delay(i*sd).animate({opacity:1},animateoptions2);
-            }
+(function($){
+"use strict";
+
+var stdMath = Math, sqrt2 = stdMath.sqrt(2);
+
+function cutimage( img, diags, W, H )
+{
+    var divs = [], diag, k;
+    for(k=0; k<diags.length; k++)
+    {
+        diag = diags[k];
+        divs.push($('<div class="diag-inside"></div>').css({
+            left: String(-diag.margin/2)+"px",
+            top: String(-diag.margin/2)+"px",
+            width: String(diag.side+diag.margin)+"px",
+            height: String(diag.side+diag.margin)+"px",
+            "background-position": String(diag.imgx)+"px "+String(diag.imgy)+"px",
+            "background-size": String(W)+"px auto",
+            "background-image": 'url("'+img+'")'
+        }).appendTo(diag.div));
+    }
+    return divs;
+}
+
+function shuffle( a )
+{
+    //v1.0
+    for(var j, x, i = a.length; i; j = ~~(stdMath.random() * i), x = a[--i], a[i] = a[j], a[j] = x);
+    return a;
+}
+
+function debounce( fn, delay )
+{
+    var timer = null;
+    return function( ) {
+        var context = this, args = arguments;
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            fn.apply(context, args);
+        }, delay);
+    };
+}
+
+function DiagonalSlideshow( el, options )
+{
+    var holder, diags, W, H, wl, hl, index, timer = null, i, j, x, y, bx, by, w, margin, margin2, offset;
+
+    var endTransition = function( ) {
+        if ( null != timer ) clearTimeout(timer);
+        holder.find('.diag-remove').remove();
+        index = (index+1) % options.images.length;
+        var nextimg = new Image();
+        nextimg.onload = function(){
+            setTimeout(function(){doTransition(index);}, 1000*options.delay);
+        };
+        nextimg.onerror = nextimg.onload;
+        nextimg.src = options.images[index];
+    };
+
+    var doTransition = function( ind ) {
+        var p = cutimage(options.images[ind], diags, W, H), i, ngroups, d, sd, animateoptions, last, max;
+
+        p = shuffle(p);
+        ngroups = p.length;
+        d = 1000*options.duration/(ngroups-(ngroups-1)*options.overlap);
+        sd = d*(1-options.overlap);
+        //last = null; max = -1;
+        for(i=0; i<ngroups; i++)
+        {
+            p[i].prev().addClass("diag-remove");
+            p[i].css({opacity:0});
+            //if ( i*sd >= max ) { last = i; max = i*sd; }
         }
-    ;
-    
-    
-$.fn.diagonalSlideshow = function( options ) {
-    
-    var defaults = {
-        width: 500,
-        height: 500,
-        side: 100,
+        for(i=0; i<ngroups; i++)
+        {
+            animateoptions = {duration:d, easing:options.easing};
+            if ( i === ngroups-1 ) animateoptions.complete = function(){endTransition();};
+            p[i].delay(i*sd).animate({opacity:1}, animateoptions);
+        }
+    };
+
+    var autoResize = function( ) {
+        W = stdMath.round(el.width()); H = stdMath.round(W/options.aspectRatio);
+        holder.css({width:String(W)+'px', height:String(H)+'px'});
+    };
+
+    options = $.extend({
+        aspectRatio: 1.0,
+        side: 200,
         easing: 'linear',
         duration: 3,
         delay: 5,
         overlap: 0.9,
-        strict: true,
-        images: [ ]
-    };
-    options = $.extend( defaults, options );
+        images: []
+    }, options);
 
-    
-    var w = options.width;
-    var h = options.height;
-    var side = options.side;
-    duration = options.duration;
-    overlap = options.overlap;
-    easing = options.easing;
-    delay = options.delay;
-    images = options.images;
-    var i,j;
-    $this = $(this);
-    $this.empty( );
-    var $cont = $("<div class='diag-container'></div>");
-    $cont.appendTo( $this );
-    $ul = $("<ul class='diag-list'></ul>");
-    $ul.appendTo( $cont );
-    coords = [ ];
-    wl = Math.round( w/side );
-    hl = Math.round( h/side );
-    // re-adjust side if not exact multiple
-    side = Math.min( Math.round(w/wl), Math.round(h/hl) );
-    //var mrg=Math.floor(Math.sin(Math.PI/4)*Math.sqrt(2*(side*side)));
-    // angle is 45 degrees
-    var mrg = Math.floor( 0.5*Math.sqrt(2*(side*side)) );
-    var mrg2 = 0.5*mrg;
-    var mrgx2 = 2*mrg;
-    wl = Math.round((w/mrg));
-    hl = Math.round((0.5*h/mrg))+1;
-    $cont.css({
-        position: "relative",
-        /*"margin-left":mrg2+"px",*/
-        "margin-top": /*mrg+*/mrg2+"px",
-        width: (w)+"px",
-        height:(h)+"px"
-    });
-    var offset = 0;
-    //console.log(mrg,wl,hl);
-    for (i=0; i<wl; i++)
+    holder = $('<div class="diag-container"></div>');
+    holder.appendTo(el.empty());
+
+    $(window).on('resize', debounce(autoResize, 300));
+    autoResize();
+
+    w = options.side*sqrt2; wl = 2*stdMath.ceil(W/w)+1; hl = 2*stdMath.ceil(H/w)+1;
+    margin = w/2; margin2 = margin/2; offset = 0;
+
+    diags = [];
+    for (i=0;i<wl;i++)
     {
-        for (j=0; j<hl; j++)
+        for (j=0;j<hl;j++)
         {
-            var $li = $("<li data-coords='"+i+" "+j+"'></li>");
-            $li.css({
-                position: "absolute",
-                width: (side)+"px", 
-                height: (side)+"px",
-                left: (i*(mrg))+"px",
-                top: (j*(mrgx2)+offset)+"px"
+            x = margin*i-margin; y = w*j-margin+offset;
+            bx = -x+margin2; by = -y+margin2;
+            diags.push({
+                i: i, j: j, x: x, y: y, imgx: bx, imgy: by, side: options.side, margin: margin, rows: wl, columns: hl,
+                div: $('<div class="diag" data-coords="'+i+' '+j+'"></div>').css({
+                    left: String(x)+"px",
+                    top: String(y)+"px",
+                    width: String(options.side)+"px",
+                    height: String(options.side)+"px"
+                }).appendTo(holder)
             });
-            var imgx = (-i*(mrg));
-            var imgy = (-j*(mrgx2)-offset);
-            coords[j+hl*i] = {li:$li,i:i,j:j,posx:imgx,posy:imgy,top:-mrg2,left:-mrg2,side:side+mrg,vis:false};
-            // skip showing empty cells (no image)
-            if (options.strict)
-            {
-                if (-imgx<(w-mrgx2) && -imgy<(h-mrgx2) && imgx<=0 && imgy<=0)
-                {
-                    $li.appendTo($ul); //$cont.append(el);
-                    coords[j+hl*i].vis=true;
-                }
-            }
-            else
-            {
-                if (-imgx<(w) && -imgy<(h))
-                {
-                    $li.appendTo($ul); //$cont.append(el);
-                    coords[j+hl*i].vis=true;
-                }
-            }
         }
-        if (offset==0)
-        {
-            offset = -mrg;
-        }
-        else
-        {
-            offset = 0;
-        }
+        offset = 0===offset ? -margin : 0;
     }
-    
+
     // init
-    if (images.length>0)
+    if ( 0 < options.images.length )
     {
-        index=0;
+        index = 0;
         var nextimg = new Image( );
         nextimg.onload = function( ) {
-            doTransition( index );
+            doTransition(index);
         };
         nextimg.onerror = nextimg.onload;
-        nextimg.src = images[index];
+        nextimg.src = options.images[index];
     }
+}
+
+$.DiagonalSlideshow = DiagonalSlideshow;
+$.fn.diagonalSlideshow = function( options ) {
+    $(this).each(function(){
+        var $el = $(this);
+        if ( !$el.data('diagonal-slideshow') )
+            $el.data('diagonal-slideshow', new DiagonalSlideshow($el, options));
+    });
+    return this; // chainable
 };
 
-}(jQuery);
+})(jQuery);
