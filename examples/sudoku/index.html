@@ -315,7 +315,7 @@ select
     
     
 <header id="header" class="fluid col-1-1" style="padding:10px;">
-    <h1>Sudoku Game, Builder and Solver in pure JavaScript</h1>
+    <h1>Sudoku Game, Builder and Solver in pure JavaScript <span id="ver"></span></h1>
     <i>a scaled-down version of CrossWord.js, professional Crossword Builder in JavaScript, by same author</i><br />
     <i>A new Sudoku of desired difficulty and symmetry is generated on-the-fly, by <a href="http://stackoverflow.com/a/28699821/3591273" target="_blank">custom algorithm</a> (with Web Workers)</i>
 </header>
@@ -579,6 +579,8 @@ function display_sudoku( sudoku, $grid, $controls )
     var renderer = new DisplayPuzzle( sudoku, sudoku.getRawGrid(), $grid, $controls );
     return renderer;
 }
+
+$('#ver').html('v.'+Sudoku.VERSION);
 
 // on DOM ready
 $(function(){
