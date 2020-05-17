@@ -20,6 +20,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     ,XRegExp: "xregexp"
     ,Regex: "Regex.min"
     ,DateX: "DateX.min"
+    ,Plot: "Plot.min"
     ,Tao: "Tao.min"
     //,ModelView: "modelview.min"
     ,ModelViewBundle: "modelview.bundle"
