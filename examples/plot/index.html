@@ -1,0 +1,388 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<html lang="en" class="ie lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie lt-ie9">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" class="no-ie">
+<!--<![endif]-->
+<head>
+<title>Plot.js Simple chart and functional graph plotting library which can render to Canvas, SVG and plain HTML</title>
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="description" content="Plot.js Simple chart and functional graph plotting library which can render to Canvas, SVG and plain HTML" />
+<meta property="og:title" content="Plot.js Simple chart and functional graph plotting library which can render to Canvas, SVG and plain HTML">
+<meta property="og:description" content="Plot.js Simple chart and functional graph plotting library which can render to Canvas, SVG and plain HTML">
+<meta property="og:image" content="https://foo123.github.io/thumbs/plot.jpg">
+<meta property="og:url" content="https://foo123.github.io/examples/plot/">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+<style type="text/css">
+body {
+    position: relative; /*needed for tooltip to show up correctly*/
+    background-color:#121212;
+    color:#aaa;
+    font-size:18px;
+    text-align: center;
+}
+.wrapper {
+    position: relative;
+    display: block;
+    border: none;
+    padding: 0;
+    margin: 20px auto;
+    width: 40%;
+    min-width: 300px;
+    max-width: 1200px;
+}
+.container {
+    position: relative;
+    display: block;
+    margin: 0;
+    height: 0px;
+    width: 100%;
+    padding: 0;
+    padding-bottom: 100%; /* 1-1 */
+    border: 2px solid blue;
+}
+.input {
+    display: block;
+    text-align: center;
+    padding: 8px;
+    font-size: 16px;
+    color: #121212;
+}
+.input select {
+    position: relative;
+    display: inline-block;
+    padding: 12px 8px;
+    margin: 8px auto;
+}
+.input span {
+    color: red;
+}
+i {
+    font-size: 14px;
+    color: #eee;
+}
+#f {
+    position: relative;
+    display: inline-block;
+    padding: 12px 8px;
+    width: 200px;
+    margin: 0px 4px;
+    color: blue;
+}
+#from,#to {
+    position: relative;
+    display: inline-block;
+    padding: 12px 8px;
+    width: 20px;
+    margin: 0px 4px;
+    color: green;
+}
+#plot {
+    position: relative;
+    display: inline-block;
+    padding: 12px 8px;
+}
+#graph-input, #chart-input {
+    position: relative;
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+.--plot-tooltip {
+    box-sizing: border-box;
+    padding: 10px;
+    margin: 0px;
+    border: 1px dotted #121212;
+    background: rgba(255,255,255,0.8);
+    color: #121212;
+    text-align: left;
+    font-size: 11px;
+}
+.--plot-tooltip.--plot-hide-tooltip {
+    display: none;
+}
+.--plot-tooltip.--plot-show-tooltip {
+    display: block;
+}
+#forkongithub a{background:#c83022;color:#fff;}
+#header {
+    text-align: center;
+}
+</style>
+<script src="../common/js/Plot.min.js"></script>
+
+</head>
+<body>
+<span id="forkongithub"><a href="https://github.com/foo123/Plot.js">See me on GitHub</a></span>
+
+<header id="header">
+    <h1>Plot.js <span id="ver"></span>: simple &amp; small plotting library which can render to <b>Canvas</b>, <b>SVG</b> and <b>plain HTML</b></h1>
+</header>
+
+<div class="input">
+    <select id="type">
+        <optgroup label="Plot Type">
+            <option value="graph" selected>Graph of Function</option>
+            <option value="vbar">Bar Chart Vertical</option>
+            <option value="hbar">Bar Chart Horizontal</option>
+            <option value="pie">Pie Chart</option>
+            <option value="doughnut">Doughnut Chart</option>
+            <option value="line">Line Chart</option>
+        </optgroup>
+    </select>
+    <div id="graph-input">
+        <p><i>(functions are those supported by JavaScript's <code>Math</code> object)</i></p>
+        <span>f(x)=</span><input type="text" id="f" value="sin(4*x)/x" /> [<input type="text" id="from" value="-3" />,<input type="text" id="to" value="3" />]
+    </div>
+    <div id="chart-input" style="display:none">
+        <select id="ndata">
+            <optgroup label="#Inputs">
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="10">10</option>
+                <option value="20" selected>20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </optgroup>
+        </select>
+        <select id="legend">
+            <optgroup label="Legend Position">
+                <option value="none">None</option>
+                <option value="top">Top</option>
+                <option value="bottom" selected>Bottom</option>
+                <option value="left">Left</option>
+                <option value="right">Right</option>
+            </optgroup>
+        </select>
+    </div>
+    <button id="plot">Plot</button>
+    <p><i>Note: hover over plot points to see further information</i></p>
+</div>
+
+<h2>== Html ==</h2>
+<div class="wrapper"><div id="container-html" class="container"></div></div>
+<h2>== Canvas ==</h2>
+<div class="wrapper"><div id="container-canvas" class="container"></div></div>
+<h2>== Svg ==</h2>
+<div class="wrapper"><div id="container-svg" class="container"></div></div>
+
+<script>
+//<![CDATA[
+!function(){
+    document.getElementById('ver').innerHTML = 'v.'+Plot.VERSION;
+
+    var plotOptions = {
+            background: {
+                color: '#ffffff'
+            },
+            text:{
+                size: 14
+            },
+            line:{
+                size: 3,
+                color: '#ff0000'
+            },
+            axes: {
+                x: {
+                    color: '#000000',
+                    ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
+                },
+                y: {
+                    color: '#000000',
+                    ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
+                }
+            }
+        },
+
+        htmlPlot = Plot(Plot.Renderer.Html(document.getElementById('container-html')), plotOptions),
+
+        canvasPlot = Plot(Plot.Renderer.Canvas(document.getElementById('container-canvas')), plotOptions),
+
+        svgPlot = Plot(Plot.Renderer.Svg(document.getElementById('container-svg')), plotOptions),
+
+        data = null, fStr = '',
+        typeSelect = document.getElementById('type'),
+        legendSelect = document.getElementById('legend'),
+        dataSelect = document.getElementById('ndata'),
+        type = 'graph', legend = 'bottom', n = 20
+    ;
+
+    function genData( )
+    {
+       if ( 'graph' === type )
+       {
+            fStr = document.getElementById('f').value.trim();
+
+            const range = [parseFloat(document.getElementById('from').value), parseFloat(document.getElementById('to').value)];
+            let f = null;
+
+            try {
+                f = new Function("x", "\"use strict\";\nreturn ("+fStr.replace(/[a-zA-Z]+\(/g, m => 'Math.'+m)+");");
+            } catch(e) {
+                console.error(e.toString());
+                f = null;
+            }
+            if ( ("function" === typeof f) &&
+                isFinite(range[0]) && isFinite(range[1]) )
+            {
+                 // cache plot samples to avoid recomputation time
+                return htmlPlot.sample(f, range[0], range[1]);
+            }
+       }
+       else
+       {
+           var data = new Array(n), i, labels = new Array(n);
+           for(i=0; i<n; i++)
+           {
+                data[i] = (200*Math.random()-100)||1;
+                labels[i] = 'Entry: '+String(i+1);
+            }
+            return {data:data, colors:Plot.Util.palette(n), labels:labels};
+       }
+    }
+
+    function plot( reset )
+    {
+        if ( reset || !data ) data = genData();
+
+        if ( data )
+        {
+            if ( 'graph' === type )
+            {
+                htmlPlot
+                    .clear()
+                    .graph(data, null, null, {axes:{
+                        x: {
+                            color: '#000000',
+                            ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
+                        },
+                        y: {
+                            color: '#000000',
+                            ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
+                        }
+                    }})
+                    .label({x:'right',y:'top'},{x:'auto',y:'auto'}, 'f(x) = '+fStr, {label:{border:{size:0},fill:'rgba(255,255,255,0.7)',text:{size:20}}})
+                ;
+                canvasPlot
+                    .clear()
+                    .graph(data, null, null, {axes:{
+                        x: {
+                            color: '#000000',
+                            ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
+                        },
+                        y: {
+                            color: '#000000',
+                            ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
+                        }
+                    }})
+                    .label({x:'right',y:'top'},{x:'auto',y:'auto'}, 'f(x) = '+fStr, {label:{border:{size:0},fill:'rgba(255,255,255,0.7)',text:{size:20}}})
+                ;
+                svgPlot
+                    .clear()
+                    .graph(data, null, null, {axes:{
+                        x: {
+                            color: '#000000',
+                            ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
+                        },
+                        y: {
+                            color: '#000000',
+                            ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
+                        }
+                    }})
+                    .label({x:'right',y:'top'},{x:'auto',y:'auto'}, 'f(x) = '+fStr, {label:{border:{size:0},fill:'rgba(255,255,255,0.7)',text:{size:20}}})
+                ;
+            }
+            else
+            {
+                htmlPlot
+                    .clear()
+                    .chart(type, data.data, {colors:data.colors, labels:data.labels, legend:{position:legend},axes:{
+                        x: {
+                            color: '#000000',
+                            ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
+                        },
+                        y: {
+                            color: '#000000',
+                            ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
+                        }
+                    }
+                })
+                ;
+                canvasPlot
+                    .clear()
+                    .chart(type, data.data, {colors:data.colors, labels:data.labels, legend:{position:legend},axes:{
+                        x: {
+                            color: '#000000',
+                            ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
+                        },
+                        y: {
+                            color: '#000000',
+                            ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
+                        }
+                    }
+                })
+                ;
+                svgPlot
+                    .clear()
+                    .chart(type, data.data, {colors:data.colors, labels:data.labels, legend:{position:legend},axes:{
+                        x: {
+                            color: '#000000',
+                            ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
+                        },
+                        y: {
+                            color: '#000000',
+                            ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
+                        }
+                    }
+                })
+                ;
+            }
+        }
+    }
+
+    typeSelect.addEventListener('change', ()=>{
+        if ( 'graph'===typeSelect.options[typeSelect.selectedIndex].value )
+        {
+            document.getElementById('graph-input').style.display = 'inline-block';
+            document.getElementById('chart-input').style.display = 'none';
+        }
+        else
+        {
+            document.getElementById('graph-input').style.display = 'none';
+            document.getElementById('chart-input').style.display = 'inline-block';
+        }
+    }, false);
+
+    document.getElementById('plot').addEventListener('click', ()=>{
+        type = typeSelect.options[typeSelect.selectedIndex].value;
+        legend = legendSelect.options[legendSelect.selectedIndex].value;
+        n = parseInt(dataSelect.options[dataSelect.selectedIndex].value);
+        plot( true );
+    }, false);
+
+    window.addEventListener('resize', Plot.Util.debounce(()=>{
+        htmlPlot.resize();
+        canvasPlot.resize();
+        svgPlot.resize();
+        plot();
+    }, 400), false);
+
+    // run on load
+    setTimeout(plot, 500);
+}();
+//]]>
+</script>
+</body>
+</html>
