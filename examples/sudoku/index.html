@@ -130,6 +130,10 @@ body
     line-height: 14px;
     vertical-align: middle;
 }
+.puzzle-control.setting-on
+{
+    color:#f90b13 !important;
+}
 table td
 {
     padding-bottom:10px;
@@ -562,6 +566,8 @@ DisplayPuzzle.prototype = {
                 {
                     self.toggleHighlighted = !self.toggleHighlighted;
                     puzzle.highlightErrors( self.toggleHighlighted );
+                    if ( self.toggleHighlighted ) $control.addClass('setting-on');
+                    else $control.removeClass('setting-on');
                 }
                 else if ( $control.is('.puzzle-clear-errors') )
                 {
@@ -584,12 +590,18 @@ DisplayPuzzle.prototype = {
                     notesEnabled = !notesEnabled;
                     puzzle.enableNotes( notesEnabled );
                     if ( notesEnabled && allNotesEnabled ) allNotesEnabled = false;
+                    if ( notesEnabled ) $control.addClass('setting-on');
+                    else $control.removeClass('setting-on');
+                    if ( !allNotesEnabled ) $controls.find('.puzzle-all-notes').removeClass('setting-on');
                 }
                 else if ( $control.is('.puzzle-all-notes') )
                 {
                     allNotesEnabled = !allNotesEnabled;
                     puzzle.enableAllNotes( allNotesEnabled );
                     if ( allNotesEnabled && notesEnabled ) notesEnabled = false;
+                    if ( allNotesEnabled ) $control.addClass('setting-on');
+                    else $control.removeClass('setting-on');
+                    if ( !notesEnabled ) $controls.find('.puzzle-notes').removeClass('setting-on');
                 }
                 else if ( $control.is('.puzzle-clear-notes') )
                 {
