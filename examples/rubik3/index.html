@@ -121,6 +121,7 @@ body {
     text-decoration:none;
     text-align:center;
     text-shadow:1px 1px 0px #ffffff;
+    outline: none !important;
 }
 .button:hover {
     background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
@@ -140,11 +141,31 @@ body {
     display:inline-block;
     margin: 3px;
 }
+#controls select {
+    margin: 3px;
+    font-size: 16px;
+    padding: 5px;
+    color: #121212;
+}
 #forkongithub a, #forkongithub a:hover{background:#fd0002;color:#fff;}
 #footer {
     z-index: 100;
     position:relative;
     margin-top: 20px;
+}
+@media (max-width:800px){
+#controls select {
+    font-size: 13px;
+    padding: 3px;
+    margin: 3px 2px;
+}
+#controls .button {
+    width: 80px;
+    height: 25px;
+    font-size: 11px;
+    line-height: 25px;
+    margin: 3px 2px;
+}
 }
 </style>
 <!--<link rel="stylesheet" href="../common/css/colorpicker.css" type="text/css" />
@@ -155,7 +176,7 @@ body {
 <script type="text/javascript" src="./Rubik.js"></script>
 <script type="text/javascript" src="./RubikApplication.js"></script>
 </head>
-<body class="responsive-864-container" style="max-width:1600px; overflow-x:hidden; margin:0 auto;">
+<body class="responsive-864-container" style="max-width:2000px; overflow-x:hidden; margin:0 auto;">
     <span id="forkongithub"><a href="https://github.com/foo123/Rubik3">Twist me on GitHub</a></span>
     
 <!--    Rubik Cube Viewer (and future Solver) implementation in HTML 5 canvas, Javascript Three.js 3D Library
@@ -168,22 +189,23 @@ body {
         Free to use, modify, distribute, make the world a better place
         A link back to author is appreciated
 -->
-<div id='controls' class="fluid col-1-1" style="margin-top:5px;">
-    <div>
-        <select style="margin:3px;font-size:16px;padding:5px;color:#121212;" size="1" id="rubik-type">
-            <option value="2">2x2x2</option>    
-            <option value="3" selected="selected">3x3x3</option>
-            <option value="4">4x4x4</option>
-        </select>
-        
-        <input class="button" type='button' id='newrubik' value='New Cube'/>
-        <input class="button" type='button' id='scramble' value='Scramble'/>
-        <input class="button" type='button' id='undo' value='Undo'/>
-        <br />
-        
-        <p>Click or touch and drag on background to rotate cube. Drag row or column to rotate sides</p>
-        
+<div id='controls' class="fluid col-1-1" style="margin-top:8px;">
+    <select size="1" id="rubik-type">
+        <option value="2">2x2x2</option>    
+        <option value="3" selected="selected">3x3x3</option>
+        <option value="4">4x4x4</option>
+    </select>
+    
+    <button class="button" id="newrubik">New Cube</button>
+    <button class="button" id="scramble">Scramble</button>
+    <button class="button" id="undo">Undo</button>
+    
+    <p style="margin-top: 8px">Click or touch and drag on background to rotate cube. Drag row or column to rotate sides</p>
+    
+    <div class="fluid col-1-1" style="margin-top: 0px;">
+    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a>
     </div>
+    
     <!--<div id='colors' style="position:relative;">
         <div class='color-class colorSelector'><div id='cstop1'></div></div>
         <div class='color-class colorSelector'><div id='csbottom1'></div></div>
@@ -203,10 +225,6 @@ body {
 
 <div id="container"><div id="flatimage"></div></div>
 
-<footer id="footer">
-<div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a><br /></div>
-</footer>
-    
 <script type="text/javascript">//<![CDATA[
 RubikApplication.init();
 //]]></script>

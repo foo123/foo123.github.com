@@ -102,6 +102,7 @@ body
     text-decoration:none;
     text-align:center;
     text-shadow:1px 1px 0px #ffffff;
+    outline: none !important;
 }
 .button:hover {
     background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
@@ -392,6 +393,11 @@ h1 {
     font-size: 12px;
     margin: 5px auto 30px auto;
 }
+@media (max-width:800px){
+h1 {
+    font-size: 20px;
+}
+}
 </style>
 <link rel="stylesheet" type="text/css" href="./sudoku.min.css" />
 
@@ -466,17 +472,12 @@ h1 {
     <button id="menu-open" class="menulink" title="Options"><span></span></button><h1>Sudoku Game, Builder and Solver in pure JavaScript <span id="ver"></span></h1>
 </header>
 
-<br />
-
-<section id="panel" class="fluid col-1-1" style="padding:20px;">
+<section id="panel" class="fluid col-1-1" style="margin-top:40px;padding:10px;">
+<div class="fluid col-1-1 text-center" style="margin-bottom:12px"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
 <div class="fluid col-1-1 text-center"><button class="button" id="new_game" data-bind='{"click":"new_game"}'>New Game</button></div>
 <div id="grid" class="fluid col-1-1" style="padding-top:10px;"></div>
 <div class="ui-delayable-overlay"><div class="ui-spinner ui-spinner-dots"></div></div>
 </section>
-
-<footer id="footer">
-<div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
-</footer>
 
 <script type="text/javascript">//<![CDATA[
 !function($, /*Contemplate,*/ ModelView, Sudoku) {
@@ -550,6 +551,12 @@ DisplayPuzzle.prototype = {
         {
             puzzle = self.puzzle;
 
+            $controls.find('.puzzle-control:not(.puzzle-highlight-errors)').removeClass('setting-on');
+            if ( $controls.find('.puzzle-highlight-errors').hasClass('setting-on') )
+            {
+                self.toggleHighlighted = !self.toggleHighlighted;
+                puzzle.highlightErrors( self.toggleHighlighted );
+            }
             $controls.on('click.'+self.id, '.puzzle-control', function( evt ){
                 if ( self.disposed ) return false;
                 var $control = $(evt.target);

@@ -622,8 +622,8 @@ function animate( )
 
 function setDimensions( )
 {
-    w = Math.min(window.innerWidth, 1600)-20;
-    h = Math.max(window.innerHeight-80, 500);
+    w = Math.min(window.innerWidth, 2000)-20;
+    h = Math.max(window.innerHeight-100, 500);
     w2 = w/2;
     h2 = h/2;
     container.style.width = w+"px";
