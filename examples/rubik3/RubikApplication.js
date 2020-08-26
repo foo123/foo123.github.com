@@ -29,7 +29,7 @@ var
 
     w, h, w2, h2,
     targetRotationY = 0, targetRotationOnMouseDownY = 0, targetRotationX = 0, targetRotationOnMouseDownX = 0,
-    rad = 500, mouse = {x:0, y:0}, mouseX = 0, mouseXOnMouseDown = 0, mouseY = 0, mouseYOnMouseDown = 0,
+    rad = 500, mouse = {x:0, y:0}, mouseX = 0, mouseXOnMouseDown = 0, mouseY = 0, mouseYOnMouseDown = 0, mouseX0 = mouseX, mouseY0 = mouseY,
 
     //cstop, csbottom, csleft, csright, csfront, csback, csinside,
     //cstope, csbottome, cslefte, csrighte, csfronte, csbacke, csinsidee,
@@ -334,12 +334,12 @@ function onDocumentDown( event, isTouch )
     if ( null == target )
     {
         isCubeRotation = true;
-        mouseX = ( clientX / w ) * 2 - 1;
-        mouseY = ( clientY / h ) * 2 - 1;
-        targetRotationY = mouseX;
-        targetRotationX = mouseY;
-        targetRotationOnMouseDownY = targetRotationY;
-        targetRotationOnMouseDownX = targetRotationX;
+        mouseX0 = mouseX = ( clientX / w )/* * 2 - 1*/;
+        mouseY0 = mouseY = ( clientY / h )/* * 2 - 1*/;
+        //targetRotationY = mouseX;
+        //targetRotationX = mouseY;
+        //targetRotationOnMouseDownY = targetRotationY;
+        //targetRotationOnMouseDownX = targetRotationX;
 
         if ( isTouch )
         {
@@ -398,10 +398,11 @@ function onDocumentMove( event, isTouch )
     if ( isCubeRotation )
     {
         if ( clientX>w || clientX<0 || clientY>h || clientY<0 ) return;
-        mouseX = ( clientX / w ) * 2 - 1;
-        mouseY = ( clientY / h ) * 2 - 1;
-        targetRotationY = mouseX;
-        targetRotationX = mouseY;
+        mouseX = ( clientX / w )/* * 2 - 1*/;
+        mouseY = ( clientY / h )/* * 2 - 1*/;
+        targetRotationY += mouseX-mouseX0;
+        targetRotationX += mouseY-mouseY0;
+        mouseX0 = mouseX; mouseY0 = mouseY;
     }
     else
     {
@@ -623,7 +624,7 @@ function animate( )
 function setDimensions( )
 {
     w = Math.min(window.innerWidth, 2000)-20;
-    h = Math.max(window.innerHeight-100, 500);
+    h = Math.max(window.innerHeight-150, 650);
     w2 = w/2;
     h2 = h/2;
     container.style.width = w+"px";
