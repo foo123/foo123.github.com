@@ -239,7 +239,7 @@ require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcasc
             startTime('Feature Detect');
             // detect the feature
             new HAAR.Detector(haarcascade_frontalface_alt.haarcascade_frontalface_alt, useParallel)
-                    .image(canvas, scaling.getValue()) // use the image
+                    .image(canvas, 150 / image.width/*scaling.getValue()*/) // use the image
                     .interval(40) // set detection interval for asynchronous detection (if not parallel)
                     .complete(function() {  // onComplete callback
                         
@@ -276,13 +276,13 @@ require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcasc
         image.src = src; // load it
     }
 
-    controls = new DAT.GUI( { height: 7*32, domElement: controlsContainer } );
-    scaling = controls.add({ scaling: 0.5}, 'scaling' ).name('Image Scaling').min(0).max(1);
-    cannyL = controls.add({ cannyL: 20}, 'cannyL' ).name('Canny Low Threshold');
-    cannyH = controls.add({ cannyH: 100}, 'cannyH' ).name('Canny High Threshold');
+    controls = new DAT.GUI( { height: /*7*/6*32, domElement: controlsContainer } );
+    //scaling = controls.add({ scaling: 0.5}, 'scaling' ).name('Image Scaling').min(0).max(1);
+    cannyL = controls.add({ cannyL: 10}, 'cannyL' ).name('Canny Low Threshold');
+    cannyH = controls.add({ cannyH: 400}, 'cannyH' ).name('Canny High Threshold');
     basescale = controls.add({ basescale: 1}, 'basescale' ).name('Base Scale').min(0);
-    scaleinc = controls.add({ scaleinc: 1.25}, 'scaleinc' ).name('Scale Increment').min(0);
-    inc = controls.add({ inc: 0.5}, 'inc' ).name('Step Increment').min(0);
+    scaleinc = controls.add({ scaleinc: 1.1}, 'scaleinc' ).name('Scale Increment').min(0);
+    inc = controls.add({ inc: 0.15}, 'inc' ).name('Step Increment').min(0);
     minneighbours = controls.add({ minneighbours: 1}, 'minneighbours' ).name('Min. Neighbours').min(1);
     
     $screen.modelview({
