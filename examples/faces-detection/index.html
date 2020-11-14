@@ -218,7 +218,7 @@ require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcasc
                         alert(l+" Object(s) found");
                     })
                     .cannyThreshold({low:90, high:200})  // custom thresholds for canny pruning (for best results)
-                    .detect(1, 1.1, 0.12, 1, true); // go
+                    .detect(1, 1.1, 0.12, 1, 0.2, true); // go
         };
         startTime('Image Load');
         image.src = src; // load it

@@ -269,7 +269,7 @@ require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcasc
                         alert(l+" Object(s) found");
                     })
                     .cannyThreshold({low: cannyL.getValue(), high: cannyH.getValue()})  // custom thresholds for canny pruning (for best results)
-                    .detect(basescale.getValue(), scaleinc.getValue(), inc.getValue(), minneighbours.getValue(), true); // go
+                    .detect(basescale.getValue(), scaleinc.getValue(), inc.getValue(), minneighbours.getValue(), 0.2, true); // go
         };
         startTime('Image Load');
         image.src = src; // load it
