@@ -238,7 +238,7 @@ require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcasc
             startTime('Feature Detect');
             // detect the feature
             new HAAR.Detector(haarcascade_mcs_mouth.haarcascade_mcs_mouth, useParallel)
-                    .image(canvas, scaling.getValue()) // use the image
+                    .image(canvas, 300 / image.width/*scaling.getValue()*/) // use the image
                     .interval(40) // set detection interval for asynchronous detection (if not parallel)
                     .complete(function() {  // onComplete callback
                         
@@ -275,8 +275,8 @@ require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcasc
         image.src = src; // load it
     }
 
-    controls = new DAT.GUI( { height: 7*32, domElement: controlsContainer } );
-    scaling = controls.add({ scaling: 0.9}, 'scaling' ).name('Image Scaling').min(0).max(1);
+    controls = new DAT.GUI( { height: 6*32, domElement: controlsContainer } );
+    //scaling = controls.add({ scaling: 0.9}, 'scaling' ).name('Image Scaling').min(0).max(1);
     cannyL = controls.add({ cannyL: 50}, 'cannyL' ).name('Canny Low Threshold');
     cannyH = controls.add({ cannyH: 110}, 'cannyH' ).name('Canny High Threshold');
     basescale = controls.add({ basescale: 1}, 'basescale' ).name('Base Scale').min(0);
