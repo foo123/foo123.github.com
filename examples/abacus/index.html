@@ -1300,7 +1300,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     next = comb.next();
                     if ( null == next ) {next=false; break;}
                     if ( 0 < count ) output += "\n";
-                    output += next.join ? next.map(function(x){return x.join?('['+x.join(',')+']'):String(x);}).join(sep) : String(next);
+                    output += next.join ? next.map(function(x){return x.join?('{'+x.join(',')+'}'):String(x);}).join(sep) : String(next);
                     count++; cnt++;
                 }
 
