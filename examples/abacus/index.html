@@ -1479,7 +1479,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     return false;
                 },
                 "hasrand": function(){
-                    return this.$data.object.slice(-7) !== "_square" && this.$data.object!=="balanced_paren";
+                    return this.$data.object.slice(-7) !== "_square";
                 },
                 "hasN": function(){
                     return ("tensor"!==this.$data.object || "tensor_inversion"===this.$data.type) && !("gcd"===this.$data.object || "diophantines"===this.$data.object || "linears"===this.$data.object || "poly_factors"===this.$data.object || "groebner"===this.$data.object || "polynomials"===this.$data.object);
