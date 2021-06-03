@@ -609,7 +609,9 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     }
     function factor( f, as_tex )
     {
-        return '(' + String(f[0]) + (Abacus.Arithmetic.lt(Abacus.Arithmetic.I, f[1]) ? ('^' + (as_tex ? '{' : '') + String(f[1]) + (as_tex ? '}' : '')) : '') + ')';
+        var s = String(f[0]) + (Abacus.Arithmetic.lt(Abacus.Arithmetic.I, f[1]) ? ('^' + (as_tex ? '{' : '') + String(f[1]) + (as_tex ? '}' : '')) : '');
+        if (!as_tex) s = '(' + s + ')';
+        return s;
     }
 
     $MV.jquery( $ );
@@ -672,8 +674,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         {
             model.set('summary', esc_html("Abacus.Math.factorize(\""+String(N)+"\")"), true);
             res = Abacus.Math.factorize(N);
-            out.setValue(String(N)+'='+res.map(function(p){return factor(p);}).join(''));
-            print_math('\\['+String(N)+'='+res.map(function(p){return factor(p,true);}).join('')+'\\]');
+            out.setValue(String(N)+'='+res.map(function(p){return factor(p,false);}).join('·'));
+            print_math('\\['+String(N)+'='+res.map(function(p){return factor(p,true);}).join('\\cdot')+'\\]');
             return;
         }
         else if ( 'num2cfrac' === object )
