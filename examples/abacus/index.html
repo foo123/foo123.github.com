@@ -17,9 +17,9 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-<meta name="description" content="Abacus - Advanced Combinatorics &amp; Algebraic Number Theory Symbolic Computation Library for Node.js / Browser / XPCOM Javascript" />
+<meta name="description" content="Abacus: Combinatorics, Tensors, Permutations, Combinations, Variations, Subsets, Restricted Partitions, Restricted Compositions, Set Partitions, Algebraic Number Theory, Matrices, Polynomials, Prime Factorisation, Diophantine Systems Equations" />
 <meta property="og:title" content="Abacus - Advanced Combinatorics &amp; Algebraic Number Theory Symbolic Computation Library for Node.js / Browser / XPCOM Javascript">
-<meta property="og:description" content="Abacus - Advanced Combinatorics &amp; Algebraic Number Theory Symbolic Computation Library for Node.js / Browser / XPCOM Javascript">
+<meta property="og:description" content="Abacus: Combinatorics, Tensors, Permutations, Combinations, Variations, Subsets, Restricted Partitions, Restricted Compositions, Set Partitions, Algebraic Number Theory, Matrices, Polynomials, Prime Factorisation, Diophantine Systems Equations">
 <meta property="og:image" content="https://foo123.github.io/thumbs/abacus-live.jpg">
 <meta property="og:url" content="https://foo123.github.io/examples/abacus/">
 <meta name="twitter:card" content="summary">
@@ -544,7 +544,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
     var undef=undefined, $window = $(window), $screen = $('#screen'), math = $('#math'),
         output = document.getElementById('output'), expr = document.getElementById('expr'), out, exprout,
         appModel, appView, appRouter, width = output.clientWidth, height, toJSON = JSON.stringify,
-        MAXITEMS = 100000, $conditions = $('#conditions>tbody'), $condition_tpl = $('#condition_tpl'),
+        MAXITEMS = 10000, $conditions = $('#conditions>tbody'), $condition_tpl = $('#condition_tpl'),
         html_esc_re = /[&<>]/g;
 
     var promise = Promise.resolve();  // Used to hold chain of typesetting calls
@@ -1226,7 +1226,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
 
         $screen.addClass('ui-delayed').removeClass('ui-undelayed');
 
-        var count = 0, chunk = 5000;
+        var count = 0, chunk = 1000;
 
         setTimeout(function(){
             if ( "PrimeSieve"===klass )
