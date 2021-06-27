@@ -12,13 +12,13 @@
 <html lang="en" class="no-ie">
 <!--<![endif]-->
 <head>
-<title>Abacus - Advanced Combinatorics &amp; Algebraic Number Theory Symbolic Computation Library for Node.js / Browser / XPCOM Javascript</title>
+<title>Abacus: Advanced Combinatorics &amp; Algebraic Number Theory Symbolic Computation Library for JavaScript</title>
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 <meta name="description" content="Abacus: Combinatorics, Tensors, Permutations, Combinations, Variations, Subsets, Restricted Partitions, Restricted Compositions, Set Partitions, Algebraic Number Theory, Matrices, Polynomials, Greatest Common Divisor, Gröbner Basis, Prime Factorisation, Continued Fractions, Diophantine Systems Equations" />
-<meta property="og:title" content="Abacus - Advanced Combinatorics &amp; Algebraic Number Theory Symbolic Computation Library for Node.js / Browser / XPCOM Javascript">
+<meta property="og:title" content="Abacus: Advanced Combinatorics &amp; Algebraic Number Theory Symbolic Computation Library for JavaScript">
 <meta property="og:description" content="Abacus: Combinatorics, Tensors, Permutations, Combinations, Variations, Subsets, Restricted Partitions, Restricted Compositions, Set Partitions, Algebraic Number Theory, Matrices, Polynomials, Greatest Common Divisor, Gröbner Basis, Prime Factorisation, Continued Fractions, Diophantine Systems Equations">
 <meta property="og:image" content="https://foo123.github.io/thumbs/abacus-live.jpg">
 <meta property="og:url" content="https://foo123.github.io/examples/abacus/">
@@ -304,7 +304,7 @@ window.MathJax = {
 
 <header id="header">
     <h1>Abacus</h1>
-    <i>A simple, fast &amp; versatile <b>combinatorics</b> &amp <b>algebraic number theory</b> Symbolic Computation library for Node.js / Browser / XPCOM Javascript, Python, Java</i>
+    <i>A simple, fast &amp; versatile <b>Combinatorics</b> &amp <b>Algebraic Number Theory</b> Symbolic Computation library for JavaScript, Python</i>
 </header>
 
 <br /><br />
@@ -374,13 +374,21 @@ window.MathJax = {
         <option value="subset_binary" data-bind='{"show":"object.subset"}'>Subset (Binary)</option>
         <option value="subset_combination" data-bind='{"show":"object.subset"}'>Subset (Combination)</option>
         <option value="subset_01" data-bind='{"show":"object.subset"}'>Zero/One</option>
+        <!--<option value="partition_min" data-bind='{"show":"object.partition"}'>Fixed Min. Part</option>-->
         <option value="partition_max" data-bind='{"show":"object.partition"}'>Fixed Max. Part</option>
         <option value="partition_parts" data-bind='{"show":"object.partition"}'>Fixed Num. Parts</option>
+        <!--<option value="partition_min_max" data-bind='{"show":"object.partition"}'>Fixed Min. &amp; Max. Part</option>-->
+        <option value="partition_min_parts" data-bind='{"show":"object.partition"}'>Fixed Min. Part &amp; Num. Parts</option>
         <option value="partition_max_parts" data-bind='{"show":"object.partition"}'>Fixed Max. Part &amp; Num. Parts</option>
+        <option value="partition_min_max_parts" data-bind='{"show":"object.partition"}'>Fixed Min./Max. Part &amp; Num. Parts</option>
         <option value="partition_distinct" data-bind='{"show":"object.partition"}'>Distinct Parts</option>
+        <!--<option value="composition_min" data-bind='{"show":"object.composition"}'>Fixed Min. Part</option>-->
         <option value="composition_max" data-bind='{"show":"object.composition"}'>Fixed Max. Part</option>
         <option value="composition_parts" data-bind='{"show":"object.composition"}'>Fixed Num. Parts</option>
+        <!--<option value="composition_min_max" data-bind='{"show":"object.composition"}'>Fixed Min. &amp; Max. Part</option>-->
+        <option value="composition_min_parts" data-bind='{"show":"object.composition"}'>Fixed Min. Part &amp; Num. Parts</option>
         <option value="composition_max_parts" data-bind='{"show":"object.composition"}'>Fixed Max. Part &amp; Num. Parts</option>
+        <option value="composition_min_max_parts" data-bind='{"show":"object.composition"}'>Fixed Min./Max. Part &amp; Num. Parts</option>
         <option value="composition_distinct" data-bind='{"show":"object.composition"}'>Distinct Parts</option>
         <option value="set_partition_parts" data-bind='{"show":"object.set_partition"}'>Fixed Num. Parts</option>
         </select>
@@ -441,7 +449,7 @@ window.MathJax = {
 
 
     <footer id="footer">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
 
 <div class="showcase">Big Integer Arithmetic plugin by <a href="https://github.com/peterolson/BigInteger.js" target="_blank">BigInteger.js</a></div>
 <div class="showcase">Syntax Highlight by <a href="https://codemirror.net/" target="_blank">Codemirror</a></div>
@@ -541,7 +549,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
 
     });
 
-    var undef=undefined, $window = $(window), $screen = $('#screen'), math = $('#math'),
+    var undef = undefined, $window = $(window), $screen = $('#screen'), math = $('#math'),
         output = document.getElementById('output'), expr = document.getElementById('expr'), out, exprout,
         appModel, appView, appRouter, width = output.clientWidth, height, toJSON = JSON.stringify,
         MAXITEMS = 10000, $conditions = $('#conditions>tbody'), $condition_tpl = $('#condition_tpl'),
@@ -641,12 +649,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
 
     function produce( model )
     {
-        var comb=null, sep=',', N=model.get('N'), K=model.get('K'), Text=model.get('Text'),
+        var comb = null, sep = ',', N = model.get('N'), K = model.get('K'), Text = model.get('Text'),
             object = model.get('object'), type = model.get('type'), order = model.get('order'),
-            $={order:order}, $$=null, n, nn=null, klass=null, filter=null, filter_code=null,
-            subklass=null, subklass_code='', sub$ = null, subn=null, submethod=null,
+            $ = {order:order}, $$ = null, n, nn = null, klass = null, filter = null, filter_code = null,
+            subklass = null, subklass_code = '', sub$ = null, subn = null, submethod = null,
             conditions, data, res, r, sol, free_vars, ring, max, NL = /\r\n|\r|\n/,
-            poly_coeffs_dense_re = /^\-?\d+(?:\s+\-?\d+)*$/;
+            poly_coeffs_dense_re = /^\-?\d+(?:\s+\-?\d+)*$/, s0 = '', s1 = '',
+            Arithmetic = Abacus.Arithmetic;
 
         clear_math();
 
@@ -657,23 +666,24 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         }
         else if ( 'prime_sieve' === object )
         {
-            klass = "PrimeSieve"; res = Abacus.Arithmetic.gt(Abacus.Arithmetic.num(N), MAXITEMS);
+            klass = "PrimeSieve"; res = Arithmetic.gt(Arithmetic.num(N), MAXITEMS);
             N = res ? MAXITEMS : +N;
             model.set('summary', esc_html("Abacus.PrimeSieve().get("+N+")"+(res ? ' (max '+MAXITEMS+' shown)' : '')), true);
         }
         else if ( 'is_prime' === object )
         {
             model.set('summary', esc_html("Abacus.Math.isProbablePrime(\""+N+"\") && Abacus.Math.isPrime(\""+N+"\")"), true);
-            N = Abacus.Arithmetic.num(N);
-            res = Abacus.Math.isProbablePrime(N) && Abacus.Math.isPrime(N);
+            N = Arithmetic.num(N);
+            res = Arithmetic.equ(N, 0) || Arithmetic.equ(N, 1) ? false : Abacus.Math.isProbablePrime(N) && Abacus.Math.isPrime(N);
             out.setValue(String(N) + ' is ' + (res ? 'PRIME' : 'COMPOSITE'));
             print_math('\\['+String(N)+(res ? ' \\in ' : ' \\notin ')+'\\mathbb{P}\\]');
             return;
         }
         else if ( 'prime_factors' === object )
         {
+            N = Arithmetic.num(N);
             model.set('summary', esc_html("Abacus.Math.factorize(\""+String(N)+"\")"), true);
-            res = Abacus.Math.factorize(N);
+            res = Arithmetic.equ(N, 0) ? [[Arithmetic.O, Arithmetic.I]] : (Arithmetic.equ(N, 1) ? [[Arithmetic.I, Arithmetic.I]] : Abacus.Math.factorize(N));
             out.setValue(String(N)+'='+res.map(function(p){return factor(p,false);}).join('·'));
             print_math('\\['+String(N)+'='+res.map(function(p){return factor(p,true);}).join('\\cdot')+'\\]');
             return;
@@ -689,7 +699,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         else if ( 'cfrac2num' === object )
         {
             model.set('summary', esc_html("Abacus.Rational.fromContFrac(["+N+"])"), true);
-            r = Abacus.Arithmetic.nums(trim(N).split(',').map(trim)); res = Abacus.Rational.fromContFrac(r);
+            r = Arithmetic.nums(trim(N).split(',').map(trim)); res = Abacus.Rational.fromContFrac(r);
             model.set('summary', esc_html("Abacus.Rational.fromContFrac(["+r.map(function(a){return '"'+String(a)+'"';}).join(',')+"])"), true);
             out.setValue(res.toString());
             print_math('\\['+res.toTex()+' = '+r.map(function(a,i){return String(a)+(i+1<r.length?'+\\cfrac{1}{':'')}).join('')+(new Array(r.length).join('}'))+'\\]');
@@ -1116,6 +1126,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         else if ( "subset" === object )
         {
             klass = "Subset";
+            s0 = '{'; s1 = '}';
             n = N;
             if ( "subset_combination"===type )
             {
@@ -1143,7 +1154,11 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             klass = "Partition";
             n = N;
             sep = '+';
-            if ( "partition_max" === type )
+            if ( "partition_min" === type )
+            {
+                $["min="] = +K;
+            }
+            else if ( "partition_max" === type )
             {
                 $["max="] = +K;
             }
@@ -1153,12 +1168,33 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 //$["max="] = +K;
                 //$.output = "conjugate";
             }
+            else if ( "partition_min_max" === type )
+            {
+                K = String(K).split(',').map(number);
+                $["min="] = K[0]; $["max="] = K[1];
+                //filter = Abacus.Filter.MAX(K[1]).AND(Abacus.Filter.MIN(K[0]));
+                //filter_code = 'Abacus.Filter.MAX('+K[1]+').AND(Abacus.Filter.MIN('+K[0]+'))';
+            }
+            else if ( "partition_min_parts" === type )
+            {
+                K = String(K).split(',').map(number);
+                $["min="] = K[0]; $["parts="] = K[1];
+                //filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MIN(K[0]));
+                //filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MIN('+K[0]+'))';
+            }
             else if ( "partition_max_parts" === type )
             {
                 K = String(K).split(',').map(number);
                 $["max="] = K[0]; $["parts="] = K[1];
                 //filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MAX(K[0]));
                 //filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MAX('+K[0]+'))';
+            }
+            else if ( "partition_min_max_parts" === type )
+            {
+                K = String(K).split(',').map(number);
+                $["min="] = K[0]; $["max="] = K[1]; $["parts="] = K[2];
+                //filter = Abacus.Filter.LEN(K[2]).AND(Abacus.Filter.MIN(K[0])).AND(Abacus.Filter.MAX(K[1]));
+                //filter_code = 'Abacus.Filter.LEN('+K[2]+').AND(Abacus.Filter.MIN('+K[0]+')).AND(Abacus.Filter.MAX('+K[1]+'))';
             }
             else if ( "partition_distinct" === type )
             {
@@ -1172,13 +1208,31 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             n = N;
             sep = '+';
             $.type = "composition";
-            if ( "composition_parts" === type )
+            if ( "composition_min" === type )
             {
-                $["parts="] = +K;
+                $["min="] = +K;
             }
             else if ( "composition_max" === type )
             {
                 $["max="] = +K;
+            }
+            else if ( "composition_parts" === type )
+            {
+                $["parts="] = +K;
+            }
+            else if ( "composition_min_max" === type )
+            {
+                K = String(K).split(',').map(number);
+                $["min="] = K[0]; $["max="] = K[1];
+                //filter = Abacus.Filter.MAX(K[1]).AND(Abacus.Filter.MIN(K[0]));
+                //filter_code = 'Abacus.Filter.MAX('+K[1]+').AND(Abacus.Filter.MIN('+K[0]+'))';
+            }
+            else if ( "composition_min_parts" === type )
+            {
+                K = String(K).split(',').map(number);
+                $["min="] = K[0]; $["parts="] = K[1];
+                //filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MIN(K[0]));
+                //filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MIN('+K[0]+'))';
             }
             else if ( "composition_max_parts" === type )
             {
@@ -1186,6 +1240,13 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 $["max="] = K[0]; $["parts="] = K[1];
                 //filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MAX(K[0]));
                 //filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MAX('+K[0]+'))';
+            }
+            else if ( "composition_min_max_parts" === type )
+            {
+                K = String(K).split(',').map(number);
+                $["min="] = K[0]; $["max="] = K[1]; $["parts="] = K[2];
+                //filter = Abacus.Filter.LEN(K[2]).AND(Abacus.Filter.MIN(K[0])).AND(Abacus.Filter.MAX(K[1]));
+                //filter_code = 'Abacus.Filter.LEN('+K[2]+').AND(Abacus.Filter.MIN('+K[0]+')).AND(Abacus.Filter.MAX('+K[1]+'))';
             }
             else if ( "composition_distinct" === type )
             {
@@ -1231,11 +1292,12 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
         setTimeout(function(){
             if ( "PrimeSieve"===klass )
             {
-                comb = new Abacus.PrimeSieve();
+                comb = 0 >= N ? new Abacus.Iterator([]) : new Abacus.PrimeSieve();
             }
             else if ( "divisors"===klass )
             {
-                comb = Abacus.Math.divisors(N, true);
+                N = Arithmetic.num(N);
+                comb = Arithmetic.equ(N, 0) ? new Abacus.Iterator([Arithmetic.O]) : Abacus.Math.divisors(N, true);
             }
             else
             {
@@ -1302,7 +1364,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     next = comb.next();
                     if ( null == next ) {next=false; break;}
                     if ( 0 < count ) output += "\n";
-                    output += next.join ? next.map(function(x){return x.join?('{'+x.join(',')+'}'):String(x);}).join(sep) : String(next);
+                    output += next.join ? s0+next.map(function(x){return x.join?('{'+x.join(',')+'}'):String(x);}).join(sep)+s1 : s0+String(next)+s1;
                     count++; cnt++;
                 }
 
@@ -1478,7 +1540,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     return this.$data.object.slice(-7) !== "_square" && this.$data.object!=="set_partition"; //"composition"!==this.$data.object && "partition"!==this.$data.object;
                 },
                 "hasminimal": function(){
-                    return false;
+                    return this.$data.object === "subset";
                 },
                 "hasrand": function(){
                     return this.$data.object.slice(-7) !== "_square";
@@ -1488,7 +1550,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 },
                 "hasK": function(){
                     var obj = this.$data.object, type = this.$data.type;
-                    return ("combination"===obj || ("tensor"===obj && "tensor_inversion"!==type) || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type || "conditional-k-permutation"===type || "k-derangement"===type || "k-cycle-permutation"===type)) || ("partition"===obj && ("partition_max"===type||"partition_parts"===type||"partition_max_parts"===type)) || ("composition"===obj && ("composition_max"===type||"composition_parts"===type||"composition_max_parts"===type)) || ("set_partition"===obj && "set_partition_parts"===type);
+                    return ("combination"===obj || ("tensor"===obj && "tensor_inversion"!==type) || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type || "conditional-k-permutation"===type || "k-derangement"===type || "k-cycle-permutation"===type)) || ("partition"===obj && ("partition_min"===type||"partition_max"===type||"partition_parts"===type||"partition_min_max"===type||"partition_min_parts"===type||"partition_max_parts"===type||"partition_min_max_parts"===type)) || ("composition"===obj && ("composition_min"===type||"composition_max"===type||"composition_parts"===type||"composition_min_max"===type||"composition_min_parts"===type||"composition_max_parts"===type||"composition_min_max_parts"===type)) || ("set_partition"===obj && "set_partition_parts"===type);
                 },
                 "hasAlphabet": function(){
                     return ("groebner"===this.$data.object) || ("tuple"===this.$data.object && "word"===this.$data.type);
@@ -1536,12 +1598,20 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                     if ( "permutation" === obj && "multiset" === type ) return "Multiplicities(.. , ..) = ";
                     if ( "permutation" === obj && "k-derangement" === type ) return "#Fixed = ";
                     if ( "permutation" === obj && "k-cycle-permutation" === type ) return "#Cycles = ";
+                    if ( "partition" === obj && "partition_min" === type ) return "Min = ";
                     if ( "partition" === obj && "partition_max" === type ) return "Max = ";
                     if ( "partition" === obj && "partition_parts" === type ) return "#Parts = ";
+                    if ( "partition" === obj && "partition_min_max" === type ) return "Min,Max = ";
+                    if ( "partition" === obj && "partition_min_parts" === type ) return "Min,#Parts = ";
                     if ( "partition" === obj && "partition_max_parts" === type ) return "Max,#Parts = ";
+                    if ( "partition" === obj && "partition_min_max_parts" === type ) return "Min,Max,#Parts = ";
+                    if ( "composition" === obj && "composition_min" === type ) return "Min = ";
                     if ( "composition" === obj && "composition_max" === type ) return "Max = ";
                     if ( "composition" === obj && "composition_parts" === type ) return "#Parts = ";
+                    if ( "composition" === obj && "composition_min_max" === type ) return "Min,Max = ";
+                    if ( "composition" === obj && "composition_min_parts" === type ) return "Min,#Parts = ";
                     if ( "composition" === obj && "composition_max_parts" === type ) return "Max,#Parts = ";
+                    if ( "composition" === obj && "composition_min_max_parts" === type ) return "Min,Max,#Parts = ";
                     if ( "set_partition" === obj && "set_partition_parts" === type ) return "#Parts = ";
                     return "K =";
                 },
