@@ -1360,7 +1360,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             else if ( "PrimeSieve"!==klass && "divisors"!==klass )
             {
-                summary = esc_html("Abacus."+klass+"("+nn+","+$$+")"+subklass_code+(filter ? '.filterBy('+filter_code+')' : ''))) +
+                summary = esc_html("Abacus."+klass+"("+nn+","+$$+")"+subklass_code+(filter ? '.filterBy('+filter_code+')' : '')) +
                 "<br />" + (filter ? "(filtered from) " : "");
                 total = comb.total();
             }
