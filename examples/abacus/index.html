@@ -1299,6 +1299,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 N = Arithmetic.num(N);
                 comb = Arithmetic.equ(N, 0) ? new Abacus.Iterator([Arithmetic.O]) : Abacus.Math.divisors(N, true);
             }
+            else if ( "k-cycle-permutation"===type )
+            {
+                comb = Abacus.SetPartition(N, {"parts=":+K}).fuse(
+                (partition, permutation) => {
+                    if (!Array.isArray(permutation[0])) permutation = [permutation];
+                    return Abacus.Permutation.fromCycles(partition.filter(p => 1 < p.length).map((p, i) => [p[p.length-1]].concat(Abacus.Permutation.permute(p.slice(0, -1), permutation[i], true))), N);
+                }, Abacus.CombinatorialProxy(item => item.reverse().reduce((p,i) => 1 < i.length ? Abacus.Permutation(i.length-1).juxtaposeWith(p) : p, null)));
+            }
             else
             {
                 if ( "CombinatorialIterator"===klass )
@@ -1343,14 +1351,22 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             if ( filter ) comb.filterBy(filter);
 
-            var total, MAX = MAXITEMS, output = "";
+            var total, MAX = MAXITEMS, output = "", summary;
+            if ( "k-cycle-permutation"===type )
+            {
+                summary = esc_html('Abacus.SetPartition('+N+', {"parts=":'+K+'}).fuse((partition, permutation) => Abacus.Permutation.fromCycles(partition.filter(p => 1 < p.length).map((p, i) => [p[p.length-1]].concat(Abacus.Permutation.permute(p.slice(0, -1), permutation[i], true))), '+N+'), Abacus.CombinatorialProxy(item => item.reverse().reduce((p,i) => 1 < i.length ? Abacus.Permutation(i.length-1).juxtaposeWith(p) : p, null)))') +
+                "<br />";
+                total = Abacus.Permutation.count(N, {"cycles=":+K});
+            }
+            else if ( "PrimeSieve"!==klass && "divisors"!==klass )
+            {
+                summary = esc_html("Abacus."+klass+"("+nn+","+$$+")"+subklass_code+(filter ? '.filterBy('+filter_code+')' : ''))) +
+                "<br />" + (filter ? "(filtered from) " : "");
+                total = comb.total();
+            }
             if ( "PrimeSieve"!==klass && "divisors"!==klass )
             {
-                total = comb.total();
-                model.set('summary', (
-                esc_html("Abacus."+klass+"("+nn+","+$$+")"+subklass_code+(filter ? '.filterBy('+filter_code+')' : '')) +
-                "<br />" + (filter ? "(filtered from) " : "") + "total = " + String(total) + (total.gt(MAXITEMS) ? " (max "+MAXITEMS+" shown)" : "")
-                ), true);
+                model.set('summary', summary + "total = " + String(total) + (total.gt(MAXITEMS) ? " (max "+MAXITEMS+" shown)" : ""), true);
             }
             else if ( "PrimeSieve"===klass )
             {
