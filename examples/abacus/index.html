@@ -1301,7 +1301,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             else if ( "k-cycle-permutation"===type )
             {
-                comb = Abacus.SetPartition(N, {"parts=":+K}).fuse(
+                comb = +K >= N ? Abacus.SetPartition(N, {"parts=":+K}).mapTo(Abacus.Permutation.fromCycles) : Abacus.SetPartition(N, {"parts=":+K}).fuse(
                 (partition, permutation) => {
                     if (!Array.isArray(permutation[0])) permutation = [permutation];
                     return Abacus.Permutation.fromCycles(partition.filter(p => 1 < p.length).map((p, i) => [p[p.length-1]].concat(Abacus.Permutation.permute(p.slice(0, -1), permutation[i], true))), N);
@@ -1354,7 +1354,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             var total, MAX = MAXITEMS, output = "", summary;
             if ( "k-cycle-permutation"===type )
             {
-                summary = esc_html('Abacus.SetPartition('+N+', {"parts=":'+K+'}).fuse((partition, permutation) => Abacus.Permutation.fromCycles(partition.filter(p => 1 < p.length).map((p, i) => [p[p.length-1]].concat(Abacus.Permutation.permute(p.slice(0, -1), permutation[i], true))), '+N+'), Abacus.CombinatorialProxy(item => item.reverse().reduce((p,i) => 1 < i.length ? Abacus.Permutation(i.length-1).juxtaposeWith(p) : p, null)))') +
+                summary = esc_html(+K >= N ? 'Abacus.SetPartition('+N+', {"parts=":'+K+'}).mapTo(Abacus.Permutation.fromCycles)' : 'Abacus.SetPartition('+N+', {"parts=":'+K+'}).fuse((partition, permutation) => Abacus.Permutation.fromCycles(partition.filter(p => 1 < p.length).map((p, i) => [p[p.length-1]].concat(Abacus.Permutation.permute(p.slice(0, -1), permutation[i], true))), '+N+'), Abacus.CombinatorialProxy(item => item.reverse().reduce((p,i) => 1 < i.length ? Abacus.Permutation(i.length-1).juxtaposeWith(p) : p, null)))') +
                 "<br />";
                 total = Abacus.Permutation.count(N, {"cycles=":+K});
             }
