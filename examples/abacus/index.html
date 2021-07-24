@@ -1301,14 +1301,6 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
                 N = Arithmetic.num(N);
                 comb = Arithmetic.equ(N, 0) ? new Abacus.Iterator([Arithmetic.O]) : Abacus.Math.divisors(N, true);
             }
-            else if ( "k-cycle-permutation"===type )
-            {
-                comb = +K >= N ? Abacus.SetPartition(N, {"parts=":+K}).mapTo(Abacus.Permutation.fromCycles) : Abacus.SetPartition(N, {"parts=":+K}).fuse(
-                (partition, permutation) => {
-                    if (!Array.isArray(permutation[0])) permutation = [permutation];
-                    return Abacus.Permutation.fromCycles(partition.filter(p => 1 < p.length).map((p, i) => [p[p.length-1]].concat(Abacus.Permutation.permute(p.slice(0, -1), permutation[i], true))), N);
-                }, Abacus.CombinatorialProxy(item => item.reverse().reduce((p,i) => 1 < i.length ? Abacus.Permutation(i.length-1).juxtaposeWith(p) : p, null)));
-            }
             else
             {
                 if ( "CombinatorialIterator"===klass )
