@@ -986,12 +986,14 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             }
             else if ( "k-derangement"===type )
             {
-                klass = "Combination"; $.type = "combination";
+                /*klass = "Combination"; $.type = "combination";
                 n = [N, +K];
                 subklass = "Permutation";
                 sub$ = {order:order,type:"derangement"};
                 subn = N-(+K);
-                submethod = "combineWith";
+                submethod = "combineWith";*/
+                $.type = "derangement";
+                $["fixed="] = +K;
             }
             else if ( "k-cycle-permutation"===type )
             {
@@ -1352,21 +1354,12 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             if ( filter ) comb.filterBy(filter);
 
             var total, MAX = MAXITEMS, output = "", summary;
-            if ( "k-cycle-permutation"===type )
-            {
-                summary = esc_html(+K >= N ? 'Abacus.SetPartition('+N+', {"parts=":'+K+'}).mapTo(Abacus.Permutation.fromCycles)' : 'Abacus.SetPartition('+N+', {"parts=":'+K+'}).fuse((partition, permutation) => Abacus.Permutation.fromCycles(partition.filter(p => 1 < p.length).map((p, i) => [p[p.length-1]].concat(Abacus.Permutation.permute(p.slice(0, -1), permutation[i], true))), '+N+'), Abacus.CombinatorialProxy(item => item.reverse().reduce((p,i) => 1 < i.length ? Abacus.Permutation(i.length-1).juxtaposeWith(p) : p, null)))') +
-                "<br />";
-                total = Abacus.Permutation.count(N, {"cycles=":+K});
-            }
-            else if ( "PrimeSieve"!==klass && "divisors"!==klass )
+            if ( "PrimeSieve"!==klass && "divisors"!==klass )
             {
                 summary = esc_html("Abacus."+klass+"("+nn+","+$$+")"+subklass_code+(filter ? '.filterBy('+filter_code+')' : '')) +
                 "<br />" + (filter ? "(filtered from) " : "");
-                total = comb.total();
-            }
-            if ( "PrimeSieve"!==klass && "divisors"!==klass )
-            {
                 model.set('summary', summary + "total = " + String(total) + (total.gt(MAXITEMS) ? " (max "+MAXITEMS+" shown)" : ""), true);
+                total = comb.total();
             }
             else if ( "PrimeSieve"===klass )
             {
