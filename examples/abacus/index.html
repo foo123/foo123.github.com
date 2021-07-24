@@ -1358,8 +1358,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
             {
                 summary = esc_html("Abacus."+klass+"("+nn+","+$$+")"+subklass_code+(filter ? '.filterBy('+filter_code+')' : '')) +
                 "<br />" + (filter ? "(filtered from) " : "");
-                model.set('summary', summary + "total = " + String(total) + (total.gt(MAXITEMS) ? " (max "+MAXITEMS+" shown)" : ""), true);
                 total = comb.total();
+                model.set('summary', summary + "total = " + String(total) + (total.gt(MAXITEMS) ? " (max "+MAXITEMS+" shown)" : ""), true);
             }
             else if ( "PrimeSieve"===klass )
             {
