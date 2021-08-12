@@ -39,7 +39,7 @@ require.config({
     }
     ,bundles: {
         ModelViewBundle: ["ModelView", "ModelViewValidation"]
-    }        
+    }
     ,shim: {
         Storage: {exports: 'Storage'}
         ,todomvc: {exports: 'todomvc'}
@@ -49,8 +49,7 @@ require.config({
 </script>
 </head>
 <body>
-    <span id="forkongithub"><a href="https://github.com/foo123/modelview.js">Fork me on GitHub</a></span>
-
+<span id="forkongithub"><a href="https://github.com/foo123/modelview.js">Fork me on GitHub</a></span>
 
 <script id="todo-component" type="text/x-template">
 <li todo-id="{%= props.uuid %}" class="todo {%= props.completed ? 'completed' : '' %}">
@@ -108,7 +107,7 @@ require.config({
 <script>
 // use requireJS
 require(['Storage', 'ModelView', 'ModelViewValidation', 'todomvc'], function(Storage, ModelView, _, todomvc) {
-    todomvc(window, Storage, ModelView); 
+    todomvc(window, Storage, ModelView);
 });
 </script>
 </body>
