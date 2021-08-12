@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en" class="no-ie">
+<head>
+<title>Weather at a Glance w/ modelview.js</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<link rel="shortcut icon" href="../../favicon.ico"/>
+<meta name="description" content="Weather with modelview.js" />
+<meta property="og:title" content="Weather at a Glance">
+<meta property="og:description" content="Weather with modelview.js">
+<meta property="og:image" content="https://foo123.github.io/thumbs/weather-modelview.png">
+<meta property="og:url" content="https://foo123.github.io/examples/modelview/weather.html">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#000000"/>
+<link href="./weather.css" rel="stylesheet">
+<style type="text/css">
+#forkongithub a{background:#aa0000;color:#fff;text-decoration:none;font-family:arial, sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:0.9rem;line-height:1.4rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#aa0000;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;z-index:100;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:absolute;display:block;z-index:100;top:0;right:0;width:200px;overflow:hidden;height:200px;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}
+.show-all > .todo {
+    display: block;
+}
+.tab {
+    font-weight: normal;
+}
+.tab.active_tab {
+    font-weight: bold;
+}
+</style>
+<script type="text/javascript" src="../common/js/require.js"></script>
+<script type="text/javascript">
+!function(require) {
+require.config({
+    baseUrl: /^https?:\/\/foo123\./.test(location.href) ? "/examples/common/js" : "/foo123.github.com/examples/common/js"
+
+    ,paths: {
+        ModelViewBundle: "modelview.bundle"
+        ,weather: "../../modelview/weather"
+    }
+    ,bundles: {
+        ModelViewBundle: ["ModelView", "ModelViewValidation"]
+    }
+    ,shim: {
+        weather: {exports: 'weather'}
+    }
+});
+}(require);
+</script>
+</head>
+<body>
+<span id="forkongithub"><a href="https://github.com/foo123/modelview.js">Fork me on GitHub</a></span>
+<noscript>You need to enable JavaScript to run this app.</noscript>
+<h1>Weather at a Glance w/ modelview.js</h1>
+<div id="app"></div>
+
+<script type="text/x-template" id="loader-component">
+<div class="lds-facebook"><div></div><div></div><div></div></div>
+</script>
+<script type="text/x-template" id="weather-data-component">
+{% if (props.data && props.data.consolidated_weather && props.data.consolidated_weather.length) { %}
+   {% if (props.detailed) { %}
+        {%= props.data.consolidated_weather.map(current =>
+            `<div class="weather-data">
+            <p><b>`+format_date(current.applicable_date)+`</b></p>
+            <img class="weather-icon" src="`+weather_icon(current.weather_state_abbr)+`" alt="`+current.weather_state_name+`" title="`+current.weather_state_name+`" />
+            <p><span class="weather-details">`+format_temp(current.the_temp, 'celsius', 0, 1)+` (`+format_temp(current.min_temp, 'celsius', 0, 1)+` &mdash; `+format_temp(current.max_temp, 'celsius', 0, 1)+`)</span></p>
+            <p><span class="weather-details">`+format_num(current.wind_speed)+`mph</span> `+wind_icon(current.wind_direction_compass)+` (`+current.wind_direction_compass+`)</p>
+            </div>`
+        ).join('') %}
+    {% } else {
+        let current = props.data.consolidated_weather[0]; %}
+        {%=
+            `<div class="weather-data">
+            <p><b>Today</b></p>
+            <img class="weather-icon" src="`+weather_icon(current.weather_state_abbr)+`" alt="`+current.weather_state_name+`" title="`+current.weather_state_name+`" />
+            <p><span class="weather-details">`+format_temp(current.the_temp, 'celsius', 0, 1)+` (`+format_temp(current.min_temp, 'celsius', 0, 1)+` &mdash; `+format_temp(current.max_temp, 'celsius', 0, 1)+`)</span></p>
+            <p><span class="weather-details">`+format_num(current.wind_speed)+`mph</span> `+wind_icon(current.wind_direction_compass)+` (`+current.wind_direction_compass+`)</p>
+            </div>`
+        %}
+    {% } %}
+{% } else { %}
+    {%=
+        `<div class="weather-data">
+        <p><b>No data!</b></p>
+        </div>`
+    %}
+{% } %}
+</script>
+<script type="text/x-template" id="weather-component">
+<div class="weather{%=props.detailed ? ' detailed' : ''%}">
+    <div class="weather-header">
+    {%= props.detailed ? '<b>'+(view.model().get('woeid.'+props.woeid+'.city')||'..')+' (Forecast)</b>' : '<a href="#/weather/'+props.woeid+'"><b>'+(view.model().get('woeid.'+props.woeid+'.city')||'..')+'</b></a>' %}
+    </div>
+    <div class="weather-content">
+     {%= view.model().get('woeid.'+props.woeid) ? view.component('WeatherData', {data:view.model().get('woeid.'+props.woeid), detailed:props.detailed}) : view.component('Loader', {text:'Loading..'}) %}
+    </div>
+</div>
+</script>
+<script type="text/x-template" id="weather-page-component">
+<div class="page page-weather">
+    <h2 class="page-header">Weather Forecast</h2>
+    {%= view.component('Weather', {detailed:true, woeid:props.woeid}) %}
+</div>
+</script>
+<script type="text/x-template" id="search-page-component">
+<div class="page page-search">
+    <h2 class="page-header">Search Results</h2>
+    <div class="search-box">
+        <input id="search" type="text" placeholder="search.." name="model[term]" value="{%= view.model().get('term') %}" />
+        <button type="button" mv-evt mv-on-click="search">Search!</button>
+    </div>
+    {%= view.model().get('search.'+props.term) ? view.model().get('search.'+props.term).map(place => view.component('Weather', {woeid:place.woeid, city:place.title})).join('') : view.component('Loader', {text:'Loading..'}) %}
+</div>
+</script>
+<script type="text/x-template" id="home-page-component">
+<div class="page page-home">
+    <h2 class="page-header">Weather at a Glance</h2>
+    <div class="search-box">
+        <input id="search" type="text" placeholder="search.." name="model[term]" value="{%= view.model().get('term') %}" />
+        <button type="button" mv-evt mv-on-click="search">Search!</button>
+    </div>
+    {%= props.cities.map(city => view.component('Weather', {city:city.name, woeid:city.woeid})).join('') %}
+</div>
+</script>
+<script type="text/x-template" id="app-content">
+{% if (match('/weather/:woeid')){ %} {%= view.component('WeatherPage', {woeid:route(1)}) %}
+{% }else if (match('/search/:term')){ %} {%= view.component('SearchPage', {term:route(1)}) %}
+{% }else{ %} {%= view.component('HomePage', {cities:view.model().get('cities')}) %}
+{% } %}
+</script>
+
+<script>
+// use requireJS
+require(['ModelView', 'weather'], function(ModelView, weather) {
+    weather(window, ModelView);
+});
+</script>
+</body>
+</html>

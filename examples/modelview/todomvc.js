@@ -122,6 +122,11 @@ View = new ModelView.View('todoview')
 .components({
     Todo: new ModelView.View.Component(document.getElementById('todo-component').innerHTML)
 })
+.funcs({
+    timeSince: function(time) {
+        return null!=time ? timeSince(time) : '';
+    }
+})
 .actions({
     addTodo: function(evt, el) {
         var title = el.value.trim();
@@ -247,9 +252,6 @@ View = new ModelView.View('todoview')
 })
 .bind(['change', 'click', 'dblclick', 'blur'/*'focusout'*/], document.getElementById('todoapp'))
 ;
-View.timeSince = function(time){
-    return null!=time ? timeSince(time) : '';
-};
 
 // synchronize UI/View/Model
 updateModelFromStorage(STORAGE_KEY);
