@@ -101,7 +101,7 @@ require.config({
 <script type="text/x-template" id="weather-page-component">
 <div class="page page-weather">
     <h2 class="page-header">Weather Forecast</h2>
-    {%= view.component('Weather', {detailed:true, woeid:props.woeid}) %}
+    {%= view.component('Weather', {detailed:true, city:props.city, woeid:props.woeid}) %}
 </div>
 </script>
 

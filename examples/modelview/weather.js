@@ -7,9 +7,9 @@ function weather(window, ModelView)
 
     // temperature scales
     const T = {
-        fahrenheit: {symbol: '\u2109', celsius: t => ((5/9) * (t - 32)) },
-        celsius: {symbol: '\u2103', fahrenheit: t => (t * 9 / 5 + 32) }
-    }
+        fahrenheit: {symbol: '\u2109', celsius: t => ((5 / 9) * (t - 32))},
+        celsius: {symbol: '\u2103', fahrenheit: t => (t * (9 / 5) + 32)}
+    };
 
     function format_date(strdate)
     {
@@ -43,9 +43,11 @@ function weather(window, ModelView)
     {
         if (path && path.length)
         {
+            path = path.trim();
             if ('#' === path.charAt(0)) path = path.slice(1);
             if ('/' === path.charAt(0)) path = path.slice(1);
             if ('/' === path.slice(-1)) path = path.slice(0, -1);
+            path = path.trim();
         }
         return path;
     }
@@ -64,7 +66,7 @@ function weather(window, ModelView)
     }
     function route(part)
     {
-        return decodeURIComponent(normalise(location.hash || '').split('/')[part || 0]);
+        return decodeURIComponent(normalise(location.hash || '').split('/')[part || 0] || '');
     }
 
     class Store
@@ -98,11 +100,13 @@ function weather(window, ModelView)
 
         clear()  {
             this.$data = {};
+            this.loading = {};
             return this;
         }
 
         autoclear(interval) {
-            if ( this.$timer ) {
+            if (this.$timer)
+            {
                 clearTimeout(this.$timer);
                 this.$timer = null;
             }
@@ -118,7 +122,7 @@ function weather(window, ModelView)
     // singleton
     const store = new Store().autoclear(30 * 60 * 1000); // auto-clear every 30 minutes
 
-    let view = new ModelView.View('view')
+    const view = new ModelView.View('view')
         .model(new ModelView.Model('model', {
             cities: [
                 /*{name: 'Istanbul', woeid: 2344116},*/
@@ -143,7 +147,7 @@ function weather(window, ModelView)
         .getters({
             'woeid.*': function(k) {
                 let woeid = k.split('.')[1] || k;
-                if (!woeid) return null;
+                if (!woeid || !woeid.length) return {};
 
                 let weatherData = store.get('weather_'+woeid);
                 if (weatherData)
@@ -175,6 +179,7 @@ function weather(window, ModelView)
                 let searchData = store.get('search_'+term);
                 if (searchData)
                 {
+                    // null if still loading
                     return store === searchData ? null : searchData;
                 }
                 else
