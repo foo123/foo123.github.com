@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en" class="no-ie">
+<head>
+<title>HtmlWidget Demo</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<link rel="shortcut icon" href="../../favicon.ico"/>
+<meta name="description" content="Html Widgets in action" />
+<meta property="og:title" content="HtmlWidget Demo">
+<meta property="og:description" content="Html Widgets in action">
+<meta property="og:image" content="https://foo123.github.io/thumbs/htmlwidget-demo.png">
+<meta property="og:url" content="https://foo123.github.io/examples/htmlwidget/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#000000"/>
+<link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+</head>
+<body>
+<span id="forkongithub"><a href="https://github.com/foo123/HtmlWidget">Fork me on GitHub</a></span>
+<noscript>You need to enable JavaScript to run this app.</noscript>
+<h2>Some HtmlWidgets w/ ModelView</h2>
+<div id="app"></div>
+
+<script type="text/x-template" id="app-content">
+<div>
+<h4>Buttons</h4>
+{%= view.widget('button',{'class':'w-xsmall','icon':'times-circle'}) %}
+{%= view.widget('button',{'class':'w-small','icon':'times-circle'}) %}
+{%= view.widget('button',{'class':'','icon':'times-circle'}) %}
+{%= view.widget('button',{'class':'w-large','icon':'times-circle'}) %}
+{%= view.widget('button',{'class':'w-xlarge','icon':'info-circle'}) %}
+{%= view.widget('button',{'class':'w-xsmall','icon':'plus'},{'text':'xsmall'}) %}
+{%= view.widget('button',{'class':'w-small','icon':'plus'},{'text':'small'}) %}
+{%= view.widget('button',{'class':'','icon':'plus'},{'text':'button'}) %}
+{%= view.widget('button',{'class':'','icon':'plus','disabled':1},{'text':'button'}) %}
+{%= view.widget('button',{'class':'w-large','icon':'plus','readonly':1},{'text':'large'}) %}
+{%= view.widget('button',{'class':'w-large','icon':'plus','disabled':1},{'text':'large'}) %}
+{%= view.widget('button',{'class':'w-xlarge','icon':'info-circle'},{'text':'xlarge'}) %}
+{%= view.widget('button',{'class':'w-xlarge','icon':'info-circle','readonly':1},{'text':'xlarge'}) %}
+<br />
+{%= view.widget('button',{'class':'w-xsmall w-black','icon':'times-circle'}) %}
+{%= view.widget('button',{'class':'w-small w-black','icon':'times-circle'}) %}
+{%= view.widget('button',{'class':'w-black','icon':'times-circle'}) %}
+{%= view.widget('button',{'class':'w-large w-black','icon':'times-circle'}) %}
+{%= view.widget('button',{'class':'w-xlarge w-black','icon':'info-circle'}) %}
+{%= view.widget('button',{'class':'w-xsmall w-black','icon':'plus'},{'text':'xsmall'}) %}
+{%= view.widget('button',{'class':'w-small w-black','icon':'plus'},{'text':'small'}) %}
+{%= view.widget('button',{'class':'w-black','icon':'plus'},{'text':'button'}) %}
+{%= view.widget('button',{'class':'w-black','icon':'plus','disabled':1},{'text':'button'}) %}
+{%= view.widget('button',{'class':'w-large w-black','icon':'plus','readonly':1},{'text':'large'}) %}
+{%= view.widget('button',{'class':'w-large w-black','icon':'plus','disabled':1},{'text':'large'}) %}
+{%= view.widget('button',{'class':'w-xlarge w-black','icon':'info-circle'},{'text':'xlarge'}) %}
+{%= view.widget('button',{'class':'w-xlarge w-black','icon':'info-circle','readonly':1},{'text':'xlarge'}) %}
+</div>
+<div>
+<h4>Dropdowns</h4>
+{%= view.widget('dropdown',{'placeholder':'select..'},{'options':options({
+    '1' : 'option 1',
+    '2' : 'option 2'
+},-1)}) %}
+{%= view.widget('dropdown',{'placeholder':'large..','class':'w-large','disabled':1},{'options':options({
+    '1' : 'option 1',
+    '2' : 'option 2'
+},-1)}) %}
+{%= view.widget('dropdown',{'placeholder':'xlarge..','class':'w-xlarge','readonly':1},{'options':options({
+    '1' : 'option 1',
+    '2' : 'option 2'
+},-1)}) %}
+<br />
+{%= view.widget('select2',{'placeholder':'select..'},{'options':options({
+    '1' : 'option 1',
+    '2' : 'option 2'
+},-1)}) %}
+{%= view.widget('select2',{'placeholder':'large..','class':'w-large','disabled':1},{'options':options({
+    '1' : 'option 1',
+    '2' : 'option 2'
+},-1)}) %}
+{%= view.widget('select2',{'placeholder':'xlarge..','class':'w-xlarge','multiple':1},{'options':options({
+    '1' : 'option 1',
+    '2' : 'option 2'
+},-1)}) %}
+</div>
+<div>
+<h4>Colorpickers</h4>
+{%= view.widget('colorpicker',{
+    'title':'Select color',
+    'options':{
+        'format' : 'rgba',
+        'color':'rgba(210,0,0,0.7)'
+    }
+},{}) %}
+{%= view.widget('colorpicker',{
+    'title':'Select color',
+    'class' : 'w-large',
+    'options':{
+        'format' : 'rgba',
+        'color':'rgba(210,0,0,0.7)'
+    }
+},{}) %}
+{%= view.widget('colorpicker',{
+    'title':'Select color',
+    'class' : 'w-xlarge',
+    'options':{
+        'format' : 'rgba',
+        'color':'rgba(210,0,0,0.7)'
+    }
+},{}) %}
+</div>
+<div>
+<h4>Datepickers</h4>
+{%= view.widget('datetimepicker',{
+    'title':'Select date-time',
+    'options':{
+        'delayedInit':200,
+        'format' : 'Y-m-d H:i:s',
+        'showTime' : 1,
+        'showSeconds' : 1,
+        'value':'2016-01-24 12:00:00'
+    }
+},{}) %}
+{%= view.widget('datetimepicker',{
+    'title':'Select date-time',
+    'class' : 'w-large',
+    'disabled' : 1,
+    'options':{
+        'delayedInit':200,
+        'format' : 'Y-m-d H:i:s',
+        'showTime' : 1,
+        'showSeconds' : 1,
+        'value':'2016-01-24 12:00:00'
+    }
+},{}) %}
+{%= view.widget('datetimepicker',{
+    'title':'Select date-time',
+    'class' : 'w-xlarge',
+    'readonly' : 1,
+    'options':{
+        'delayedInit':200,
+        'format' : 'Y-m-d H:i:s',
+        'showTime' : 1,
+        'showSeconds' : 1,
+        'value':'2016-01-24 12:00:00'
+    }
+},{}) %}
+</div>
+<div>
+<h4>Ratings</h4>
+{%= view.widget('rating',{'title':'Please rate:','icon':'star'},{'value':'3'}) %}
+{%= view.widget('rating',{'title':'Please rate:','class':'w-large','icon':'star','disabled':1},{'value':'3'}) %}
+{%= view.widget('rating',{'title':'Please rate:','class':'w-xlarge','icon':'star','readonly':1},{'value':'3'}) %}
+</div>
+<div>
+<h4>Wysiwyg Editor</h4>
+{%= view.widget('wysiwyg-editor',{
+    'placeholder':'rich text..',
+    'options':{'delayedInit':200}
+},{
+    'value':'<b>Hello Tinymce</b>'
+}) %}
+</div>
+<div>
+<h4>Syntax Editor</h4>
+{%= view.widget('syntax-editor',{
+    'placeholder':'source text..',
+    'options':{'mode':'xml','delayedInit':200}
+},{
+    'value':'<b>Hello Codemirror</b>'
+}) %}
+</div>
+</script>
+<script src="../common/js/modelview.bundle.js"></script>
+<script src="../common/js/HtmlWidget.min.js"></script>
+<script src="../common/js/Importer.min.js"></script>
+<script>
+var assets = {
+ "fontawesome.css":{"type":"styles", "asset":"https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"}
+,"htmlwidgets.css":{"type":"styles", "asset":"../common/css/htmlwidgets.min.css", "dependencies":["fontawesome.css"]}
+,"jquery":{"type":"scripts", "asset":"https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"}
+,"jquery-ui":{"type":"scripts", "asset":"https://code.jquery.com/ui/1.11.4/jquery-ui.min.js", "dependencies":["jquery"]}
+,"bootstrap.css":{"type":"styles", "asset":"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", "attributes":{"integrity":"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u","crossorigin":"anonymous"}}
+,"bootstrap":{"type":"scripts", "asset":"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js", "dependencies":["bootstrap.css", "jquery"], "attributes":{"integrity":"sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa","crossorigin":"anonymous"}}
+,"datex":{"type":"scripts", "asset":"../common/js/Datex.min.js"}
+,"pikadaytime.css":{"type":"styles", "asset":"../common/css/pikadaytime.css"}
+,"pikadaytime":{"type":"scripts", "asset":"../common/js/pikadaytime.js", "dependencies":["pikadaytime.css","datex"]}
+,"colorpicker.css":{"type":"styles", "asset":"../common/css/colorpicker2.css"}
+,"colorpicker":{"type":"scripts", "asset":"../common/js/colorpicker.min.js", "dependencies":["colorpicker.css"]}
+,"select2.css":{"type":"styles", "asset":"https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css"}
+,"select2":{"type":"scripts", "asset":"https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.full.min.js", "dependencies":["select2.css","jquery"]}
+,"html5media":{"type":"scripts", "asset":"https://cdnjs.cloudflare.com/ajax/libs/html5media/1.1.8/html5media.min.js"}
+,"tooltipster.css":{"type":"styles", "asset":"https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/tooltipster.min.css"}
+,"tooltipster":{"type":"scripts", "asset":"https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js", "dependencies":["tooltipster.css","jquery"]}
+,"datatables.css":{"type":"styles", "asset":"https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css"}
+,"datatables":{"type":"scripts", "asset":"https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js", "dependencies":["datatables.css","jquery"]}
+,"datatables-reorder.css":{"type":"styles-composite", "asset":[
+    "https://cdn.datatables.net/colreorder/1.3.1/css/colReorder.dataTables.min.css",
+    "https://cdn.datatables.net/rowreorder/1.1.1/css/rowReorder.dataTables.min.css"
+]}
+,"datatables-reorder":{"type":"scripts-composite", "asset":[
+    "https://cdn.datatables.net/colreorder/1.3.1/js/dataTables.colReorder.min.js",
+    "https://cdn.datatables.net/rowreorder/1.1.1/js/dataTables.rowReorder.min.js"
+], "dependencies":["datatables-reorder.css","datatables"]}
+,"datatables-buttons.css":{"type":"styles", "asset":"https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css", "dependencies":["datatables.css"]}
+,"datatables-buttons":{"type":"scripts", "asset":"https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js", "dependencies":["datatables-buttons.css","datatables"]}
+,"datatables-colvis":{"type":"scripts", "asset":"https://cdn.datatables.net/buttons/1.1.2/js/buttons.colVis.min.js", "dependencies":["datatables-buttons"]}
+,"datatables-extra.css":{"type":"styles-composite", "asset":[
+    "https://cdn.datatables.net/responsive/2.0.2/css/responsive.dataTables.min.css",
+    "https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css",
+    "https://cdn.datatables.net/select/1.1.2/css/select.dataTables.min.css",
+    "https://cdn.datatables.net/colreorder/1.3.1/css/colReorder.dataTables.min.css",
+    "https://cdn.datatables.net/rowreorder/1.1.1/css/rowReorder.dataTables.min.css"
+], "dependencies":["datatables.css"]}
+,"datatables-extra":{"type":"scripts-composite", "asset":[
+    "https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js",
+    "https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js",
+    "https://cdn.datatables.net/buttons/1.1.2/js/buttons.colVis.min.js",
+    "https://cdn.datatables.net/buttons/1.1.2/js/buttons.html5.min.js",
+    "https://cdn.datatables.net/buttons/1.1.2/js/buttons.flash.min.js",
+    "https://cdn.datatables.net/buttons/1.1.2/js/buttons.print.min.js",
+    "https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js",
+    "https://cdn.datatables.net/colreorder/1.3.1/js/dataTables.colReorder.min.js",
+    "https://cdn.datatables.net/rowreorder/1.1.1/js/dataTables.rowReorder.min.js"
+], "dependencies":["datatables-extra.css","datatables"]}
+,"datatables-all.css":{"type":"styles-composite", "asset":[
+    "https://cdn.datatables.net/responsive/2.0.2/css/responsive.dataTables.min.css",
+    "https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css",
+    "https://cdn.datatables.net/select/1.1.2/css/select.dataTables.min.css",
+    "https://cdn.datatables.net/colreorder/1.3.1/css/colReorder.dataTables.min.css",
+    "https://cdn.datatables.net/rowreorder/1.1.1/css/rowReorder.dataTables.min.css",
+    "https://cdn.datatables.net/autofill/2.1.1/css/autoFill.dataTables.min.css",
+    "https://cdn.datatables.net/fixedcolumns/3.2.1/css/fixedColumns.dataTables.min.css",
+    "https://cdn.datatables.net/fixedheader/3.1.1/css/fixedHeader.dataTables.min.css",
+    "https://cdn.datatables.net/scroller/1.4.1/css/scroller.dataTables.min.css",
+    "https://cdn.datatables.net/keytable/2.1.1/css/keyTable.dataTables.min.css"
+]}
+,"datatables-all":{"type":"scripts-composite", "asset":[
+    "https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js",
+    "https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js",
+    "https://cdn.datatables.net/buttons/1.1.2/js/buttons.colVis.min.js",
+    "https://cdn.datatables.net/buttons/1.1.2/js/buttons.html5.min.js",
+    "https://cdn.datatables.net/buttons/1.1.2/js/buttons.flash.min.js",
+    "https://cdn.datatables.net/buttons/1.1.2/js/buttons.print.min.js",
+    "https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js",
+    "https://cdn.datatables.net/colreorder/1.3.1/js/dataTables.colReorder.min.js",
+    "https://cdn.datatables.net/rowreorder/1.1.1/js/dataTables.rowReorder.min.js",
+    "https://cdn.datatables.net/autofill/2.1.1/js/dataTables.autoFill.min.js",
+    "https://cdn.datatables.net/fixedcolumns/3.2.1/js/dataTables.fixedColumns.min.js",
+    "https://cdn.datatables.net/fixedheader/3.1.1/js/dataTables.fixedHeader.min.js",
+    "https://cdn.datatables.net/scroller/1.4.1/js/dataTables.scroller.min.js",
+    "https://cdn.datatables.net/keytable/2.1.1/js/dataTables.keyTable.min.js"
+], "dependencies":["datatables-all.css","datatables"]}
+,"mathjax":{"type":"scripts", "asset":"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"}
+,"tinymce":{"type":"scripts", "asset":"https://cloud.tinymce.com/4/tinymce.js"}
+,"codemirror.css":{"type":"styles", "asset":"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/codemirror.min.css"}
+,"codemirror":{"type":"scripts-composite", "asset":[
+    "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/codemirror.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/mode/multiplex.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/comment/comment.min.js"
+], "dependencies":["codemirror.css"]}
+,"codemirror-fold.css":{"type":"styles", "asset":"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/fold/foldgutter.css", "dependencies":["codemirror.css"]}
+,"codemirror-fold":{"type":"scripts-composite", "asset":[
+    "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/fold/foldgutter.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/fold/foldcode.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/fold/comment-fold.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/fold/brace-fold.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/fold/indent-fold.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/fold/markdown-fold.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/fold/xml-fold.min.js"
+], "dependencies":["codemirror-fold.css","codemirror"]}
+,"codemirror-htmlmixed":{"type":"scripts-composite", "asset":[
+    "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/mode/xml/xml.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/mode/javascript/javascript.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/mode/css/css.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/mode/htmlmixed/htmlmixed.min.js"
+], "dependencies":["codemirror"]}
+};
+// requireJS breaks the loading since my modules if present dont register to global object
+(function(ModelView, Importer, HtmlWidget) {
+    // make the needed plumbing
+    var importer = new Importer();
+    HtmlWidget.assets(assets);
+    importer.register('assets', HtmlWidget.assets(true, ''));
+    HtmlWidget.enqueueAssets(importer.enqueue.bind(importer));
+    ModelView.View.HtmlWidget = HtmlWidget;
+    new ModelView.View('view')
+        .model(new ModelView.Model('model'))
+        .template(document.getElementById('app-content').innerHTML)
+        .funcs({
+            options: function() {return HtmlWidget.options.apply(HtmlWidget, arguments);}
+        })
+        .livebind(true)
+        .autobind(false)
+        .bind([], document.getElementById('app'))
+        .render()
+    ;
+    window.requestAnimationFrame(() => {
+        importer.assets('styles');
+        importer.assets('scripts');
+    });
+})(ModelView, Importer, HtmlWidget);
+</script>
+</body>
+</html>
