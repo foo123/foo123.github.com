@@ -111,7 +111,6 @@
 {%= view.widget('datetimepicker',{
     'title':'Select date-time',
     'options':{
-        'delayedInit':200,
         'format' : 'Y-m-d H:i:s',
         'showTime' : 1,
         'showSeconds' : 1,
@@ -123,7 +122,6 @@
     'class' : 'w-large',
     'disabled' : 1,
     'options':{
-        'delayedInit':200,
         'format' : 'Y-m-d H:i:s',
         'showTime' : 1,
         'showSeconds' : 1,
@@ -135,7 +133,6 @@
     'class' : 'w-xlarge',
     'readonly' : 1,
     'options':{
-        'delayedInit':200,
         'format' : 'Y-m-d H:i:s',
         'showTime' : 1,
         'showSeconds' : 1,
@@ -153,7 +150,7 @@
 <h4>Wysiwyg Editor</h4>
 {%= view.widget('wysiwyg-editor',{
     'placeholder':'rich text..',
-    'options':{'delayedInit':200}
+    'options':{}
 },{
     'value':'<b>Hello Tinymce</b>'
 }) %}
@@ -162,15 +159,15 @@
 <h4>Syntax Editor</h4>
 {%= view.widget('syntax-editor',{
     'placeholder':'source text..',
-    'options':{'mode':'xml','delayedInit':200}
+    'options':{'mode':'xml'}
 },{
     'value':'<b>Hello Codemirror</b>'
 }) %}
 </div>
 </script>
-<script src="../common/js/modelview.bundle.js"></script>
-<script src="../common/js/HtmlWidget.min.js"></script>
 <script src="../common/js/Importer.min.js"></script>
+<script src="../common/js/HtmlWidget.min.js"></script>
+<script src="../common/js/modelview.bundle.js"></script>
 <script>
 var assets = {
  "fontawesome.css":{"type":"styles", "asset":"https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"}
@@ -271,7 +268,7 @@ var assets = {
     "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/mode/javascript/javascript.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/mode/css/css.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/mode/htmlmixed/htmlmixed.min.js"
-], "dependencies":["codemirror"]}
+], "dependencies":["codemirror-fold"]}
 };
 // requireJS breaks the loading since my modules if present dont register to global object
 (function(ModelView, Importer, HtmlWidget) {
@@ -285,7 +282,7 @@ var assets = {
         .model(new ModelView.Model('model'))
         .template(document.getElementById('app-content').innerHTML)
         .funcs({
-            options: function() {return HtmlWidget.options.apply(HtmlWidget, arguments);}
+            options: HtmlWidget.options
         })
         .livebind(true)
         .autobind(false)
