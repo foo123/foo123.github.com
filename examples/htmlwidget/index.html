@@ -272,7 +272,7 @@ var assets = {
 };
 // requireJS breaks the loading since my modules if present dont register to global object
 (function(ModelView, Importer, HtmlWidget) {
-    // make the needed plumbing
+    // do the needed plumbing
     var importer = new Importer();
     HtmlWidget.assets(assets);
     importer.register('assets', HtmlWidget.assets(true, ''));
@@ -287,12 +287,12 @@ var assets = {
         .livebind(true)
         .autobind(false)
         .bind([], document.getElementById('app'))
+        .on('render', () => {
+            importer.assets('styles');
+            importer.assets('scripts');
+        })
         .render()
     ;
-    window.requestAnimationFrame(() => {
-        importer.assets('styles');
-        importer.assets('scripts');
-    });
 })(ModelView, Importer, HtmlWidget);
 </script>
 </body>
