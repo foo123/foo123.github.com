@@ -84,6 +84,7 @@
 <h4>Colorpickers</h4>
 {%= view.widget('colorpicker',{
     'title':'Select color',
+    'class' : 'colorpicker-dark',
     'options':{
         'format' : 'rgba',
         'color':'rgba(210,0,0,0.7)'
@@ -91,7 +92,7 @@
 },{}) %}
 {%= view.widget('colorpicker',{
     'title':'Select color',
-    'class' : 'w-large',
+    'class' : 'w-large colorpicker-dark',
     'options':{
         'format' : 'rgba',
         'color':'rgba(210,0,0,0.7)'
@@ -99,7 +100,7 @@
 },{}) %}
 {%= view.widget('colorpicker',{
     'title':'Select color',
-    'class' : 'w-xlarge',
+    'class' : 'w-xlarge colorpicker-dark',
     'options':{
         'format' : 'rgba',
         'color':'rgba(210,0,0,0.7)'
@@ -150,7 +151,10 @@
 <h4>Wysiwyg Editor</h4>
 {%= view.widget('wysiwyg-editor',{
     'placeholder':'rich text..',
-    'options':{}
+    'options':{
+        'theme': 'modern',
+        'mobile': {'theme':'mobile'}
+    }
 },{
     'value':'<b>Hello Tinymce</b>'
 }) %}
@@ -159,7 +163,10 @@
 <h4>Syntax Editor</h4>
 {%= view.widget('syntax-editor',{
     'placeholder':'source text..',
-    'options':{'mode':'xml'}
+    'options':{
+        'mode':'xml',
+        'theme': 'lesser-dark'
+    }
 },{
     'value':'<b>Hello Codemirror</b>'
 }) %}
@@ -247,7 +254,10 @@ var assets = {
 ], "dependencies":["datatables-all.css","datatables"]}
 ,"mathjax":{"type":"scripts", "asset":"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"}
 ,"tinymce":{"type":"scripts", "asset":"https://cloud.tinymce.com/4/tinymce.js"}
-,"codemirror.css":{"type":"styles", "asset":"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/codemirror.min.css"}
+,"codemirror.css":{"type":"styles-composite", "asset":[
+    "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/codemirror.min.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/theme/lesser-dark.min.css"
+]}
 ,"codemirror":{"type":"scripts-composite", "asset":[
     "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/codemirror.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/addon/mode/multiplex.min.js",
