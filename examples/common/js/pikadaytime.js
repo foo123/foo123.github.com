@@ -498,7 +498,6 @@ Pikadaytime = function Pikadaytime(options) {
 
     self._onInputBlur = function() {
         console.log('input blur');
-        alert('input blur');
         if (!self._c)
         {
             self._b = sto(function() {
