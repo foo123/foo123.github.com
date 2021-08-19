@@ -19,6 +19,9 @@ else
 }('undefined' !== typeof self ? self : this, 'Pikadaytime', function() {
 "use strict";
 
+console.log('Pikadaytime');
+alert('Pikadaytime');
+
 var
 /**
  * feature detection and helper functions
