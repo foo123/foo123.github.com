@@ -8,10 +8,10 @@
 **/
 !function(root, name, factory) {
 "use strict";
-if ('object' === typeof exports)
+if (('object' === typeof module) && module.exports)
     // CommonJS module
     module.exports = factory();
-else if ('function' === typeof define && define.amd)
+else if (('function' === typeof define) && define.amd)
     // AMD. Register as an anonymous module.
     define(function(req) {return factory();});
 else
