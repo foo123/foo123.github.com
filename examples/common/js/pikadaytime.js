@@ -19,16 +19,15 @@ else
 }('undefined' !== typeof self ? self : this, 'Pikadaytime', function() {
 "use strict";
 
-console.log('Pikadaytime');
-alert('Pikadaytime');
+console.log('Pikadaytime started loading');
 
 var
 /**
  * feature detection and helper functions
  */
-hasEventListeners = !!window.addEventListener,
+hasEventListeners = !!document.addEventListener,
 
-document = window.document,
+//document = window.document,
 
 sto = window.setTimeout,
 
@@ -489,13 +488,11 @@ Pikadaytime = function Pikadaytime(options) {
 
     self._onInputFocus = function() {
         console.log('input focus');
-        alert('input focus');
         self.show();
     };
 
     self._onInputClick = function() {
         console.log('input click');
-        alert('input click');
         self.show();
     };
 
@@ -1066,7 +1063,6 @@ Pikadaytime.prototype = {
         if (self.el.parentNode) self.el.parentNode.removeChild(self.el);
     }
 };
-console.log('Pikadaytime');
-alert('Pikadaytime');
+console.log('Pikadaytime loaded');
 return Pikadaytime;
 });
