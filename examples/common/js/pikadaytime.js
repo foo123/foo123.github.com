@@ -1064,6 +1064,7 @@ Pikadaytime.prototype = {
         if (self.el.parentNode) self.el.parentNode.removeChild(self.el);
     }
 };
-
+console.log('Pikadaytime');
+alert('Pikadaytime');
 return Pikadaytime;
 });
