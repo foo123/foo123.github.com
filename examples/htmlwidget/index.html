@@ -63,6 +63,9 @@ body {
 #app input.w-radio + label::before, #app input.w-checkbox + label::before {
     color: #121212;
 }
+#app .w-switch > .w-switch-handle {
+    background-color: #232323;
+}
 #app .w-syntax-editor + .CodeMirror {
     min-height: 160px;
     max-height: 180px;
@@ -73,7 +76,7 @@ body {
     display: block;
 }
 #app .row > .label {
-    width: 10%;
+    width: 100%;
     display: block;
     margin-bottom: 20px;
 }
@@ -119,6 +122,12 @@ body {
 </div>
 </div>
 <div class="row">
+{%= view.widget('label',{'for':'subscription','class':'label'},{'text':'Subscribe:'}) %}
+<div class="field">
+{%= view.widget('switch',{'id':'subscription','name':'subscription','class':'w-large','iconon':'check','iconoff':'thumbs-down','checked':true},{'value':'1'}) %}
+</div>
+</div>
+<div class="row">
 {%= view.widget('label',{'for':'bio','class':'label'},{'text':'About:'}) %}
 <div class="field">
 {%= view.widget('wysiwyg-editor',{'id':'bio','name':'bio','options':{
@@ -136,7 +145,8 @@ body {
         'cf' : 'Cis Female',
         'cm' : 'Cis Male',
         'tf' : 'Trans Female',
-        'tm' : 'Trans Male'
+        'tm' : 'Trans Male',
+        'ng' : 'None of the above'
     },-1)}) %}
 </div>
 </div>
