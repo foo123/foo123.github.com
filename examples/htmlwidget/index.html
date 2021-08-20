@@ -53,10 +53,10 @@ body {
     font-weight: bold;
     display: inline-block;
 }
-#app .w-widget {
+#app .w-widget:not(.w-button) {
     color: #eee;
 }
-#app input,#app select,#app textarea {
+#app input.w-widget,#app select.w-widget,#app textarea.w-widget {
     background: #121212;
     color: #eee;
 }
@@ -163,7 +163,7 @@ body {
 </div>
 </div>
 <div style="text-align:center">
-{%= view.widget('button',{'class':'w-xlarge w-black','icon':'thumbs-up'},{'text':'Submit'}) %}
+{%= view.widget('button',{'class':'w-large w-black','icon':'thumbs-up'},{'text':'Submit'}) %}
 </div>
 </script>
 <script src="../common/js/Importer.min.js"></script>
