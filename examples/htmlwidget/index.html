@@ -132,6 +132,7 @@ input,select,textarea {
 {%= view.widget('datetimepicker',{
     'title':'Select date-time',
     'options':{
+        'className': 'pika-dark',
         'format' : 'Y-m-d H:i:s',
         'showTime' : 1,
         'showSeconds' : 1,
@@ -143,6 +144,7 @@ input,select,textarea {
     'class' : 'w-large',
     'disabled' : 1,
     'options':{
+        'className': 'pika-dark',
         'format' : 'Y-m-d H:i:s',
         'showTime' : 1,
         'showSeconds' : 1,
@@ -154,6 +156,7 @@ input,select,textarea {
     'class' : 'w-xlarge',
     'readonly' : 1,
     'options':{
+        'className': 'pika-dark',
         'format' : 'Y-m-d H:i:s',
         'showTime' : 1,
         'showSeconds' : 1,
@@ -204,7 +207,7 @@ var assets = {
 ,"bootstrap.css":{"type":"styles", "asset":"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", "attributes":{"integrity":"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u","crossorigin":"anonymous"}}
 ,"bootstrap":{"type":"scripts", "asset":"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js", "dependencies":["bootstrap.css", "jquery"], "attributes":{"integrity":"sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa","crossorigin":"anonymous"}}
 ,"datex":{"type":"scripts", "asset":"../common/js/DateX.min.js"}
-,"pikadaytime.css":{"type":"styles-composite", "asset":["../common/css/pikadaytime.css","../common/css/pikadaytime-dark.css"]}
+,"pikadaytime.css":{"type":"styles", "asset":"../common/css/pikadaytime.css"}
 ,"pikadaytime":{"type":"scripts", "asset":"../common/js/pikadaytime.js", "dependencies":["pikadaytime.css","datex"]}
 ,"colorpicker.css":{"type":"styles", "asset":"../common/css/colorpicker2.css"}
 ,"colorpicker":{"type":"scripts", "asset":"../common/js/colorpicker.js", "dependencies":["colorpicker.css"]}
