@@ -17,16 +17,66 @@
 #forkongithub a{background:#aa0000;color:#fff;text-decoration:none;font-family:arial, sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:0.9rem;line-height:1.4rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#aa0000;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;z-index:100;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:absolute;display:block;z-index:100;top:0;right:0;width:200px;overflow:hidden;height:200px;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}
 body {
     background-color:#121212;
-    color:#aaa;
-    margin:0;
-    padding:0;
+    color: #eee;
+    margin: 0;
+    padding: 0;
     font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
     -webkit-font-smoothing:antialiased;
     -moz-osx-font-smoothing:grayscale
+    text-align: center;
 }
-input,select,textarea {
-    background:#121212 !important;
-    color:#eee !important;
+#app {
+    position: relative;
+    box-sizing:border-box;
+    margin: 20px auto;
+    width: 800px;
+    max-width: 100%;
+    text-align: left;
+}
+#app .row {
+    position: relative;
+    box-sizing:border-box;
+    width: 100%;
+    padding: 20px 10px;
+    border-bottom: 1px solid rgba(100,100,100,0.5);
+}
+#app .row > .field {
+    position: relative;
+    vertical-align: top;
+    width: 60%;
+    display: inline-block;
+}
+#app .row > .label {
+    position: relative;
+    vertical-align: top;
+    width: 30%;
+    font-weight: bold;
+    display: inline-block;
+}
+#app .w-widget {
+    color: #eee;
+}
+#app input,#app select,#app textarea {
+    background: #121212;
+    color: #eee;
+}
+#app input.w-radio + label::before, #app input.w-checkbox + label::before {
+    color: #121212;
+}
+#app .w-syntax-editor + .CodeMirror {
+    min-height: 160px;
+    max-height: 180px;
+}
+@media all and (max-width: 640px) {
+#app .row > .field {
+    width: 100%;
+    display: block;
+}
+#app .row > .label {
+    width: 10%;
+    display: block;
+    margin-bottom: 20px;
+}
 }
 </style>
 <!--<script src="../common/js/hnl.mobileConsole.js"></script>-->
@@ -38,161 +88,82 @@ input,select,textarea {
 <div id="app"></div>
 
 <script type="text/x-template" id="app-content">
-<div>
-<h4>Buttons</h4>
-{%= view.widget('button',{'class':'w-xsmall','icon':'times-circle'}) %}
-{%= view.widget('button',{'class':'w-small','icon':'times-circle'}) %}
-{%= view.widget('button',{'class':'','icon':'times-circle'}) %}
-{%= view.widget('button',{'class':'w-large','icon':'times-circle'}) %}
-{%= view.widget('button',{'class':'w-xlarge','icon':'info-circle'}) %}
-<br />
-{%= view.widget('button',{'class':'w-xsmall','icon':'plus'},{'text':'xsmall'}) %}
-{%= view.widget('button',{'class':'w-small','icon':'plus'},{'text':'small'}) %}
-{%= view.widget('button',{'class':'','icon':'plus'},{'text':'button'}) %}
-{%= view.widget('button',{'class':'','icon':'plus','disabled':1},{'text':'button'}) %}
-<br />
-{%= view.widget('button',{'class':'w-large','icon':'plus','readonly':1},{'text':'large'}) %}
-{%= view.widget('button',{'class':'w-large','icon':'plus','disabled':1},{'text':'large'}) %}
-{%= view.widget('button',{'class':'w-xlarge','icon':'info-circle'},{'text':'xlarge'}) %}
-{%= view.widget('button',{'class':'w-xlarge','icon':'info-circle','readonly':1},{'text':'xlarge'}) %}
-<br />
-{%= view.widget('button',{'class':'w-xsmall w-black','icon':'times-circle'}) %}
-{%= view.widget('button',{'class':'w-small w-black','icon':'times-circle'}) %}
-{%= view.widget('button',{'class':'w-black','icon':'times-circle'}) %}
-{%= view.widget('button',{'class':'w-large w-black','icon':'times-circle'}) %}
-{%= view.widget('button',{'class':'w-xlarge w-black','icon':'info-circle'}) %}
-<br />
-{%= view.widget('button',{'class':'w-xsmall w-black','icon':'plus'},{'text':'xsmall'}) %}
-{%= view.widget('button',{'class':'w-small w-black','icon':'plus'},{'text':'small'}) %}
-{%= view.widget('button',{'class':'w-black','icon':'plus'},{'text':'button'}) %}
-{%= view.widget('button',{'class':'w-black','icon':'plus','disabled':1},{'text':'button'}) %}
-<br />
-{%= view.widget('button',{'class':'w-large w-black','icon':'plus','readonly':1},{'text':'large'}) %}
-{%= view.widget('button',{'class':'w-large w-black','icon':'plus','disabled':1},{'text':'large'}) %}
-{%= view.widget('button',{'class':'w-xlarge w-black','icon':'info-circle'},{'text':'xlarge'}) %}
-{%= view.widget('button',{'class':'w-xlarge w-black','icon':'info-circle','readonly':1},{'text':'xlarge'}) %}
+<div class="row">
+{%= view.widget('label',{'for':'username','class':'label'},{'text':'Username:'}) %}
+<div class="field">
+{%= view.widget('textbox',{'id':'username','name':'username','placeholder':'Your username','iconr':'user'}) %}
 </div>
-<div>
-<h4>Dropdowns</h4>
-{%= view.widget('dropdown',{'placeholder':'select..'},{'options':options({
-    '1' : 'option 1',
-    '2' : 'option 2'
-},-1)}) %}
-{%= view.widget('dropdown',{'placeholder':'large..','class':'w-large','disabled':1},{'options':options({
-    '1' : 'option 1',
-    '2' : 'option 2'
-},-1)}) %}
-{%= view.widget('dropdown',{'placeholder':'xlarge..','class':'w-xlarge','readonly':1},{'options':options({
-    '1' : 'option 1',
-    '2' : 'option 2'
-},-1)}) %}
-<br />
-{%= view.widget('select2',{'placeholder':'select..'},{'options':options({
-    '1' : 'option 1',
-    '2' : 'option 2'
-},-1)}) %}
-{%= view.widget('select2',{'placeholder':'large..','class':'w-large','disabled':1},{'options':options({
-    '1' : 'option 1',
-    '2' : 'option 2'
-},-1)}) %}
-{%= view.widget('select2',{'placeholder':'xlarge..','class':'w-xlarge','multiple':1},{'options':options({
-    '1' : 'option 1',
-    '2' : 'option 2'
-},-1)}) %}
 </div>
-<div>
-<h4>Colorpickers</h4>
-{%= view.widget('colorpicker',{
-    'title':'Select color',
-    'class' : 'colorpicker-dark',
-    'options':{
-        'format' : 'rgba',
-        'color':'rgba(210,0,0,0.7)'
-    }
-},{}) %}
-{%= view.widget('colorpicker',{
-    'title':'Select color',
-    'class' : 'w-large colorpicker-dark',
-    'options':{
-        'format' : 'rgba',
-        'color':'rgba(0,210,0,0.7)'
-    }
-},{}) %}
-{%= view.widget('colorpicker',{
-    'title':'Select color',
-    'class' : 'w-xlarge colorpicker-dark',
-    'options':{
-        'format' : 'rgba',
-        'color':'rgba(0,0,210,0.7)'
-    }
-},{}) %}
+<div class="row">
+{%= view.widget('label',{'for':'email','class':'label'},{'text':'Email:'}) %}
+<div class="field">
+{%= view.widget('textbox',{'type':'email','id':'email','name':'email','placeholder':'Your email','iconr':'envelope'}) %}
 </div>
-<div>
-<h4>Datepickers</h4>
-{%= view.widget('datetimepicker',{
-    'title':'Select date-time',
-    'options':{
-        'className': 'pika-dark',
-        'format' : 'Y-m-d H:i:s',
-        'showTime' : 1,
-        'showSeconds' : 1,
-        'value':'2016-01-24 12:00:00'
-    }
-},{}) %}
-{%= view.widget('datetimepicker',{
-    'title':'Select date-time',
-    'class' : 'w-large',
-    'disabled' : 1,
-    'options':{
-        'className': 'pika-dark',
-        'format' : 'Y-m-d H:i:s',
-        'showTime' : 1,
-        'showSeconds' : 1,
-        'value':'2016-01-24 12:00:00'
-    }
-},{}) %}
-{%= view.widget('datetimepicker',{
-    'title':'Select date-time',
-    'class' : 'w-xlarge',
-    'readonly' : 1,
-    'options':{
-        'className': 'pika-dark',
-        'format' : 'Y-m-d H:i:s',
-        'showTime' : 1,
-        'showSeconds' : 1,
-        'value':'2016-01-24 12:00:00'
-    }
-},{}) %}
 </div>
-<div>
-<h4>Ratings</h4>
-{%= view.widget('rating',{'title':'Please rate:','icon':'star'},{'value':'3'}) %}
-{%= view.widget('rating',{'title':'Please rate:','class':'w-large','icon':'star','disabled':1},{'value':'3'}) %}
-{%= view.widget('rating',{'title':'Please rate:','class':'w-xlarge','icon':'star','readonly':1},{'value':'3'}) %}
+<div class="row">
+{%= view.widget('label',{'for':'birthday','class':'label'},{'text':'Birthday:'}) %}
+<div class="field">
+{%= view.widget('datetimepicker',{'id':'birthday','name':'birthday','placeholder':'Your birthday','options':{'className':'pika-dark','showTime':false,'format':'D, d M Y'}}) %}
 </div>
-<div>
-<h4>Wysiwyg Editor</h4>
-{%= view.widget('wysiwyg-editor',{
-    'placeholder':'rich text..',
-    'options':{
+</div>
+<div class="row">
+{%= view.widget('label',{'class':'label'},{'text':'Color:'}) %}
+<div class="field">
+{%= view.widget('colorpicker',{'title':'Your favorite color','class':'colorpicker-dark','options':{'format':'rgba','color':'rgba(255,0,0,1)'}}) %}
+</div>
+</div>
+<div class="row">
+{%= view.widget('label',{'class':'label'},{'text':'Rate us:'}) %}
+<div class="field">
+{%= view.widget('rating',{'title':'Please rate:','icon':'star'}) %}
+</div>
+</div>
+<div class="row">
+{%= view.widget('label',{'for':'bio','class':'label'},{'text':'About:'}) %}
+<div class="field">
+{%= view.widget('wysiwyg-editor',{'id':'bio','name':'bio','options':{
         'theme': 'modern',
-        'mobile': {'theme':'mobile'}
-    }
-},{
-    'value':'<b>Hello Tinymce</b>'
-}) %}
+        'height': 100,
+        'mobile': {'theme':'mobile'},
+    }},{'value':'<i>Tell us something about you</i>'}) %}
 </div>
-<div>
-<h4>Syntax Editor</h4>
-{%= view.widget('syntax-editor',{
-    'placeholder':'source text..',
-    'options':{
-        'mode':'xml',
-        'theme': 'lesser-dark'
-    }
-},{
-    'value':'<b>Hello Codemirror</b>'
-}) %}
+</div>
+<div class="row">
+{%= view.widget('label',{'class':'label'},{'text':'Gender:'}) %}
+<div class="field">
+{%= view.widget('radiolist',{'name':'gender'},{'options':options({
+        'gb' : 'Gender Bender',
+        'cf' : 'Cis Female',
+        'cm' : 'Cis Male',
+        'tf' : 'Trans Female',
+        'tm' : 'Trans Male'
+    },-1)}) %}
+</div>
+</div>
+<div class="row">
+{%= view.widget('label',{'class':'label'},{'text':'Programming:'}) %}
+<div class="field">
+{%= view.widget('checkbox-array',{'name':'programming[]'},{
+    'fields':{
+    'html':'HTML',
+    'css':'CSS',
+    'js':'JavaScript'
+    },
+    'options':options({
+        'client' : 'Client-Side',
+        'server' : 'Server-Side'
+    },-1)
+    })  %}
+</div>
+</div>
+<div class="row">
+{%= view.widget('label',{'for':'program','class':'label'},{'text':'Program:'}) %}
+<div class="field">
+{%= view.widget('syntax-editor',{'id':'program','name':'program','options':{'mode':'xml','theme':'lesser-dark'}},{'value':'<span>write some html</span>'}) %}
+</div>
+</div>
+<div style="text-align:center">
+{%= view.widget('button',{'class':'w-xlarge w-black','icon':'thumbs-up'},{'text':'Submit'}) %}
 </div>
 </script>
 <script src="../common/js/Importer.min.js"></script>
