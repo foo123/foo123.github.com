@@ -172,7 +172,7 @@ body {
 <div class="row">
 {%= view.widget('label',{'for':'program','class':'label'},{'text':'Program:'}) %}
 <div class="field">
-{%= view.widget('syntax-editor',{'id':'program','name':'program','options':{'mode':'xml','theme':'lesser-dark'}},{'value':'<span>write some html</span>'}) %}
+{%= view.widget('syntax-editor',{'id':'program','name':'program','options':{'mode':'text/html','theme':'lesser-dark'}},{'value':'<span>write some html</span>'}) %}
 </div>
 </div>
 <div style="text-align:center">
@@ -299,9 +299,10 @@ var assets = {
         .model(new ModelView.Model('model'))
         .template(document.getElementById('app-content').innerHTML)
         .funcs({
-            options: HtmlWidget.options
+            options: HtmlWidget.options,
+            code: HtmlWidget.code
         })
-        .livebind(true)
+        .livebind(false)
         .autobind(false)
         .bind([], document.getElementById('app'))
         .on('render', () => {
