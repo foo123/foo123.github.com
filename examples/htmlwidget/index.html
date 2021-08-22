@@ -73,6 +73,13 @@ body {
 #app .tinymce-mobile-editor-socket {
     background: #fff !important;
 }
+.w-modal.w-dialog {
+    color: #121212;
+}
+.w-modal.w-dialog > .w-dialog-title {
+    background: rgba(12,144,232,0.9);
+    color: #fafafa;
+}
 @media all and (max-width: 640px) {
 #app .row > .field {
     width: 100%;
@@ -128,6 +135,7 @@ body {
 {%= view.widget('label',{'for':'subscription','class':'label'},{'text':'Subscribe:'}) %}
 <div class="field">
 {%= view.widget('switch',{'id':'subscription','name':'subscription','class':'w-large','iconon':'check','iconoff':'thumbs-down','checked':true},{'value':'1'}) %}
+{%= view.widget('button',{'for':'modal_a_modal','class':'w-large w-black'},{'text':'Modal'}) %}
 </div>
 </div>
 <div class="row">
@@ -289,6 +297,14 @@ var assets = {
 };
 // requireJS breaks the loading since my modules if present dont register to global object
 (function(ModelView, Importer, HtmlWidget) {
+    var t = document.createElement('template');
+    t.innerHTML = HtmlWidget.widget('modal', {'id':'a_modal','autoclose':true})+`
+    <h2>A Modal</h2>
+    <p>Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p>
+    <p>Some more text here..Some more text here..Some more text here..Some more text here..</p>
+    `+HtmlWidget.widget('/modal', {'id':'a_modal','autoclose':true});
+    while (t.content.firstChild) document.body.appendChild(t.content.firstChild);
+    
     // do the needed plumbing
     var importer = new Importer();
     HtmlWidget.assets(assets);
