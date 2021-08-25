@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
 <meta name="description" content="Image Processing with Filter.js" />
 <meta property="og:title" content="Image Processing with Filter.js">
 <meta property="og:description" content="Image Processing with Filter.js">
@@ -102,7 +102,7 @@
     <script src="../common/js/require-config.js"></script>
     <!--<script src="../common/cascades/haarcascade_frontalface_alt.js"></script>-->
 </head>
-<body class="responsive-640-container" style="max-width: 1600px; margin: 0 auto;">
+<body class="responsive-960-container" style="max-width: 1600px; margin: 0 auto;">
     <span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
     
     <header id="header" class="fluid col-1-1">
@@ -119,7 +119,7 @@
     <div id="container" class="fluid col-1-1 panel"></div>
     
     <footer id="footer" class="fluid col-1-1">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div><br />
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div><br />
     </footer>
     
     <script>//<![CDATA[
@@ -364,6 +364,12 @@
             img.domElement.style.maxWidth = '100%';
             img.domElement.style.width = '100%';
             img.domElement.style.height = 'auto';
+            /*
+            // Set actual size in memory (scaled to account for extra pixel density).
+            var scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
+            img.domElement.width = Math.floor(img.domElement.width * scale);
+            img.domElement.height = Math.floor(img.domElement.height * scale);
+            */
             return wrapper;
         }
         
