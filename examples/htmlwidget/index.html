@@ -53,18 +53,8 @@ body {
     font-weight: bold;
     display: inline-block;
 }
-#app .w-widget:not(.w-button) {
+#app .w-widget.w-label {
     color: #eee;
-}
-#app input.w-widget,#app select.w-widget,#app textarea.w-widget {
-    background: #121212;
-    color: #eee;
-}
-#app input.w-radio + label::before, #app input.w-checkbox + label::before {
-    color: #121212;
-}
-#app .w-switch > .w-switch-handle {
-    background-color: #232323;
 }
 #app .w-syntax-editor + .CodeMirror {
     min-height: 160px;
@@ -72,13 +62,6 @@ body {
 }
 #app .tinymce-mobile-editor-socket {
     background: #fff !important;
-}
-.w-modal.w-dialog {
-    color: #121212;
-}
-.w-modal.w-dialog > .w-dialog-title {
-    background: rgba(12,144,232,0.9);
-    color: #fafafa;
 }
 @media all and (max-width: 640px) {
 #app .row > .field {
@@ -104,25 +87,25 @@ body {
 <div class="row">
 {%= view.widget('label',{'for':'username','class':'label'},{'text':'Username:'}) %}
 <div class="field">
-{%= view.widget('textbox',{'id':'username','name':'username','placeholder':'Your username','iconr':'user'}) %}
+{%= view.widget('textbox',{'id':'username','class':'w-dark','name':'username','placeholder':'Your username','iconr':'user'}) %}
 </div>
 </div>
 <div class="row">
 {%= view.widget('label',{'for':'email','class':'label'},{'text':'Email:'}) %}
 <div class="field">
-{%= view.widget('textbox',{'type':'email','id':'email','name':'email','placeholder':'Your email','iconr':'envelope'}) %}
+{%= view.widget('textbox',{'type':'email','id':'email','class':'w-dark','name':'email','placeholder':'Your email','iconr':'envelope'}) %}
 </div>
 </div>
 <div class="row">
 {%= view.widget('label',{'for':'birthday','class':'label'},{'text':'Birthday:'}) %}
 <div class="field">
-{%= view.widget('datetimepicker',{'id':'birthday','name':'birthday','placeholder':'Your birthday','options':{'className':'pika-dark','showTime':false,'format':'D, d M Y'}}) %}
+{%= view.widget('datetimepicker',{'id':'birthday','class':'w-dark','name':'birthday','placeholder':'Your birthday','options':{'className':'pika-dark','showTime':false,'format':'D, d M Y'}}) %}
 </div>
 </div>
 <div class="row">
-{%= view.widget('label',{'class':'label'},{'text':'Color:'}) %}
+{%= view.widget('label',{'for':'color','class':'label'},{'text':'Color:'}) %}
 <div class="field">
-{%= view.widget('colorpicker',{'title':'Your favorite color','class':'colorpicker-dark','options':{'format':'rgba','color':'rgba(255,0,0,1)'}}) %}
+{%= view.widget('colorpicker',{'id':'color','title':'Your favorite color','input':true,'iconr':true,'class':'w-dark','selector-class':'colorpicker-dark','options':{'format':'rgba','color':'rgba(255,0,0,1)'}}) %}
 </div>
 </div>
 <div class="row">
@@ -134,7 +117,7 @@ body {
 <div class="row">
 {%= view.widget('label',{'for':'subscription','class':'label'},{'text':'Subscribe:'}) %}
 <div class="field">
-{%= view.widget('switch',{'id':'subscription','name':'subscription','class':'w-large','iconon':'check','iconoff':'thumbs-down','checked':true},{'value':'1'}) %}
+{%= view.widget('switch',{'id':'subscription','name':'subscription','class':'w-large w-dark','iconon':'check','iconoff':'thumbs-down','checked':true},{'value':'1'}) %}
 {%= view.widget('button',{'for':'modal_a_modal','class':'w-large w-black'},{'text':'Modal'}) %}
 </div>
 </div>
@@ -164,7 +147,7 @@ body {
 <div class="row">
 {%= view.widget('label',{'class':'label'},{'text':'Programming:'}) %}
 <div class="field">
-{%= view.widget('checkbox-array',{'name':'programming[]'},{
+{%= view.widget('checkbox-array',{'class':'w-dark','name':'programming[]'},{
     'fields':{
     'html':'HTML',
     'css':'CSS',
@@ -180,7 +163,7 @@ body {
 <div class="row">
 {%= view.widget('label',{'for':'program','class':'label'},{'text':'Program:'}) %}
 <div class="field">
-{%= view.widget('syntax-editor',{'id':'program','name':'program','options':{'mode':'text/html','theme':'lesser-dark'}},{'value':'<span>write some html</span>'}) %}
+{%= view.widget('syntax-editor',{'id':'program','class':'w-dark','name':'program','options':{'mode':'text/html','theme':'lesser-dark'}},{'value':'<span>write some html</span>'}) %}
 </div>
 </div>
 <div style="text-align:center">
@@ -298,11 +281,11 @@ var assets = {
 // requireJS breaks the loading since my modules if present dont register to global object
 (function(ModelView, Importer, HtmlWidget) {
     var t = document.createElement('template');
-    t.innerHTML = HtmlWidget.widget('modal', {'id':'a_modal','autoclose':true})+`
+    t.innerHTML = HtmlWidget.widget('modal', {'id':'a_modal','class':'w-dark','autoclose':true})+`
     <h2>A Modal</h2>
     <p>Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p>
     <p>Some more text here..Some more text here..Some more text here..Some more text here..</p>
-    `+HtmlWidget.widget('/modal', {'id':'a_modal','autoclose':true});
+    `+HtmlWidget.widget('/modal', {'id':'a_modal','class':'w-dark','autoclose':true});
     while (t.content.firstChild) document.body.appendChild(t.content.firstChild);
     
     // do the needed plumbing
