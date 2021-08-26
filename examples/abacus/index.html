@@ -312,7 +312,7 @@ window.MathJax = {
 
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
-        <strong>Abacus ($(abacus_version)):</strong>
+        <strong>Abacus ({%=abacus_version%}):</strong>
         <div class="sepa"></div>
         <div style="display:inline-block;margin-bottom:10px">
         <label style="text-"for="object">Type:</label><select id="object" name="model[object]">
@@ -345,95 +345,95 @@ window.MathJax = {
         </optgroup>
         </select>
         </div>
-        <div style="display:inline-block;margin-bottom:10px" data-bind='{"show":"isCombinatorics"}'>
+        <div style="display:inline-block;margin-bottom:10px" mv-model="isCombinatorics" mv-model-evt mv-on-model-change="show">
         <label for="type">SubType:</label><select id="type" name="model[type]">
-        <option value="default" selected>$(object.default)</option>
-        <option value="tensor_inversion" data-bind='{"show":"object.tensor"}'>Permutation</option>
-        <option value="gray" data-bind='{"show":"object.tuple"}'>(n,k)-Gray Code</option>
-        <option value="word" data-bind='{"show":"object.tuple"}'>Word</option>
-        <option value="conditional-tuple" data-bind='{"show":"object.tuple"}'>Conditional Tuple</option>
-        <option value="cyclic" data-bind='{"show":"object.permutation"}'>Cyclic Shift</option>
-        <option value="multiset" data-bind='{"show":"object.permutation"}'>Multiset</option>
-        <option value="k-permutation" data-bind='{"show":"object.permutation"}'>k-Permutation</option>
-        <option value="derangement" data-bind='{"show":"object.permutation"}'>Derangement</option>
-        <option value="involution" data-bind='{"show":"object.permutation"}'>Involution</option>
-        <option value="inversion" data-bind='{"show":"object.permutation"}'>Inversion</option>
-        <option value="k-derangement" data-bind='{"show":"object.permutation"}'>k-Derangement</option>
-        <option value="connected" data-bind='{"show":"object.permutation"}'>Connected (1-Cycle)</option>
-        <option value="k-cycle-permutation" data-bind='{"show":"object.permutation"}'>k-Cycle</option>
-        <option value="conditional-permutation" data-bind='{"show":"object.permutation"}'>Conditional Permutation</option>
-        <option value="conditional-k-permutation" data-bind='{"show":"object.permutation"}'>Conditional k-Permutation</option>
-        <option value="recursive-permutation" data-bind='{"show":"object.permutation"}'>Recursive Permutation</option>
-        <option value="unordered_01" data-bind='{"show":"object.combination"}'>Zero/One</option>
-        <option value="ordered" data-bind='{"show":"object.combination"}'>Variation</option>
-        <option value="repeated" data-bind='{"show":"object.combination"}'>Combination+Repeated</option>
-        <option value="ordered_repeated" data-bind='{"show":"object.combination"}'>Variation+Repeated</option>
-        <option value="conditional-ordered" data-bind='{"show":"object.combination"}'>Conditional Variation</option>
-        <option value="conditional-ordered_repeated" data-bind='{"show":"object.combination"}'>Conditional Variation+Repeated</option>
-        <option value="conditional-combination" data-bind='{"show":"object.combination"}'>Conditional Combination</option>
-        <option value="subset_binary" data-bind='{"show":"object.subset"}'>Subset (Binary)</option>
-        <option value="subset_combination" data-bind='{"show":"object.subset"}'>Subset (Combination)</option>
-        <option value="subset_01" data-bind='{"show":"object.subset"}'>Zero/One</option>
-        <!--<option value="partition_min" data-bind='{"show":"object.partition"}'>Fixed Min. Part</option>-->
-        <option value="partition_max" data-bind='{"show":"object.partition"}'>Fixed Max. Part</option>
-        <option value="partition_parts" data-bind='{"show":"object.partition"}'>Fixed Num. Parts</option>
-        <!--<option value="partition_min_max" data-bind='{"show":"object.partition"}'>Fixed Min. &amp; Max. Part</option>-->
-        <option value="partition_min_parts" data-bind='{"show":"object.partition"}'>Fixed Min. Part &amp; Num. Parts</option>
-        <option value="partition_max_parts" data-bind='{"show":"object.partition"}'>Fixed Max. Part &amp; Num. Parts</option>
-        <option value="partition_min_max_parts" data-bind='{"show":"object.partition"}'>Fixed Min./Max. Part &amp; Num. Parts</option>
-        <option value="partition_distinct" data-bind='{"show":"object.partition"}'>Distinct Parts</option>
-        <!--<option value="composition_min" data-bind='{"show":"object.composition"}'>Fixed Min. Part</option>-->
-        <option value="composition_max" data-bind='{"show":"object.composition"}'>Fixed Max. Part</option>
-        <option value="composition_parts" data-bind='{"show":"object.composition"}'>Fixed Num. Parts</option>
-        <!--<option value="composition_min_max" data-bind='{"show":"object.composition"}'>Fixed Min. &amp; Max. Part</option>-->
-        <option value="composition_min_parts" data-bind='{"show":"object.composition"}'>Fixed Min. Part &amp; Num. Parts</option>
-        <option value="composition_max_parts" data-bind='{"show":"object.composition"}'>Fixed Max. Part &amp; Num. Parts</option>
-        <option value="composition_min_max_parts" data-bind='{"show":"object.composition"}'>Fixed Min./Max. Part &amp; Num. Parts</option>
-        <option value="composition_distinct" data-bind='{"show":"object.composition"}'>Distinct Parts</option>
-        <option value="set_partition_parts" data-bind='{"show":"object.set_partition"}'>Fixed Num. Parts</option>
+        <option value="default" selected>{%=object.default%}</option>
+        <option value="tensor_inversion" mv-model="object.tensor" mv-model-evt mv-on-model-change="show">Permutation</option>
+        <option value="gray" mv-model="object.tuple" mv-model-evt mv-on-model-change="show">(n,k)-Gray Code</option>
+        <option value="word" mv-model="object.tuple" mv-model-evt mv-on-model-change="show">Word</option>
+        <option value="conditional-tuple" mv-model="object.tuple" mv-model-evt mv-on-model-change="show">Conditional Tuple</option>
+        <option value="cyclic" mv-model="object.permutation" mv-model-evt mv-on-model-change="show">Cyclic Shift</option>
+        <option value="multiset" mv-model="object.permutation" mv-model-evt mv-on-model-change="show">Multiset</option>
+        <option value="k-permutation" mv-model="object.permutation" mv-model-evt mv-on-model-change="show">k-Permutation</option>
+        <option value="derangement" mv-model="object.permutation" mv-model-evt mv-on-model-change="show">Derangement</option>
+        <option value="involution" mv-model="object.permutation" mv-model-evt mv-on-model-change="show">Involution</option>
+        <option value="inversion" mv-model="object.permutation" mv-model-evt mv-on-model-change="show">Inversion</option>
+        <option value="k-derangement" mv-model="object.permutation" mv-model-evt mv-on-model-change="show">k-Derangement</option>
+        <option value="connected" mv-model="object.permutation" mv-model-evt mv-on-model-change="show">Connected (1-Cycle)</option>
+        <option value="k-cycle-permutation" mv-model="object.permutation" mv-model-evt mv-on-model-change="show">k-Cycle</option>
+        <option value="conditional-permutation" mv-model="object.permutation" mv-model-evt mv-on-model-change="show">Conditional Permutation</option>
+        <option value="conditional-k-permutation" mv-model="object.permutation" mv-model-evt mv-on-model-change="show">Conditional k-Permutation</option>
+        <option value="recursive-permutation" mv-model="object.permutation" mv-model-evt mv-on-model-change="show">Recursive Permutation</option>
+        <option value="unordered_01" mv-model="object.combination" mv-model-evt mv-on-model-change="show">Zero/One</option>
+        <option value="ordered" mv-model="object.combination" mv-model-evt mv-on-model-change="show">Variation</option>
+        <option value="repeated" mv-model="object.combination" mv-model-evt mv-on-model-change="show">Combination+Repeated</option>
+        <option value="ordered_repeated" mv-model="object.combination" mv-model-evt mv-on-model-change="show">Variation+Repeated</option>
+        <option value="conditional-ordered" mv-model="object.combination" mv-model-evt mv-on-model-change="show">Conditional Variation</option>
+        <option value="conditional-ordered_repeated" mv-model="object.combination" mv-model-evt mv-on-model-change="show">Conditional Variation+Repeated</option>
+        <option value="conditional-combination" mv-model="object.combination" mv-model-evt mv-on-model-change="show">Conditional Combination</option>
+        <option value="subset_binary" mv-model="object.subset" mv-model-evt mv-on-model-change="show">Subset (Binary)</option>
+        <option value="subset_combination" mv-model="object.subset" mv-model-evt mv-on-model-change="show">Subset (Combination)</option>
+        <option value="subset_01" mv-model="object.subset" mv-model-evt mv-on-model-change="show">Zero/One</option>
+        <!--<option value="partition_min" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Fixed Min. Part</option>-->
+        <option value="partition_max" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Fixed Max. Part</option>
+        <option value="partition_parts" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Fixed Num. Parts</option>
+        <!--<option value="partition_min_max" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Fixed Min. &amp; Max. Part</option>-->
+        <option value="partition_min_parts" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Fixed Min. Part &amp; Num. Parts</option>
+        <option value="partition_max_parts" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Fixed Max. Part &amp; Num. Parts</option>
+        <option value="partition_min_max_parts" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Fixed Min./Max. Part &amp; Num. Parts</option>
+        <option value="partition_distinct" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Distinct Parts</option>
+        <!--<option value="composition_min" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Fixed Min. Part</option>-->
+        <option value="composition_max" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Fixed Max. Part</option>
+        <option value="composition_parts" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Fixed Num. Parts</option>
+        <!--<option value="composition_min_max" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Fixed Min. &amp; Max. Part</option>-->
+        <option value="composition_min_parts" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Fixed Min. Part &amp; Num. Parts</option>
+        <option value="composition_max_parts" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Fixed Max. Part &amp; Num. Parts</option>
+        <option value="composition_min_max_parts" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Fixed Min./Max. Part &amp; Num. Parts</option>
+        <option value="composition_distinct" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Distinct Parts</option>
+        <option value="set_partition_parts" mv-model="object.set_partition" mv-model-evt mv-on-model-change="show">Fixed Num. Parts</option>
         </select>
         </div>
-        <div style="display:inline-block;margin-bottom:10px" data-bind='{"show":"isCombinatorics"}'>
+        <div style="display:inline-block;margin-bottom:10px" mv-model="isCombinatorics" mv-model-evt mv-on-model-change="show">
         <label for="order">Order:</label><select id="order" name="model[order]">
         <option value="" >Default</option>
-        <option value="lex" data-bind='{"show":"haslex"}'>Lexicographic</option>
-        <option value="colex" data-bind='{"show":"hascolex"}'>CoLexicographic</option>
-        <option value="minimal" data-bind='{"show":"hasminimal"}'>Minimal</option>
-        <option value="lex,reversed" data-bind='{"show":"haslex"}'>Reverse Lexicographic</option>
-        <option value="colex,reversed" data-bind='{"show":"hascolex"}'>Reverse CoLexicographic</option>
-        <option value="minimal,reversed" data-bind='{"show":"hasminimal"}'>Reverse Minimal</option>
-        <option value="lex,reflected" data-bind='{"show":"haslex"}'>Reflected Lexicographic</option>
-        <option value="colex,reflected" data-bind='{"show":"hascolex"}'>Reflected CoLexicographic</option>
-        <option value="minimal,reflected" data-bind='{"show":"hasminimal"}'>Reflected Minimal</option>
-        <option value="random" data-bind='{"show":"hasrand"}'>Random</option>
-        <option value="random,reflected" data-bind='{"show":"hasrand"}'>Random Reflected</option>
+        <option value="lex" mv-model="haslex" mv-model-evt mv-on-model-change="show">Lexicographic</option>
+        <option value="colex" mv-model="hascolex" mv-model-evt mv-on-model-change="show">CoLexicographic</option>
+        <option value="minimal" mv-model="hasminimal" mv-model-evt mv-on-model-change="show">Minimal</option>
+        <option value="lex,reversed" mv-model="haslex" mv-model-evt mv-on-model-change="show">Reverse Lexicographic</option>
+        <option value="colex,reversed" mv-model="hascolex" mv-model-evt mv-on-model-change="show">Reverse CoLexicographic</option>
+        <option value="minimal,reversed" mv-model="hasminimal" mv-model-evt mv-on-model-change="show">Reverse Minimal</option>
+        <option value="lex,reflected" mv-model="haslex" mv-model-evt mv-on-model-change="show">Reflected Lexicographic</option>
+        <option value="colex,reflected" mv-model="hascolex" mv-model-evt mv-on-model-change="show">Reflected CoLexicographic</option>
+        <option value="minimal,reflected" mv-model="hasminimal" mv-model-evt mv-on-model-change="show">Reflected Minimal</option>
+        <option value="random" mv-model="hasrand" mv-model-evt mv-on-model-change="show">Random</option>
+        <option value="random,reflected" mv-model="hasrand" mv-model-evt mv-on-model-change="show">Random Reflected</option>
         </select>
         </div>
         <div class="sepa"></div>
-        <div style="display:inline-block" data-bind='{"show":"hasN"}'>
-        <label for="N">$(labelN)</label><input id="N"  name="model[N]" size="8" type="text" value="1" />
-        </div><div style="display:inline-block" data-bind='{"show":"hasK"}'>
-        <label for="K">$(labelK)</label><input id="K"  name="model[K]" size="8" type="text" value="1" />
-        </div><div style="display:inline-block;vertical-align:top;margin-right:5px;" data-bind='{"show":"hasAlphabet"}'>
-        <label for="alphabet">$(labelAlphabet)</label><input id="alphabet" name="model[alphabet]" size="12" type="text" value="" />
-        </div><div style="display:inline-block;position:relative;width:80%" data-bind='{"show":"hasText"}'>
-        <div data-bind='{"html":"placeholderText"}'></div><label for="expr">$(labelText)</label><textarea id="expr" style="position:relative;display:inline-block;vertical-align:top;padding:4px;height:200px;width:90%"></textarea>
+        <div style="display:inline-block" mv-model="hasN" mv-model-evt mv-on-model-change="show">
+        <label for="N">{%=labelN%}</label><input id="N"  name="model[N]" size="8" type="text" value="1" />
+        </div><div style="display:inline-block" mv-model="hasK" mv-model-evt mv-on-model-change="show">
+        <label for="K">{%=labelK%}</label><input id="K"  name="model[K]" size="8" type="text" value="1" />
+        </div><div style="display:inline-block;vertical-align:top;margin-right:5px;" mv-model="hasAlphabet" mv-model-evt mv-on-model-change="show">
+        <label for="alphabet">{%=labelAlphabet%}</label><input id="alphabet" name="model[alphabet]" size="12" type="text" value="" />
+        </div><div style="display:inline-block;position:relative;width:80%" mv-model="hasText" mv-model-evt mv-on-model-change="show">
+        <div mv-model="placeholderText" mv-model-evt mv-on-model-change="html"></div><label for="expr">{%=labelText%}</label><textarea id="expr" style="position:relative;display:inline-block;vertical-align:top;padding:4px;height:200px;width:90%"></textarea>
         </div>
-        <div style="display:inline-block;position:relative;vertical-align:top;margin-left:5px;margin-top:-1.6em" data-bind='{"show":"hasConditions"}'>
+        <div style="display:inline-block;position:relative;vertical-align:top;margin-left:5px;margin-top:-1.6em" mv-model="hasConditions" mv-model-evt mv-on-model-change="show">
         <table id="conditions" style="position:relative;max-width:100%;border-spacing:2">
-        <thead><tr><th>Position</th><th>&nbsp;Op&nbsp;</th><th>Value(s)</th><th>&nbsp;<button title="Add New" style="font-weight:bold" data-bind='{"click":"add_condition"}'>+</button></th></tr></thead><tbody></tbody></table>
+        <thead><tr><th>Position</th><th>&nbsp;Op&nbsp;</th><th>Value(s)</th><th>&nbsp;<button title="Add New" style="font-weight:bold" mv-evt mv-on-click="add_condition">+</button></th></tr></thead><tbody></tbody></table>
         </div>
     </div>
 
     <div class="fluid col-1-1" style="margin-top:10px">
-        <strong>Output:</strong>&nbsp;&nbsp;<button class="button" style="margin-left:10px" id="produce" data-bind='{"click":"produce"}'>Produce</button><br />
-        <div class="fluid col-1-1" style="margin-top:10px;margin-bottom:15px;font-family:consolas,monospace" data-bind='{"html":"summary"}'></div>
-        <div id="math" style="margin-bottom:15px;" data-bind='{"show":"hasMath"}'></div>
+        <strong>Output:</strong>&nbsp;&nbsp;<button class="button" style="margin-left:10px" id="produce" mv-evt mv-on-click="produce">Produce</button><br />
+        <div class="fluid col-1-1" style="margin-top:10px;margin-bottom:15px;font-family:consolas,monospace" mv-model="summary" mv-model-evt mv-on-model-change="html"></div>
+        <div id="math" style="margin-bottom:15px;" mv-model="hasMath" mv-model-evt mv-on-model-change="show"></div>
         <textarea id="output"></textarea>
     </div>
 <div class="ui-delayable-overlay"><div class="ui-spinner ui-spinner-dots"></div></div>
 </div>
-<script type="text/tpl" id="condition_tpl">
+<script type="text/x-template" id="condition_tpl">
 <tr>
 <td><input type="text" name="pos" value="" size="2" title="Position number (0..N-1)" /></td>
 <td>&nbsp;<select name="op" title="Values or Algebraic Expression">
@@ -442,7 +442,7 @@ window.MathJax = {
 <option value="EXPR">=EXPR</option>
 </select>&nbsp;</td>
 <td><input type="text" name="dat" value="" size="6" title="Values or Expression. Eg Value Set: 0 or 1 or 2 = 0,1,2. Value at pos &quot;1&quot; plus 4 = [1]+4" /></td>
-<td>&nbsp;<button title="Remove" style="font-weight:bold" data-bind='{"click":"remove_condition"}'>-</button></td>
+<td>&nbsp;<button title="Remove" style="font-weight:bold" mv-evt mv-on-click="remove_condition">-</button></td>
 </tr>
 </script>
 
@@ -1425,8 +1425,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'BigInteger', 'Abacus'],
 
     $screen.modelview({
         autobind: true
-        ,livebind: '$(__KEY__)'
-        ,bindAttribute: 'data-bind'
+        ,livebind: 'text'
 
         ,model: {
             id: 'model'

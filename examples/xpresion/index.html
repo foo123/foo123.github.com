@@ -125,9 +125,9 @@
     
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
-        <strong>Xpresion ($(xpresion_version)):</strong>
-        &nbsp;&nbsp;<input type="button" class="button" id="debug" data-bind='{"click":"debug"}' value="Debug" />
-        &nbsp;&nbsp;<input type="button" class="button" id="evaluate" data-bind='{"click":"evaluate"}' value="Evaluate" />
+        <strong>Xpresion ({%=xpresion_version%}):</strong>
+        &nbsp;&nbsp;<input type="button" class="button" id="debug" mv-evt mv-on-click="debug" value="Debug" />
+        &nbsp;&nbsp;<input type="button" class="button" id="evaluate" mv-evt mv-on-click="evaluate" value="Evaluate" />
         &nbsp;&nbsp;<a class="button" id="help" href="https://github.com/foo123/Xpresion" target="_blank">Help</a>
         <br />
         <textarea id="input">1+2+$v</textarea>
@@ -147,7 +147,7 @@
     
     
     <footer id="footer">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
     
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 
@@ -295,8 +295,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Xpresion'],
     
     $screen.modelview({
         //autobind: true
-        livebind: '$(__KEY__)'
-        ,bindAttribute: 'data-bind'
+        livebind: 'text'
         
         ,model: {
             id: 'model'

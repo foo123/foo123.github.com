@@ -79,21 +79,7 @@ input[type=text] {
 <script src="../common/js/codemirror/mode/css.js"></script>
 <script src="../common/js/codemirror/mode/htmlmixed.js"></script>
 <script type="text/javascript" src="../common/js/require.js"></script>
-<script type="text/javascript">
-!function(require) {
-require.config({
-    baseUrl: /^https?:\/\/foo123\./.test(location.href) ? "/examples/common/js" : "/foo123.github.com/examples/common/js"
-
-    ,paths: {
-        Snippets: "snippets"
-        ,ModelViewBundle: "modelview.bundle"
-    }
-    ,bundles: {
-        ModelViewBundle: ["ModelView", "ModelViewValidation"]
-    }        
-});
-}(require);
-</script>
+<script type="text/javascript" src="../common/js/require-config.js"></script>
 </head>
 
 <body class="responsive-864-container">

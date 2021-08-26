@@ -221,7 +221,7 @@ function get_mode( grammar, SyntaxHighlighter )
     </div>
     
     <div id="grammarContainer" class="fluid col-5-10 container">
-        <div class="heading"><strong>Grammar (JSON format):</strong> &nbsp;&nbsp; <input id="apply" type="button" class="button" data-bind='{"click":"apply"}' value="Apply" /></div>
+        <div class="heading"><strong>Grammar (JSON format):</strong> &nbsp;&nbsp; <input id="apply" type="button" class="button" mv-evt mv-on-click="apply" value="Apply" /></div>
                             
 <textarea id="grammar" class="editor">
 // a partial javascript grammar in simple JSON format
@@ -344,7 +344,7 @@ function get_mode( grammar, SyntaxHighlighter )
     
     
     <footer id="footer">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
     
 <div class="showcase">Syntax Highlight by <a href="http://alexgorbatchev.com/SyntaxHighlighter/" target="_blank">SyntaxHighlighter</a> and <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 
@@ -426,7 +426,6 @@ require(['jQuery', 'ModelView'],
         
         $screen.modelview({
             autobind: true
-            ,bindAttribute: 'data-bind'
             
             ,model: {
                 id: 'model'

@@ -206,8 +206,8 @@
     
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
-        <strong>Composed Regular Expression ($(regex_version)):</strong>
-        &nbsp;&nbsp;<button class="button" id="compose" data-bind='{"click":"compose"}'>Compose</button>&nbsp;&nbsp;<a href="../regex-analyzer/#$(regex_code)" target="_blank" class="button" id="analyze">Analyze</a>
+        <strong>Composed Regular Expression ({%=regex_version%}):</strong>
+        &nbsp;&nbsp;<button class="button" id="compose" mv-evt mv-on-click="compose">Compose</button>&nbsp;&nbsp;<a href="../regex-analyzer/#{%=regex_code%}" target="_blank" class="button" id="analyze">Analyze</a>
         <br />
         <textarea id="regex"></textarea>
     </div>
@@ -543,7 +543,7 @@
     
     
     <footer id="footer">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
     
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 <div class="showcase">Regular Expression syntax highlight mode by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
@@ -749,9 +749,8 @@ require(['jQuery', 'ModelView', 'Regex', 'Dromeo'],
     }});
     
     $screen.modelview({
-        //autobind: true
-        livebind: '$(__KEY__)'
-        ,bindAttribute: 'data-bind'
+        autobind: false
+        ,livebind: 'text'
         
         ,model: {
             id: 'model'

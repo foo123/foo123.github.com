@@ -246,7 +246,7 @@ function get_mode( grammar, DEFAULT, CodeMirror )
     </div>
         
     <div id="grammarContainer" class="fluid col-5-10 container">
-        <div class="heading"><strong>Grammar (JSON format):</strong> &nbsp;&nbsp; <input data-bind='{"click":"apply"}' id="apply" type="button" class="button" value="Apply" />&nbsp;&nbsp; <label><input id="annotate" name="model[annotate]" data-bind='{"change":"apply"}' type="checkbox" /> &nbsp;&nbsp; Enable Grammar Annotations</label></div>
+        <div class="heading"><strong>Grammar (JSON format):</strong> &nbsp;&nbsp; <input mv-evt mv-on-click="apply" id="apply" type="button" class="button" value="Apply" />&nbsp;&nbsp; <label><input type="checkbox" id="annotate" name="model[annotate]" mv-model="annotate" mv-model-evt mv-on-model-change="apply" /> &nbsp;&nbsp; Enable Grammar Annotations</label></div>
                         
 <textarea id="grammar" class="editor">
 // a partial javascript grammar in simple JSON format
@@ -365,7 +365,7 @@ function get_mode( grammar, DEFAULT, CodeMirror )
     
     
     <footer id="footer">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
     
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 <div class="showcase">Generate / edit EBNF Diagrams <a href="http://www.bottlecaps.de/rr/ui" target="_blank">Railroad Diagram Generator</a></div>
@@ -477,7 +477,6 @@ require(['jQuery', 'ModelView'],
         
         $screen.modelview({
             autobind: true
-            ,bindAttribute: 'data-bind'
             
             ,model: {
                 id: 'model'

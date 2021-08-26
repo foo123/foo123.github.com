@@ -119,7 +119,7 @@
     
 <header id="header">
     <h1>Grammar Template</h1>
-    <i>A versatile and intuitive grammar-based templating for PHP, Python, Node/XPCOM/JS, ActionScript</i>
+    <i>A versatile and intuitive grammar-based templating for PHP, Python, JavaScript</i>
 </header>
 
 <br /><br />
@@ -130,9 +130,9 @@
     <div class="fluid col-1-1">
     <div class="fluid col-1-1" style="margin-bottom:10px">
     
-        <strong>Grammar Template ($(grammartemplate_version)):</strong>
-        &nbsp;&nbsp;<input type="button" class="button" id="render" data-bind='{"click":"render"}' value="Render" />
-        &nbsp;&nbsp;<a class="button" id="help" href="https://github.com/foo123/GrammarTemplate" target="_blank">Help</a>&nbsp;&nbsp;<input id="mode" type="checkbox" data-bind='{"change":"setMode"}' />&nbsp;&nbsp;<label id="setmode" for="mode">PostOp Mode</label>
+        <strong>Grammar Template ({%=grammartemplate_version%}):</strong>
+        &nbsp;&nbsp;<input type="button" class="button" id="render" mv-evt mv-on-click="render" value="Render" />
+        &nbsp;&nbsp;<a class="button" id="help" href="https://github.com/foo123/GrammarTemplate" target="_blank">Help</a>&nbsp;&nbsp;<input id="mode" type="checkbox" mv-evt mv-on-change="setMode" />&nbsp;&nbsp;<label id="setmode" for="mode">PostOp Mode</label>
         <br /><br />
 <!--
 SELECT <column.select>[, <column.select>*]
@@ -223,7 +223,7 @@ LIMIT &lt;offset|0&gt;, &lt;?count&gt;][#
     
     
     <footer id="footer">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
     
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 <div class="showcase">JSON &amp; GrammarTemplate syntax highlight modes by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
@@ -333,9 +333,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'GrammarTemplate'],
     }});
     
     $screen.modelview({
-        //autobind: true
-        livebind: '$(__KEY__)'
-        ,bindAttribute: 'data-bind'
+        autobind: false
+        ,livebind: 'text'
         
         ,model: {
             id: 'model'

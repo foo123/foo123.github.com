@@ -122,7 +122,7 @@
     
 <header id="header">
     <h1>Regex Analyzer</h1>
-    <i>A generic &amp; simple Regular Expression Analyzer &amp; Composer for PHP, Python, Node.js / Browser / XPCOM Javascript</i>
+    <i>A generic &amp; simple Regular Expression Analyzer &amp; Composer for PHP, Python, JavaScript</i>
 </header>
 
 <br /><br />
@@ -131,10 +131,10 @@
     
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
-        <strong>Regular Expression ($(regex_version)):</strong>
+        <strong>Regular Expression ({%=regex_version%}):</strong>
         <br />(wrap the expression in <code>/../[flags]</code> and optionaly add flags)
-        &nbsp;&nbsp;<button class="button" id="analyze" data-bind='{"click":"analyze"}'>Syntax Tree</button>
-        &nbsp;&nbsp;<button class="button" id="statistics" data-bind='{"click":"statistics"}'>Statistics</button>&nbsp;&nbsp;<a href="../regex-composer/#$(regex_ast)" target="_blank" class="button" id="compose">Compose</a>
+        &nbsp;&nbsp;<button class="button" id="analyze" mv-evt mv-on-click="analyze">Syntax Tree</button>
+        &nbsp;&nbsp;<button class="button" id="statistics" mv-evt mv-on-click="statistics">Statistics</button>&nbsp;&nbsp;<a href="../regex-composer/#{%=regex_ast%}" target="_blank" class="button" id="compose">Compose</a>
         <br />
         <textarea id="regex">/[abc]+/i</textarea>
     </div>
@@ -148,7 +148,7 @@
     
     
     <footer id="footer">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
     
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 <div class="showcase">JSON &amp; Regular Expression syntax highlight modes by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
@@ -353,9 +353,8 @@ require(['jQuery', 'Dromeo', 'ModelView', 'Regex'],
     }});
     
     $screen.modelview({
-        //autobind: true
-        livebind: '$(__KEY__)'
-        ,bindAttribute: 'data-bind'
+        autobind: false
+        ,livebind: 'text'
         
         ,model: {
             id: 'model'

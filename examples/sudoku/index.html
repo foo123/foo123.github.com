@@ -405,7 +405,7 @@ h1 {
 <script type="text/javascript" src="../common/js/require-config.js"></script>-->
 <script type="text/javascript" src="./jquery.js"></script>
 <!--<script type="text/javascript" src="./jqueryui.js"></script>-->
-<script type="text/javascript" src="../common/js/modelview_old.bundle.js"></script>
+<script type="text/javascript" src="../common/js/modelview.bundle.js"></script>
 <script type="text/javascript" src="./sudoku.bundle.js"></script>
 
 </head>
@@ -473,8 +473,8 @@ h1 {
 </header>
 
 <section id="panel" class="fluid col-1-1" style="margin-top:40px;padding:10px;">
-<div class="fluid col-1-1 text-center" style="margin-bottom:12px"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
-<div class="fluid col-1-1 text-center"><button class="button" id="new_game" data-bind='{"click":"new_game"}'>New Game</button></div>
+<div class="fluid col-1-1 text-center" style="margin-bottom:12px"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
+<div class="fluid col-1-1 text-center"><button class="button" id="new_game" mv-evt mv-on-click="new_game">New Game</button></div>
 <div id="grid" class="fluid col-1-1" style="padding-top:10px;"></div>
 <div class="ui-delayable-overlay"><div class="ui-spinner ui-spinner-dots"></div></div>
 </section>

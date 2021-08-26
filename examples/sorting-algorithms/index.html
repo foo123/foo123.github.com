@@ -244,7 +244,7 @@ select {
     </select></div>                                
     
     <input id="test" type="button" class="button" 
-        value="Run Test" data-bind='{"click":"test"}' />
+        value="Run Test" mv-evt mv-on-click="test" />
     <br /><br />
 </div>
 
@@ -252,28 +252,28 @@ select {
     <strong>Console: </strong> <br />
     <div id="console" class="fluid col-1-1">
         <div class="algo_info">
-            <strong>Selected Algorithm: $(algorithm.name)</strong>
+            <strong>Selected Algorithm: {%=algorithm.name%}</strong>
             <br /><br />
-            <strong>Reference Link:</strong> <a href="$(algorithm.reflink)" target="_blank">$(algorithm.reflink)</a>
+            <strong>Reference Link:</strong> <a href="{%=algorithm.reflink%}" target="_blank">{%=algorithm.reflink%}</a>
             <br /><br />
-            <strong>Summary:</strong> <i data-bind='{"html":"algorithm.desc"}'></i>
+            <strong>Summary:</strong> <i mv-model="algorithm.desc" mv-model-evt mv-on-model-change="html"></i>
             <br /><br />
         </div>
         <div id="loader" class="loader"></div>
         <div id="result">
-            <div style="display:none" data-bind='{"show":"result.showData"}'>
-                Original: $(result.original)<br />
-                Result: $(result.sorted)<br />
+            <div style="display:none" mv-model="result.showData" mv-model-evt mv-on-model-change="show">
+                Original: {%=result.original%}<br />
+                Result: {%=result.sorted%}<br />
                 <br /><br />
             </div>
-            <strong>Time Taken = $(result.tms) (ms)</strong>
+            <strong>Time Taken = {%=result.tms%} (ms)</strong>
             <br /><br />
             <i>Reality Check:</i> Result is &nbsp;&nbsp;
-            <span data-bind='{"show":"result.isSorted"}'>
+            <span mv-model="result.isSorted" mv-model-evt mv-on-model-change="show">
                 <span style="color:green;font-weight:bold;font-size:20px;">&#10003;&nbsp;&nbsp;</span>
                 <strong>SORTED</strong>
             </span>
-            <span data-bind='{"hide":"result.isSorted"}'>
+            <span mv-model="result.isSorted" mv-model-evt mv-on-model-change="hide">
                 <span style="color:red;font-weight:bold;font-size:20px;">&#10060;&nbsp;&nbsp;</span>
                 <strong>NOT SORTED</strong>
             </span>
@@ -287,7 +287,7 @@ select {
     
     
     <footer id="footer">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
     
 <div class="showcase">DOM abstraction by <a href="http://jquery.com/" target="_blank">jQuery</a></div>
 
@@ -542,7 +542,7 @@ require([/*'Benchmark',*/ 'jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Sort'
         
         id: 'SortingAlgorithmsPanel',
         
-        livebind: '$(__KEY__)',
+        livebind: 'text',
         autobind: true,
         events: ['change', 'click'],
         autoSync: true,

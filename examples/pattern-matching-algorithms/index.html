@@ -33,6 +33,9 @@ body {
     color:#aaa;
     position:relative;
 }
+input,select,textarea {
+    color: #121212;
+}
 .showcase {
     margin:5px 2px;
     color:white;
@@ -184,7 +187,7 @@ body {
     <div class="cont">&quot;&nbsp;0123456789ABCDEFQHIJKLMNOPQRSTUVWXYZabcdefqhijklmnopqrstuvwxyz&quot;</div> 
     
     <input id="test" type="button" class="button" 
-        value="Run Test" data-bind='{"click":"test"}' />
+        value="Run Test" mv-evt mv-on-click="test" />
     <br /><br />
 </div>
 
@@ -192,22 +195,22 @@ body {
     <strong>Console: </strong> <br />
     <div id="console" class="fluid col-1-1">
         <div class="algo_info">
-            <strong>Selected Algorithm: $(algorithm.name)</strong>
+            <strong>Selected Algorithm: {%=algorithm.name%}</strong>
             <br /><br />
-            <strong>Reference Link:</strong> <a href="$(algorithm.reflink)" target="_blank">$(algorithm.reflink)</a>
+            <strong>Reference Link:</strong> <a href="{%=algorithm.reflink%}" target="_blank">{%=algorithm.reflink%}</a>
             <br /><br />
-            <strong>Summary:</strong> <i data-bind='{"html":"algorithm.desc"}'></i>
+            <strong>Summary:</strong> <i mv-model="algorithm.desc" mv-model-evt mv-on-model-change="html"></i>
             <br /><br />
         </div>
         <div id="loader" class="loader"></div>
         <div id="result">
-            Pattern: /<i style="white-space:pre">$(algorithm.pattern)</i>/<br />
-            Text: <p style="white-space:pre;font-style:italic">$(algorithm.text)</p><br />
-            <span data-bind='{"show":"result.matched"}'>
+            Pattern: /<i style="white-space:pre">{%=algorithm.pattern%}</i>/<br />
+            Text: <p style="white-space:pre;font-style:italic">{%=algorithm.text%}</p><br />
+            <span mv-model="result.matched" mv-model-evt mv-on-model-change="show">
                 <span style="color:green;font-weight:bold;font-size:20px;">&#10003;&nbsp;&nbsp;</span>
-                <strong>Pattern matched at position $(result.pos)</strong>
+                <strong>Pattern matched at position {%=result.pos%}</strong>
             </span>
-            <span data-bind='{"hide":"result.matched"}'>
+            <span mv-model="result.matched" mv-model-evt mv-on-model-change="hide">
                 <span style="color:red;font-weight:bold;font-size:20px;">&#10060;&nbsp;&nbsp;</span>
                 <strong>Pattern NOT matched</strong>
             </span>
@@ -221,7 +224,7 @@ body {
     
     
     <footer id="footer">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
     
 <div class="showcase">DOM abstraction by <a href="http://jquery.com/" target="_blank">jQuery</a></div>
 
@@ -283,7 +286,7 @@ require(['jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'Pattern'],
         
         id: 'PatternMatchingAlgorithmsPanel',
         
-        livebind: '$(__KEY__)',
+        livebind: 'text',
         autobind: true,
         events: ['change', 'click'],
         autoSync: true,

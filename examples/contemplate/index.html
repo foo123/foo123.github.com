@@ -121,7 +121,7 @@
 
 <script src="../common/js/jquery.js"></script>
 <script src="../common/js/Contemplate.min.js"></script>
-<script src="../common/js/modelview_old.min.js"></script>
+<script src="../common/js/modelview.min.js"></script>
 <script src="../common/js/codemirror/codemirror.min.js"></script>
 <script src="../common/js/codemirror/addon/mode/multiplex.js"></script>
 <script src="../common/js/codemirror/mode/xml.js"></script>
@@ -155,7 +155,7 @@
     
 <div id="screen" class="fluid col-1-1">
     <div id="tplContainer" class="fluid col-9-10 container">
-        <div class="heading"><strong>Template Markup (Contemplate $(contemplate_version)):</strong>&nbsp;&nbsp;<input type="checkbox" data-bind='{"change":"setCompatibility"}' />&nbsp;&nbsp;Compatibility Mode</div>
+        <div class="heading"><strong>Template Markup (Contemplate {%=contemplate_version%}):</strong>&nbsp;&nbsp;<input type="checkbox" mv-evt mv-on-change="setCompatibility" />&nbsp;&nbsp;Compatibility Mode</div>
         
         <textarea id="tpl" class="editor">
 <div class="class">
@@ -188,7 +188,7 @@
     </div>
         
     <div class="fluid col-9-10 container">
-        <div class="heading"><strong>Output:</strong> &nbsp;&nbsp; <input class="button" type="button" id="render" value="Render" data-bind='{"click":"render"}' />&nbsp;&nbsp;<i>(Enable console to see any errors)</i>
+        <div class="heading"><strong>Output:</strong> &nbsp;&nbsp; <input class="button" type="button" id="render" value="Render" mv-evt mv-on-click="render" />&nbsp;&nbsp;<i>(Enable console to see any errors)</i>
         </div>
         
         <div id="output" style="min-height:300px; font-size:12px; background:#262626;">
@@ -200,7 +200,7 @@
     
     
     <footer id="footer">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
     
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 <div class="showcase">Contemplate Grammar highlight mode by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
@@ -277,8 +277,7 @@ jQuery(function($){
     
     $screen.modelview({
         autobind: true
-        ,livebind: '$(__KEY__)'
-        ,bindAttribute: 'data-bind'
+        ,livebind: 'text'
         
         ,model: {
             id: 'model'

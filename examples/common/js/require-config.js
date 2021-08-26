@@ -22,7 +22,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     ,DateX: "DateX.min"
     ,Plot: "Plot.min"
     ,Tao: "Tao.min"
-    ,ModelViewBundle: "modelview_old.bundle"
+    ,ModelViewBundle: "modelview.bundle"//"modelview_old.bundle"
     ,Importer: "Importer.min"
     ,HtmlWidget: "HtmlWidget.min"
     ,Contemplate: "Contemplate.min"

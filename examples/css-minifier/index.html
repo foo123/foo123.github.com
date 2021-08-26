@@ -133,7 +133,7 @@ label > input
 
 
 <script src="../common/js/jquery.js"></script>
-<script src="../common/js/modelview_old.min.js"></script>
+<script src="../common/js/modelview.min.js"></script>
 <script src="../common/js/codemirror/codemirror.min.js"></script>
 <script src="../common/js/codemirror/addon/lint/lint.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
@@ -174,14 +174,14 @@ label > input
         <label><input id="fonts" type="checkbox" disabled /> Embed Fonts (server only)</label>
         <label><input id="imports" type="checkbox" disabled /> Embed Imports (server only)</label>
         <br />
-        <label><input id="line-wrap" name="model[wrap]" data-bind='{"change":"lineWrap"}' type="checkbox" checked /> Line Wrapping</label>
+        <label><input id="line-wrap" name="model[wrap]" mv-evt mv-on-change="lineWrap" type="checkbox" checked /> Line Wrapping</label>
         <br />
     </div>
         
     <div class="fluid col-1-1">
     
         <div id="codeContainer" class="fluid col-5-10 container">
-            <div class="heading"><strong>CSS to be processed:</strong>&nbsp;&nbsp;<button id="apply" class="button" data-bind='{"click":"process"}'>Process</button></div>
+            <div class="heading"><strong>CSS to be processed:</strong>&nbsp;&nbsp;<button id="apply" class="button" mv-evt mv-on-click="process">Process</button></div>
             
 <textarea id="code" class="editor">
 /* sample css here */
@@ -227,7 +227,7 @@ div
     
     
     <footer id="footer">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a> or <a href="https://nikos-web-dev.000webhostapp.com/#contact_tab" class="donate">hire me for a job</a></div>
+    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
     
 <div class="showcase">For an alternative approach to a vendor-aware CSS without prefixes see <a href="http://leaverou.github.io/prefixfree/" target="_blank">prefixfree</a></div>
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
@@ -309,7 +309,6 @@ jQuery(function($){
     
     $screen.modelview({
         autobind: true
-        ,bindAttribute: 'data-bind'
         
         ,model: {
             id: 'model'
