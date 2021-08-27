@@ -5,10 +5,9 @@
  * Provides requestAnimationFrame in a cross browser way.
  * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
  */
-if ( !window.requestAnimationFrame ) {
-
-    window.requestAnimationFrame = ( function() {
-
+if (!window.requestAnimationFrame)
+{
+    window.requestAnimationFrame = (function(){
         return window.webkitRequestAnimationFrame ||
         window.mozRequestAnimationFrame ||
         window.oRequestAnimationFrame ||
@@ -18,9 +17,7 @@ if ( !window.requestAnimationFrame ) {
             window.setTimeout( callback, 1000 / 60 );
 
         };
-
-    } )();
-
+    })();
 }
 
 var
@@ -49,10 +46,11 @@ var
     multx = 0.5*Math.PI, multy = -Math.PI
 ;
 
-function range( what, min, max, closed )
+function range(what, min, max, closed)
 {
     return true===closed ? ((what <= max) && (what >= min)) : ((what < max) && (what > min));
 }
+
 /*function max( v )
 {
     var xx = Math.abs(v.x), yy = Math.abs(v.y), zz = Math.abs(v.z);
@@ -74,23 +72,23 @@ function range( what, min, max, closed )
     return('#' + prefix + hx);
 }*/
 
-function recursive_offset( node )
+function recursive_offset(node)
 {
     var x = 0, y = 0, nodeStyle;
 
-    while ( node )
+    while (node)
     {
         try {
             nodeStyle = window.getComputedStyle(node);
         } catch(e) {
             nodeStyle = null;
         }
-        if ( node.scrollLeft ) x += node.scrollLeft;
-        if ( node.scrollTop ) y += node.scrollTop;
-        if ( node.offsetLeft ) x -= node.offsetLeft;
-        if ( node.offsetTop ) y -= node.offsetTop;
-        if ( nodeStyle && nodeStyle.marginLeft ) x -= parseInt(nodeStyle.marginLeft, 10);
-        if ( nodeStyle && nodeStyle.marginTop ) y -= parseInt(nodeStyle.marginTop, 10);
+        if (node.scrollLeft) x += node.scrollLeft;
+        if (node.scrollTop) y += node.scrollTop;
+        if (node.offsetLeft) x -= node.offsetLeft;
+        if (node.offsetTop) y -= node.offsetTop;
+        if (nodeStyle && nodeStyle.marginLeft) x -= parseInt(nodeStyle.marginLeft, 10);
+        if (nodeStyle && nodeStyle.marginTop) y -= parseInt(nodeStyle.marginTop, 10);
         node = node.parentNode
     }
     return {x:x, y:y};
@@ -297,61 +295,61 @@ function cs_init()
 
 function updateflatimage()
 {
-    /*var flat =*/ rubikcube.getFlatImage(flatimage);
+    /*var flat =*/rubikcube.getFlatImage(flatimage);
 }
 
-function getCubelet( clientX, clientY )
+function getCubelet(clientX, clientY)
 {
-    mouse.x = ( clientX / w ) * 2 - 1;
-    mouse.y = - ( clientY / h ) * 2 + 1;
-    var vector = new THREE.Vector3( mouse.x, mouse.y, 1 ), ray, intersects;
-    projector.unprojectVector( vector, camera );
-    ray = new THREE.Ray( camera.position, vector.subSelf( camera.position ).normalize() );
-    intersects = ray.intersectObjects( rubikcube.children );
+    mouse.x = (clientX / w) * 2 - 1;
+    mouse.y = -(clientY / h) * 2 + 1;
+    var vector = new THREE.Vector3(mouse.x, mouse.y, 1), ray, intersects;
+    projector.unprojectVector(vector, camera);
+    ray = new THREE.Ray(camera.position, vector.subSelf(camera.position).normalize());
+    intersects = ray.intersectObjects(rubikcube.children);
     return 0 < intersects.length ? {cubelet:intersects[0].object, face:intersects[0].face, ray:ray, vector:vector} : null;
 }
 
-function onDocumentMouseDown( event )
+function onDocumentMouseDown(event)
 {
     onDocumentDown(event, false);
 }
-function onDocumentTouchStart( event )
+function onDocumentTouchStart(event)
 {
     onDocumentDown(event, true);
 }
-function onDocumentDown( event, isTouch )
+function onDocumentDown(event, isTouch)
 {
     event.preventDefault();
 
     var clientX = isTouch ? event.changedTouches[0].clientX : event.clientX,
         clientY = isTouch ? event.changedTouches[0].clientY : event.clientY,
-        offset = recursive_offset( event.target ), target;
+        offset, target;
 
+    offset = recursive_offset(event.target);
     clientX += offset.x; clientY += offset.y;
-
     target = getCubelet(clientX, clientY);
 
-    if ( null == target )
+    if (null == target)
     {
         isCubeRotation = true;
-        mouseX0 = mouseX = ( clientX / w )/* * 2 - 1*/;
-        mouseY0 = mouseY = ( clientY / h )/* * 2 - 1*/;
+        mouseX0 = mouseX = (clientX / w)/* * 2 - 1*/;
+        mouseY0 = mouseY = (clientY / h)/* * 2 - 1*/;
         //targetRotationY = mouseX;
         //targetRotationX = mouseY;
         //targetRotationOnMouseDownY = targetRotationY;
         //targetRotationOnMouseDownX = targetRotationX;
 
-        if ( isTouch )
+        if (isTouch)
         {
-            container.addEventListener( 'touchmove', onDocumentTouchMove, false );
-            container.addEventListener( 'touchend', onDocumentTouchEnd, false );
-            container.addEventListener( 'touchcancel', onDocumentTouchEnd, false );
+            container.addEventListener('touchmove', onDocumentTouchMove, false);
+            container.addEventListener('touchend', onDocumentTouchEnd, false);
+            container.addEventListener('touchcancel', onDocumentTouchEnd, false);
         }
         else
         {
-            container.addEventListener( 'mousemove', onDocumentMouseMove, false );
-            container.addEventListener( 'mouseup', onDocumentMouseUp, false );
-            container.addEventListener( 'mouseout', onDocumentMouseOut, false );
+            container.addEventListener('mousemove', onDocumentMouseMove, false);
+            container.addEventListener('mouseup', onDocumentMouseUp, false);
+            container.addEventListener('mouseout', onDocumentMouseOut, false);
         }
     }
     else
@@ -359,50 +357,52 @@ function onDocumentDown( event, isTouch )
         isCubeRotation = false;
         var cubeletseenas = rubikcube.getCubeletSeenCoords(target.cubelet),
             f = rubikcube.getFacesAsSeen(target.cubelet), matname;
-        if ( null == f ) return;
+        if (null == f) return;
 
         matname = target.cubelet.geometry.materials[target.face.materialIndex].name;
         pressed_cub = {cub:target.cubelet,seenas:{name:f.faceseenas[matname],xx:cubeletseenas.xx,yy:cubeletseenas.yy,zz:cubeletseenas.zz},ray:target.ray,vector:target.vector};
 
-        if ( isTouch )
+        if (isTouch)
         {
-            //container.addEventListener( 'touchmove', onDocumentTouchMove, false );
-            container.addEventListener( 'touchend', onDocumentTouchEnd, false );
-            container.addEventListener( 'touchcancel', onDocumentTouchEnd, false );
+            //container.addEventListener('touchmove', onDocumentTouchMove, false);
+            container.addEventListener('touchend', onDocumentTouchEnd, false);
+            container.addEventListener('touchcancel', onDocumentTouchEnd, false);
         }
         else
         {
-            //container.addEventListener( 'mousemove', onDocumentMouseMove, false );
-            container.addEventListener( 'mouseup', onDocumentMouseUp, false );
-            container.addEventListener( 'mouseout', onDocumentMouseOut, false );
+            //container.addEventListener('mousemove', onDocumentMouseMove, false);
+            container.addEventListener('mouseup', onDocumentMouseUp, false);
+            container.addEventListener('mouseout', onDocumentMouseOut, false);
         }
     }
 }
 
-function onDocumentMouseMove( event )
+function onDocumentMouseMove(event)
 {
     onDocumentMove(event, false);
 }
-function onDocumentTouchMove( event )
+function onDocumentTouchMove(event)
 {
     onDocumentMove(event, true);
 }
-function onDocumentMove( event, isTouch )
+function onDocumentMove(event, isTouch)
 {
     var clientX = isTouch ? event.changedTouches[0].clientX : event.clientX,
         clientY = isTouch ? event.changedTouches[0].clientY : event.clientY,
-        offset = recursive_offset( event.target );
+        offset;
 
-    clientX += offset.x; clientY += offset.y;
-
-    if ( isCubeRotation )
+    if (isCubeRotation)
     {
-        if ( clientX>w || clientX<0 || clientY>h || clientY<0 ) return;
-        mouseX = ( clientX / w )/* * 2 - 1*/;
-        mouseY = ( clientY / h )/* * 2 - 1*/;
-        targetRotationY += mouseX-mouseX0;
-        targetRotationX += mouseY-mouseY0;
-        mouseX0 = mouseX; mouseY0 = mouseY;
+        offset = recursive_offset(event.target);
+        clientX += offset.x; clientY += offset.y;
+
+        if (clientX > w || clientX < 0 || clientY > h || clientY < 0) return;
+        mouseX = (clientX / w)/* * 2 - 1*/;
+        mouseY = (clientY / h)/* * 2 - 1*/;
+        targetRotationY += mouseX - mouseX0;
+        targetRotationX += mouseY - mouseY0;
+        mouseX0 = mouseX;
+        mouseY0 = mouseY;
     }
     else
     {
@@ -410,30 +410,28 @@ function onDocumentMove( event, isTouch )
     }
 }
 
-function onDocumentMouseUp( event )
+function onDocumentMouseUp(event)
 {
     onDocumentUp(event, false);
 }
-function onDocumentTouchEnd( event )
+function onDocumentTouchEnd(event)
 {
     onDocumentUp(event, true);
 }
-function onDocumentUp( event, isTouch )
+function onDocumentUp(event, isTouch)
 {
     var clientX = isTouch ? event.changedTouches[0].clientX : event.clientX,
         clientY = isTouch ? event.changedTouches[0].clientY : event.clientY,
-        offset = recursive_offset( event.target );
+        offset;
 
-    clientX += offset.x; clientY += offset.y;
-
-    if ( isCubeRotation )
+    if (isCubeRotation)
     {
         isCubeRotation = false;
-        if ( isTouch )
+        if (isTouch)
         {
-            container.removeEventListener( 'touchmove', onDocumentTouchMove, false );
-            container.removeEventListener( 'touchend', onDocumentTouchEnd, false );
-            container.removeEventListener( 'touchcancel', onDocumentTouchEnd, false );
+            container.removeEventListener('touchmove', onDocumentTouchMove, false);
+            container.removeEventListener('touchend', onDocumentTouchEnd, false);
+            container.removeEventListener('touchcancel', onDocumentTouchEnd, false);
         }
         else
         {
@@ -444,15 +442,17 @@ function onDocumentUp( event, isTouch )
     }
     else
     {
-        var target = getCubelet(clientX, clientY), cubeletseenas, f, matname,
-            N, prev_ray, now_ray, angle = -1, nn/*, maxd*/;
+        offset = recursive_offset(event.target);
+        clientX += offset.x; clientY += offset.y;
 
-        if ( null == target ) return;
+        var target = getCubelet(clientX, clientY), cubeletseenas, f, matname, N, angle = -1;
+
+        if (null == target) return;
 
         cubeletseenas = rubikcube.getCubeletSeenCoords(target.cubelet);
         f = rubikcube.getFacesAsSeen(target.cubelet);
 
-        if ( null == f ) return;
+        if (null == f) return;
 
         matname = target.cubelet.geometry.materials[target.face.materialIndex].name;
 
@@ -467,50 +467,51 @@ function onDocumentUp( event, isTouch )
             ray: target.ray,
             vector: target.vector
         };
-        if ( pressed_cub.seenas.name === released_cub.seenas.name )
+        if (pressed_cub.seenas.name === released_cub.seenas.name)
         {
             N = rubikcube.rubik.N;
-            prev_ray = pressed_cub.vector;
-            now_ray = released_cub.vector;
             angle = -1;
-            nn = now_ray.subSelf(prev_ray);
-            //maxd = max(nn);
 
+            //console.log(pressed_cub.seenas.name, pressed_cub.seenas.xx, pressed_cub.seenas.yy, pressed_cub.seenas.zz);
+            //console.log(released_cub.seenas.name, released_cub.seenas.xx, released_cub.seenas.yy, released_cub.seenas.zz);
             switch(pressed_cub.seenas.name)
             {
                 case 'right':
                 case 'left':
                     if (range(pressed_cub.seenas.yy,0,N-1) && range(released_cub.seenas.yy,0,N-1))
                     {
-                        if ( nn.x>0 ) angle=-angle;
+                        if ('left' === pressed_cub.seenas.name) angle = -angle;
+                        if (released_cub.seenas.zz < pressed_cub.seenas.zz) angle = -angle;
                         rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     else if (range(pressed_cub.seenas.zz,0,N-1) && range(released_cub.seenas.zz,0,N-1))
                     {
-                        if ( nn.y<0 ) angle=-angle;
-                        if ( 'right' === pressed_cub.seenas.name ) angle=-angle;
+                        if ('right' === pressed_cub.seenas.name) angle = -angle;
+                        if (released_cub.seenas.yy < pressed_cub.seenas.yy) angle = -angle;
                         rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
-                    else if (pressed_cub.seenas.yy==N-1 && released_cub.seenas.yy==N-1)
+                    else if (pressed_cub.seenas.yy === N-1 && released_cub.seenas.yy === N-1)
                     {
-                        if ( nn.x>0 ) angle=-angle;
-                        if ( 'right' === pressed_cub.seenas.name ) angle=-angle;
+                        angle = -angle;
+                        if (released_cub.seenas.zz < pressed_cub.seenas.zz) angle = -angle;
                         rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
-                    else if (pressed_cub.seenas.yy==0 && released_cub.seenas.yy==0)
+                    else if (pressed_cub.seenas.yy === 0 && released_cub.seenas.yy === 0)
                     {
-                        if ( nn.x>0 ) angle=-angle;
-                        if ( 'right' === pressed_cub.seenas.name ) angle=-angle;
+                        angle = -angle;
+                        if (released_cub.seenas.zz < pressed_cub.seenas.zz) angle = -angle;
                         rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
-                    else if (pressed_cub.seenas.zz==0 && released_cub.seenas.zz==0)
+                    else if (pressed_cub.seenas.zz === 0 && released_cub.seenas.zz === 0)
                     {
-                        if ( nn.y>0 ) angle=-angle;
+                        angle = -angle;
+                        if (released_cub.seenas.yy < pressed_cub.seenas.yy) angle = -angle;
                         rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
-                    else if (pressed_cub.seenas.zz==N-1 && released_cub.seenas.zz==N-1)
+                    else if (pressed_cub.seenas.zz === N-1 && released_cub.seenas.zz === N-1)
                     {
-                        if ( nn.y>0 ) angle=-angle;
+                        angle = -angle;
+                        if (released_cub.seenas.yy < pressed_cub.seenas.yy) angle = -angle;
                         rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     break;
@@ -518,35 +519,36 @@ function onDocumentUp( event, isTouch )
                 case 'bottom':
                     if (range(pressed_cub.seenas.zz,0,N-1) && range(released_cub.seenas.zz,0,N-1))
                     {
-                        if ( nn.x>0 ) angle=-angle;
-                        if ( 'top'===pressed_cub.seenas.name ) angle=-angle;
+                        if ('bottom' === pressed_cub.seenas.name) angle = -angle;
+                        if (released_cub.seenas.xx < pressed_cub.seenas.xx) angle = -angle;
                         rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     else if (range(pressed_cub.seenas.xx,0,N-1) && range(released_cub.seenas.xx,0,N-1))
                     {
-                        if ( nn.y>0 ) angle=-angle;
+                        if ('bottom' === pressed_cub.seenas.name) angle = -angle;
+                        if (released_cub.seenas.zz < pressed_cub.seenas.zz) angle = -angle;
                         rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
-                    else if (pressed_cub.seenas.zz==N-1 && released_cub.seenas.zz==N-1)
+                    else if (pressed_cub.seenas.zz === N-1 && released_cub.seenas.zz === N-1)
                     {
-                        if ( nn.x<0 ) angle=-angle;
+                        if (released_cub.seenas.xx < pressed_cub.seenas.xx) angle = -angle;
                         rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
-                    else if (pressed_cub.seenas.zz==0 && released_cub.seenas.zz==0)
+                    else if (pressed_cub.seenas.zz === 0 && released_cub.seenas.zz === 0)
                     {
-                        if ( nn.x<0 ) angle=-angle;
+                        if (released_cub.seenas.xx < pressed_cub.seenas.xx) angle = -angle;
                         rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
-                    else if (pressed_cub.seenas.xx==N-1 && released_cub.seenas.xx==N-1)
+                    else if (pressed_cub.seenas.xx === N-1 && released_cub.seenas.xx === N-1)
                     {
-                        if ( nn.y<0 ) angle=-angle;
-                        if ( 'bottom'===pressed_cub.seenas.name ) angle=-angle;
+                        angle = -angle;
+                        if (released_cub.seenas.zz < pressed_cub.seenas.zz) angle = -angle;
                         rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
-                    else if (pressed_cub.seenas.xx==0 && released_cub.seenas.xx==0)
+                    else if (pressed_cub.seenas.xx === 0 && released_cub.seenas.xx === 0)
                     {
-                        if ( nn.y<0 ) angle=-angle;
-                        if ( 'bottom'===pressed_cub.seenas.name ) angle=-angle;
+                        angle = -angle;
+                        if (released_cub.seenas.zz < pressed_cub.seenas.zz) angle = -angle;
                         rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     break;
@@ -554,82 +556,84 @@ function onDocumentUp( event, isTouch )
                 case 'front':
                     if (range(pressed_cub.seenas.yy,0,N-1) && range(released_cub.seenas.yy,0,N-1))
                     {
-                        if ( nn.x<0 ) angle=-angle;
-                        if ( 'back'===pressed_cub.seenas.name ) angle=-angle;
+                        if ('back' === pressed_cub.seenas.name) angle = -angle;
+                        if (released_cub.seenas.xx < pressed_cub.seenas.xx) angle = -angle;
                         rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     else if (range(pressed_cub.seenas.xx,0,N-1) && range(released_cub.seenas.xx,0,N-1))
                     {
-                        if ( nn.y<0 ) angle=-angle;
-                        if ( 'back'===pressed_cub.seenas.name ) angle=-angle;
+                        if ('back' === pressed_cub.seenas.name) angle = -angle;
+                        if (released_cub.seenas.yy < pressed_cub.seenas.yy) angle = -angle;
                         rubikcube.rotate({axis:"x",row:pressed_cub.seenas.xx,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
-                    else if (pressed_cub.seenas.yy==N-1 && released_cub.seenas.yy==N-1)
+                    else if (pressed_cub.seenas.yy === N-1 && released_cub.seenas.yy === N-1)
                     {
-                        if ( nn.x>0 ) angle=-angle;
+                        angle = -angle;
+                        if (released_cub.seenas.xx < pressed_cub.seenas.xx) angle = -angle;
                         rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
-                    else if (pressed_cub.seenas.yy==0 && released_cub.seenas.yy==0)
+                    else if (pressed_cub.seenas.yy === 0 && released_cub.seenas.yy === 0)
                     {
-                        if ( nn.x>0 ) angle=-angle;
+                        angle = -angle;
+                        if (released_cub.seenas.xx < pressed_cub.seenas.xx) angle = -angle;
                         rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
-                    else if (pressed_cub.seenas.xx==N-1 && released_cub.seenas.xx==N-1)
+                    else if (pressed_cub.seenas.xx === N-1 && released_cub.seenas.xx === N-1)
                     {
-                        if ( nn.y<0 ) angle=-angle;
+                        if (released_cub.seenas.yy < pressed_cub.seenas.yy) angle = -angle;
                         rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
-                    else if (pressed_cub.seenas.xx==0 && released_cub.seenas.xx==0)
+                    else if (pressed_cub.seenas.xx === 0 && released_cub.seenas.xx === 0)
                     {
-                        if ( nn.y<0 ) angle=-angle;
+                        if (released_cub.seenas.yy < pressed_cub.seenas.yy) angle = -angle;
                         rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
                     break;
             }
         }
-        if ( isTouch )
+        if (isTouch)
         {
-            //container.removeEventListener( 'touchmove', onDocumentTouchMove, false );
-            container.removeEventListener( 'touchend', onDocumentTouchEnd, false );
-            container.removeEventListener( 'touchcancel', onDocumentTouchEnd, false );
+            //container.removeEventListener('touchmove', onDocumentTouchMove, false);
+            container.removeEventListener('touchend', onDocumentTouchEnd, false);
+            container.removeEventListener('touchcancel', onDocumentTouchEnd, false);
         }
         else
         {
-            //container.removeEventListener( 'mousemove', onDocumentMouseMove, false );
-            container.removeEventListener( 'mouseup', onDocumentMouseUp, false );
-            container.removeEventListener( 'mouseout', onDocumentMouseOut, false );
+            //container.removeEventListener('mousemove', onDocumentMouseMove, false);
+            container.removeEventListener('mouseup', onDocumentMouseUp, false);
+            container.removeEventListener('mouseout', onDocumentMouseOut, false);
         }
     }
 }
 
-function onDocumentMouseOut( event )
+function onDocumentMouseOut(event)
 {
     isCubeRotation = false;
-    container.removeEventListener( 'mousemove', onDocumentMouseMove, false );
-    container.removeEventListener( 'mouseup', onDocumentMouseUp, false );
-    container.removeEventListener( 'mouseout', onDocumentMouseOut, false );
+    container.removeEventListener('mousemove', onDocumentMouseMove, false);
+    container.removeEventListener('mouseup', onDocumentMouseUp, false);
+    container.removeEventListener('mouseout', onDocumentMouseOut, false);
 }
 
-function animate( )
+function animate()
 {
-    camera.position.x = rad * Math.sin( targetRotationY*multy ) * Math.cos( targetRotationX*multx );
-    camera.position.y = rad * Math.sin( targetRotationX*multx );
-    camera.position.z = rad * Math.cos( targetRotationY*multy ) * Math.cos( targetRotationX*multx );
-    camera.lookAt( scene.position );
+    camera.position.x = rad * Math.sin(targetRotationY * multy) * Math.cos(targetRotationX * multx);
+    camera.position.y = rad * Math.sin(targetRotationX * multx);
+    camera.position.z = rad * Math.cos(targetRotationY * multy) * Math.cos(targetRotationX * multx);
+    camera.lookAt(scene.position);
     TWEEN.update();
-    renderer.render( scene, camera );
-    requestAnimationFrame( animate );
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
 }
 
-function setDimensions( )
+function setDimensions()
 {
     w = Math.min(window.innerWidth, 2000)-20;
     h = Math.max(window.innerHeight-150, 650);
-    w2 = w/2;
-    h2 = h/2;
-    container.style.width = w+"px";
-    container.style.height = h+"px";
-    renderer.setSize( w, h );
+    w2 = w / 2;
+    h2 = h / 2;
+    container.style.width = String(w)+"px";
+    container.style.height = String(h)+"px";
+    renderer.setSize(w, h);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
 }
@@ -647,38 +651,38 @@ var self = {
         rubikN = document.getElementById('rubik-type');
 
         scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera( 70, 1.0, 1, 1000 );
+        camera = new THREE.PerspectiveCamera(70, 1.0, 1, 1000);
         camera.position.z = rad;
-        scene.add( camera );
+        scene.add(camera);
 
         projector = new THREE.Projector();
 
         // Rubik Cube
         rubikcube = new Rubik(rubikN.options[rubikN.selectedIndex].value, 200, 0.1, colors);
-        scene.add( rubikcube );
+        scene.add(rubikcube);
         rubikcube.onChange = updateflatimage;
 
         renderer = new THREE.CanvasRenderer();
-        setDimensions( );
-        container.appendChild( renderer.domElement );
+        setDimensions();
+        container.appendChild(renderer.domElement);
 
         window.addEventListener('resize', setDimensions, false);
-        container.addEventListener( 'mousedown', onDocumentMouseDown, false );
-        container.addEventListener( 'touchstart', onDocumentTouchStart, false );
-        newbt.addEventListener( 'click', function(){
-            if ( rubikcube ) scene.remove(rubikcube);
+        container.addEventListener('mousedown', onDocumentMouseDown, false);
+        container.addEventListener('touchstart', onDocumentTouchStart, false);
+        newbt.addEventListener('click', function() {
+            if (rubikcube) scene.remove(rubikcube);
             rubikcube = new Rubik(rubikN.options[rubikN.selectedIndex].value, 200, 0.1, colors);
             scene.add(rubikcube);
             rubikcube.onChange = updateflatimage;
-            renderer.render( scene, camera );
+            renderer.render(scene, camera);
             updateflatimage();
-        }, false );
-        scramblebt.addEventListener( 'click', function(){
+        }, false);
+        scramblebt.addEventListener('click', function() {
             rubikcube.scramble(10);
             updateflatimage();
-        }, false );
-        undobt.addEventListener( 'click', function() {
-            if (rubikcube.undo()=='setRubikColors')
+        }, false);
+        undobt.addEventListener('click', function() {
+            if (rubikcube.undo() == 'setRubikColors')
             {
                 colors = {
                     front: rubikcube.rubik.colors.front,
@@ -692,13 +696,13 @@ var self = {
                 //updatecolors();
                 //updateflatimage();
             }
-        }, false );
+        }, false);
 
         // after render works
-        renderer.render( scene, camera );
+        renderer.render(scene, camera);
         updateflatimage();
 
-        requestAnimationFrame( animate );
+        requestAnimationFrame(animate);
     },
     //cs_init: cs_init,
     animate : animate
