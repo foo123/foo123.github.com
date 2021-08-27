@@ -105,12 +105,12 @@ div, a {
     max-width: 1700px;
     margin: 10px auto;
 }
-.imagik-caption {
+#imagik .imagik-caption {
     position: absolute !important;
     margin: 0 !important;
     display: block !important;
-    top: 0 !important; left: 0 !important;
-    width: 100% !important;
+    top: 0 !important; left: auto !important; right: 0 !important;
+    width: 0 !important;
     height: 0 !important;
     box-sizing: border-box !important;
     z-index: -1000 !important;
@@ -120,43 +120,49 @@ div, a {
     transition: opacity 0.5s linear 0.2s !important;
     overflow: hidden !important;
 }
-.imagik-caption.show {
+#imagik .imagik-caption.show {
     pointer-events: auto !important;
+    width: 40% !important;
     height: 100% !important;
     z-index: 10 !important;
     opacity: 1 !important;
 }
-.caption-heading {
+#imagik .caption-heading {
     position: absolute;
     display: block;
+    box-sizing: border-box;
     text-align: center;
     margin: 0;
     left: -100%;
-    top: 30%;
+    top: 20%;
     font-weight: bold;
     font-size: 6em;
     width: 70%;
     color: #fff;
     transform: translate(-50%, -50%);
 }
-.caption-text {
+#imagik .caption-text {
     position: absolute;
     display: block;
+    box-sizing: border-box;
+    padding: 10px 20px;
     text-align: left;
     margin: 0;
     left: 200%;
     top: 60%;
+    height: 40%;
+    overflow-y: auto;
     font-weight: normal;
     font-style: italic;
     font-size: 3em;
-    width: 90%;
+    width: 100%;
     color: #fff;
     transform: translate(-50%, -50%);
 }
-.show > .caption-heading {
+#imagik .show > .caption-heading {
     animation: slide-left 0.5s ease 0.7s 1 normal both running;
 }
-.show > .caption-text {
+#imagik .show > .caption-text {
     animation: slide-right 0.5s ease 0.7s 1 normal both running;
 }
 /* do an extra animation on static image shown */
@@ -192,19 +198,19 @@ div, a {
     }
 }*/
 @media all and (max-width: 1280px) {
-.caption-heading {
+#imagik .caption-heading {
     font-size: 3em;
 }
-.caption-text {
+#imagik .caption-text {
     font-size: 2em;
 }
 }
 @media all and (max-width: 640px) {
-.caption-heading {
+#imagik .caption-heading {
     font-size: 1.6em;
     top: 25%;
 }
-.caption-text {
+#imagik .caption-text {
     font-size: 1.1em;
 }
 }
@@ -230,7 +236,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape5.jpg" alt="Landscape 5" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=tv ease=ease duration=2 delay=4">
         <img srcset="../common/assets/scape3-500.jpg 500w,
@@ -238,7 +244,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape3.jpg" alt="Landscape 3" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=cubes-down columns=5 overlap=0.9 ease=ease order=random duration=2 delay=4">
         <img srcset="../common/assets/scape4-500.jpg 500w,
@@ -246,7 +252,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape4.jpg" alt="Landscape 4" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=cubes-left rows=5 overlap=0.9 ease=ease order=random duration=2 delay=4">
         <img srcset="../common/assets/scape3-500.jpg 500w,
@@ -254,7 +260,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape3.jpg" alt="Landscape 3" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=fold-right ease=ease duration=2 delay=4">
         <img srcset="../common/assets/scape2-500.jpg 500w,
@@ -262,7 +268,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape2.jpg" alt="Landscape 2" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=cubes-up columns=5 overlap=0.9 ease=ease order=random duration=2 delay=4">
         <img srcset="../common/assets/scape1-500.jpg 500w,
@@ -270,7 +276,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape1.jpg" alt="Landscape 1" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=cubes-right rows=5 overlap=0.9 ease=ease order=random duration=2 delay=4">
         <img srcset="../common/assets/scape5-500.jpg 500w,
@@ -278,7 +284,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape5.jpg" alt="Landscape 5" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=shuffle-left ease=ease-in-out duration=2 delay=4">
         <img srcset="../common/assets/scape4-500.jpg 500w,
@@ -286,7 +292,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape4.jpg" alt="Landscape 4" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=shuffle-right ease=ease-in-out duration=2 delay=4">
         <img srcset="../common/assets/scape3-500.jpg 500w,
@@ -294,7 +300,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape3.jpg" alt="Landscape 3" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=flip-horizontal rows=1 columns=1 overlap=0.9 ease=ease-out-back order=random duration=2 delay=4">
         <img srcset="../common/assets/scape5-500.jpg 500w,
@@ -302,7 +308,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape5.jpg" alt="Landscape 5" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=flip-horizontal rows=5 columns=5 overlap=0.9 ease=ease-out-back order=diagonal-bottom-right duration=2 delay=4">
         <img
@@ -310,7 +316,7 @@ div, a {
              ../common/assets/scape2.jpg 1920w"
             sizes="(max-width: 600px) 500px,
             1920px"src="../common/assets/scape2.jpg" alt="Landscape 2" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=flip-vertical rows=1 columns=1 overlap=0.9 ease=ease-out-back order=random duration=2 delay=4">
         <img srcset="../common/assets/scape1-500.jpg 500w,
@@ -318,7 +324,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape1.jpg" alt="Landscape 1" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=flip-vertical rows=5 columns=5 overlap=0.9 ease=ease-out-back order=diagonal-top-left duration=2 delay=4">
         <img srcset="../common/assets/scape5-500.jpg 500w,
@@ -326,7 +332,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape5.jpg" alt="Landscape 5" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=pan-left-right rows=2 columns=1 overlap=1 ease=ease-out-quint order=rows-first duration=2 delay=4">
         <img srcset="../common/assets/scape3-500.jpg 500w,
@@ -334,7 +340,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape3.jpg" alt="Landscape 3" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=pan-up-down rows=1 columns=2 overlap=1 ease=ease-out-quint order=columns-first duration=2 delay=4">
         <img srcset="../common/assets/scape1-500.jpg 500w,
@@ -342,7 +348,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape1.jpg" alt="Landscape 1" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=pan-diagonal columns=3 overlap=1 ease=ease-out-quint order=columns-first duration=2 delay=4">
         <img srcset="../common/assets/scape4-500.jpg 500w,
@@ -350,7 +356,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape4.jpg" alt="Landscape 4" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=blinds-horizontal rows=5 columns=5 overlap=0.5 ease=ease-in-out-quint order=checkerboard duration=2 delay=4">
         <img srcset="../common/assets/scape2-500.jpg 500w,
@@ -358,7 +364,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape2.jpg" alt="Landscape 2" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=blinds-vertical rows=5 columns=5 overlap=0.5 ease=ease-in-out-quint order=checkerboard duration=2 delay=4">
         <img srcset="../common/assets/scape5-500.jpg 500w,
@@ -366,7 +372,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape5.jpg" alt="Landscape 5" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=rotate rows=3 columns=3 overlap=0.95 order=random ease=ease-out duration=2 delay=4">
         <img srcset="../common/assets/scape4-500.jpg 500w,
@@ -374,7 +380,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape4.jpg" alt="Landscape 4" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=scale rows=3 columns=3 overlap=1 order=rows-first ease=ease-in-out-quint duration=2 delay=4">
         <img srcset="../common/assets/scape2-500.jpg 500w,
@@ -382,7 +388,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape2.jpg" alt="Landscape 2" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=iris ease=ease duration=2 delay=4">
         <img srcset="../common/assets/scape3-500.jpg 500w,
@@ -390,7 +396,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape3.jpg" alt="Landscape 3" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=fade rows=6 columns=8 overlap=0.9 ease=ease-in order=spiral-top-left duration=2 delay=4">
         <img srcset="../common/assets/scape5-500.jpg 500w,
@@ -398,7 +404,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape5.jpg" alt="Landscape 5" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=fade-rhombus rows=5 columns=5 order=random ease=ease-in duration=2 delay=4">
         <img srcset="../common/assets/scape2-500.jpg 500w,
@@ -406,7 +412,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape2.jpg" alt="Landscape 2" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=fade-zoom ease=ease-out duration=2 delay=4">
         <img srcset="../common/assets/scape1-500.jpg 500w,
@@ -414,7 +420,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape1.jpg" alt="Landscape 1" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=brightness ease=linear duration=2 delay=4">
         <img srcset="../common/assets/scape4-500.jpg 500w,
@@ -422,7 +428,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape4.jpg" alt="Landscape 4" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=darkness ease=linear duration=2 delay=4">
         <img srcset="../common/assets/scape3-500.jpg 500w,
@@ -430,7 +436,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape3.jpg" alt="Landscape 3" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=move-down rows=1 columns=8 overlap=0.91 ease=ease-out-back order=rows-first duration=2 delay=4">
         <img srcset="../common/assets/scape2-500.jpg 500w,
@@ -438,7 +444,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape2.jpg" alt="Landscape 2" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=move-up-down rows=1 columns=8 overlap=0.91 ease=ease-out-back order=rows-first duration=2 delay=4">
         <img srcset="../common/assets/scape3-500.jpg 500w,
@@ -446,7 +452,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape3.jpg" alt="Landscape 3" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=move-right rows=6 columns=1 overlap=0.91 ease=ease-out-back order=rows-first duration=2 delay=4">
         <img srcset="../common/assets/scape4-500.jpg 500w,
@@ -454,7 +460,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape4.jpg" alt="Landscape 4" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=move-left-right rows=6 columns=1 overlap=0.91 ease=ease-out-back order=rows-first duration=2 delay=4">
         <img srcset="../common/assets/scape5-500.jpg 500w,
@@ -462,7 +468,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape5.jpg" alt="Landscape 5" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=move-left-right-reverse rows=6 columns=1 overlap=0.91 ease=ease-in-back order=rows-first duration=2 delay=4">
         <img srcset="../common/assets/scape3-500.jpg 500w,
@@ -470,7 +476,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape3.jpg" alt="Landscape 3" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=move-diagonal columns=8 overlap=0.9 ease=ease-out-back order=random duration=2 delay=4">
         <img srcset="../common/assets/scape2-500.jpg 500w,
@@ -478,7 +484,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape2.jpg" alt="Landscape 2" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=move-diagonal-reverse columns=8 overlap=0.9 ease=ease-in-back order=random duration=2 delay=4">
         <img srcset="../common/assets/scape4-500.jpg 500w,
@@ -486,7 +492,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape4.jpg" alt="Landscape 4" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=fade-grow-horizontal rows=1 columns=8 overlap=0.9 ease=ease-out order=random duration=2 delay=4">
         <img srcset="../common/assets/scape1-500.jpg 500w,
@@ -494,7 +500,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape1.jpg" alt="Landscape 1" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=fade-grow-vertical rows=5 columns=1 overlap=0.9 ease=ease-out order=random duration=2 delay=4">
         <img srcset="../common/assets/scape2-500.jpg 500w,
@@ -502,7 +508,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape2.jpg" alt="Landscape 2" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=grow-horizontal rows=1 columns=8 overlap=0.9 ease=ease-out order=random duration=2 delay=4">
         <img srcset="../common/assets/scape4-500.jpg 500w,
@@ -510,7 +516,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape4.jpg" alt="Landscape 4" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=grow-vertical rows=5 columns=1 overlap=0.9 ease=ease-out order=random duration=2 delay=4">
         <img srcset="../common/assets/scape5-500.jpg 500w,
@@ -518,7 +524,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape5.jpg" alt="Landscape 5" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=fade-shrink rows=6 columns=8 overlap=0.8 ease=ease order=diagonal-bottom-right duration=2 delay=4">
         <img srcset="../common/assets/scape3-500.jpg 500w,
@@ -526,7 +532,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape3.jpg" alt="Landscape 3" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=fly-top-left ease=ease-out-back order=rows-first duration=2 delay=4">
         <img srcset="../common/assets/scape4-500.jpg 500w,
@@ -534,7 +540,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape4.jpg" alt="Landscape 4" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=pan-top-left ease=ease-out-back duration=2 delay=4">
         <img srcset="../common/assets/scape5-500.jpg 500w,
@@ -542,7 +548,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape5.jpg" alt="Landscape 5" />
-        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">A Caption</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
     <div class="transition=random delay=4">
         <img srcset="../common/assets/scape2-500.jpg 500w,
@@ -550,7 +556,7 @@ div, a {
             sizes="(max-width: 600px) 500px,
             1920px"
             src="../common/assets/scape2.jpg" alt="Landscape 2" />
-        <div><h4 class="caption-heading">This transition is random</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
+        <div><h4 class="caption-heading">This transition is random</h4><p class="caption-text">Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p></div>
     </div>
 </div>
 <br />
