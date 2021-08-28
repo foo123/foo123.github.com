@@ -51,12 +51,12 @@ function range(what, min, max, closed)
     return true===closed ? ((what <= max) && (what >= min)) : ((what < max) && (what > min));
 }
 
-/*function max( v )
+/*function max(v)
 {
     var xx = Math.abs(v.x), yy = Math.abs(v.y), zz = Math.abs(v.z);
-    if ( xx >= yy && xx >= zz ) return 'x';
-    else if ( yy >= xx && yy >= zz ) return 'y';
-    else if ( zz >= xx && zz >= yy ) return 'z';
+    if (xx >= yy && xx >= zz) return 'x';
+    else if (yy >= xx && yy >= zz) return 'y';
+    else if (zz >= xx && zz >= yy) return 'z';
     return 'x';
 }*/
 
@@ -332,12 +332,8 @@ function onDocumentDown(event, isTouch)
     if (null == target)
     {
         isCubeRotation = true;
-        mouseX0 = mouseX = (clientX / w)/* * 2 - 1*/;
-        mouseY0 = mouseY = (clientY / h)/* * 2 - 1*/;
-        //targetRotationY = mouseX;
-        //targetRotationX = mouseY;
-        //targetRotationOnMouseDownY = targetRotationY;
-        //targetRotationOnMouseDownX = targetRotationX;
+        mouseX0 = mouseX = (clientX / w);
+        mouseY0 = mouseY = (clientY / h);
 
         if (isTouch)
         {
@@ -360,7 +356,15 @@ function onDocumentDown(event, isTouch)
         if (null == f) return;
 
         matname = target.cubelet.geometry.materials[target.face.materialIndex].name;
-        pressed_cub = {cub:target.cubelet,seenas:{name:f.faceseenas[matname],xx:cubeletseenas.xx,yy:cubeletseenas.yy,zz:cubeletseenas.zz},ray:target.ray,vector:target.vector};
+        pressed_cub = {
+            cub: target.cubelet,
+            seenas: {
+                name: f.faceseenas[matname],
+                xx: cubeletseenas.xx,
+                yy: cubeletseenas.yy,
+                zz: cubeletseenas.zz
+            }
+        };
 
         if (isTouch)
         {
@@ -397,8 +401,8 @@ function onDocumentMove(event, isTouch)
         clientX += offset.x; clientY += offset.y;
 
         if (clientX > w || clientX < 0 || clientY > h || clientY < 0) return;
-        mouseX = (clientX / w)/* * 2 - 1*/;
-        mouseY = (clientY / h)/* * 2 - 1*/;
+        mouseX = (clientX / w);
+        mouseY = (clientY / h);
         targetRotationY += mouseX - mouseX0;
         targetRotationX += mouseY - mouseY0;
         mouseX0 = mouseX;
@@ -463,9 +467,7 @@ function onDocumentUp(event, isTouch)
                 xx: cubeletseenas.xx,
                 yy: cubeletseenas.yy,
                 zz: cubeletseenas.zz
-            },
-            ray: target.ray,
-            vector: target.vector
+            }
         };
         if (pressed_cub.seenas.name === released_cub.seenas.name)
         {
@@ -478,13 +480,13 @@ function onDocumentUp(event, isTouch)
             {
                 case 'right':
                 case 'left':
-                    if (range(pressed_cub.seenas.yy,0,N-1) && range(released_cub.seenas.yy,0,N-1))
+                    if (range(pressed_cub.seenas.yy, 0, N-1) && range(released_cub.seenas.yy, 0, N-1))
                     {
                         if ('left' === pressed_cub.seenas.name) angle = -angle;
                         if (released_cub.seenas.zz < pressed_cub.seenas.zz) angle = -angle;
                         rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
-                    else if (range(pressed_cub.seenas.zz,0,N-1) && range(released_cub.seenas.zz,0,N-1))
+                    else if (range(pressed_cub.seenas.zz, 0, N-1) && range(released_cub.seenas.zz, 0, N-1))
                     {
                         if ('right' === pressed_cub.seenas.name) angle = -angle;
                         if (released_cub.seenas.yy < pressed_cub.seenas.yy) angle = -angle;
@@ -517,13 +519,13 @@ function onDocumentUp(event, isTouch)
                     break;
                 case 'top':
                 case 'bottom':
-                    if (range(pressed_cub.seenas.zz,0,N-1) && range(released_cub.seenas.zz,0,N-1))
+                    if (range(pressed_cub.seenas.zz, 0, N-1) && range(released_cub.seenas.zz, 0, N-1))
                     {
                         if ('bottom' === pressed_cub.seenas.name) angle = -angle;
                         if (released_cub.seenas.xx < pressed_cub.seenas.xx) angle = -angle;
                         rubikcube.rotate({axis:"z",row:pressed_cub.seenas.zz,angle:angle,duration:1/*,onComplete:updateflatimage*/});
                     }
-                    else if (range(pressed_cub.seenas.xx,0,N-1) && range(released_cub.seenas.xx,0,N-1))
+                    else if (range(pressed_cub.seenas.xx, 0, N-1) && range(released_cub.seenas.xx, 0, N-1))
                     {
                         if ('bottom' === pressed_cub.seenas.name) angle = -angle;
                         if (released_cub.seenas.zz < pressed_cub.seenas.zz) angle = -angle;
@@ -554,13 +556,13 @@ function onDocumentUp(event, isTouch)
                     break;
                 case 'back':
                 case 'front':
-                    if (range(pressed_cub.seenas.yy,0,N-1) && range(released_cub.seenas.yy,0,N-1))
+                    if (range(pressed_cub.seenas.yy, 0, N-1) && range(released_cub.seenas.yy, 0, N-1))
                     {
                         if ('back' === pressed_cub.seenas.name) angle = -angle;
                         if (released_cub.seenas.xx < pressed_cub.seenas.xx) angle = -angle;
                         rubikcube.rotate({axis:"y",row:pressed_cub.seenas.yy,angle:-angle,duration:1/*,onComplete:updateflatimage*/});
                     }
-                    else if (range(pressed_cub.seenas.xx,0,N-1) && range(released_cub.seenas.xx,0,N-1))
+                    else if (range(pressed_cub.seenas.xx, 0, N-1) && range(released_cub.seenas.xx, 0, N-1))
                     {
                         if ('back' === pressed_cub.seenas.name) angle = -angle;
                         if (released_cub.seenas.yy < pressed_cub.seenas.yy) angle = -angle;
@@ -616,6 +618,7 @@ function onDocumentMouseOut(event)
 
 function animate()
 {
+    // sperical coordinate system for camera, with radius = rad
     camera.position.x = rad * Math.sin(targetRotationY * multy) * Math.cos(targetRotationX * multx);
     camera.position.y = rad * Math.sin(targetRotationX * multx);
     camera.position.z = rad * Math.cos(targetRotationY * multy) * Math.cos(targetRotationX * multx);
@@ -658,7 +661,7 @@ var self = {
         projector = new THREE.Projector();
 
         // Rubik Cube
-        rubikcube = new Rubik(rubikN.options[rubikN.selectedIndex].value, 200, 0.1, colors);
+        rubikcube = new Rubik(rubikN.options[rubikN.selectedIndex || 0].value, 200, 0.1, colors);
         scene.add(rubikcube);
         rubikcube.onChange = updateflatimage;
 
@@ -671,7 +674,7 @@ var self = {
         container.addEventListener('touchstart', onDocumentTouchStart, false);
         newbt.addEventListener('click', function() {
             if (rubikcube) scene.remove(rubikcube);
-            rubikcube = new Rubik(rubikN.options[rubikN.selectedIndex].value, 200, 0.1, colors);
+            rubikcube = new Rubik(rubikN.options[rubikN.selectedIndex || 0].value, 200, 0.1, colors);
             scene.add(rubikcube);
             rubikcube.onChange = updateflatimage;
             renderer.render(scene, camera);
