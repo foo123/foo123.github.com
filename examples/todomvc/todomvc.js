@@ -2,9 +2,38 @@ function todomvc(window, Storage, ModelView)
 {
     "use strict";
 
-    var Model, View,
-        TypeCast = ModelView.Type.Cast, Validate = ModelView.Validation.Validate,
-        STORAGE_KEY = "modelview_todomvc", KEY_ENTER = 13;
+    function debounce(f, wait, immediate)
+    {
+        var timeout;
+        return function() {
+            var ctx = this, args = arguments;
+            var later = function() {
+                timeout = null;
+                if (!immediate) f.apply(ctx, args);
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) f.apply(ctx, args);
+        };
+    }
+
+    function timeSince(time)
+    {
+      var seconds = Math.floor((new Date().getTime() - time) / 1000), interval;
+      interval = Math.floor(seconds / 31536000);
+      if (interval > 0) return String(interval) + " "+(1===interval?'year':'years')+" ago";
+      interval = Math.floor(seconds / 2592000);
+      if (interval > 0) return String(interval) + " "+(1===interval?'month':'months')+" ago";
+      interval = Math.floor(seconds / 86400);
+      if (interval > 0) return String(interval) + " "+(1===interval?'day':'days')+" ago";
+      interval = Math.floor(seconds / 3600);
+      if (interval > 0) return String(interval) + " "+(1===interval?'hour':'hours')+" ago";
+      interval = Math.floor(seconds / 60);
+      if (interval > 0) return String(interval) + " "+(1===interval?'minute':'minutes')+" ago";
+      interval = Math.floor(seconds);
+      return interval < 30 ? "just now" : String(interval) + " seconds ago";
+    }
 
     function autoStoreModel()
     {
@@ -34,23 +63,6 @@ function todomvc(window, Storage, ModelView)
         return false;
     }
 
-    function timeSince(time)
-    {
-      var seconds = Math.floor((new Date().getTime() - time) / 1000), interval;
-      interval = Math.floor(seconds / 31536000);
-      if (interval > 0) return String(interval) + " "+(1===interval?'year':'years')+" ago";
-      interval = Math.floor(seconds / 2592000);
-      if (interval > 0) return String(interval) + " "+(1===interval?'month':'months')+" ago";
-      interval = Math.floor(seconds / 86400);
-      if (interval > 0) return String(interval) + " "+(1===interval?'day':'days')+" ago";
-      interval = Math.floor(seconds / 3600);
-      if (interval > 0) return String(interval) + " "+(1===interval?'hour':'hours')+" ago";
-      interval = Math.floor(seconds / 60);
-      if (interval > 0) return String(interval) + " "+(1===interval?'minute':'minutes')+" ago";
-      interval = Math.floor(seconds);
-      return interval < 30 ? "just now" : String(interval) + " seconds ago";
-    }
-
     function route(displayMode)
     {
         if (displayMode)
@@ -60,6 +72,9 @@ function todomvc(window, Storage, ModelView)
         }
     }
 
+
+    var Model, View, TypeCast = ModelView.Type.Cast, Validate = ModelView.Validation.Validate,
+        STORAGE_KEY = "modelview_todomvc", KEY_ENTER = 13, autostore = debounce(autoStoreModel, 500);
 
     // ModelView for App
     Model = new ModelView.Model('model', {
@@ -106,9 +121,7 @@ function todomvc(window, Storage, ModelView)
     })
     .on('change', function(evt, data){
         if ('todoList' === data.key.slice(0, 8))
-        {
-            autoStoreModel();
-        }
+            autostore();
     })
     ;
 

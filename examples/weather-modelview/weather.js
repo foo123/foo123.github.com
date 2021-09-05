@@ -11,6 +11,21 @@ function weather(window, ModelView)
         celsius: {symbol: '\u2103', fahrenheit: t => (t * (9 / 5) + 32)}
     };
 
+    function debounce(f, wait, immediate)
+    {
+        var timeout;
+        return function() {
+            var ctx = this, args = arguments;
+            var later = function() {
+                timeout = null;
+                if (!immediate) f.apply(ctx, args);
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) f.apply(ctx, args);
+        };
+    }
     function format_date(strdate)
     {
         const [year, month, day] = strdate.split('-');
@@ -29,7 +44,6 @@ function weather(window, ModelView)
         if (convert) t = T['fahrenheit' === scale ? 'celsius' : 'fahrenheit'][scale](t);
         return format_num(t) + (withsymbol ? T[scale].symbol : '');
     }
-
     function weather_icon(icon, type)
     {
         return "https://www.metaweather.com/static/img/weather/"+icon+"."+(type||"svg").toLowerCase();
@@ -38,7 +52,6 @@ function weather(window, ModelView)
     {
         return '<i class="wind-dir '+dir.trim().toLowerCase()+'"></i>';
     }
-
     function normalise(path)
     {
         if (path && path.length)
@@ -57,7 +70,7 @@ function weather(window, ModelView)
         route = normalise(route||'').split('/')
         pattern = normalise(pattern||'').split('/');
         if (pattern.length !== route.length) return false;
-        for(let i = 0; i < route.length; i++)
+        for (let i = 0; i < route.length; i++)
         {
             if (':' === pattern[i].charAt(0)) continue;
             if (pattern[i] !== route[i]) return false;
@@ -125,7 +138,6 @@ function weather(window, ModelView)
     const view = new ModelView.View('view')
         .model(new ModelView.Model('model', {
             cities: [
-                /*{name: 'Istanbul', woeid: 2344116},*/
                 {name: 'Athens', woeid: 946738},
                 {name: 'Beijing', woeid: 2151330},
                 {name: 'Berlin', woeid: 638242},
@@ -136,10 +148,7 @@ function weather(window, ModelView)
                 {name: 'New Delhi', woeid: 28743736},
                 {name: 'New York', woeid: 2459115},
                 {name: 'Paris', woeid: 615702},
-                {name: 'Sydney', woeid: 1105779},
-                /*{name: 'Helsinki', woeid: 565346},
-                {name: 'Dublin', woeid: 560743},
-                {name: 'Vancouver', woeid: 9807}*/
+                {name: 'Sydney', woeid: 1105779}
             ],
             term: '',
             woeid: {}
@@ -227,9 +236,20 @@ function weather(window, ModelView)
         .autobind(false)
         .livebind(true)
         .bind(['click'], document.getElementById('app'))
+        .on('render', () => {
+            if (pagechanged)
+            {
+                pagechanged = false;
+                window.scrollTo(0, 0); // scroll to top on new page
+            }
+        })
     ;
 
-    window.addEventListener('hashchange', () => {view.render();}, false);
+    let pagechanged = false;
+    window.addEventListener('hashchange', () => {
+        pagechanged = true;
+        view.render();
+    }, false);
 
     if (!location.hash) location.hash = '#/';
     else view.render();
