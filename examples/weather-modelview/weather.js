@@ -51,7 +51,7 @@ function weather(window, ModelView)
         }
         return path;
     }
-    function match(pattern)
+    function route(pattern)
     {
         let route = location.hash;
         route = normalise(route||'').split('/')
@@ -64,7 +64,7 @@ function weather(window, ModelView)
         }
         return true;
     }
-    function route(part)
+    function match(part)
     {
         return decodeURIComponent(normalise(location.hash || '').split('/')[part || 0] || '');
     }
@@ -201,14 +201,14 @@ function weather(window, ModelView)
         }))
         .template(document.getElementById('app-content').innerHTML)
         .components({
-            'HomePage': new ModelView.View.Component(document.getElementById('home-page-component').innerHTML)
-            ,'SearchPage': new ModelView.View.Component(document.getElementById('search-page-component').innerHTML)
-            ,'WeatherPage': new ModelView.View.Component(document.getElementById('weather-page-component').innerHTML)
-            ,'Weather': new ModelView.View.Component(document.getElementById('weather-component').innerHTML)
-            ,'WeatherData': new ModelView.View.Component(document.getElementById('weather-data-component').innerHTML)
-            ,'Loader': new ModelView.View.Component(document.getElementById('loader-component').innerHTML)
+            'HomePage': new ModelView.View.Component('HomePage', document.getElementById('home-page-component').innerHTML)
+            ,'SearchPage': new ModelView.View.Component('SearchPage', document.getElementById('search-page-component').innerHTML)
+            ,'WeatherPage': new ModelView.View.Component('WeatherPage', document.getElementById('weather-page-component').innerHTML)
+            ,'Weather': new ModelView.View.Component('Weather', document.getElementById('weather-component').innerHTML)
+            ,'WeatherData': new ModelView.View.Component('WeatherData', document.getElementById('weather-data-component').innerHTML)
+            ,'Loader': new ModelView.View.Component('Loader', document.getElementById('loader-component').innerHTML)
         })
-        .funcs({
+        .context({
             match: match
             ,route: route
             ,weather_icon: weather_icon

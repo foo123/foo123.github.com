@@ -297,7 +297,7 @@ var assets = {
     new ModelView.View('view')
         .model(new ModelView.Model('model'))
         .template(document.getElementById('app-content').innerHTML)
-        .funcs({
+        .context({
             options: HtmlWidget.options,
             code: HtmlWidget.code
         })
