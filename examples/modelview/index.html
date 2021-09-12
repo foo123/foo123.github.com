@@ -101,7 +101,6 @@ input[type=text] {
 <div id="app"></div>
 </div>
 
-<script src="../build/modelview.js"></script>
 <script id="js-snippet-without-jquery" type="text/javascript" data-snippet="JS Code (standalone)" data-snippet-type="javascript">
 function setup(ModelView)
 {
@@ -144,7 +143,7 @@ function setup(ModelView)
 <div id="snippets" class="fluid col-1-1" style="margin:10px 0px 50px 0px"></div>
 <script>
 // use requireJS
-require(['Snippets', 'ModelView', 'ModelViewValidation'], function(Snippets, ModelView) {
+require(['Snippets', 'ModelView'], function(Snippets, ModelView) {
     Snippets(['html-snippet', 'js-snippet-without-jquery'], 'snippets', CodeMirror);
     setup(ModelView); 
 });

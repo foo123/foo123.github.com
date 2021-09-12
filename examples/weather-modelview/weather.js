@@ -213,9 +213,9 @@ function weather(window, ModelView)
             'HomePage': new ModelView.View.Component('HomePage', document.getElementById('home-page-component').innerHTML)
             ,'SearchPage': new ModelView.View.Component('SearchPage', document.getElementById('search-page-component').innerHTML)
             ,'WeatherPage': new ModelView.View.Component('WeatherPage', document.getElementById('weather-page-component').innerHTML)
-            ,'Weather': new ModelView.View.Component('Weather', document.getElementById('weather-component').innerHTML)
+            ,'Weather': new ModelView.View.Component('Weather', document.getElementById('weather-component').innerHTML, {changed: (o, n) => (o.woeid !== n.woeid) || (o.detailed !== n.detailed) || (o.data !== n.data)})
             ,'WeatherData': new ModelView.View.Component('WeatherData', document.getElementById('weather-data-component').innerHTML)
-            ,'Loader': new ModelView.View.Component('Loader', document.getElementById('loader-component').innerHTML)
+            ,'Loader': new ModelView.View.Component('Loader', document.getElementById('loader-component').innerHTML, {changed: ()=>false})
         })
         .context({
             match: match

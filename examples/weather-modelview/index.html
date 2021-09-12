@@ -53,7 +53,7 @@ require.config({
 <div id="app"></div>
 
 <script type="text/x-template" id="loader-component">
-<div class="lds-facebook"><div></div><div></div><div></div></div>
+<div mv-id="loader" class="lds-facebook"><div></div><div></div><div></div></div>
 </script>
 
 <script type="text/x-template" id="weather-data-component">
@@ -72,12 +72,12 @@ require.config({
 </script>
 
 <script type="text/x-template" id="weather-component">
-<div class="weather{%=props.detailed ? ' detailed' : ''%}">
+<div mv-id="show_weather_{%=props.woeid%}" class="weather{%=props.detailed ? ' detailed' : ''%}">
     <div class="weather-header">
     {%= props.detailed ? '<b>'+(props.city||view.model().get('woeid.'+props.woeid+'.city')||'..')+' (Forecast)</b>' : '<a href="#/weather/'+props.woeid+'"><b>'+(props.city||view.model().get('woeid.'+props.woeid+'.city')||'..')+'</b></a>' %}
     </div>
     <div class="weather-content">
-     {%= view.model().get('woeid.'+props.woeid) ? view.component('WeatherData', {data:view.model().get('woeid.'+props.woeid), detailed:props.detailed}) : view.component('Loader', {text:'Loading..'}) %}
+     {%= props.data ? view.component('WeatherData', props.woeid, {data:props.data, detailed:props.detailed}) : view.component('Loader', 'loader', {text:'Loading..'}) %}
     </div>
 </div>
 </script>
@@ -85,7 +85,7 @@ require.config({
 <script type="text/x-template" id="weather-page-component">
 <div mv-id="weather_{%=props.woeid%}" class="page page-weather">
     <h2 class="page-header">Weather Forecast</h2>
-    {%= view.component('Weather', {detailed:true, city:props.city, woeid:props.woeid}) %}
+    {%= view.component('Weather', props.woeid, {detailed:true, city:props.city, woeid:props.woeid, data:view.model().get('woeid.'+props.woeid)}) %}
 </div>
 </script>
 
@@ -96,7 +96,7 @@ require.config({
         <input id="search" type="text" placeholder="search.." name="model[term]" value="{%= props.term %}" />
         <button type="button" mv-evt mv-on-click="search">Search!</button>
     </div>
-    {%= view.model().get('search.'+props.term) ? (view.model().get('search.'+props.term).length ? view.model().get('search.'+props.term).map(place => view.component('Weather', {woeid:place.woeid, city:place.title})).join('') : '<p><b>No results found!</b></p>') : view.component('Loader', {text:'Loading..'}) %}
+    {%= props.results ? (props.results.length ? props.results.map(place => view.component('Weather', place.woeid, {woeid:place.woeid, city:place.title, data:view.model().get('woeid.'+place.woeid)})).join('') : '<p><b>No results found!</b></p>') : view.component('Loader', 'loader', {text:'Loading..'}) %}
 </div>
 </script>
 
@@ -107,14 +107,14 @@ require.config({
         <input id="search" type="text" placeholder="search.." name="model[term]" value="" />
         <button type="button" mv-evt mv-on-click="search">Search!</button>
     </div>
-    {%= props.cities.map(city => view.component('Weather', {city:city.name, woeid:city.woeid})).join('') %}
+    {%= props.cities.map(city => view.component('Weather', city.woeid, {city:city.name, woeid:city.woeid, data:view.model().get('woeid.'+city.woeid)})).join('') %}
 </div>
 </script>
 
 <script type="text/x-template" id="app-content">
-{% if (route('/weather/:woeid')){ %} {%= view.component('WeatherPage', {woeid:match(1)}) %}
-{% }else if (route('/search/:term')){ %} {%= view.component('SearchPage', {term:match(1)}) %}
-{% }else{ %} {%= view.component('HomePage', {cities:view.model().get('cities')}) %}
+{% if (route('/weather/:woeid')){ %} {%= view.component('WeatherPage', 'weather_'+match(1), {woeid:match(1)}) %}
+{% }else if (route('/search/:term')){ %} {%= view.component('SearchPage', 'search_'+match(1), {term:match(1), results:view.model().get('search.'+match(1))}) %}
+{% }else{ %} {%= view.component('HomePage', 'index', {cities:view.model().get('cities')}) %}
 {% } %}
 </script>
 
