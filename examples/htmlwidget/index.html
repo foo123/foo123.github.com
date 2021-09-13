@@ -85,25 +85,25 @@ body {
 
 <script type="text/x-template" id="app-content">
 <div class="row">
-{%= view.widget('label',{'for':'username','class':'label'},{'text':'Username:'}) %}
+{%= view.widget('label',{'for':'username','class':'label'},{'text':'Your Username:'}) %}
 <div class="field">
 {%= view.widget('textbox',{'id':'username','class':'w-dark','name':'username','placeholder':'Your username','iconr':'user'}) %}
 </div>
 </div>
 <div class="row">
-{%= view.widget('label',{'for':'email','class':'label'},{'text':'Email:'}) %}
+{%= view.widget('label',{'for':'email','class':'label'},{'text':'Your Email:'}) %}
 <div class="field">
 {%= view.widget('textbox',{'type':'email','id':'email','class':'w-dark','name':'email','placeholder':'Your email','iconr':'envelope'}) %}
 </div>
 </div>
 <div class="row">
-{%= view.widget('label',{'for':'birthday','class':'label'},{'text':'Birthday:'}) %}
+{%= view.widget('label',{'for':'birthday','class':'label'},{'text':'Your Birthday:'}) %}
 <div class="field">
 {%= view.widget('datetimepicker',{'id':'birthday','class':'w-dark','name':'birthday','placeholder':'Your birthday','options':{'className':'pika-dark','showTime':false,'format':'D, d M Y'}}) %}
 </div>
 </div>
 <div class="row">
-{%= view.widget('label',{'for':'color','class':'label'},{'text':'Color:'}) %}
+{%= view.widget('label',{'for':'color','class':'label'},{'text':'Your favorite Color:'}) %}
 <div class="field">
 {%= view.widget('colorpicker',{'id':'color','title':'Your favorite color','input':true,'iconr':true,'class':'w-dark','selector-class':'colorpicker-dark','options':{'format':'rgba','color':'rgba(255,0,0,1)'}}) %}
 </div>
@@ -117,7 +117,7 @@ body {
 <div class="row">
 {%= view.widget('label',{'for':'subscription','class':'label'},{'text':'Subscribe:'}) %}
 <div class="field">
-{%= view.widget('switch',{'id':'subscription','name':'subscription','class':'w-large w-dark','iconon':'check','iconoff':'thumbs-down','checked':true},{'value':'1'}) %}
+{%= view.widget('switch',{'id':'subscription','name':'subscription','class':'w-large w-dark','iconon':'check','iconoff':'thumbs-down','checked':true},{'value':'subscribe'}) %}
 {%= view.widget('button',{'for':'modal_a_modal','class':'w-large w-black'},{'text':'Modal'}) %}
 </div>
 </div>
@@ -140,7 +140,7 @@ body {
         'cm' : 'Cis Male',
         'tf' : 'Trans Female',
         'tm' : 'Trans Male',
-        'ng' : 'None of the above'
+        'nb' : 'Non-Binary / None of the above'
     },-1)}) %}
 </div>
 </div>
@@ -167,7 +167,7 @@ body {
 </div>
 </div>
 <div style="text-align:center">
-{%= view.widget('button',{'class':'w-large w-black','icon':'thumbs-up'},{'text':'Submit'}) %}
+{%= view.widget('button',{'class':'w-large w-black','iconr':'check','extra':'mv-evt mv-on-click="submit"'},{'text':'Submit'}) %}
 </div>
 </script>
 <script src="../common/js/Importer.min.js"></script>
@@ -280,15 +280,15 @@ var assets = {
 };
 // requireJS breaks the loading since my modules if present dont register to global object
 (function(ModelView, Importer, HtmlWidget) {
-    var t = document.createElement('template');
-    t.innerHTML = HtmlWidget.widget('modal', {'id':'a_modal','class':'w-dark','autoclose':true})+`
-    <h2>A Modal</h2>
-    <p>Some text here..Some text here..Some text here..Some text here..Some text here..Some text here..</p>
-    <p>Some more text here..Some more text here..Some more text here..Some more text here..</p>
-    `+HtmlWidget.widget('/modal', {'id':'a_modal','class':'w-dark','autoclose':true});
-    while (t.content.firstChild) document.body.appendChild(t.content.firstChild);
+    document.body.insertAdjacentHTML('beforeend',
+HtmlWidget.widget('modal', {'id':'a_modal','class':'w-dark','autoclose':true})+
+'<h2>A Modal</h2>\
+<p>Some text here.. Some text here.. Some text here.. Some text here.. Some text here.. Some text here..</p>\
+<p>Some more text here.. Some more text here.. Some more text here.. Some more text here..</p>'+
+HtmlWidget.widget('/modal', {'id':'a_modal','class':'w-dark','autoclose':true})
+);
     
-    // do the needed plumbing
+    // do the necessary plumbing
     var importer = new Importer();
     HtmlWidget.assets(assets);
     importer.register('assets', HtmlWidget.assets(true, ''));
@@ -301,9 +301,14 @@ var assets = {
             options: HtmlWidget.options,
             code: HtmlWidget.code
         })
+        .actions({
+            submit: function(evt, el) {
+                alert('Submitted!');
+            }
+        })
         .livebind(false)
         .autobind(false)
-        .bind([], document.getElementById('app'))
+        .bind(['click'], document.getElementById('app'))
         .on('render', () => {
             importer.assets('styles');
             importer.assets('scripts');
