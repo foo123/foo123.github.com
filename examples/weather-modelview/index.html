@@ -62,7 +62,7 @@ require.config({
         `<div class="weather-data">
         <p><b>`+format_date(current.applicable_date)+`</b></p>
         <img class="weather-icon" src="`+weather_icon(current.weather_state_abbr)+`" alt="`+current.weather_state_name+`" title="`+current.weather_state_name+`" />
-        <p><span class="weather-details">`+format_temp(current.the_temp, 'celsius', 0, 1)+` (`+format_temp(current.min_temp, 'celsius', 0, 1)+` &mdash; `+format_temp(current.max_temp, 'celsius', 0, 1)+`)</span></p>
+        <p><span class="weather-details">`+format_temp(current.the_temp, 'celsius', 0, 1)+` (`+format_temp(current.min_temp, 'celsius', 0, 1)+` &#8212; `+format_temp(current.max_temp, 'celsius', 0, 1)+`)</span></p>
         <p><span class="weather-details">`+format_num(current.wind_speed)+`mph</span> `+wind_icon(current.wind_direction_compass)+` (`+current.wind_direction_compass+`)</p>
         </div>`
     ).join('') %}
