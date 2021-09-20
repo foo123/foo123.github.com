@@ -148,6 +148,7 @@ function todomvc(window, Storage, ModelView)
     .actions({
         addTodo: function(evt, el) {
             var title = el.value.trim();
+            el.value = '';
 
             if (title.length )
             {
