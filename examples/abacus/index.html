@@ -326,7 +326,7 @@ window.MathJax = {
 
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
-        <strong>Abacus ({%=abacus_version%}):</strong>
+        <strong>Abacus ({abacus_version}):</strong>
         <div class="sepa"></div>
         <div style="display:inline-block;margin-bottom:10px">
         <label style="text-"for="object">Type:</label><select id="object" name="model[object]">
@@ -361,7 +361,7 @@ window.MathJax = {
         </div>
         <div style="display:inline-block;margin-bottom:10px" mv-model="isCombinatorics" mv-model-evt mv-on-model-change="show">
         <label for="type">SubType:</label><select id="type" name="model[type]">
-        <option value="default" selected>{%=object.default%}</option>
+        <option value="default" selected>{object.default}</option>
         <option value="tensor_inversion" mv-model="object.tensor" mv-model-evt mv-on-model-change="show">Permutation</option>
         <option value="gray" mv-model="object.tuple" mv-model-evt mv-on-model-change="show">(n,k)-Gray Code</option>
         <option value="word" mv-model="object.tuple" mv-model-evt mv-on-model-change="show">Word</option>
@@ -425,13 +425,13 @@ window.MathJax = {
         </div>
         <div class="sepa"></div>
         <div style="display:inline-block" mv-model="hasN" mv-model-evt mv-on-model-change="show">
-        <label for="N">{%=labelN%}</label><input id="N"  name="model[N]" size="8" type="text" value="1" />
+        <label for="N">{labelN}</label><input id="N"  name="model[N]" size="8" type="text" value="1" />
         </div><div style="display:inline-block" mv-model="hasK" mv-model-evt mv-on-model-change="show">
-        <label for="K">{%=labelK%}</label><input id="K"  name="model[K]" size="8" type="text" value="1" />
+        <label for="K">{labelK}</label><input id="K"  name="model[K]" size="8" type="text" value="1" />
         </div><div style="display:inline-block;vertical-align:top;margin-right:5px;" mv-model="hasAlphabet" mv-model-evt mv-on-model-change="show">
-        <label for="alphabet">{%=labelAlphabet%}</label><input id="alphabet" name="model[alphabet]" size="12" type="text" value="" />
+        <label for="alphabet">{labelAlphabet}</label><input id="alphabet" name="model[alphabet]" size="12" type="text" value="" />
         </div><div style="display:inline-block;position:relative;width:80%" mv-model="hasText" mv-model-evt mv-on-model-change="show">
-        <div mv-model="placeholderText" mv-model-evt mv-on-model-change="html"></div><label for="expr">{%=labelText%}</label><textarea id="expr" style="position:relative;display:inline-block;vertical-align:top;padding:4px;height:200px;width:90%"></textarea>
+        <div mv-model="placeholderText" mv-model-evt mv-on-model-change="html"></div><label for="expr">{labelText}</label><textarea id="expr" style="position:relative;display:inline-block;vertical-align:top;padding:4px;height:200px;width:90%"></textarea>
         </div>
         <div style="display:inline-block;position:relative;vertical-align:top;margin-left:5px;margin-top:-1.6em" mv-model="hasConditions" mv-model-evt mv-on-model-change="show">
         <table id="conditions" style="position:relative;max-width:100%;border-spacing:2">

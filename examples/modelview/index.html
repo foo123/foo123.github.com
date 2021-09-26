@@ -98,12 +98,12 @@ input[type=text] {
         
 <div id="html-snippet" data-snippet="HTML Code" data-snippet-type="xml">
 <script id="content" type="text/x-template">
-<b>Note:</b> Arbitrary JavaScript Expressions can be run inside &#123;%= and %&#125; template placeholders
+<b>Note:</b> Arbitrary JavaScript Expressions can be run inside &#123; and &#125; template placeholders
 <br /><br />
-<b class="rainbow">Hello {%= this.model().get('msg') %}</b> &nbsp;&nbsp;(updated live on <i>keyup</i>)
+<b class="rainbow">Hello {this.model().get('msg')}</b> &nbsp;&nbsp;(updated live on <i>keyup</i>)
 <br /><br />
-<input type="text" name="model[msg]" size="50" value="{%= this.model().get('msg') %}" mv-evt mv-on-keyup="update" />
-<button class="button" title="{%= this.model().get('msg') %}" mv-evt mv-on-click="alert">Hello</button>
+<input type="text" name="model[msg]" size="50" value={this.model().get('msg')} mv-evt mv-on-keyup="update" />
+<button class="button" title={this.model().get('msg')} mv-evt mv-on-click="alert">Hello</button>
 <button class="button" mv-evt mv-on-click="hello_world">Hello World</button>
 </script>
 <div id="app"></div>

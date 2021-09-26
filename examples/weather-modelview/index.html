@@ -57,7 +57,7 @@ require.config({
 </script>
 
 <script type="text/x-template" id="weather-data-component">
-{%=
+{
 props.data && props.data.consolidated_weather && props.data.consolidated_weather.length
     ? ((props.detailed ? props.data.consolidated_weather : [props.data.consolidated_weather[0]]).map(current => (<div class="weather-data">
         <p><b>{format_date(current.applicable_date)}</b></p>
@@ -66,35 +66,35 @@ props.data && props.data.consolidated_weather && props.data.consolidated_weather
         <p><span class="weather-details">{format_num(current.wind_speed)+'mph'}</span>&nbsp;<i class={'wind-dir '+current.wind_direction_compass.trim().toLowerCase()}></i> ({current.wind_direction_compass.toUpperCase()})</p>
         </div>)))
     : (<div class="weather-data"><p><b>No data!</b></p></div>)
-%}
+}
 </script>
 
 <script type="text/x-template" id="weather-component">
-<div mv-id="show_weather_{%=props.woeid%}" class="weather{%=props.detailed ? ' detailed' : ''%}">
-    <div class="weather-header">
-    {%= props.detailed ? (<b>{props.city||view.model().get('woeid.'+props.woeid+'.city')||'..'} (Forecast)</b>) : (<a href={'#/weather/'+props.woeid}><b>{props.city||view.model().get('woeid.'+props.woeid+'.city')||'..'}</b></a>) %}
-    </div>
-    <div class="weather-content">
-     {%= props.data ? view.component('WeatherData', props.woeid, {data:props.data, detailed:props.detailed}) : view.component('Loader', 'loader', {text:'Loading..'}) %}
-    </div>
+<div mv-id={'show_weather_'+props.woeid} class={'weather'+(props.detailed ? ' detailed' : '')}>
+    <div class="weather-header">{
+    props.detailed ? (<b>{props.city||view.model().get('woeid.'+props.woeid+'.city')||'..'} (Forecast)</b>) : (<a href={'#/weather/'+props.woeid}><b>{props.city||view.model().get('woeid.'+props.woeid+'.city')||'..'}</b></a>)
+    }</div>
+    <div class="weather-content">{
+    props.data ? view.component('WeatherData', props.woeid, {data:props.data, detailed:props.detailed}) : view.component('Loader', 'loader', {text:'Loading..'})
+    }</div>
 </div>
 </script>
 
 <script type="text/x-template" id="weather-page-component">
-<div mv-id="weather_{%=props.woeid%}" class="page page-weather">
+<div mv-id={'weather_'+props.woeid} class="page page-weather">
     <h2 class="page-header">Weather Forecast</h2>
-    {%= view.component('Weather', props.woeid, {detailed:true, city:props.city, woeid:props.woeid, data:view.model().get('woeid.'+props.woeid)}) %}
+    {view.component('Weather', props.woeid, {detailed:true, city:props.city, woeid:props.woeid, data:view.model().get('woeid.'+props.woeid)})}
 </div>
 </script>
 
 <script type="text/x-template" id="search-page-component">
-<div mv-id="search_{%=props.term%}" class="page page-search">
+<div mv-id={'search_'+props.term} class="page page-search">
     <h2 class="page-header">Search Results</h2>
     <div class="search-box">
-        <input id="search" type="text" placeholder="search.." name="model[term]" value="{%= props.term %}" />
+        <input id="search" type="text" placeholder="search.." name="model[term]" value={props.term} />
         <button type="button" mv-evt mv-on-click="search">Search!</button>
     </div>
-    {%= props.results ? (props.results.length ? props.results.map(place => view.component('Weather', place.woeid, {woeid:place.woeid, city:place.title, data:view.model().get('woeid.'+place.woeid)})) : (<p><b>No results found!</b></p>)) : view.component('Loader', 'loader', {text:'Loading..'}) %}
+    {props.results ? (props.results.length ? props.results.map(place => view.component('Weather', place.woeid, {woeid:place.woeid, city:place.title, data:view.model().get('woeid.'+place.woeid)})) : (<p><b>No results found!</b></p>)) : view.component('Loader', 'loader', {text:'Loading..'})}
 </div>
 </script>
 
@@ -105,19 +105,16 @@ props.data && props.data.consolidated_weather && props.data.consolidated_weather
         <input id="search" type="text" placeholder="search.." name="model[term]" value="" />
         <button type="button" mv-evt mv-on-click="search">Search!</button>
     </div>
-    {%= props.cities.map(city => view.component('Weather', city.woeid, {city:city.name, woeid:city.woeid, data:view.model().get('woeid.'+city.woeid)})) %}
+    {props.cities.map(city => view.component('Weather', city.woeid, {city:city.name, woeid:city.woeid, data:view.model().get('woeid.'+city.woeid)}))}
 </div>
 </script>
 
 <script type="text/x-template" id="app-content">
-{%=
-route('/weather/:woeid')
-    ? view.component('WeatherPage', 'weather_'+match(1), {woeid:match(1)})
-    : (route('/search/:term')
-        ? view.component('SearchPage', 'search_'+match(1), {term:match(1), results:view.model().get('search.'+match(1))})
-        : view.component('HomePage', 'index', {cities:view.model().get('cities')})
-    )
-%}
+{
+route('/weather/:woeid') ? view.component('WeatherPage', 'weather_'+match(1), {woeid:match(1)})
+: (route('/search/:term') ? view.component('SearchPage', 'search_'+match(1), {term:match(1), results:view.model().get('search.'+match(1))})
+: view.component('HomePage', 'index', {cities:view.model().get('cities')}))
+}
 </script>
 
 <script>

@@ -85,69 +85,69 @@ body {
 
 <script type="text/x-template" id="app-content">
 <div class="row">
-{%= view.widget('label',{'for':'username','class':'label'},{'text':'Your Username:'}) %}
+{view.widget('label',{'for':'username','class':'label'},{'text':'Your Username:'})}
 <div class="field">
-{%= view.widget('textbox',{'id':'username','class':'w-dark','name':'username','placeholder':'Your username','iconr':'user'}) %}
+{view.widget('textbox',{'id':'username','class':'w-dark','name':'username','placeholder':'Your username','iconr':'user'})}
 </div>
 </div>
 <div class="row">
-{%= view.widget('label',{'for':'email','class':'label'},{'text':'Your Email:'}) %}
+{view.widget('label',{'for':'email','class':'label'},{'text':'Your Email:'})}
 <div class="field">
-{%= view.widget('textbox',{'type':'email','id':'email','class':'w-dark','name':'email','placeholder':'Your email','iconr':'envelope'}) %}
+{view.widget('textbox',{'type':'email','id':'email','class':'w-dark','name':'email','placeholder':'Your email','iconr':'envelope'})}
 </div>
 </div>
 <div class="row">
-{%= view.widget('label',{'for':'birthday','class':'label'},{'text':'Your Birthday:'}) %}
+{view.widget('label',{'for':'birthday','class':'label'},{'text':'Your Birthday:'})}
 <div class="field">
-{%= view.widget('datetimepicker',{'id':'birthday','class':'w-dark','name':'birthday','placeholder':'Your birthday','options':{'className':'pika-dark','showTime':false,'format':'D, d M Y'}}) %}
+{view.widget('datetimepicker',{'id':'birthday','class':'w-dark','name':'birthday','placeholder':'Your birthday','options':{'className':'pika-dark','showTime':false,'format':'D, d M Y'}})}
 </div>
 </div>
 <div class="row">
-{%= view.widget('label',{'for':'color','class':'label'},{'text':'Your favorite Color:'}) %}
+{view.widget('label',{'for':'color','class':'label'},{'text':'Your favorite Color:'})}
 <div class="field">
-{%= view.widget('colorpicker',{'id':'color','title':'Your favorite color','input':true,'iconr':true,'class':'w-dark','selector-class':'colorpicker-dark','options':{'format':'rgba','color':'rgba(255,0,0,1)'}}) %}
+{view.widget('colorpicker',{'id':'color','title':'Your favorite color','input':true,'iconr':true,'class':'w-dark','selector-class':'colorpicker-dark','options':{'format':'rgba','color':'rgba(255,0,0,1)'}})}
 </div>
 </div>
 <div class="row">
-{%= view.widget('label',{'class':'label'},{'text':'Rate us:'}) %}
+{view.widget('label',{'class':'label'},{'text':'Rate us:'})}
 <div class="field">
-{%= view.widget('rating',{'title':'Please rate:','icon':'star'}) %}
+{view.widget('rating',{'title':'Please rate:','icon':'star'})}
 </div>
 </div>
 <div class="row">
-{%= view.widget('label',{'for':'subscription','class':'label'},{'text':'Subscribe:'}) %}
+{view.widget('label',{'for':'subscription','class':'label'},{'text':'Subscribe:'})}
 <div class="field">
-{%= view.widget('switch',{'id':'subscription','name':'subscription','class':'w-large w-dark','iconon':'check','iconoff':'thumbs-down','checked':true},{'value':'subscribe'}) %}
-{%= view.widget('button',{'for':'modal_a_modal','class':'w-large w-black'},{'text':'Modal'}) %}
+{view.widget('switch',{'id':'subscription','name':'subscription','class':'w-large w-dark','iconon':'check','iconoff':'thumbs-down','checked':true},{'value':'subscribe'})}
+{view.widget('button',{'for':'modal_a_modal','class':'w-large w-black'},{'text':'Modal'})}
 </div>
 </div>
 <div class="row">
-{%= view.widget('label',{'for':'bio','class':'label'},{'text':'About:'}) %}
+{view.widget('label',{'for':'bio','class':'label'},{'text':'About:'})}
 <div class="field">
-{%= view.widget('wysiwyg-editor',{'id':'bio','name':'bio','options':{
+{view.widget('wysiwyg-editor',{'id':'bio','name':'bio','options':{
         'theme': 'modern',
         'height': 100,
         'mobile': {'theme':'mobile'},
-    }},{'value':'<i>Tell us something about you</i>'}) %}
+    }},{'value':'<i>Tell us something about you</i>'})}
 </div>
 </div>
 <div class="row">
-{%= view.widget('label',{'class':'label'},{'text':'Gender:'}) %}
+{view.widget('label',{'class':'label'},{'text':'Gender:'})}
 <div class="field">
-{%= view.widget('radiolist',{'name':'gender'},{'options':options({
+{view.widget('radiolist',{'name':'gender'},{'options':options({
         'gb' : 'Gender Bender',
         'cf' : 'Cis Female',
         'cm' : 'Cis Male',
         'tf' : 'Trans Female',
         'tm' : 'Trans Male',
         'nb' : 'Non-Binary / None of the above'
-    },-1)}) %}
+    },-1)})}
 </div>
 </div>
 <div class="row">
-{%= view.widget('label',{'class':'label'},{'text':'Programming:'}) %}
+{view.widget('label',{'class':'label'},{'text':'Programming:'})}
 <div class="field">
-{%= view.widget('checkbox-array',{'class':'w-dark','name':'programming[]'},{
+{view.widget('checkbox-array',{'class':'w-dark','name':'programming[]'},{
     'fields':{
     'html':'HTML',
     'css':'CSS',
@@ -157,17 +157,17 @@ body {
         'client' : 'Client-Side',
         'server' : 'Server-Side'
     },-1)
-    })  %}
+    })}
 </div>
 </div>
 <div class="row">
-{%= view.widget('label',{'for':'program','class':'label'},{'text':'Program:'}) %}
+{view.widget('label',{'for':'program','class':'label'},{'text':'Program:'})}
 <div class="field">
-{%= view.widget('syntax-editor',{'id':'program','class':'w-dark','name':'program','options':{'mode':'text/html','theme':'lesser-dark'}},{'value':'<span>write some html</span>'}) %}
+{view.widget('syntax-editor',{'id':'program','class':'w-dark','name':'program','options':{'mode':'text/html','theme':'lesser-dark'}},{'value':'<span>write some html</span>'})}
 </div>
 </div>
 <div style="text-align:center">
-{%= view.widget('button',{'class':'w-large w-black','iconr':'check','extra':'mv-evt mv-on-click="submit"'},{'text':'Submit'}) %}
+{view.widget('button',{'class':'w-large w-black','iconr':'check','extra':'mv-evt mv-on-click="submit"'},{'text':'Submit'})}
 </div>
 </script>
 <script src="../common/js/Importer.min.js"></script>
@@ -287,7 +287,7 @@ HtmlWidget.widget('modal', {'id':'a_modal','class':'w-dark','autoclose':true})+
 <p>Some more text here.. Some more text here.. Some more text here.. Some more text here..</p>'+
 HtmlWidget.widget('/modal', {'id':'a_modal','class':'w-dark','autoclose':true})
 );
-    
+
     // do the necessary plumbing
     var importer = new Importer();
     HtmlWidget.assets(assets);

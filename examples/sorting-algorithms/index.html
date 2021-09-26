@@ -252,9 +252,9 @@ select {
     <strong>Console: </strong> <br />
     <div id="console" class="fluid col-1-1">
         <div class="algo_info">
-            <strong>Selected Algorithm: {%=algorithm.name%}</strong>
+            <strong>Selected Algorithm: {algorithm.name}</strong>
             <br /><br />
-            <strong>Reference Link:</strong> <a href="{%=algorithm.reflink%}" target="_blank">{%=algorithm.reflink%}</a>
+            <strong>Reference Link:</strong> <a href="{algorithm.reflink}" target="_blank">{algorithm.reflink}</a>
             <br /><br />
             <strong>Summary:</strong> <i mv-model="algorithm.desc" mv-model-evt mv-on-model-change="html"></i>
             <br /><br />
@@ -262,11 +262,11 @@ select {
         <div id="loader" class="loader"></div>
         <div id="result">
             <div style="display:none" mv-model="result.showData" mv-model-evt mv-on-model-change="show">
-                Original: {%=result.original%}<br />
-                Result: {%=result.sorted%}<br />
+                Original: {result.original}<br />
+                Result: {result.sorted}<br />
                 <br /><br />
             </div>
-            <strong>Time Taken = {%=result.tms%} (ms)</strong>
+            <strong>Time Taken = {result.tms} (ms)</strong>
             <br /><br />
             <i>Reality Check:</i> Result is &nbsp;&nbsp;
             <span mv-model="result.isSorted" mv-model-evt mv-on-model-change="show">
