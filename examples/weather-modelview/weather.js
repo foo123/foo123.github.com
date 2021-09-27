@@ -208,14 +208,14 @@ function weather(window, ModelView)
                 }
             }
         }))
-        .template(document.getElementById('app-content').innerHTML)
+        .template(document.getElementById('AppContent').innerHTML)
         .components({
-            'HomePage': new ModelView.View.Component('HomePage', document.getElementById('home-page-component').innerHTML)
-            ,'SearchPage': new ModelView.View.Component('SearchPage', document.getElementById('search-page-component').innerHTML)
-            ,'WeatherPage': new ModelView.View.Component('WeatherPage', document.getElementById('weather-page-component').innerHTML)
-            ,'Weather': new ModelView.View.Component('Weather', document.getElementById('weather-component').innerHTML, {changed: (o, n) => (o.woeid !== n.woeid) || (o.detailed !== n.detailed) || (o.data !== n.data)})
-            ,'WeatherData': new ModelView.View.Component('WeatherData', document.getElementById('weather-data-component').innerHTML)
-            ,'Loader': new ModelView.View.Component('Loader', document.getElementById('loader-component').innerHTML, {changed: ()=>false})
+            'HomePage': new ModelView.View.Component('HomePage', document.getElementById('HomePageComponent').innerHTML)
+            ,'SearchPage': new ModelView.View.Component('SearchPage', document.getElementById('SearchPageComponent').innerHTML)
+            ,'WeatherPage': new ModelView.View.Component('WeatherPage', document.getElementById('WeatherPageComponent').innerHTML)
+            ,'Weather': new ModelView.View.Component('Weather', document.getElementById('WeatherComponent').innerHTML, {changed: (o, n) => (o.woeid !== n.woeid) || (o.detailed !== n.detailed) || (o.data !== n.data)})
+            ,'WeatherData': new ModelView.View.Component('WeatherData', document.getElementById('WeatherDataComponent').innerHTML/*, {changed: (o, n) => (o.woeid !== n.woeid) || (o.detailed !== n.detailed) || (o.data !== n.data)}*/)
+            ,'Loader': new ModelView.View.Component('Loader', document.getElementById('LoaderComponent').innerHTML, {changed: ()=>false})
         })
         .context({
             match: match
