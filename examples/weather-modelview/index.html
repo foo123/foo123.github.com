@@ -75,7 +75,7 @@ props.data && props.data.consolidated_weather && props.data.consolidated_weather
     props.detailed ? (<b>{props.city||view.model().get('woeid.'+props.woeid+'.city')||'..'} (Forecast)</b>) : (<a href={'#/weather/'+props.woeid}><b>{props.city||view.model().get('woeid.'+props.woeid+'.city')||'..'}</b></a>)
     }</div>
     <div class="weather-content">{
-    props.data ? (<WeatherData id={props.woeid} props={props}/>) : (<Loader id="loader" props={{text:'Loading..'}}/>)
+    props.data ? (<WeatherData id={props.woeid} props={props}/>) : (<Loader/>)
     }</div>
 </div>
 </script>
@@ -94,7 +94,7 @@ props.data && props.data.consolidated_weather && props.data.consolidated_weather
         <input id="search" type="text" placeholder="search.." name="model[term]" value={props.term} />
         <button type="button" mv-evt mv-on-click="search">Search!</button>
     </div>
-    {props.results ? (props.results.length ? props.results.map(place => (<Weather id={place.woeid} props={{woeid:place.woeid, city:place.title, data:view.model().get('woeid.'+place.woeid)}}/>)) : (<p><b>No results found!</b></p>)) : (<Loader id="loader" props={{text:'Loading..'}}/>)}
+    {props.results ? (props.results.length ? props.results.map(place => (<Weather id={place.woeid} props={{woeid:place.woeid, city:place.title, data:view.model().get('woeid.'+place.woeid)}}/>)) : (<p><b>No results found!</b></p>)) : (<Loader/>)}
 </div>
 </script>
 
