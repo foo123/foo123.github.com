@@ -201,8 +201,8 @@
     
     
 <script>//<![CDATA[
-require(['jQuery', 'ModelView', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcascade_mcs_mouth'], 
-    function($, ModelView, DAT, HAAR, Parallel, haarcascade_mcs_mouth) {
+require(['jQuery', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'DatGUI', 'HAAR', 'Parallel', 'cascades/haarcascade_mcs_mouth'], 
+    function($, ModelView, _, __, DAT, HAAR, Parallel, haarcascade_mcs_mouth) {
     
     var startTime = (window.console && window.console.time) ? function(s) { window.console.time(s); } : function() {},
         endTime = (window.console && window.console.timeEnd) ? function(s) { window.console.timeEnd(s); } : function() {},

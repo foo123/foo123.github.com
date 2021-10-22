@@ -62,7 +62,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
 }
 ,bundles: {
     //FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_IO", "FILTER_CODECS", "FILTER_FILTERS", "FILTER_PLUGINS"],
-    ModelViewBundle: ["ModelView", "ModelViewValidation"]
+    ModelViewBundle: ["ModelView", "ModelViewValidation", "ModelViewjQuery"]
 }        
 ,shim: {
     Storage: { exports: 'Storage' }

@@ -559,8 +559,8 @@
     
     
 <script type="text/javascript">//<![CDATA[
-require(['jQuery', 'ModelView', 'Regex', 'Dromeo'],
-    function($, ModelView, Regex, Router) {
+require(['jQuery', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'Regex', 'Dromeo'],
+    function($, ModelView, _, __, Regex, Router) {
     var $screen = $('#screen'),
         oEditor, regex = document.getElementById('regex'),
         codeEditor, code = document.getElementById('code'),
