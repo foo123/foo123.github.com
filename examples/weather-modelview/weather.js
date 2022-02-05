@@ -52,35 +52,6 @@ function weather(window, ModelView)
     {
         return '<i class="wind-dir '+dir.trim().toLowerCase()+'"></i>';
     }
-    function normalise(path)
-    {
-        if (path && path.length)
-        {
-            path = path.trim();
-            if ('#' === path.charAt(0)) path = path.slice(1);
-            if ('/' === path.charAt(0)) path = path.slice(1);
-            if ('/' === path.slice(-1)) path = path.slice(0, -1);
-            path = path.trim();
-        }
-        return path;
-    }
-    function route(pattern)
-    {
-        let route = location.hash;
-        route = normalise(route||'').split('/')
-        pattern = normalise(pattern||'').split('/');
-        if (pattern.length !== route.length) return false;
-        for (let i = 0; i < route.length; i++)
-        {
-            if (':' === pattern[i].charAt(0)) continue;
-            if (pattern[i] !== route[i]) return false;
-        }
-        return true;
-    }
-    function match(part)
-    {
-        return decodeURIComponent(normalise(location.hash || '').split('/')[part || 0] || '');
-    }
 
     class Store
     {
@@ -135,6 +106,7 @@ function weather(window, ModelView)
     // singleton
     const store = new Store().autoclear(30 * 60 * 1000); // auto-clear every 30 minutes
 
+    let pagechanged = false;
     const view = new ModelView.View('view')
         .model(new ModelView.Model('model', {
             cities: [
@@ -210,21 +182,26 @@ function weather(window, ModelView)
         }))
         .template(document.getElementById('AppContent').innerHTML)
         .components({
-            'HomePage': new ModelView.View.Component('HomePage', document.getElementById('HomePageComponent').innerHTML)
-            ,'SearchPage': new ModelView.View.Component('SearchPage', document.getElementById('SearchPageComponent').innerHTML)
-            ,'WeatherPage': new ModelView.View.Component('WeatherPage', document.getElementById('WeatherPageComponent').innerHTML)
-            ,'Weather': new ModelView.View.Component('Weather', document.getElementById('WeatherComponent').innerHTML, {changed: (o, n) => (o.woeid !== n.woeid) || (o.detailed !== n.detailed) || (o.data !== n.data)})
-            ,'WeatherData': new ModelView.View.Component('WeatherData', document.getElementById('WeatherDataComponent').innerHTML/*, {changed: (o, n) => (o.woeid !== n.woeid) || (o.detailed !== n.detailed) || (o.data !== n.data)}*/)
-            ,'Loader': new ModelView.View.Component('Loader', document.getElementById('LoaderComponent').innerHTML, {changed: ()=>false})
+            'HomePage': ModelView.View.Component('HomePage', document.getElementById('HomePageComponent').innerHTML)
+            ,'SearchPage': ModelView.View.Component('SearchPage', document.getElementById('SearchPageComponent').innerHTML)
+            ,'WeatherPage': ModelView.View.Component('WeatherPage', document.getElementById('WeatherPageComponent').innerHTML)
+            ,'Weather': ModelView.View.Component('Weather', document.getElementById('WeatherComponent').innerHTML, {changed: (o, n) => (o.woeid !== n.woeid) || (o.detailed !== n.detailed) || (o.data !== n.data)})
+            ,'WeatherData': ModelView.View.Component('WeatherData', document.getElementById('WeatherDataComponent').innerHTML/*, {changed: (o, n) => (o.woeid !== n.woeid) || (o.detailed !== n.detailed) || (o.data !== n.data)}*/)
+            ,'Loader': ModelView.View.Component('Loader', document.getElementById('LoaderComponent').innerHTML)
         })
         .context({
-            match: match
-            ,route: route
-            ,weather_icon: weather_icon
+             weather_icon: weather_icon
             ,wind_icon: wind_icon
             ,format_num: format_num
             ,format_temp: format_temp
             ,format_date: format_date
+        })
+        .option('router.useHash', true)
+        .events({
+            'window:popstate': function(evt) {
+                pagechanged = true;
+                this.render();
+            }
         })
         .actions({
             search: function(evt, el) {
@@ -244,12 +221,6 @@ function weather(window, ModelView)
             }
         })
     ;
-
-    let pagechanged = false;
-    window.addEventListener('hashchange', () => {
-        pagechanged = true;
-        view.render();
-    }, false);
 
     if (!location.hash) location.hash = '#/';
     else view.render();

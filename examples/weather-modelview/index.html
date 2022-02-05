@@ -57,7 +57,7 @@ require.config({
 </script>
 
 <script type="text/x-template" id="WeatherDataComponent">
-{
+<div style="display:block;width:100%;position:relative;box-sizing:border-box;padding:0;margin:0;border:0">{
 props.data && props.data.consolidated_weather && props.data.consolidated_weather.length
     ? ((props.detailed ? props.data.consolidated_weather : [props.data.consolidated_weather[0]]).map(current => (<div class="weather-data">
         <p><b>{format_date(current.applicable_date)}</b></p>
@@ -66,7 +66,7 @@ props.data && props.data.consolidated_weather && props.data.consolidated_weather
         <p><span class="weather-details">{format_num(current.wind_speed)+'mph'}</span>&nbsp;<i class={'wind-dir '+current.wind_direction_compass.trim().toLowerCase()}></i> ({current.wind_direction_compass.toUpperCase()})</p>
         </div>)))
     : (<div class="weather-data"><p><b>No data!</b></p></div>)
-}
+}</div>
 </script>
 
 <script type="text/x-template" id="WeatherComponent">
@@ -110,11 +110,17 @@ props.data && props.data.consolidated_weather && props.data.consolidated_weather
 </script>
 
 <script type="text/x-template" id="AppContent">
-{
-  route('/weather/:woeid') ? (<WeatherPage id={'weather_'+match(1)} props={{woeid:match(1)}}/>)
-: (route('/search/:term') ? (<SearchPage id={'search_'+match(1)} props={{term:match(1), results:view.model().get('search.'+match(1))}}/>)
-: (<HomePage id="index" props={{cities:view.model().get('cities')}}/>))
-}
+{view.router({
+    type: "hash",
+    caseSensitive: false,
+    prefix: "",
+    routes: {
+        "/": () => (<HomePage id="index" props={{cities:view.model().get('cities')}}/>),
+        "/weather/:woeid": (match) => (<WeatherPage id={'weather_'+match.woeid} props={match}/>),
+        "/search/:term": (match) => (<SearchPage id={'search_'+match.term} props={{term:match.term, results:view.model().get('search.'+match.term)}}/>)
+    },
+    fail: () => (<HomePage id="index" props={{cities:view.model().get('cities')}}/>)
+})}
 </script>
 
 <script>
