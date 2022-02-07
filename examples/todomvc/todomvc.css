@@ -220,6 +220,7 @@ label[for='toggle-all'] {
 	-ms-appearance: none;
 	-o-appearance: none;
 	appearance: none;
+    outline: none;
 }
 #todo-list li .toggle:after {
 	content: '✔';
@@ -246,7 +247,9 @@ label[for='toggle-all'] {
 	bottom: 0;
     display: block;
 	margin: auto 0;
+    background: none;
 	border: none;
+    outline: none;
     cursor: ns-resize;
 }
 #todo-list li .drag:after {
@@ -254,12 +257,13 @@ label[for='toggle-all'] {
 	line-height: 64px; /* 40 + a couple of pixels visual adjustment */
 	font-size: 32px;
 	color: #d9d9d9;
-    display: block;
+    display: inline-block;
 	text-shadow: 0 -1px 0 #bfbfbf;
 }
 #todo-list li .drag:active:after,
 #todo-list li .drag:hover:after {
 	color: #444;
+    font-weight: bold;
 }
 #todo-list li label {
 	word-break: break-word;
@@ -340,9 +344,9 @@ label[for='toggle-all'] {
 	content: '✎';
 }
 
-#todo-list li:hover .time-added,
-#todo-list li:hover .process,
-#todo-list li:hover .destroy {
+#todo-list li:not(.dnd-dragged):hover .time-added,
+#todo-list li:not(.dnd-dragged):hover .process,
+#todo-list li:not(.dnd-dragged):hover .destroy {
 	display: block;
 }
 
@@ -355,12 +359,22 @@ label[for='toggle-all'] {
 }
 
 #todo-list li.dnd-dragged {
+    box-sizing: border-box;
     display: block;
     width: 100%;
     min-height: 50px;
     overflow: hidden;
     border: 4px dashed #669991;
     z-index: 100;
+}
+#todo-list li.dnd-closest {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    min-height: 50px;
+    border: 2px dashed #f00;
+    overflow: hidden;
+    z-index: 90;
 }
 
 #footer {

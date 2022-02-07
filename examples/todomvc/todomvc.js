@@ -27,7 +27,8 @@ DnDSortable.prototype = {
         if (!Object.prototype.hasOwnProperty.call(window.Element.prototype, '$dndRect'))
             window.Element.prototype.$dndRect = null;
 
-        var self = this, draggingEle, handlerEle, parent, parentRect, y0, isDraggingStarted = false;
+        var self = this, draggingEle, handlerEle, parent, parentRect,
+            y0, lastY, isDraggingStarted = false, closestEle, dir;
 
         if (self.handler) return;
 
@@ -61,11 +62,13 @@ DnDSortable.prototype = {
             if (!draggingEle) return;
 
             e.preventDefault();
+            e.stopPropagation();
             parent = draggingEle.parentNode;
 
             if ('function' === typeof self.opts.onStart) self.opts.onStart(draggingEle);
 
             isDraggingStarted = true;
+            closestEle = null;
 
             parentRect = parent.getBoundingClientRect();
             [].forEach.call(parent.children, function(el){
@@ -82,7 +85,8 @@ DnDSortable.prototype = {
                 el.style.top = String(el.$dndRect.top-parentRect.top)+'px';
                 el.style.left = String(el.$dndRect.left-parentRect.left)+'px';
             });
-            y0 = (e.changedTouches && e.changedTouches.length ? e.changedTouches[0].clientY : e.clientY) + parentRect.top - draggingEle.$dndRect.top;
+            lastY = e.changedTouches && e.changedTouches.length ? e.changedTouches[0].clientY : e.clientY;
+            y0 = lastY + parentRect.top - draggingEle.$dndRect.top;
             // Set position for dragging element
             draggingEle.style.top = String((e.changedTouches && e.changedTouches.length ? e.changedTouches[0].clientY : e.clientY) - y0)+'px';
 
@@ -95,29 +99,72 @@ DnDSortable.prototype = {
         };
 
         var dragMove = function(e) {
+            var prevEle, nextEle, p = 0, y;
+
+            y = e.changedTouches && e.changedTouches.length ? e.changedTouches[0].clientY : e.clientY;
             // Set position for dragging element
-            draggingEle.style.top = String((e.changedTouches && e.changedTouches.length ? e.changedTouches[0].clientY : e.clientY) - y0)+'px';
+            draggingEle.style.top = String(y - y0)+'px';
 
-            var prevEle = draggingEle.previousElementSibling, nextEle = draggingEle.nextElementSibling, p;
-
-            // User moves the dragging element to the top
-            if (prevEle && (p=intersect(draggingEle, prevEle)))
+            if (closestEle && ((1 === dir && lastY < y) || (-1 === dir && lastY > y)))
             {
-                if (p <= 0.5)
-                {
-                    if (p <= 0.25 && draggingEle !== prevEle.previousElementSibling) swap(draggingEle, prevEle, true);
-                    prevEle.style.top = String(prevEle.$dndRect.top-parentRect.top + (draggingEle === prevEle.previousElementSibling ? -p : p)*prevEle.$dndRect.height)+'px';
-                }
-                return;
+                closestEle.classList.remove(self.opts.closest || 'dnd-closest');
+                closestEle = null;
             }
 
-            // User moves the dragging element to the bottom
-            if (nextEle && (p=intersect(nextEle, draggingEle)))
+            lastY = y;
+
+            if (!closestEle)
             {
-                if (p <= 0.5)
+                // User moves the dragging element to the top
+                prevEle = draggingEle.previousElementSibling;
+                if (prevEle && (p=intersect(draggingEle, prevEle)))
                 {
-                    if (p <= 0.25 && draggingEle !== nextEle.nextElementSibling) swap(draggingEle, nextEle, true);
-                    nextEle.style.top = String(nextEle.$dndRect.top-parentRect.top + (draggingEle === nextEle.nextElementSibling ? p : -p)*nextEle.$dndRect.height)+'px';
+                    closestEle = prevEle; dir = 1;
+                }
+            }
+
+            if (!closestEle)
+            {
+                // User moves the dragging element to the bottom
+                nextEle = draggingEle.nextElementSibling;
+                if (nextEle && (p=intersect(nextEle, draggingEle)))
+                {
+                    closestEle = nextEle; dir = -1;
+                }
+            }
+
+            if (closestEle)
+            {
+                p = p || intersect(draggingEle, closestEle);
+                if (p)
+                {
+                    if (p >= 0.2)
+                    {
+                        closestEle.classList.add(self.opts.closest || 'dnd-closest');
+                    }
+                    else
+                    {
+                        closestEle.classList.remove(self.opts.closest || 'dnd-closest');
+                    }
+                    if (p <= 0.5)
+                    {
+                        if (p <= 0.25)
+                        {
+                            if (
+                            (1 === dir && draggingEle !== closestEle.previousElementSibling) ||
+                            (-1 === dir && draggingEle !== closestEle.nextElementSibling)
+                            )
+                            {
+                                swap(draggingEle, closestEle, true);
+                            }
+                        }
+                        closestEle.style.top = String(closestEle.$dndRect.top-parentRect.top + dir*p*closestEle.$dndRect.height)+'px';
+                    }
+                }
+                else
+                {
+                    closestEle.classList.remove(self.opts.closest || 'dnd-closest');
+                    closestEle = null;
                 }
             }
         };
@@ -139,6 +186,7 @@ DnDSortable.prototype = {
             parent.style.removeProperty('padding-bottom');
             parent.style.removeProperty('height');
             parent.classList.remove(self.opts.container || 'dnd-container');
+            if (closestEle) closestEle.classList.remove(self.opts.closest || 'dnd-closest');
             draggingEle.classList.remove(self.opts.dragged || 'dnd-dragged');
 
             if ('function' === typeof self.opts.onEnd) self.opts.onEnd(draggingEle);
@@ -147,6 +195,7 @@ DnDSortable.prototype = {
             handlerEle = null;
             parent = null;
             parentRect = null;
+            closestEle = null;
             isDraggingStarted = false;
         };
 

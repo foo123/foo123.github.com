@@ -55,7 +55,7 @@ require.config({
 <li mv-id={props.uuid} id={props.uuid} class={props.className}>
     <div class="view">
         <input class="toggle" mv-evt mv-on-change="complete" type="checkbox" value="completed" checked={props.completed}/>
-        <a href="javascript:void(0)" class="drag" title="Drag to Re-Order"></a>
+        <button class="drag" title="Drag to Re-Order"></button>
         <label mv-evt mv-on-dblclick="edit">{props.title}</label>
         <span class="time-added">{timeSince(props.time)}</span>
         <button class="process" mv-evt mv-on-click="edit" title="Edit"></button>
