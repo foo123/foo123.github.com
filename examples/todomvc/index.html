@@ -34,6 +34,7 @@ require.config({
 
     ,paths: {
         Storage: "Storage"
+        ,AreaSortable: "areasortable.min"
         ,ModelViewBundle: "modelview.bundle"
         ,todomvc: "../../todomvc/todomvc"
     }
@@ -105,8 +106,8 @@ this.model().get('todoList.display').map(todo => (<Todo id={todo.uuid.val()} pro
 </footer>
 <script>
 // use requireJS
-require(['Storage', 'ModelView', 'todomvc'], function(Storage, ModelView, todomvc) {
-    todomvc(window, Storage, ModelView);
+require(['Storage', 'AreaSortable', 'ModelView', 'todomvc'], function(Storage, AreaSortable, ModelView, todomvc) {
+    todomvc(window, Storage, AreaSortable, ModelView);
 });
 </script>
 </body>

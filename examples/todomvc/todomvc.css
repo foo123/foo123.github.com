@@ -365,6 +365,7 @@ label[for='toggle-all'] {
     min-height: 50px;
     overflow: hidden;
     border: 2px dashed #669991;
+    opacity: 0.7;
     z-index: 100;
 }
 #todo-list li.dnd-closest {
