@@ -38,7 +38,7 @@ DnDSortable.prototype = {
             {
                 delta = nodeA.$dndRect.height-nodeB.$dndRect.height;
                 tmp = nodeA.$dndRect.top;
-                nodeA.$dndRect.top = nodeB.$dndRect.top-delta;
+                nodeA.$dndRect.top = nodeB.$dndRect.top;
                 nodeB.$dndRect.top = tmp+delta;
             }
             // Move `nodeA` before the `nodeB`
