@@ -33,16 +33,17 @@ DnDSortable.prototype = {
         if (self.handler) return;
 
         var swap = function(nodeA, nodeB, withRect) {
-            var siblingA = nodeA.nextSibling === nodeB ? nodeA : nodeA.nextSibling, tmp;
+            var siblingA = nodeA.nextSibling === nodeB ? nodeA : nodeA.nextSibling, tmp, delta;
             if (withRect)
             {
+                delta = nodeA.$dndRect.height-nodeB.$dndRect.height;
                 tmp = nodeA.$dndRect.top;
-                nodeA.$dndRect.top = nodeB.$dndRect.top;
-                nodeB.$dndRect.top = tmp;
+                nodeA.$dndRect.top = nodeB.$dndRect.top-delta;
+                nodeB.$dndRect.top = tmp+delta;
             }
-            // Move `nodeA` to before the `nodeB`
+            // Move `nodeA` before the `nodeB`
             parent.insertBefore(nodeA, nodeB);
-            // Move `nodeB` to before the sibling of `nodeA`
+            // Move `nodeB` before the sibling of `nodeA`
             parent.insertBefore(nodeB, siblingA);
         };
 
@@ -98,7 +99,7 @@ DnDSortable.prototype = {
             document.addEventListener('mouseup', dragEnd, false);
         };
 
-        var dragMove = function(e) {
+        var dragMove = throttle(function(e) {
             var prevEle, nextEle, p = 0, y;
 
             y = e.changedTouches && e.changedTouches.length ? e.changedTouches[0].clientY : e.clientY;
@@ -167,7 +168,7 @@ DnDSortable.prototype = {
                     closestEle = null;
                 }
             }
-        };
+        }, 20);
 
         var dragEnd = function(e) {
             // Remove the handlers of `mousemove` and `mouseup`
@@ -203,6 +204,20 @@ DnDSortable.prototype = {
         document.addEventListener('mousedown', dragStart, true);
     }
 };
+
+function throttle(f, limit)
+{
+    var inThrottle = false;
+    return function() {
+        var args = arguments, context = this;
+        if (!inThrottle)
+        {
+            f.apply(context, args);
+            inThrottle = true
+            setTimeout(function(){inThrottle = false;}, limit);
+        }
+    };
+}
 
 function debounce(f, wait, immediate)
 {
