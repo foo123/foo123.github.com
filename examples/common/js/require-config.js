@@ -6,6 +6,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
      Storage: "Storage"
     ,Snippets: "snippets"
     ,AreaSelect: "areaselect.min"
+    ,AreaSortable: "areasortable.min"
     ,utils: "utils.min"
     ,BigInteger: "BigInteger"
     ,jQuery: "jquery"
