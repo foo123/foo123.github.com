@@ -17,6 +17,20 @@ function debounce(f, wait, immediate)
     };
 }
 
+function disableScroll()
+{
+    // Get the current page scroll position
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop,
+        scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+    // if any scroll is attempted, set this to the previous value
+    window.onscroll = function() {window.scrollTo(scrollLeft, scrollTop);};
+}
+function enableScroll()
+{
+    window.onscroll = function() {};
+}
+
+
 function autoStoreModel()
 {
     // if supports localStorage
@@ -328,7 +342,9 @@ AreaSortable('vertical', {
     item: 'todo',
     activeItem: 'dnd-dragged',
     closestItem: 'dnd-closest',
+    onStart: disableScroll,
     onEnd: function($todo){
+        enableScroll()
         View.do_reorder($todo);
     }
 });
