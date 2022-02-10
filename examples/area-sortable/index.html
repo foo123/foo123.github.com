@@ -68,7 +68,7 @@ h1 {
 }
 #c3.container > .dnd-sortable-item {
     display: inline-block;
-    width: 30%;
+    width: calc(25% - 8px);
     cursor: move;
 }
 #c1.container > .dnd-sortable-item.tall {
@@ -136,7 +136,7 @@ h1 {
 <li id="i11" class="dnd-sortable-item dnd-sortable-handle">11</li>
 </ul>
 
-<script src="../src/areasortable.js"></script>
+<script src="../common/js/areasortable.min.js"></script>
 <script>
 document.getElementById('ver').textContent = AreaSortable.VERSION;
 
