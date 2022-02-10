@@ -342,6 +342,7 @@ AreaSortable('vertical', {
     item: 'todo',
     activeItem: 'dnd-dragged',
     closestItem: 'dnd-closest',
+    animationMs: 180,
     onStart: disableScroll,
     onEnd: function($todo){
         enableScroll()
