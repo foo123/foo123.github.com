@@ -4,6 +4,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
 
 ,paths: {
      Storage: "Storage"
+    ,touchTouch: "touchTouch.min"
     ,Snippets: "snippets"
     ,AreaSelect: "areaselect.min"
     ,AreaSortable: "areasortable.min"
@@ -67,6 +68,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
 }        
 ,shim: {
     Storage: { exports: 'Storage' }
+    ,touchTouch: { exports: 'touchTouch' }
     ,utils: { exports: 'U' }
     ,jQuery: { exports: 'jQuery' }
     ,lodash: { exports: '_' }
