@@ -105,32 +105,38 @@ h1 {
 <h1>AreaSortable Demo v.<span id="ver"></span></h1>
 
 <ul id="c1" class="container">
-<li class="dnd-sortable-item dnd-sortable-handle">A</li>
-<li class="dnd-sortable-item dnd-sortable-handle">B</li>
-<li class="dnd-sortable-item dnd-sortable-handle">C</li>
-<li class="dnd-sortable-item dnd-sortable-handle tall">D</li>
-<li class="dnd-sortable-item dnd-sortable-handle">E</li>
-<li class="dnd-sortable-item dnd-sortable-handle">F</li>
+<li id="A1" class="dnd-sortable-item dnd-sortable-handle">A</li>
+<li id="B1" class="dnd-sortable-item dnd-sortable-handle">B</li>
+<li id="C1" class="dnd-sortable-item dnd-sortable-handle">C</li>
+<li id="D1" class="dnd-sortable-item dnd-sortable-handle tall">D</li>
+<li id="E1" class="dnd-sortable-item dnd-sortable-handle">E</li>
+<li id="F1" class="dnd-sortable-item dnd-sortable-handle">F</li>
 </ul>
 
 <ul id="c2" class="container">
-<li class="dnd-sortable-item dnd-sortable-handle">A</li>
-<li class="dnd-sortable-item dnd-sortable-handle">B</li>
-<li class="dnd-sortable-item dnd-sortable-handle">C</li>
-<li class="dnd-sortable-item dnd-sortable-handle wide">D</li>
-<li class="dnd-sortable-item dnd-sortable-handle">E</li>
-<li class="dnd-sortable-item dnd-sortable-handle">F</li>
+<li id="A2" class="dnd-sortable-item dnd-sortable-handle">A</li>
+<li id="B2" class="dnd-sortable-item dnd-sortable-handle">B</li>
+<li id="C2" class="dnd-sortable-item dnd-sortable-handle">C</li>
+<li id="D2" class="dnd-sortable-item dnd-sortable-handle wide">D</li>
+<li id="E2" class="dnd-sortable-item dnd-sortable-handle">E</li>
+<li id="F2" class="dnd-sortable-item dnd-sortable-handle">F</li>
 </ul>
 
 <ul id="c3" class="container">
-<li class="dnd-sortable-item dnd-sortable-handle">A</li>
-<li class="dnd-sortable-item dnd-sortable-handle">B</li>
-<li class="dnd-sortable-item dnd-sortable-handle">C</li>
-<li class="dnd-sortable-item dnd-sortable-handle">D</li>
-<li class="dnd-sortable-item dnd-sortable-handle">E</li>
+<li id="i1" class="dnd-sortable-item dnd-sortable-handle">1</li>
+<li id="i2" class="dnd-sortable-item dnd-sortable-handle">2</li>
+<li id="i3" class="dnd-sortable-item dnd-sortable-handle">3</li>
+<li id="i4" class="dnd-sortable-item dnd-sortable-handle">4</li>
+<li id="i5" class="dnd-sortable-item dnd-sortable-handle">5</li>
+<li id="i6" class="dnd-sortable-item dnd-sortable-handle">6</li>
+<li id="i7" class="dnd-sortable-item dnd-sortable-handle">7</li>
+<li id="i8" class="dnd-sortable-item dnd-sortable-handle">8</li>
+<li id="i9" class="dnd-sortable-item dnd-sortable-handle">9</li>
+<li id="i10" class="dnd-sortable-item dnd-sortable-handle">10</li>
+<li id="i11" class="dnd-sortable-item dnd-sortable-handle">11</li>
 </ul>
 
-<script src="../common/js/areasortable.min.js"></script>
+<script src="../src/areasortable.js"></script>
 <script>
 document.getElementById('ver').textContent = AreaSortable.VERSION;
 
@@ -139,6 +145,7 @@ function disableScroll()
     // Get the current page scroll position
     var scrollTop = window.pageYOffset || document.documentElement.scrollTop,
         scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
     // if any scroll is attempted, set this to the previous value
     window.onscroll = function() {window.scrollTo(scrollLeft, scrollTop);};
 }
@@ -155,16 +162,19 @@ let instance1 = AreaSortable('vertical', {
     ,item: 'dnd-sortable-item' // default
     ,activeItem: 'dnd-sortable-dragged' // default
     ,closestItem: 'dnd-sortable-closest' // default
+    ,animationMs: 180
     ,onStart: disableScroll
     ,onEnd: enableScroll
 });
 let instance2 = AreaSortable('horizontal', {
     container: 'c2' // container id
+    ,animationMs: 180
     ,onStart: disableScroll
     ,onEnd: enableScroll
 });
 let instance3 = AreaSortable('unrestricted', {
     container: 'c3' // container id
+    ,animationMs: 180
     ,onStart: disableScroll
     ,onEnd: enableScroll
 });
