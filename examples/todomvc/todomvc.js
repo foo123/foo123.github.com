@@ -335,16 +335,17 @@ updateModelFromStorage();
 
 window.addEventListener('hashchange', function() {route(location.hash);}, false);
 
-AreaSortable('vertical', {
+if (AreaSortable) AreaSortable('vertical', {
     container: 'todo-list',
     handle: 'drag',
     item: 'todo',
     activeItem: 'dnd-dragged',
     closestItem: 'dnd-closest',
     animationMs: 180,
-    onStart: disableScroll,
+    autoscroll: true,
+    //onStart: disableScroll,
     onEnd: function($todo){
-        enableScroll()
+        //enableScroll()
         View.do_reorder($todo);
     }
 });
