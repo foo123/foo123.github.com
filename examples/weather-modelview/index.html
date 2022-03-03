@@ -59,8 +59,8 @@ require.config({
 <script type="text/x-template" id="WeatherDataComponent">
 <div style="display:block;width:100%;position:relative;box-sizing:border-box;padding:0;margin:0;border:0">{
 props.data && props.data.consolidated_weather && props.data.consolidated_weather.length
-    ? ((props.detailed ? props.data.consolidated_weather : [props.data.consolidated_weather[0]]).map(current => (<div class="weather-data">
-        <p><b>{format_date(current.applicable_date)}</b></p>
+    ? ((props.detailed ? props.data.consolidated_weather : [props.data.consolidated_weather[0]]).map((current, i, data) => (<div class="weather-data">
+        <p><b>{1 === data.length ? 'Today' : format_date(current.applicable_date)}</b></p>
         <img class="weather-icon" src={weather_icon(current.weather_state_abbr)} alt={current.weather_state_name} title={current.weather_state_name} />
         <p><span class="weather-details">{format_temp(current.the_temp, 'celsius', 0, 1)} ({format_temp(current.min_temp, 'celsius', 0, 1)} &#8212; {format_temp(current.max_temp, 'celsius', 0, 1)})</span></p>
         <p><span class="weather-details">{format_num(current.wind_speed)+'mph'}</span>&nbsp;<i class={'wind-dir '+current.wind_direction_compass.trim().toLowerCase()}></i> ({current.wind_direction_compass.toUpperCase()})</p>
