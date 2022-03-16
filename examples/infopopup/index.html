@@ -17,6 +17,7 @@
 body {
     font-family: Helvetica, Arial, sans-serif;
     font-size: 16px;
+    padding: 10px 0;
 }
 #map {
     position: relative;
@@ -437,6 +438,11 @@ InfoPopup({
     content: function(g) {
         var area = areas[g.id];
         return '<h4 class="area-name">'+area.name+'</h4><p class="area-size"><b>Area</b>: <span>'+area.area+'</span></p>';
+    },
+    atItemX: 'center',
+    atItemY: function(g) {
+        // different Y position per item
+        return -1 !== ['argosaronikos','egeo','dodekanisa','sporades','kyklades','ionio'].indexOf(g.id) ? 'center' : 'top';
     },
     closeDelay: 1000
 });
