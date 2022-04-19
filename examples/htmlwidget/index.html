@@ -115,6 +115,12 @@ body {
 </div>
 </div>
 <div class="row">
+{view.widget('label',{'class':'label'},{'text':'Usage percentage:'})}
+<div class="field">
+{view.widget('range',{'circular':true,'title':'Please rate:','class':'w-dark','suffix':'%'},{'value':75})}
+</div>
+</div>
+<div class="row">
 {view.widget('label',{'for':'subscription','class':'label'},{'text':'Subscribe:'})}
 <div class="field">
 {view.widget('switch',{'id':'subscription','name':'subscription','class':'w-large w-dark','iconon':'check','iconoff':'thumbs-down','checked':true},{'value':'subscribe'})}
@@ -177,6 +183,7 @@ body {
 var assets = {
  "fontawesome.css":{"type":"styles", "asset":"https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"}
 ,"htmlwidgets.css":{"type":"styles", "asset":"../common/css/htmlwidgets.min.css", "dependencies":["fontawesome.css"]}
+,"htmlwidgets.js":{"type":"scripts", "asset":"../common/js/htmlwidgets.min.js"}
 ,"jquery":{"type":"scripts", "asset":"https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"}
 ,"jquery-ui":{"type":"scripts", "asset":"https://code.jquery.com/ui/1.11.4/jquery-ui.min.js", "dependencies":["jquery"]}
 ,"bootstrap.css":{"type":"styles", "asset":"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", "attributes":{"integrity":"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u","crossorigin":"anonymous"}}
