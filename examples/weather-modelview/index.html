@@ -34,11 +34,8 @@ require.config({
     baseUrl: /^https?:\/\/foo123\./.test(location.href) ? "/examples/common/js" : "/foo123.github.com/examples/common/js"
 
     ,paths: {
-        ModelViewBundle: "modelview.bundle"
+        ModelView: "modelview.jsx.min"
         ,weather: "../../weather-modelview/weather"
-    }
-    ,bundles: {
-        ModelViewBundle: ["ModelView", "ModelViewValidation"]
     }
     ,shim: {
         weather: {exports: 'weather'}

@@ -170,7 +170,7 @@ function setup(ModelView)
 <div id="snippets" class="fluid col-1-1" style="margin:10px 0px 50px 0px"></div>
 <script>
 // use requireJS
-require(['Snippets', 'ModelView'], function(Snippets, ModelView) {
+require(['Snippets', 'ModelViewJSX'], function(Snippets, ModelView) {
     Snippets(['html-snippet', 'js-snippet-without-jquery'], 'snippets', CodeMirror);
     setup(ModelView); 
 });
