@@ -1424,16 +1424,18 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
                 }
             }
             var model = $screen.modelview('model');
-            model.set('conditions_dom', params.conditions||null);
-            model.set('conditions', params.conditions||null);
-            model.set('object', String(params.object), true);
-            model.set('type', String(params.type), true);
-            model.set('N', String(params.N), true);
-            model.set('K', String(params.K), true);
-            model.set('alphabet', String(params.alphabet||""), true);
-            model.set('Text', String(params.Text||""), true);
-            model.set('order', String(params.order||""), true);
-            setTimeout(function(){ produce( model ); }, 10);
+            setTimeout(function(){
+                model.set('conditions_dom', params.conditions||null);
+                model.set('conditions', params.conditions||null);
+                model.set('Text', String(params.Text||""), true);
+                model.set('order', String(params.order||""), true);
+                model.set('alphabet', String(params.alphabet||""), true);
+                model.set('N', String(params.N), true);
+                model.set('K', String(params.K), true);
+                model.set('object', String(params.object), true);
+                model.set('type', String(params.type), true);
+                setTimeout(function(){produce( model );}, 10);
+            }, 10);
         }
     }});
 
@@ -1634,7 +1636,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
                 }
             },
             dependencies: {
-                //"default": ["object"],
+                //"object.default": ["object"],
                 //"default_order": ["object","type"],
                 "isCombinatorics": ["object"],
                 "hasMath": ["object"],

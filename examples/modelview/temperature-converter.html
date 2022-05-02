@@ -24,14 +24,13 @@
 </header>
         
 <div id="html-snippet" data-snippet="HTML Code" data-snippet-type="htmlmixed" data-snippet-escape="1">
-<template id="content">
-    <p class="temperature-converter">
-        <label class="celsius-wrap"><input type="number" class="celsius" id="celsius" name="model[celsius]" step="0.5" value="">°C</label>
-        <span class="arrows">⇄</span>
-        <label class="fahrenheit-wrap"><input type="number" class="fahrenheit" id="fahrenheit" name="model[fahrenheit]" step="0.5" value="" >°F</label>
-    </p>
-</template>
-<div id="app"></div>
+<div id="app">
+<p class="temperature-converter">
+    <label class="celsius-wrap"><input type="number" class="celsius" id="celsius" name="model[celsius]" step="0.5" value="">°C</label>
+    <span class="arrows">⇄</span>
+    <label class="fahrenheit-wrap"><input type="number" class="fahrenheit" id="fahrenheit" name="model[fahrenheit]" step="0.5" value="" >°F</label>
+</p>
+</div>
 </div>
 
 <script id="js-snippet-without-jquery" type="text/javascript" data-snippet="JS Code (standalone)" data-snippet-type="javascript">
@@ -63,7 +62,6 @@ new ModelView.View('view')
             }
         })
     )
-    .template(document.getElementById('content').innerHTML)
     .autovalidate(false)
     .autobind(true)
     .livebind(false) // not needed

@@ -313,7 +313,7 @@ HtmlWidget.widget('/modal', {'id':'a_modal','class':'w-dark','autoclose':true})
                 alert('Submitted!');
             }
         })
-        .livebind(false)
+        .livebind(true)
         .autobind(false)
         .bind(['click'], document.getElementById('app'))
         .on('render', () => {
