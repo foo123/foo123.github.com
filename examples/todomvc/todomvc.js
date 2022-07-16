@@ -161,8 +161,16 @@ View = new ModelView.View('todoview')
 .context({
     timeSince: function(time) {
         if (null == time) return '';
-        var t = timeSince(time);
-        return Value(t.join(' ')).dirty(-1 !== [undefined, 'seconds','minute','minutes','hour'].indexOf(t[1]));
+        var t = timeSince(time), unit = t[1], rerender = () => (View.render());
+        if (null == unit || 'second' === unit || 'seconds' === unit)
+        {
+            setTimeout(rerender, 30000);
+        }
+        else if ('minute' === unit || 'minutes' === unit)
+        {
+            setTimeout(rerender, 5*60000);
+        }
+        return Value(t.join(' ')).dirty(-1 !== [undefined,'seconds','minute','minutes'].indexOf(unit));
     }
 })
 .actions({
