@@ -69,17 +69,17 @@ function timeSince(time)
     interval;
   seconds = Math.abs(seconds);
   interval = Math.floor(seconds / 31536000);
-  if (interval > 0) return [String(interval), (1===interval?'year':'years'), then];
+  if (interval > 0) return [interval, (1===interval?'year':'years'), then];
   interval = Math.floor(seconds / 2592000);
-  if (interval > 0) return [String(interval), (1===interval?'month':'months'), then];
+  if (interval > 0) return [interval, (1===interval?'month':'months'), then];
   interval = Math.floor(seconds / 86400);
-  if (interval > 0) return [String(interval), (1===interval?'day':'days'), then];
+  if (interval > 0) return [interval, (1===interval?'day':'days'), then];
   interval = Math.floor(seconds / 3600);
-  if (interval > 0) return [String(interval), (1===interval?'hour':'hours'), then];
+  if (interval > 0) return [interval, (1===interval?'hour':'hours'), then];
   interval = Math.floor(seconds / 60);
-  if (interval > 0) return [String(interval), (1===interval?'minute':'minutes'), then];
+  if (interval > 0) return [interval, (1===interval?'minute':'minutes'), then];
   interval = Math.floor(seconds);
-  return interval < 30 ? [now] : [String(interval), 'seconds', then];
+  return interval < 30 ? [now] : [interval, 'seconds', then];
 }
 
 function route(displayMode)
@@ -177,20 +177,17 @@ View = new ModelView.View('todoview')
 .context({
     timeSince: function(time) {
         if (null == time) return '';
-        var t = timeSince(time), unit = t[1], dirty = false;
+        var t = timeSince(time),
+            dur = t[0], unit = t[1],
+            dirty = false;
         if (null == unit || 'second' === unit || 'seconds' === unit)
         {
             setDelayedRender(reRender, 30*1000);
             dirty = true;
         }
-        else if ('minute' === unit)
+        else if ('minute' === unit || 'minutes' === unit)
         {
-            setDelayedRender(reRender, 4*60*1000);
-            dirty = true;
-        }
-        else if ('minutes' === unit)
-        {
-            setDelayedRender(reRender, 10*60*1000);
+            setDelayedRender(reRender, dur < 10 ? 1*60*1000 : 10*60*1000);
             dirty = true;
         }
         return Value(t.join(' ')).dirty(dirty);
