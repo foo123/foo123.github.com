@@ -91,8 +91,23 @@ function route(displayMode)
     }
 }
 
+function setDelayedRender(f, t)
+{
+    timeouts.push(setTimeout(f, t));
+}
+function clearDelayedRender()
+{
+    timeouts.forEach(id => clearTimeout(id));
+    timeouts = [];
+}
+function reRender()
+{
+    clearDelayedRender();
+    View.render();
+}
+
 var Model, View, Value = ModelView.Model.Value, TypeCast = ModelView.Type.Cast, Validate = ModelView.Validation.Validate,
-    STORAGE_KEY = "modelview_todomvc", KEY_ENTER = 13, autostore = debounce(autoStoreModel, 500);
+    STORAGE_KEY = "modelview_todomvc", KEY_ENTER = 13, autostore = debounce(autoStoreModel, 500), timeouts = [];
 
 // ModelView for App
 Model = new ModelView.Model('model', {
@@ -138,6 +153,7 @@ Model = new ModelView.Model('model', {
     }
 })
 .on('change', function(evt, data){
+    clearDelayedRender();
     if ('todoList' === data.key.slice(0, 8))
         autostore();
 })
@@ -161,16 +177,23 @@ View = new ModelView.View('todoview')
 .context({
     timeSince: function(time) {
         if (null == time) return '';
-        var t = timeSince(time), unit = t[1], rerender = () => (View.render());
+        var t = timeSince(time), unit = t[1], dirty = false;
         if (null == unit || 'second' === unit || 'seconds' === unit)
         {
-            setTimeout(rerender, 30000);
+            setDelayedRender(reRender, 30*1000);
+            dirty = true;
         }
-        else if ('minute' === unit || 'minutes' === unit)
+        else if ('minute' === unit)
         {
-            setTimeout(rerender, 5*60000);
+            setDelayedRender(reRender, 4*60*1000);
+            dirty = true;
         }
-        return Value(t.join(' ')).dirty(-1 !== [undefined,'seconds','minute','minutes'].indexOf(unit));
+        else if ('minutes' === unit)
+        {
+            setDelayedRender(reRender, 10*60*1000);
+            dirty = true;
+        }
+        return Value(t.join(' ')).dirty(dirty);
     }
 })
 .actions({
@@ -236,8 +259,9 @@ View = new ModelView.View('todoview')
 
         if (todo && !todo.editing)
         {
-            $todo.classList.add('editing');
             todo.editing = true;
+            todo.className = Value('todo' + (todo.completed.val() ? ' completed editing' : ' editing')).dirty(true);
+            $todo.classList.add('editing');
             setTimeout(() => {$todo.querySelector('.edit').focus();}, 10);
         }
     }
@@ -261,8 +285,9 @@ View = new ModelView.View('todoview')
             {
                 // update
                 todo.editing = false;
-                todo.title.set(title);
+                todo.className = Value('todo' + (todo.completed.val() ? ' completed' : '')).dirty(true);
                 $todo.classList.remove('editing');
+                todo.title.set(title);
                 Model.notify('todoList');
             }
         }
