@@ -572,22 +572,28 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
     var promise = Promise.resolve();  // Used to hold chain of typesetting calls
     function print_math( tex )
     {
-        math.html(tex);
 
-        promise = promise.then(function(){
-            return MathJax.typesetPromise([math[0]]);
-        }).catch(function(err){
-            console.log('MathJax.Typeset failed: ' + err.message)
-        });
+        if (window.MathJax.typesetPromise)
+        {
+            math.html(tex);
+            promise = promise.then(function(){
+                return MathJax.typesetPromise([math[0]]);
+            }).catch(function(err){
+                console.log('MathJax.Typeset failed: ' + err.message)
+            });
+            /*setTimeout(function(){
+                MathJax.typeset([math[0]]); // synchronous
+            }, 40);*/
+        }
         return promise;
-        /*setTimeout(function(){
-            MathJax.typeset([math[0]]); // synchronous
-        }, 40);*/
     }
     function clear_math( )
     {
-        math.html('');
-        MathJax.typesetClear([math[0]]);
+        if (window.MathJax.typesetClear)
+        {
+            math.html('');
+            MathJax.typesetClear([math[0]]);
+        }
     }
     function esc_html( s )
     {
@@ -1442,6 +1448,10 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
     $screen.modelview({
         autobind: true
         ,livebind: 'text'
+        ,autoSync: true
+        /*,options: {
+            'model.events': true
+        }*/
 
         ,model: {
             id: 'model'
