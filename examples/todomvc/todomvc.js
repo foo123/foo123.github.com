@@ -93,12 +93,24 @@ function route(displayMode)
 
 function setDelayedRender(f, t)
 {
-    timeouts.push(setTimeout(f, t));
+    if (timeout.id)
+    {
+        if (t < timeout.t)
+        {
+            clearTimeout(timeout.id);
+            timeout.id = setTimeout(f, timeout.t=t);
+        }
+    }
+    else
+    {
+        timeout.id = setTimeout(f, timeout.t=t);
+    }
 }
 function clearDelayedRender()
 {
-    timeouts.forEach(id => clearTimeout(id));
-    timeouts = [];
+    if (timeout.id) clearTimeout(timeout.id);
+    timeout.id = null;
+    timeout.t = 0;
 }
 function reRender()
 {
@@ -107,7 +119,7 @@ function reRender()
 }
 
 var Model, View, Value = ModelView.Model.Value, TypeCast = ModelView.Type.Cast, Validate = ModelView.Validation.Validate,
-    STORAGE_KEY = "modelview_todomvc", KEY_ENTER = 13, autostore = debounce(autoStoreModel, 500), timeouts = [];
+    STORAGE_KEY = "modelview_todomvc", KEY_ENTER = 13, autostore = debounce(autoStoreModel, 500), timeout = {id:null, t:0};
 
 // ModelView for App
 Model = new ModelView.Model('model', {
@@ -189,6 +201,10 @@ View = new ModelView.View('todoview')
         {
             setDelayedRender(reRender, dur < 10 ? 1*60*1000 : 10*60*1000);
             dirty = true;
+        }
+        else if ('hour' === unit || 'hours' === unit)
+        {
+            setDelayedRender(reRender, dur < 3 ? 60*60*1000 : 5*60*60*1000);
         }
         return Value(t.join(' ')).dirty(dirty);
     }
