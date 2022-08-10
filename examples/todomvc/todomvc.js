@@ -43,7 +43,7 @@ function updateModelFromStorage()
     // if supports localStorage
     if (Storage.isSupported)
     {
-        var storedOptions = Storage.get(STORAGE_KEY);
+        const storedOptions = Storage.get(STORAGE_KEY);
         if (storedOptions)
         {
             // reset any editing flags
@@ -63,23 +63,24 @@ function updateModelFromStorage()
 
 function timeSince(time)
 {
-  var seconds = Math.floor((new Date().getTime() - time) / 1000),
-    then = 0 > seconds ? " later" : " ago",
-    now = 0 > seconds ? "about now" : "just now",
-    interval;
-  seconds = Math.abs(seconds);
-  interval = Math.floor(seconds / 31536000);
-  if (interval > 0) return [interval, (1===interval?'year':'years'), then];
-  interval = Math.floor(seconds / 2592000);
-  if (interval > 0) return [interval, (1===interval?'month':'months'), then];
-  interval = Math.floor(seconds / 86400);
-  if (interval > 0) return [interval, (1===interval?'day':'days'), then];
-  interval = Math.floor(seconds / 3600);
-  if (interval > 0) return [interval, (1===interval?'hour':'hours'), then];
-  interval = Math.floor(seconds / 60);
-  if (interval > 0) return [interval, (1===interval?'minute':'minutes'), then];
-  interval = Math.floor(seconds);
-  return interval < 30 ? [now] : [interval, 'seconds', then];
+    let seconds = Math.floor((new Date().getTime() - time) / 1000),
+        then = 0 > seconds ? " later" : " ago",
+        now = 0 > seconds ? "about now" : "just now",
+        interval
+    ;
+    seconds = Math.abs(seconds);
+    interval = Math.floor(seconds / 31536000);
+    if (interval > 0) return [interval, (1 === interval ? 'year' : 'years'), then];
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 0) return [interval, (1 === interval ? 'month' : 'months'), then];
+    interval = Math.floor(seconds / 86400);
+    if (interval > 0) return [interval, (1 === interval ? 'day' : 'days'), then];
+    interval = Math.floor(seconds / 3600);
+    if (interval > 0) return [interval, (1 === interval ? 'hour' : 'hours'), then];
+    interval = Math.floor(seconds / 60);
+    if (interval > 0) return [interval, (1 === interval ? 'minute' : 'minutes'), then];
+    interval = Math.floor(seconds);
+    return interval < 30 ? [now] : [interval, 'seconds', then];
 }
 
 function route(displayMode)
@@ -118,11 +119,17 @@ function reRender()
     View.render();
 }
 
-var Model, View, Value = ModelView.Model.Value, TypeCast = ModelView.Type.Cast, Validate = ModelView.Validation.Validate,
-    STORAGE_KEY = "modelview_todomvc", KEY_ENTER = 13, autostore = debounce(autoStoreModel, 500), timeout = {id:null, t:0};
+const Value = ModelView.Model.Value,
+    TypeCast = ModelView.Type.Cast,
+    Validate = ModelView.Validation.Validate,
+    STORAGE_KEY = "modelview_todomvc",
+    KEY_ENTER = 13,
+    autostore = debounce(autoStoreModel, 500),
+    timeout = {id: null, t: 0}
+;
 
 // ModelView for App
-Model = new ModelView.Model('model', {
+const Model = new ModelView.Model('model', {
     displayMode: 'all'
     ,todoList: {
         todos: []
@@ -167,11 +174,13 @@ Model = new ModelView.Model('model', {
 .on('change', function(evt, data){
     clearDelayedRender();
     if ('todoList' === data.key.slice(0, 8))
+    {
         autostore();
+    }
 })
 ;
 
-View = new ModelView.View('todoview')
+const View = new ModelView.View('todoview')
 .model(Model)
 .template(document.getElementById('content').innerHTML)
 .autovalidate(false)
@@ -189,9 +198,8 @@ View = new ModelView.View('todoview')
 .context({
     timeSince: function(time) {
         if (null == time) return '';
-        var t = timeSince(time),
-            dur = t[0], unit = t[1],
-            dirty = false;
+        const t = timeSince(time), dur = t[0], unit = t[1];
+        let dirty = false;
         if (null == unit || 'second' === unit || 'seconds' === unit)
         {
             setDelayedRender(reRender, 30*1000);
@@ -199,24 +207,30 @@ View = new ModelView.View('todoview')
         }
         else if ('minute' === unit || 'minutes' === unit)
         {
-            setDelayedRender(reRender, dur < 10 ? 1*60*1000 : 10*60*1000);
+            setDelayedRender(reRender, 1*60*1000);
             dirty = true;
         }
         else if ('hour' === unit || 'hours' === unit)
         {
-            setDelayedRender(reRender, dur < 3 ? 60*60*1000 : 5*60*60*1000);
+            setDelayedRender(reRender, 60*60*1000);
+            dirty = true;
+        }
+        else if ('day' === unit || 'days' === unit)
+        {
+            setDelayedRender(reRender, 24*60*60*1000);
+            dirty = true;
         }
         return Value(t.join(' ')).dirty(dirty);
     }
 })
 .actions({
     addTodo: function(evt, el) {
-        var title = el.value.trim(), todo;
+        let title = el.value.trim(), todo = null;
         el.value = '';
 
-        if (title.length )
+        if (title.length)
         {
-            Model.$data.todoList.todos.unshift(todo={
+            Model.$data.todoList.todos.unshift(todo = {
                 uuid: Value(ModelView.UUID('todo')),
                 title: Value(title),
                 time: new Date().getTime(),
@@ -224,15 +238,14 @@ View = new ModelView.View('todoview')
                 className: Value('todo'),
                 editing: false
             });
-            Model.$data.todoList.active++;
+            ++Model.$data.todoList.active;
             Model.notify('todoList');
         }
     }
     ,allCompleted: function(evt, el) {
-        var completed, visible;
-
-        visible = Model.get('todoList.display');
-        completed = visible.filter(todo => todo.completed.val());
+        const visible = Model.get('todoList.display'),
+            completed = visible.filter(todo => todo.completed.val())
+        ;
 
         if (completed.length === visible.length)
         {
@@ -253,8 +266,8 @@ View = new ModelView.View('todoview')
                 {
                     todo.completed.set(true);
                     todo.className = Value('todo' + (todo.completed.val() ? ' completed' : '')).dirty(todo.completed.dirty());
-                    Model.$data.todoList.completed++;
-                    Model.$data.todoList.active--;
+                    ++Model.$data.todoList.completed;
+                    --Model.$data.todoList.active;
                 }
             })
             Model.notify('todoList');
@@ -267,7 +280,7 @@ View = new ModelView.View('todoview')
         Model.notify('todoList');
     }
     ,edit: function(evt, el) {
-        var $todo = el.closest('.todo'),
+        let $todo = el.closest('.todo'),
             todo = $todo ? Model.$data.todoList.todos.filter(todo => todo.uuid.val() == $todo.id)[0] : null;
 
         if (todo && !todo.editing)
@@ -279,12 +292,12 @@ View = new ModelView.View('todoview')
         }
     }
     ,stopEditing: function(evt, el) {
-        var title, $todo = el.closest('.todo'),
+        let title, $todo = el.closest('.todo'),
             todo = $todo ? Model.$data.todoList.todos.filter(todo => todo.uuid.val() == $todo.id)[0] : null;
 
         if (todo && todo.editing)
         {
-            if (evt.keyCode && KEY_ENTER !== evt.keyCode) return;
+            if (evt.keyCode && (KEY_ENTER !== evt.keyCode)) return;
             title = el.value.trim();
             if (!title.length)
             {
@@ -306,7 +319,7 @@ View = new ModelView.View('todoview')
         }
     }
     ,complete: function(evt, el) {
-        var $todo = el.closest('.todo'),
+        let $todo = el.closest('.todo'),
             todo = $todo ? Model.$data.todoList.todos.filter(todo => todo.uuid.val() == $todo.id)[0] : null;
 
         if (!todo) return;
@@ -329,7 +342,7 @@ View = new ModelView.View('todoview')
         }
     }
     ,remove: function(evt, el) {
-        var $todo = el.closest('.todo'),
+        let $todo = el.closest('.todo'),
             todo = $todo ? Model.$data.todoList.todos.filter(todo => todo.uuid.val() == $todo.id)[0] : null;
 
         if (todo)
@@ -342,14 +355,7 @@ View = new ModelView.View('todoview')
         }
     }
     ,reorder: function($todo) {
-        /*var todos = Model.$data.todoList.todos.reduce(function(todos, todo){
-            todos[todo.uuid.val()] = todo;
-            return todos;
-        }, {});
-        Model.$data.todoList.todos = [].map.call(document.getElementById('todo-list').children, function($todo){
-            return todos[$todo.id];
-        });*/
-        var todo = $todo ? Model.$data.todoList.todos.filter(todo => todo.uuid.val() == $todo.id)[0] : null;
+        let todo = $todo ? Model.$data.todoList.todos.filter(todo => todo.uuid.val() == $todo.id)[0] : null;
 
         if (todo)
         {
@@ -372,7 +378,7 @@ View = new ModelView.View('todoview')
 // synchronize UI/View/Model
 updateModelFromStorage();
 
-window.addEventListener('hashchange', function() {route(location.hash);}, false);
+window.addEventListener('hashchange', () => {route(location.hash);}, false);
 
 if (AreaSortable) AreaSortable('vertical', {
     container: 'todo-list',
@@ -382,9 +388,7 @@ if (AreaSortable) AreaSortable('vertical', {
     closestItem: 'dnd-closest',
     animationMs: 180,
     autoscroll: true,
-    onEnd: function($todo){
-        View.do_reorder($todo);
-    }
+    onEnd: ($todo) => {View.do_reorder($todo);}
 });
 
 if (location.hash) route(location.hash);
