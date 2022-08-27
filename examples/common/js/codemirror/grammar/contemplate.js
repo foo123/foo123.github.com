@@ -1,7 +1,7 @@
 // 1. JSON grammar for Contemplate Engine ( https://github.com/foo123/Contemplate )
 // to be used with CodeMirrorGrammar add-on (https://github.com/foo123/codemirror-grammar)
 codemirror_define_grammar_mode("contemplate", {
-        
+
 // prefix ID for regular expressions used in the grammar
 "RegExpID"                      : "RE::",
 
@@ -42,20 +42,24 @@ codemirror_define_grammar_mode("contemplate", {
                                 ]}
     ,"keyword"                  : {"autocomplete":true,"tokens":[
                                 "extends", "block", "endblock", "super", "getblock", "include",
-                                "if", "elseif", "elif", "else", "endif", "fi", 
+                                "if", "elseif", "elif", "else", "endif", "fi",
                                 "for", "elsefor", "endfor", "as", "in",
                                 "set", "unset", "isset", "empty", "iif", "continue", "break", "local_set", "get"
                                 ]}
     ,"function"                 : {"autocomplete":true,"tokens":[
-                                's', 'n', 'f', 'q', 'qq', 
-                                'echo', 'time', 'count',
-                                'lowercase', 'uppercase', 'ucfirst', 'lcfirst', 'sprintf', 'vsprintf',
-                                'date', 'ldate', 'locale', 'xlocale',
-                                'inline', 'tpl', 'uuid', 'haskey',
-                                'concat', 'ltrim', 'rtrim', 'trim', 'addslashes', 'stripslashes',
-                                'is_array', 'in_array', 'json_encode', 'json_decode',
-                                'camelcase', 'snakecase', 'e', 'url', 'nlocale', 'nxlocale', 'join', 'queryvar', 'striptags',
-                                'l','xl','nl','nxl','cc','j','dq','now','template','keys','values','buildquery','parsequery'
+                                's', 'n', 'f', 'q', 'qq', 'dq',
+                                'cc', 'concat', 'j','join',
+                                'time', 'now', 'date',
+                                'keys', 'values', 'count',
+                                'is_array', 'in_array', 'haskey',
+                                'lowercase', 'uppercase',
+                                'ltrim', 'rtrim', 'trim',
+                                'sprintf', 'vsprintf',
+                                'json_encode', 'json_decode',
+                                'e', 'striptags',
+                                'urlencode', 'urldecode',
+                                'queryvar', 'buildquery', 'parsequery',
+                                'uuid', 'inline', 'tpl', 'template'
                                 ]}
     ,"plugin"                   : "RE::/[a-zA-Z_][a-zA-Z0-9_]*/"
 

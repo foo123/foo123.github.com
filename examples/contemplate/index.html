@@ -138,25 +138,24 @@
 <script src="../common/js/codemirror/grammar/define_grammar_mode.js"></script>
 <script src="../common/js/codemirror/grammar/json.js"></script>
 <script src="../common/js/codemirror/grammar/contemplate.js"></script>
-<script src="../common/js/codemirror/grammar/contemplate_compat.js"></script>
 
 </head>
 <body class="responsive-864-container">
     <span id="forkongithub"><a href="https://github.com/foo123/Contemplate">Cook me on GitHub</a></span>
-    
-    
+
+
 <header id="header">
     <h1>Contemplate</h1>
-    <i>A light-weight Template Engine for PHP, Python, client-side JavaScript, XPCOM and Node.js</i>
+    <i>A light-weight Template Engine for PHP, Python, JavaScript</i>
 </header>
 <br /><br />
 
-    
-    
+
+
 <div id="screen" class="fluid col-1-1">
     <div id="tplContainer" class="fluid col-9-10 container">
-        <div class="heading"><strong>Template Markup (Contemplate {contemplate_version}):</strong>&nbsp;&nbsp;<input type="checkbox" mv-evt mv-on-change="setCompatibility" />&nbsp;&nbsp;Compatibility Mode</div>
-        
+        <div class="heading"><strong>Template Markup (Contemplate {contemplate_version}):</strong></div>
+
         <textarea id="tpl" class="editor">
 <div class="class">
     Number of Items: <% count($data) %><hr />
@@ -166,7 +165,7 @@
     <% elsefor %>
         <strong>No Data</strong>
     <% endfor %>
-    
+
     <br />User Data:<hr />
     <% set($user_name, $user.name) %>
     user[ Name ] = <strong><% $user_name %></strong>
@@ -175,33 +174,33 @@
 </div>
         </textarea>
     </div>
-            
+
     <div id="dataContainer" class="fluid col-9-10 container">
         <div class="heading"><strong>Data (JSON format):</strong></div>
-                    
+
         <textarea id="data" class="editor">
 {
-    "data": [1, 2, 3, 4, 5, 6], 
+    "data": [1, 2, 3, 4, 5, 6],
     "user": {"name":"foo", "email":"foo@fooland.net", "id":"f00" }
 }
         </textarea>
     </div>
-        
+
     <div class="fluid col-9-10 container">
         <div class="heading"><strong>Output:</strong> &nbsp;&nbsp; <input class="button" type="button" id="render" value="Render" mv-evt mv-on-click="render" />&nbsp;&nbsp;<i>(Enable console to see any errors)</i>
         </div>
-        
+
         <div id="output" style="min-height:300px; font-size:12px; background:#262626;">
             <br />
         </div>
     </div>
 </div>
 
-    
-    
+
+
     <footer id="footer">
     <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
-    
+
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 <div class="showcase">Contemplate Grammar highlight mode by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
 
@@ -212,30 +211,29 @@
     <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
     </footer>
     <br /><br />
-    
-    
+
+
 <script id="tpl_tmp" type="text/x-contemplate"></script>
 <script>//<![CDATA[
 // on DOM Ready
-jQuery(function($){
+jQuery(function($) {
 
     var $w = $(window), $screen = $('#screen'),
-        tpl = $('#tpl'), tpl_tmp = $('#tpl_tmp'),  
-        data = $('#data'), output = $('#output'),  render = $('#render'), 
+        tpl = $('#tpl'), tpl_tmp = $('#tpl_tmp'),
+        data = $('#data'), output = $('#output'),  render = $('#render'),
         tplEditor, dataEditor, width, height, /*json_mode,*/
         log = (console && console.log) ? function(s){console.log(s);} : function(){},
         init = true;
     ;
-    
-    ModelView.jquery( $ );
-    
-    Contemplate.setCompatibilityMode( false );
+
+    ModelView.jquery($);
+
     /*json_mode = CodeMirrorGrammar.getMode(json_grammar);
     CodeMirror.defineMode('json', json_mode);
     json_mode.supportGrammarAnnotations = true;
-    CodeMirror.registerHelper("lint", 'json', json_mode.validator);                
+    CodeMirror.registerHelper("lint", 'json', json_mode.validator);
     json_mode.supportCodeFolding = true;
-    CodeMirror.registerHelper("fold", json_mode.foldType, json_mode.folder);                
+    CodeMirror.registerHelper("fold", json_mode.foldType, json_mode.folder);
     json_mode.supportCodeMatching = true;
     CodeMirror.defineOption("json-mode-match", false, function( cm, val, old ) {
         if ( old && old != CodeMirror.Init )
@@ -249,7 +247,7 @@ jQuery(function($){
             json_mode.matcher( cm );
         }
     });*/
-    
+
     // if codemirror activated, enable syntax highlight
     tplEditor = CodeMirror.fromTextArea(tpl[0], {
         mode: "application/x-contemplate",
@@ -259,7 +257,7 @@ jQuery(function($){
         indentWithTabs: false,
         theme: 'lesser-dark'
     });
-    
+
     dataEditor = CodeMirror.fromTextArea(data[0], {
         mode: "application/json",
         lineWrapping: true,
@@ -274,22 +272,18 @@ jQuery(function($){
         gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         theme: 'lesser-dark'
     });
-    
+
     $screen.modelview({
         autobind: true
         ,livebind: 'text'
-        
+
         ,model: {
             id: 'model'
-            ,data: {  
+            ,data: {
                 contemplate_version: 'v.'+Contemplate.VERSION
             }
         }
-        ,actions: { 
-            setCompatibility: function(evt, el) {
-                Contemplate.setCompatibilityMode( el.checked );
-                tplEditor.setOption( "mode", el.checked ? "application/x-contemplate-compat" : "application/x-contemplate" );
-            },
+        ,actions: {
             render: function(evt, $el, data) {
                 var model=this.$model, data;
                 /*
@@ -300,22 +294,24 @@ jQuery(function($){
                     //console.log('template changed');
                 }
                 */
-                Contemplate.add({'tpl': [ tplEditor.getValue() ]});
-                try{
-                    data = JSON.parse( dataEditor.getValue() );
-                    output.html( Contemplate.tpl('tpl', data, {refresh: true, standalone: true, separators: "<% %>"}) );
-                }catch(e) {log(e)};
+                Contemplate.add({'tpl': [tplEditor.getValue()]});
+                try {
+                    data = JSON.parse(dataEditor.getValue());
+                    output.html(Contemplate.tpl('tpl', data, {refresh: true, standalone: true, separators: "<% %>"}));
+                } catch(e) {
+                    log(e)
+                };
             }
         }
     });
-    
+
     $w.resize(function(){
         width = tpl.width(); height = tpl.height();
         tplEditor.setSize(width, height);
         width = data.width(); height = data.height();
         dataEditor.setSize(width, height);
     });
-    
+
     $w.trigger('resize');
     render.trigger('click');
 });
