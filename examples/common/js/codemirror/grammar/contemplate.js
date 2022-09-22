@@ -44,7 +44,7 @@ codemirror_define_grammar_mode("contemplate", {
                                 "extends", "block", "endblock", "super", "getblock", "include",
                                 "if", "elseif", "elif", "else", "endif", "fi",
                                 "for", "elsefor", "endfor", "as", "in",
-                                "set", "unset", "isset", "empty", "iif", "continue", "break", "local_set", "get"
+                                "set", "unset", "isset", "empty", "iif", "continue", "break", "local_set", "get", "local"
                                 ]}
     ,"function"                 : {"autocomplete":true,"tokens":[
                                 's', 'n', 'f', 'q', 'qq', 'dq',
