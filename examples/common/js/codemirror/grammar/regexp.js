@@ -40,7 +40,7 @@ codemirror_define_grammar_mode("regexp", {
     ,"<text>"                   : "RE::#[^\\s/]#"
     ,"<bracket>"                : "RE::/\\[\\^?/"
     ,"<paren>"                  : "RE::/\\((\\?(?:&lt;=|&lt;!|<=|<!|=|!|:|P?(?:&lt;|<)\\w+(?:&gt;|>)))?/"
-    ,"<backref>"                : "RE::/\\\\[1-9][0-9]*/"
+    ,"<backref>"                : "RE::/\\\\(?:k<[a-zA-Z0-9_\\-]+>)|(?:[1-9][0-9]*)/"
     ,"<backrefn>:block"         : ["(?P=", ")"]
     ,"@bracket:action"          : {"push":"]"}
     ,"@paren:action"            : {"push":")"}
