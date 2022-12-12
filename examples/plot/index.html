@@ -154,8 +154,10 @@ i {
             <optgroup label="#Inputs">
                 <option value="2">2</option>
                 <option value="3">3</option>
+                <option value="4" selected>4</option>
+                <option value="5">5</option>
                 <option value="10">10</option>
-                <option value="20" selected>20</option>
+                <option value="20">20</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
             </optgroup>
@@ -183,207 +185,208 @@ i {
 
 <script>
 //<![CDATA[
-!function(){
-    document.getElementById('ver').innerHTML = 'v.'+Plot.VERSION;
+!function() {
+"use strict";
+document.getElementById('ver').innerHTML = 'v.'+Plot.VERSION;
 
-    var plotOptions = {
-            background: {
-                color: '#ffffff'
-            },
-            text:{
-                size: 14
-            },
-            line:{
-                size: 3,
-                color: '#ff0000'
-            },
-            axes: {
-                x: {
-                    color: '#000000',
-                    ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
-                },
-                y: {
-                    color: '#000000',
-                    ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
-                }
-            }
+var plotOptions = {
+        background: {
+            color: '#ffffff'
         },
-
-        htmlPlot = Plot(Plot.Renderer.Html(document.getElementById('container-html')), plotOptions),
-
-        canvasPlot = Plot(Plot.Renderer.Canvas(document.getElementById('container-canvas')), plotOptions),
-
-        svgPlot = Plot(Plot.Renderer.Svg(document.getElementById('container-svg')), plotOptions),
-
-        data = null, fStr = '',
-        typeSelect = document.getElementById('type'),
-        legendSelect = document.getElementById('legend'),
-        dataSelect = document.getElementById('ndata'),
-        type = 'graph', legend = 'bottom', n = 20
-    ;
-
-    function genData( )
-    {
-       if ( 'graph' === type )
-       {
-            fStr = document.getElementById('f').value.trim();
-
-            const range = [parseFloat(document.getElementById('from').value), parseFloat(document.getElementById('to').value)];
-            let f = null;
-
-            try {
-                f = new Function("x", "\"use strict\";\nreturn ("+fStr.replace(/[a-zA-Z]+\(/g, m => 'Math.'+m)+");");
-            } catch(e) {
-                console.error(e.toString());
-                f = null;
-            }
-            if ( ("function" === typeof f) &&
-                isFinite(range[0]) && isFinite(range[1]) )
-            {
-                 // cache plot samples to avoid recomputation time
-                return htmlPlot.sample(f, range[0], range[1]);
-            }
-       }
-       else
-       {
-           var data = new Array(n), i, labels = new Array(n);
-           for(i=0; i<n; i++)
-           {
-                data[i] = (200*Math.random()-100)||1;
-                labels[i] = 'Entry: '+String(i+1);
-            }
-            return {data:data, colors:Plot.Util.palette(n), labels:labels};
-       }
-    }
-
-    function plot( reset )
-    {
-        if ( reset || !data ) data = genData();
-
-        if ( data )
-        {
-            if ( 'graph' === type )
-            {
-                htmlPlot
-                    .clear()
-                    .graph(data, null, null, {axes:{
-                        x: {
-                            color: '#000000',
-                            ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
-                        },
-                        y: {
-                            color: '#000000',
-                            ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
-                        }
-                    }})
-                    .label({x:'right',y:'top'},{x:'auto',y:'auto'}, 'f(x) = '+fStr, {label:{border:{size:0},fill:'rgba(255,255,255,0.7)',text:{size:20}}})
-                ;
-                canvasPlot
-                    .clear()
-                    .graph(data, null, null, {axes:{
-                        x: {
-                            color: '#000000',
-                            ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
-                        },
-                        y: {
-                            color: '#000000',
-                            ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
-                        }
-                    }})
-                    .label({x:'right',y:'top'},{x:'auto',y:'auto'}, 'f(x) = '+fStr, {label:{border:{size:0},fill:'rgba(255,255,255,0.7)',text:{size:20}}})
-                ;
-                svgPlot
-                    .clear()
-                    .graph(data, null, null, {axes:{
-                        x: {
-                            color: '#000000',
-                            ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
-                        },
-                        y: {
-                            color: '#000000',
-                            ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
-                        }
-                    }})
-                    .label({x:'right',y:'top'},{x:'auto',y:'auto'}, 'f(x) = '+fStr, {label:{border:{size:0},fill:'rgba(255,255,255,0.7)',text:{size:20}}})
-                ;
-            }
-            else
-            {
-                htmlPlot
-                    .clear()
-                    .chart(type, data.data, {colors:data.colors, labels:data.labels, legend:{position:legend},axes:{
-                        x: {
-                            color: '#000000',
-                            ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
-                        },
-                        y: {
-                            color: '#000000',
-                            ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
-                        }
-                    }
-                })
-                ;
-                canvasPlot
-                    .clear()
-                    .chart(type, data.data, {colors:data.colors, labels:data.labels, legend:{position:legend},axes:{
-                        x: {
-                            color: '#000000',
-                            ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
-                        },
-                        y: {
-                            color: '#000000',
-                            ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
-                        }
-                    }
-                })
-                ;
-                svgPlot
-                    .clear()
-                    .chart(type, data.data, {colors:data.colors, labels:data.labels, legend:{position:legend},axes:{
-                        x: {
-                            color: '#000000',
-                            ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
-                        },
-                        y: {
-                            color: '#000000',
-                            ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
-                        }
-                    }
-                })
-                ;
+        text:{
+            size: 14
+        },
+        line:{
+            size: 3,
+            color: '#ff0000'
+        },
+        axes: {
+            x: {
+                color: '#000000',
+                ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
+            },
+            y: {
+                color: '#000000',
+                ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
             }
         }
-    }
+    },
 
-    typeSelect.addEventListener('change', ()=>{
-        if ( 'graph'===typeSelect.options[typeSelect.selectedIndex].value )
+    htmlPlot = Plot(Plot.Renderer.Html(document.getElementById('container-html')), plotOptions),
+
+    canvasPlot = Plot(Plot.Renderer.Canvas(document.getElementById('container-canvas')), plotOptions),
+
+    svgPlot = Plot(Plot.Renderer.Svg(document.getElementById('container-svg')), plotOptions),
+
+    data = null, fStr = '',
+    typeSelect = document.getElementById('type'),
+    legendSelect = document.getElementById('legend'),
+    dataSelect = document.getElementById('ndata'),
+    type = 'graph', legend = 'bottom', n = 4
+;
+
+function genData( )
+{
+   if ( 'graph' === type )
+   {
+        fStr = document.getElementById('f').value.trim();
+
+        const range = [parseFloat(document.getElementById('from').value), parseFloat(document.getElementById('to').value)];
+        let f = null;
+
+        try {
+            f = new Function("x", "\"use strict\";\nreturn ("+fStr.replace(/[a-zA-Z]+\(/g, m => 'Math.'+m)+");");
+        } catch(e) {
+            console.error(e.toString());
+            f = null;
+        }
+        if ( ("function" === typeof f) &&
+            isFinite(range[0]) && isFinite(range[1]) )
         {
-            document.getElementById('graph-input').style.display = 'inline-block';
-            document.getElementById('chart-input').style.display = 'none';
+             // cache plot samples to avoid recomputation time
+            return htmlPlot.sample(f, range[0], range[1]);
+        }
+   }
+   else
+   {
+       var data = new Array(n), i, labels = new Array(n);
+       for(i=0; i<n; i++)
+       {
+            data[i] = (200*Math.random()-100)||1;
+            labels[i] = 'Entry: '+String(i+1);
+        }
+        return {data:data, colors:Plot.Util.palette(n), labels:labels};
+   }
+}
+
+function plot( reset )
+{
+    if ( reset || !data ) data = genData();
+
+    if ( data )
+    {
+        if ( 'graph' === type )
+        {
+            htmlPlot
+                .clear()
+                .graph(data, null, null, {axes:{
+                    x: {
+                        color: '#000000',
+                        ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
+                    },
+                    y: {
+                        color: '#000000',
+                        ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
+                    }
+                }})
+                .label({x:'right',y:'top'},{x:'auto',y:'auto'}, 'f(x) = '+fStr, {label:{border:{size:0},fill:'rgba(255,255,255,0.7)',text:{size:20}}})
+            ;
+            canvasPlot
+                .clear()
+                .graph(data, null, null, {axes:{
+                    x: {
+                        color: '#000000',
+                        ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
+                    },
+                    y: {
+                        color: '#000000',
+                        ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
+                    }
+                }})
+                .label({x:'right',y:'top'},{x:'auto',y:'auto'}, 'f(x) = '+fStr, {label:{border:{size:0},fill:'rgba(255,255,255,0.7)',text:{size:20}}})
+            ;
+            svgPlot
+                .clear()
+                .graph(data, null, null, {axes:{
+                    x: {
+                        color: '#000000',
+                        ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
+                    },
+                    y: {
+                        color: '#000000',
+                        ticks: {color: 'rgba(0,0,0,0.5)', step: 0.5}
+                    }
+                }})
+                .label({x:'right',y:'top'},{x:'auto',y:'auto'}, 'f(x) = '+fStr, {label:{border:{size:0},fill:'rgba(255,255,255,0.7)',text:{size:20}}})
+            ;
         }
         else
         {
-            document.getElementById('graph-input').style.display = 'none';
-            document.getElementById('chart-input').style.display = 'inline-block';
+            htmlPlot
+                .clear()
+                .chart(type, data.data, {colors:data.colors, labels:data.labels, legend:{position:legend},axes:{
+                    x: {
+                        color: '#000000',
+                        ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
+                    },
+                    y: {
+                        color: '#000000',
+                        ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
+                    }
+                }
+            })
+            ;
+            canvasPlot
+                .clear()
+                .chart(type, data.data, {colors:data.colors, labels:data.labels, legend:{position:legend},axes:{
+                    x: {
+                        color: '#000000',
+                        ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
+                    },
+                    y: {
+                        color: '#000000',
+                        ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
+                    }
+                }
+            })
+            ;
+            svgPlot
+                .clear()
+                .chart(type, data.data, {colors:data.colors, labels:data.labels, legend:{position:legend},axes:{
+                    x: {
+                        color: '#000000',
+                        ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
+                    },
+                    y: {
+                        color: '#000000',
+                        ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
+                    }
+                }
+            })
+            ;
         }
-    }, false);
+    }
+}
 
-    document.getElementById('plot').addEventListener('click', ()=>{
-        type = typeSelect.options[typeSelect.selectedIndex].value;
-        legend = legendSelect.options[legendSelect.selectedIndex].value;
-        n = parseInt(dataSelect.options[dataSelect.selectedIndex].value);
-        plot( true );
-    }, false);
+typeSelect.addEventListener('change', ()=>{
+    if ( 'graph'===typeSelect.options[typeSelect.selectedIndex].value )
+    {
+        document.getElementById('graph-input').style.display = 'inline-block';
+        document.getElementById('chart-input').style.display = 'none';
+    }
+    else
+    {
+        document.getElementById('graph-input').style.display = 'none';
+        document.getElementById('chart-input').style.display = 'inline-block';
+    }
+}, false);
 
-    window.addEventListener('resize', Plot.Util.debounce(()=>{
-        htmlPlot.resize();
-        canvasPlot.resize();
-        svgPlot.resize();
-        plot();
-    }, 400), false);
+document.getElementById('plot').addEventListener('click', ()=>{
+    type = typeSelect.options[typeSelect.selectedIndex].value;
+    legend = legendSelect.options[legendSelect.selectedIndex].value;
+    n = parseInt(dataSelect.options[dataSelect.selectedIndex].value);
+    plot( true );
+}, false);
 
-    // run on load
-    setTimeout(plot, 500);
+window.addEventListener('resize', Plot.Util.debounce(()=>{
+    htmlPlot.resize();
+    canvasPlot.resize();
+    svgPlot.resize();
+    plot();
+}, 400), false);
+
+// run on load
+setTimeout(plot, 500);
 }();
 //]]>
 </script>
