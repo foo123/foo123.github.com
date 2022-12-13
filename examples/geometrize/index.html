@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html><head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Geometrize Intersections, Bounding Boxes, Convex Hulls</title>
+<meta name="viewport" content="width=device-width">
+<meta name="keywords" content="Geometrize Computational Geometry, Intersections, Bounding Boxes, Convex Hulls" />
+<meta name="description" content="Geometrize Computational Geometry, Intersections, Bounding Boxes, Convex Hulls demo" />
+<meta property="og:title" content="Geometrize Intersections, Bounding Boxes, Convex Hulls">
+<meta property="og:description" content="Geometrize Computational Geometry, Intersections, Bounding Boxes, Convex Hulls demo">
+<meta property="og:image" content="https://foo123.github.io/thumbs/geometrize.png">
+<meta property="og:url" content="https://foo123.github.io/examples/geometrize/">
+<meta name="twitter:card" content="summary">
+<style type="text/css">
+body {
+    font-size: 16px;
+    font-family: Arial, san-serif;
+}
+#container {
+    position: relative;
+    width: 100%;
+    height: 1000px;
+    height: 120vh;
+    padding: 0;
+    margin: 0 auto;
+    overflow: visible;
+}
+.button {
+    position: relative;
+    display: inline-block;
+    padding: 8px 12px;
+    background: white;
+    color: black;
+    border: 1px solid #676767;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 1px;
+    margin-right: 10px;
+}
+.button:hover {
+    border-width: 2px;
+    margin: 0;
+    margin-right: 9px;
+}
+#forkongithub  a {
+    background: #aa0000;
+    color: #fff;
+    text-decoration: none;
+    font-family: arial, sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.4rem;
+    position: relative;
+    transition: all 0.5s;
+}
+
+#forkongithub a:hover {
+    background: #aa0000;
+    color: #fff;
+}
+
+#forkongithub a::before, #forkongithub a::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    z-index: 100;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+
+#forkongithub a::after
+{
+    bottom: 1px;
+    top: auto;
+}
+
+@media screen and (min-width:800px) {
+    #forkongithub {
+        position: absolute;
+        display: block;
+        z-index: 100;
+        top: 0;
+        right: 0;
+        width: 200px;
+        overflow: hidden;
+        height: 200px;
+    }
+    #forkongithub a {
+        width: 200px;
+        position: absolute;
+        top: 60px;
+        right: -60px;
+        transform: rotate(45deg);
+        box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    }
+}
+</style>
+</head><body>
+<span id="forkongithub"><a href="https://github.com/foo123/Geometrize">Meet me on GitHub</a></span>
+<h1>Geometrize v.<span id="ver"></span> Intersections, Bounding Boxes, Convex Hulls</h1>
+<button id="intersections" class="button">find intersections</button>
+<button id="boxes" class="button">bounding boxes</button>
+<button id="hulls" class="button">convex hulls</button>
+<button id="image" class="button">get image</button>
+<div id="container"></div>
+<div id="img" style="border-top:1px solid #565656"></div>
+<script src="../common/js/Geometrize.min.js"></script>
+<script>
+(function() {
+"use strict";
+document.getElementById('ver').innerHTML = Geometrize.VERSION;
+const {Plane, CompositeCurve, Ellipse, Circle, Arc, QBezier, CBezier, Line, Polyline, Polygon, Rect, Point, Matrix, Geometry} = Geometrize;
+const plane = Plane(document.getElementById('container'), 0, 0, 300, 300);
+const ellipse = Ellipse([40,40], 30, 10, -45);
+const circle = Circle([30,30], 20);
+const arc = Arc([100,100], [170,90], 30, 10, 30, 0, 1);
+const qbezier = QBezier([[80,110], [120,40], [160,120]]);
+const cbezier = CBezier([[40,80], [120,40], [140,200], [160,90]]);
+const curve = CompositeCurve([
+    Line([20,100], [40,100]),
+    Arc([40,100], [40,80], 10, 10, 0, 0, 0),
+    QBezier([[40,80],[20,100],[60,120]]),
+    Line([60,120], [70,100])
+]).transform(Matrix.translate(-20, 0));
+const line1 = Line([20,20], [60,60]).setStyle('stroke', 'blue');
+const line2 = Line([50,2], [20,70]).setStyle('stroke', 'green');
+const line3 = Line([60,160], [300,0]).setStyle('stroke', 'orange');
+const line4 = Line([60,120], [300,-40]).setStyle('stroke', 'cyan');
+
+const drawBoundingBox = (shape, color) => {
+    const bb = shape.getBoundingBox();
+    plane.add(Rect([bb.xmin,bb.ymin],[bb.xmax,bb.ymax]).setStyle('stroke', color||'red'));
+};
+const drawConvexHull = (shape, color) => {
+    plane.add(Polygon(shape.getConvexHull()).setStyle('stroke', color||'red'));
+};
+
+let intersections = [];
+
+plane.add(ellipse);
+plane.add(circle);
+plane.add(arc);
+plane.add(qbezier);
+plane.add(cbezier);
+plane.add(curve);
+plane.add(line1);
+plane.add(line2);
+plane.add(line3);
+plane.add(line4);
+
+document.getElementById('intersections').addEventListener('click', () => {
+    // remove previous, if any
+    intersections.forEach(p => {
+        plane.remove(p);
+        p.dispose();
+    });
+    intersections = plane.getIntersections();
+    // add new, if any
+    intersections.forEach(p => {
+        plane.add(p.setStyle('stroke', 'red').setStyle('stroke-width', 2));
+    });
+}, false);
+
+document.getElementById('boxes').addEventListener('click', () => {
+    drawBoundingBox(circle, 'orange');
+    drawBoundingBox(ellipse, 'red');
+    drawBoundingBox(arc, 'blue');
+    drawBoundingBox(qbezier, 'cyan');
+    drawBoundingBox(cbezier, 'magenta');
+    drawBoundingBox(curve, 'yellow');
+}, false);
+
+document.getElementById('hulls').addEventListener('click', () => {
+    drawConvexHull(circle, 'orange');
+    drawConvexHull(ellipse, 'red');
+    drawConvexHull(arc, 'blue');
+    drawConvexHull(qbezier, 'cyan');
+    drawConvexHull(cbezier, 'magenta');
+    drawConvexHull(curve, 'yellow');
+}, false);
+
+document.getElementById('image').addEventListener('click', () => {
+    const img = plane.toIMG();
+    document.getElementById('img').innerHTML = '<img src="'+img+'" style="position:relative;display:block;width:400px;height:auto;margin:0 auto;border:1px solid black" />';
+}, false);
+})();
+</script>
+</body></html>
