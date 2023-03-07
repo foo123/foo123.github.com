@@ -365,6 +365,33 @@
     transition: opacity .3s ease;
 }
 
+#controller_page_projects:target ~ #wrapper #panel #page_projects
+{
+    position: relative;
+
+    -webkit-transform: translateX(0px);
+    -moz-transform: translateX(0px);
+    -o-transform: translateX(0px);
+    -ms-transform: translateX(0px);
+    transform: translateX(0px);
+
+    -webkit-transition: -webkit-transform .3s ease;
+    -moz-transition: -moz-transform .3s ease;
+    -o-transition: -o-transform .3s ease;
+    -ms-transition: -ms-transform .3s ease;
+    transition: transform .3s ease;
+}
+#controller_page_projects:target ~ #wrapper #title_page_projects.page-title
+{
+    position: relative;
+    opacity: 1;
+    -webkit-transition: opacity .3s ease;
+    -moz-transition: opacity .3s ease;
+    -o-transition: opacity .3s ease;
+    -ms-transition: opacity .3s ease;
+    transition: opacity .3s ease;
+}
+
 .controller
 {
     position: fixed !important;
@@ -397,6 +424,8 @@
 <span id="controller_page_tools" class="controller"></span>
 
 <span id="controller_page_various" class="controller"></span>
+
+<span id="controller_page_projects" class="controller"></span>
 
 <!-- /page controllers -->
 
@@ -451,6 +480,8 @@
         
         <strong id="title_page_various" class="page-title">Page:&nbsp;&nbsp;Various experiments</strong>
         
+        <strong id="title_page_projects" class="page-title">Page:&nbsp;&nbsp;Projects / Applications</strong>
+        
     </p>
 
     <div id="panel" class="fluid col-1-1">
@@ -459,7 +490,6 @@
         <section id="page_main" class="fluid col-1-1 page">
             <ul id="demos_main" class="demos fluid col-1-1">
                 
-
                 <li class="demo fluid col-1-5 autocol-1-4-1024 autocol-1-3-960 autocol-1-2-640">
                     <a class="demo-link demo-group-link" href="#controller_page_frameworks">
                         <p class="demo-description animated fadeIn">
@@ -470,9 +500,7 @@
                         </div>
                     </a>
                 </li>
-
                 
-
                 <li class="demo fluid col-1-5 autocol-1-4-1024 autocol-1-3-960 autocol-1-2-640">
                     <a class="demo-link demo-group-link" href="#controller_page_dsp">
                         <p class="demo-description animated fadeIn">
@@ -483,9 +511,7 @@
                         </div>
                     </a>
                 </li>
-
                 
-
                 <li class="demo fluid col-1-5 autocol-1-4-1024 autocol-1-3-960 autocol-1-2-640">
                     <a class="demo-link demo-group-link" href="#controller_page_processors">
                         <p class="demo-description animated fadeIn">
@@ -496,9 +522,7 @@
                         </div>
                     </a>
                 </li>
-
                 
-
                 <li class="demo fluid col-1-5 autocol-1-4-1024 autocol-1-3-960 autocol-1-2-640">
                     <a class="demo-link demo-group-link" href="#controller_page_math">
                         <p class="demo-description animated fadeIn">
@@ -509,9 +533,7 @@
                         </div>
                     </a>
                 </li>
-
                 
-
                 <li class="demo fluid col-1-5 autocol-1-4-1024 autocol-1-3-960 autocol-1-2-640">
                     <a class="demo-link demo-group-link" href="#controller_page_graphics">
                         <p class="demo-description animated fadeIn">
@@ -522,9 +544,7 @@
                         </div>
                     </a>
                 </li>
-
                 
-
                 <li class="demo fluid col-1-5 autocol-1-4-1024 autocol-1-3-960 autocol-1-2-640">
                     <a class="demo-link demo-group-link" href="#controller_page_plugins">
                         <p class="demo-description animated fadeIn">
@@ -535,9 +555,7 @@
                         </div>
                     </a>
                 </li>
-
                 
-
                 <li class="demo fluid col-1-5 autocol-1-4-1024 autocol-1-3-960 autocol-1-2-640">
                     <a class="demo-link demo-group-link" href="#controller_page_apps">
                         <p class="demo-description animated fadeIn">
@@ -548,9 +566,7 @@
                         </div>
                     </a>
                 </li>
-
                 
-
                 <li class="demo fluid col-1-5 autocol-1-4-1024 autocol-1-3-960 autocol-1-2-640">
                     <a class="demo-link demo-group-link" href="#controller_page_games">
                         <p class="demo-description animated fadeIn">
@@ -561,9 +577,7 @@
                         </div>
                     </a>
                 </li>
-
                 
-
                 <li class="demo fluid col-1-5 autocol-1-4-1024 autocol-1-3-960 autocol-1-2-640">
                     <a class="demo-link demo-group-link" href="#controller_page_tools">
                         <p class="demo-description animated fadeIn">
@@ -574,9 +588,7 @@
                         </div>
                     </a>
                 </li>
-
                 
-
                 <li class="demo fluid col-1-5 autocol-1-4-1024 autocol-1-3-960 autocol-1-2-640">
                     <a class="demo-link demo-group-link" href="#controller_page_various">
                         <p class="demo-description animated fadeIn">
@@ -587,7 +599,17 @@
                         </div>
                     </a>
                 </li>
-
+                
+                <li class="demo fluid col-1-5 autocol-1-4-1024 autocol-1-3-960 autocol-1-2-640">
+                    <a class="demo-link demo-group-link" href="#controller_page_projects">
+                        <p class="demo-description animated fadeIn">
+                            A sample of Projects and Applications ..
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="samples/truetrips.png" alt="A sample of Projects and Applications .." />
+                        </div>
+                    </a>
+                </li>
                 
             </ul>
         </section>
@@ -595,6 +617,7 @@
 
         
         <!-- frameworks page -->
+        
         <section id="page_frameworks" class="fluid col-1-1 page">
             <ul id="frameworks" class="demos demos-group fluid col-1-1">
                 
@@ -1007,9 +1030,11 @@
                 
             </ul>
         </section>
+        
         <!-- /frameworks page -->
         
         <!-- dsp page -->
+        
         <section id="page_dsp" class="fluid col-1-1 page">
             <ul id="dsp" class="demos demos-group fluid col-1-1">
                 
@@ -1114,9 +1139,11 @@
                 
             </ul>
         </section>
+        
         <!-- /dsp page -->
         
         <!-- processors page -->
+        
         <section id="page_processors" class="fluid col-1-1 page">
             <ul id="processors" class="demos demos-group fluid col-1-1">
                 
@@ -1276,9 +1303,11 @@
                 
             </ul>
         </section>
+        
         <!-- /processors page -->
         
         <!-- math page -->
+        
         <section id="page_math" class="fluid col-1-1 page">
             <ul id="math" class="demos demos-group fluid col-1-1">
                 
@@ -1471,9 +1500,11 @@
                 
             </ul>
         </section>
+        
         <!-- /math page -->
         
         <!-- graphics page -->
+        
         <section id="page_graphics" class="fluid col-1-1 page">
             <ul id="graphics" class="demos demos-group fluid col-1-1">
                 
@@ -1666,9 +1697,11 @@
                 
             </ul>
         </section>
+        
         <!-- /graphics page -->
         
         <!-- plugins page -->
+        
         <section id="page_plugins" class="fluid col-1-1 page">
             <ul id="plugins" class="demos demos-group fluid col-1-1">
                 
@@ -1828,9 +1861,11 @@
                 
             </ul>
         </section>
+        
         <!-- /plugins page -->
         
         <!-- apps page -->
+        
         <section id="page_apps" class="fluid col-1-1 page">
             <ul id="apps" class="demos demos-group fluid col-1-1">
                 
@@ -2100,9 +2135,11 @@
                 
             </ul>
         </section>
+        
         <!-- /apps page -->
         
         <!-- games page -->
+        
         <section id="page_games" class="fluid col-1-1 page">
             <ul id="games" class="demos demos-group fluid col-1-1">
                 
@@ -2174,9 +2211,11 @@
                 
             </ul>
         </section>
+        
         <!-- /games page -->
         
         <!-- tools page -->
+        
         <section id="page_tools" class="fluid col-1-1 page">
             <ul id="tools" class="demos demos-group fluid col-1-1">
                 
@@ -2336,9 +2375,11 @@
                 
             </ul>
         </section>
+        
         <!-- /tools page -->
         
         <!-- various page -->
+        
         <section id="page_various" class="fluid col-1-1 page">
             <ul id="various" class="demos demos-group fluid col-1-1">
                 
@@ -2443,7 +2484,117 @@
                 
             </ul>
         </section>
+        
         <!-- /various page -->
+        
+        <!-- projects page -->
+        
+        <section id="page_projects" class="fluid col-1-1 page">
+            <ul id="projects" class="demos demos-group fluid col-1-1">
+                
+                <li class="demo fluid col-1-3 autocol-1-2-960">
+                    <a class="demo-link" href="https://golden-greece.gr/">
+                        <p class="demo-description animated fadeIn">
+                            golden-greece.gr:<br>Discover Golden Greece
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="samples/goldengreece.png" alt="golden-greece.gr:<br>Discover Golden Greece" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-3 autocol-1-2-960">
+                    <a class="demo-link" href="https://www.truetrips.com/travel-packages-questionnaire.html">
+                        <p class="demo-description animated fadeIn">
+                            truetrips.com:<br>Build your true trip
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="samples/truetrips.png" alt="truetrips.com:<br>Build your true trip" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-3 autocol-1-2-960">
+                    <a class="demo-link" href="https://www.viewhall.gr/">
+                        <p class="demo-description animated fadeIn">
+                            viewhall.gr:<br>Multi-Purpose Culture and Event Site (TRANSITIONING)
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="samples/viewhall.png" alt="viewhall.gr:<br>Multi-Purpose Culture and Event Site (TRANSITIONING)" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-3 autocol-1-2-960">
+                    <a class="demo-link" href="https://omorfosgamos.eu/">
+                        <p class="demo-description animated fadeIn">
+                            omorfosgamos.eu:<br>All about wedding organisation
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="samples/omorfosgamos.png" alt="omorfosgamos.eu:<br>All about wedding organisation" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-3 autocol-1-2-960">
+                    <a class="demo-link" href="https://www.gamosguidedexioseis.gr/">
+                        <p class="demo-description animated fadeIn">
+                            gamosguidedexioseis.gr:<br>All about wedding receptions
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="samples/gamosguidedexioseis.png" alt="gamosguidedexioseis.gr:<br>All about wedding receptions" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-3 autocol-1-2-960">
+                    <a class="demo-link" href="https://www.gamos-guide.gr/">
+                        <p class="demo-description animated fadeIn">
+                            gamos-guide.gr:<br>All about wedding organisation
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="samples/gamos-guide.png" alt="gamos-guide.gr:<br>All about wedding organisation" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-3 autocol-1-2-960">
+                    <a class="demo-link" href="https://www.gamosguide.eu/">
+                        <p class="demo-description animated fadeIn">
+                            gamosguide.eu:<br>All about wedding organisation
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="samples/gamosguide.png" alt="gamosguide.eu:<br>All about wedding organisation" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-3 autocol-1-2-960">
+                    <a class="demo-link" href="https://istavrolexo.gr/">
+                        <p class="demo-description animated fadeIn">
+                            istavrolexo.gr:<br>Crosswords, Word Puzzles, Sudokus
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="samples/istavrolexo.png" alt="istavrolexo.gr:<br>Crosswords, Word Puzzles, Sudokus" />
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="demo fluid col-1-3 autocol-1-2-960">
+                    <a class="demo-link" href="https://mousa.gr/en">
+                        <p class="demo-description animated fadeIn">
+                            mousa.gr:<br>Know the maxims of ancient Greek philosophers
+                        </p>
+                        <div class="fluid col-1-1 img-loader animated fadeOut">
+                            <img src="samples/mousa.png" alt="mousa.gr:<br>Know the maxims of ancient Greek philosophers" />
+                        </div>
+                    </a>
+                </li>
+                
+            </ul>
+        </section>
+        
+        <!-- /projects page -->
         
 
     </div>
