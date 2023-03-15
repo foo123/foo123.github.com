@@ -387,7 +387,7 @@ if (AreaSortable) AreaSortable('vertical', {
     activeItem: 'dnd-dragged',
     closestItem: 'dnd-closest',
     animationMs: 180,
-    scrollAnimationMs: 1000,
+    scrollAnimationMs: 600,
     autoscroll: true,
     onEnd: ($todo) => {View.do_reorder($todo);}
 });
