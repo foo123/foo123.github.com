@@ -259,8 +259,8 @@
              // prepare down-scaled visualization image
             visualization = $F.Image().restorable(false).fill('rgb(0,0,0)', 0, 0, _width, _height);
             // up-scaled final rendered visualization image
-            downscaled = $F.DimensionFilter('scale', invupscaleX, invupscaleY);
-            upscaled = $F.DimensionFilter('scale', upscaleX, upscaleY);
+            downscaled = $F.DimensionFilter('scale', 0, 0, invupscaleX, invupscaleY);
+            upscaled = $F.DimensionFilter('scale', 0, 0, upscaleX, upscaleY);
             container.append(visualization.domElement);
 
 
