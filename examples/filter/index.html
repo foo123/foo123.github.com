@@ -10,9 +10,9 @@
 <meta property="og:image" content="https://foo123.github.io/thumbs/filter.jpg">
 <meta property="og:url" content="https://foo123.github.io/examples/filter/">
 <meta name="twitter:card" content="summary">
-    
+
     <title>Image Processing with Filter.js</title>
-    
+
     <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
     <style type="text/css">
         html,body {
@@ -30,9 +30,6 @@
         .image > canvas {
             position: relative;
             display: block;
-            max-width: 100% !important;
-            width: 100% !important;
-            height: auto !important;
         }
         .image > .caption {
             position: relative;
@@ -104,7 +101,7 @@
 </head>
 <body class="responsive-960-container" style="max-width: 1600px; margin: 0 auto;">
     <span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
-    
+
     <header id="header" class="fluid col-1-1">
         <h1>Image Processing with Filter.js v.<span id="lib-version">0</span></h1><br /><br />
     </header>
@@ -115,104 +112,99 @@
         <button id="restoreBt" style="display:none" class="button">Restore</button><br />
         <i style="font-size:11px"><b>Note:</b> images may appear as blurred if scaled from original dimensions due to responsive design</i>
     </div>
-    
+
     <div id="container" class="fluid col-1-1 panel"></div>
-    
+
     <footer id="footer" class="fluid col-1-1">
     <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div><br />
     </footer>
-    
+
     <script>//<![CDATA[
     "use strict";
-    require.config({
-        paths: {
-            FilterBundle: "filter.bundle"
-        },
-        bundles: {
-            FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_ML", "FILTER_IO", "FILTER_CODECS", "FILTER_FILTERS", "FILTER_PLUGINS"]
-        }
-    });
-    require(['cascades/haarcascade_frontalface_alt', 'cascades/haarcascade_eye', 'jQuery', 'Classy', 'Asynchronous', 'FILTER', 'FILTER_ML', 'FILTER_IO', 'FILTER_CODECS', 'FILTER_FILTERS', 'FILTER_PLUGINS'],
-    function( haarcascade_frontalface_alt, haarcascade_eye, $, _1, _2, _3, _4, _5, _6, _7, $F ) {
-        
+    require(['cascades/haarcascade_frontalface_alt', 'cascades/haarcascade_eye', 'jQuery', 'FILTER'],
+    function(haarcascade_frontalface_alt, haarcascade_eye, $, $F) {
+
         // utils
-        var runInThread = /(&|\?)parallel\b/i.test( location.href );
-        
-        if ( runInThread && !$F.Browser.supportsWorker )
+        var runInThread = /(&|\?)parallel\b/i.test(location.href);
+
+        if (runInThread && !$F.Browser.supportsWorker)
         {
             alert('Browser does not support workers');
         }
         runInThread = !!($F.Browser.supportsWorker && runInThread);
-        
+
         document.getElementById('lib-version').innerHTML = $F.VERSION;
-        
-        var baseUrl = location.href.split(/#|\?/)[ 0 ]
-            ,htmlImage = $F.IO.HTMLImageLoader( )
-            ,binaryImage = $F.IO.BinaryManager( )
+
+        var baseUrl = location.href.split(/#|\?/)[0]
             ,che = '../common/assets/che.jpg'
             ,face_model = '../common/assets/model_face.jpg'
             ,yinyang = '../common/assets/yin_yang_blank.png'
-            ,yinyang_tga = '../common/assets/yin_yang_blank.tga'
-            ,yinyang_gif = '../common/assets/yin_yang_blank.gif'
-            ,yinyang_bmp = '../common/assets/yin_yang_blank.bmp'
-            ,yinyang_jpg = '../common/assets/yin_yang_blank.jpg'
             ,aside = $('#aside')
             ,applyBt = $('#applyBt')
             ,restoreBt = $('#restoreBt')
             ,container = $('#container'), filters = $('#filters')
-             
-            ,closeThread = function( ) { /*this.thread( false );*/ }
-            
+
+            ,closeThread = function() {/*this.thread(false);*/}
+
              // displacemap
-            ,displacemap = $F.Image( )
-            
-             // images
-            ,im1 = htmlImage.load(che, function( ) {
+            ,displacemap = $F.Image()
+            ,perlinNoise = $F.PerlinNoiseFilter(80, 50, 4, true, false, [[0,0],[10,10], [20,10], [10,20]], Math.random(), true)
+        ;
+
+        function loadImage(src, cb)
+        {
+            var img = new Image(), fimg = $F.Image();
+            img.onload = function() {
+                fimg.image(img);
+                if (cb) cb();
+            };
+            img.src = src;
+            return fimg;
+        }
+
+        // images
+        var im1 = loadImage(che, function() {
                 // create a displace map image
-                displacemap.createImageData(im1.width, im1.height);
-                displacemap.octx.fillStyle="rgb(128,128,128)";
-                displacemap.octx.fillRect(0,0, displacemap.width, displacemap.height);
+                displacemap.setDimensions(im1.width, im1.height);
+                var octx = displacemap.domElement.getContext('2d');
+                octx.fillStyle="rgb(128,128,128)";
+                octx.fillRect(0,0, displacemap.width, displacemap.height);
                 // create radial gradient
-                var grd = displacemap.octx.createRadialGradient(displacemap.width/2, displacemap.height/2, 0, displacemap.width/2, displacemap.height/2, displacemap.width/2);
+                var grd = octx.createRadialGradient(displacemap.width/2, displacemap.height/2, 0, displacemap.width/2, displacemap.height/2, displacemap.width/2);
                 grd.addColorStop(1, "#808080"); // neutral
                 grd.addColorStop(0, "#ffffff"); // white
-                displacemap.octx.fillStyle = grd;
-                displacemap.octx.beginPath();
-                displacemap.octx.arc(displacemap.width/2,displacemap.height/2,displacemap.width/2,0,Math.PI*2,true);
-                displacemap.octx.fill();
+                octx.fillStyle = grd;
+                octx.beginPath();
+                octx.arc(displacemap.width/2,displacemap.height/2,displacemap.width/2,0,Math.PI*2,true);
+                octx.fill();
                 displacemap.store();
-                
-                im15.createImageData(im1.width, im1.height).perlinNoise(Math.random(), true, true, 80, 50, 4, [[0,0],[10,10], [20,10], [10,20]]);
-                
+
+                im15.setDimensions(im1.width, im1.height).apply(perlinNoise);
+
                 init();
             })
-            ,im2 = htmlImage.load( che )
-            ,im3 = htmlImage.load( che )
-            ,im4 = htmlImage.load( che )
-            ,im5 = htmlImage.load( che )
-            ,im6 = htmlImage.load( che )
-            ,im7 = htmlImage.load( che )
-            ,im8 = htmlImage.load( che )
-            ,im9 = htmlImage.load( che )
-            ,im10 = htmlImage.load( che )
-            ,im11 = htmlImage.load( che )
-            ,im12 = htmlImage.load( che )
-            ,im13 = htmlImage.load( che )
-            ,im14 = htmlImage.load( che )
+            ,im2 = loadImage(che)
+            ,im3 = loadImage(che)
+            ,im4 = loadImage(che)
+            ,im5 = loadImage(che)
+            ,im6 = loadImage(che)
+            ,im7 = loadImage(che)
+            ,im8 = loadImage(che)
+            ,im9 = loadImage(che)
+            ,im10 = loadImage(che)
+            ,im11 = loadImage(che)
+            ,im12 = loadImage(che)
+            ,im13 = loadImage(che)
+            ,im14 = loadImage(che)
             ,im15 = $F.Image()
-            //,im16 = htmlImage.load( yinyang )
-            ,im16 = binaryImage.codec( $F.Codec.PNG ).read( yinyang )
-            //,im16 = binaryImage.codec( $F.Codec.GIF ).read( yinyang_gif )
-            //,im16 = binaryImage.codec( $F.Codec.JPG ).read( yinyang_jpg )
-            //,im16 = binaryImage.codec( $F.Codec.BMP ).read( yinyang_bmp )
-            //,im16 = binaryImage.codec( $F.Codec.TGA ).read( yinyang_tga )
-            ,im17 = htmlImage.load( che )
-            ,im18 = htmlImage.load( che )
-            ,im19 = htmlImage.load( face_model )
-            
+            ,im16 = loadImage(yinyang)
+            ,im17 = loadImage(che)
+            ,im18 = loadImage(che)
+            ,im19 = loadImage(face_model)
+
              // filters
-            //,redChannel = $F.ColorMatrixFilter( ).worker( runInThread ).redChannel( )
-            ,redChannel = $F.InlineFilter(function(params, im, w, h) { 
+            //,redChannel = $F.ColorMatrixFilter().worker(runInThread).redChannel()
+            ,redChannel = $F.InlineFilter(function(params, im, w, h) {
                 // get red channel using an inline filter that can run in parallel worker also
                 for (var i=0,l=im.length; i<l; i+=4)
                 {
@@ -220,103 +212,102 @@
                     im[ i+2 ] = 0;
                 }
                 return im;
-            }).worker( runInThread )
-            ,greenChannel = $F.ColorMatrixFilter( ).greenChannel( ).worker( runInThread )
-            //,blueChannel = $F.ColorMatrixFilter( ).blueChannel( ).worker( runInThread )
-            ,blueChannel = $F.ColorTableFilter( ).blueChannel( ).worker( runInThread )
-            ,clr = $F.ColorMatrixFilter( ).colorize( 0xff0000 ).worker( runInThread )
-            //,gamma = $F.ColorTableFilter( ).gammaCorrection( 1.7 ).worker( runInThread )
-            //,solarize = $F.ColorTableFilter( ).solarize( 0.5 ).worker( runInThread )
-            ,posterize = $F.ColorTableFilter( ).posterize( 4 ).worker( runInThread )
-            //,extract = $F.ColorTableFilter( ).extract( $F.CHANNEL.RED, [0x75, 0x91] ).worker( runInThread )
-            //,mask = $F.ColorTableFilter( ).mask( 0xffff7732 ).worker( runInThread )
-            //,swapChannels = $F.ColorMatrixFilter( ).swapChannels( $F.CHANNEL.BLUE, $F.CHANNEL.GREEN ).worker( runInThread )
-            //,maskChannel = $F.ColorMatrixFilter( ).maskChannel( $F.CHANNEL.GREEN ).worker( runInThread )
-            //,invert = $F.ColorTableFilter( ).invert( ).worker( runInThread )
-            /*,erode = $F.MorphologicalFilter( ).erode([
+            }).worker(runInThread)
+            ,greenChannel = $F.ColorMatrixFilter().greenChannel().worker(runInThread)
+            //,blueChannel = $F.ColorMatrixFilter().blueChannel().worker(runInThread)
+            ,blueChannel = $F.ColorTableFilter().blueChannel().worker(runInThread)
+            ,clr = $F.ColorMatrixFilter().colorize(0xff0000).worker(runInThread)
+            //,gamma = $F.ColorTableFilter().gammaCorrection(1.7).worker(runInThread)
+            //,solarize = $F.ColorTableFilter().solarize(0.5).worker(runInThread)
+            ,posterize = $F.ColorTableFilter().posterize(4).worker(runInThread)
+            //,extract = $F.ColorTableFilter().extract($F.CHANNEL.RED, [0x75, 0x91]).worker(runInThread)
+            //,mask = $F.ColorTableFilter().mask(0xffff7732).worker(runInThread)
+            //,swapChannels = $F.ColorMatrixFilter().swapChannels($F.CHANNEL.BLUE, $F.CHANNEL.GREEN).worker(runInThread)
+            //,maskChannel = $F.ColorMatrixFilter().maskChannel($F.CHANNEL.GREEN).worker(runInThread)
+            //,invert = $F.ColorTableFilter().invert().worker(runInThread)
+            /*,erode = $F.MorphologicalFilter().erode([
                 0, 0, 0, 1,
                 0, 0, 1, 0,
                 0, 1, 0, 0,
                 1, 0, 0, 0
-            ]).worker( runInThread )*/
-            ,equalize = $F.HistogramEqualizeFilter( $F.MODE.INTENSITY ).worker( runInThread )
-            ,equalize_gray = $F.HistogramEqualizeFilter( $F.MODE.GRAY )
-            //,rgbequalize = $F.HistogramEqualizeFilter( $F.MODE.RGB ).worker( runInThread )
-            //,noise = $F.NoiseFilter( -127, 127 ).worker( runInThread )
-            ,sepia = $F.ColorMatrixFilter( ).sepia2( ).worker( runInThread )
-            ,gray = $F.ColorMatrixFilter( ).grayscale( )/*.worker( runInThread )*/
-            //,binary = $F.ColorTableFilter( ).threshold( 0.6 ).worker( runInThread )
-            //,threshold = $F.ColorMatrixFilter( ).thresholdRGB( 128 ).worker( runInThread )
-            ,grc = $F.ColorMatrixFilter( ).grayscale( ).contrast( 1 ).worker( runInThread )
-            //,median = $F.StatisticalFilter( ).median( 5 ).worker( runInThread )
-            //,maximum = $F.StatisticalFilter( ).maximum( 15 ).worker( runInThread )
-            //,downsampler = $F.ResampleFilter(0.7, 0.7)
-            //,subselection = $F.SelectionFilter([0.1, 0.1, 0.9, 0.9])
+            ]).worker(runInThread)*/
+            ,equalize = $F.HistogramEqualizeFilter($F.MODE.INTENSITY).worker(runInThread)
+            ,equalize_gray = $F.HistogramEqualizeFilter($F.MODE.GRAY)
+            //,rgbequalize = $F.HistogramEqualizeFilter($F.MODE.RGB).worker(runInThread)
+            //,noise = $F.NoiseFilter(-127, 127).worker(runInThread)
+            ,sepia = $F.ColorMatrixFilter().sepia2().worker(runInThread)
+            ,gray = $F.ColorMatrixFilter().grayscale().worker(runInThread)
+            //,binary = $F.ColorTableFilter().threshold(0.6).worker(runInThread)
+            //,threshold = $F.ColorMatrixFilter().thresholdRGB(128).worker(runInThread)
+            ,grc = $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread)
+            //,median = $F.StatisticalFilter().median(5).worker(runInThread)
+            //,maximum = $F.StatisticalFilter().maximum(15).worker(runInThread)
             ,halftoned = $F.CompositeFilter([
-                /*downsampler,*/ gray,
-                $F.HalftoneFilter(1).threshold(0.4)/*.setMode($F.MODE.GRAY)*/
-            ]).worker( runInThread )
-            //,pixelate = $F.PixelateFilter( 8, 'rectangular' ).worker( runInThread )
-            //,pixelate = $F.PixelateFilter( 10, 'triangular' ).worker( runInThread )
-            //,pixelate = $F.PixelateFilter( 25, 'hexagonal' ).worker( runInThread )
-            //,connected_components = $F.ConnectedComponentsFilter(4, 0.1, $F.MODE.HUE, 30).worker( runInThread )
-            //,hueExtractor = $F.ColorMapFilter( ).setMode( $F.MODE.HUE ).extract( 10, 36 ).worker( runInThread ) // extract hues corresponding to skin color
-            //,thresh = $F.ColorTableFilter( ).threshold( 0.94 ).worker( runInThread )
-            //,hsv = $F.ColorMapFilter( ).RGB2HSV( ).worker( runInThread )
-            //,skinExtractor = $F.CompositeFilter([hsv, redChannel, invert, gray, thresh]).worker( runInThread ) // extract skin region
-            //,laplace = $F.ConvolutionMatrixFilter( ).laplace( 7 ).worker( runInThread )
-            ,twirl = $F.GeometricMapFilter( ).twirl( Math.PI/2, 120, 0.33, 0.27 ).worker( runInThread )
-            //,shift = $F.AffineMatrixFilter( ).setMode( $F.MODE.WRAP ).shift(-50, 0).worker( runInThread )
-            //,rotate = $F.AffineMatrixFilter( ).rotate( -Math.PI ).worker( runInThread )
-            //,blur = $F.ConvolutionMatrixFilter( ).boxBlur( 3 ).worker( runInThread )
-            ,gauss = $F.ConvolutionMatrixFilter( ).fastGauss( 6, 3 ).setMode($F.MODE.GRAY)/*.worker( runInThread )*///gaussBlur(3)
-            //,vertical = $F.ConvolutionMatrixFilter( ).verticalBlur( 21 ).worker( runInThread )
-            //,diagonal = $F.ConvolutionMatrixFilter( ).directionalBlur( 45, 9 ).worker( runInThread )
-            //,glow = $F.ConvolutionMatrixFilter( ).glow( ).worker( runInThread )
-            ,emboss = $F.ConvolutionMatrixFilter( ).emboss( ).worker( runInThread )
+                gray,
+                $F.HalftoneFilter(1).threshold(0.4).setMode($F.MODE.GRAY)
+            ]).worker(runInThread)
+            //,pixelate = $F.PixelateFilter(8, 'rectangular').worker(runInThread)
+            //,pixelate = $F.PixelateFilter(10, 'triangular').worker(runInThread)
+            //,pixelate = $F.PixelateFilter(25, 'hexagonal').worker(runInThread)
+            //,connected_components = $F.ConnectedComponentsFilter(4, 0.1, $F.MODE.HUE, 30).worker(runInThread)
+            //,hueExtractor = $F.ColorMapFilter().setMode($F.MODE.HUE).extract(10, 36).worker(runInThread) // extract hues corresponding to skin color
+            //,thresh = $F.ColorTableFilter( ).threshold(0.94).worker(runInThread)
+            //,hsv = $F.ColorMapFilter().RGB2HSV().worker(runInThread)
+            //,skinExtractor = $F.CompositeFilter([hsv, redChannel, invert, gray, thresh]).worker(runInThread) // extract skin region
+            //,laplace = $F.ConvolutionMatrixFilter().laplace(7).worker(runInThread)
+            ,twirl = $F.GeometricMapFilter().twirl(Math.PI/2, 120, 0.33, 0.27).worker(runInThread)
+            //,shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(-50, 0).worker(runInThread)
+            //,rotate = $F.AffineMatrixFilter().rotate(-Math.PI).worker(runInThread)
+            //,blur = $F.ConvolutionMatrixFilter().boxBlur(3).worker(runInThread)
+            ,gauss = $F.ConvolutionMatrixFilter().fastGauss(6, 3).setMode($F.MODE.GRAY).worker(runInThread)//gaussBlur(3)
+            //,vertical = $F.ConvolutionMatrixFilter().verticalBlur(21).worker(runInThread)
+            //,diagonal = $F.ConvolutionMatrixFilter().directionalBlur(45, 9).worker(runInThread)
+            //,glow = $F.ConvolutionMatrixFilter().glow().worker(runInThread)
+            ,emboss = $F.ConvolutionMatrixFilter().emboss().worker(runInThread)
             ,grsb = $F.CompositeFilter([
                 gray,
-                $F.ConvolutionMatrixFilter( ).sobel( 3 ).setMode($F.MODE.GRAY)
+                $F.ConvolutionMatrixFilter().sobel(3).setMode($F.MODE.GRAY)
                 /*, binary*/
-            ]).worker( runInThread )
-            ,displace = $F.DisplacementMapFilter( displacemap ).worker( runInThread )
+            ]).worker(runInThread)
+            ,displace = $F.DisplacementMapFilter(displacemap).worker(runInThread)
             ,floodFill = $F.CompositeFilter([
                 /*                 x0, y0,  color,   tolerance, exterior border */
                 $F.ColorFillFilter(25, 75,  0xff0000, 0.2,       0x0),
                 $F.ColorFillFilter(75, 112, 0xff0000, 0.2,       0x0),
                 $F.ColorFillFilter(125,75,  0x0000ff, 0.8           ),
                 $F.ColorFillFilter(75, 36,  0x0000ff, 0.8           )
-            ]).worker( runInThread )
-            ,seamless = $F.SeamlessTileFilter().worker( runInThread )
-            //,bokeh = $F.BokehFilter(80, 90, 60, 10).worker( runInThread )
+            ]).worker(runInThread)
+            ,seamless = $F.SeamlessTileFilter().worker(runInThread)
+            //,bokeh = $F.BokehFilter(80, 90, 60, 10).worker(runInThread)
             /*$F.ConvolutionMatrixFilter([2,  4,  5,  4, 2,
                                         4,  9, 12,  9, 4,
                                         5, 12, 15, 12, 5,
                                         4,  9, 12,  9, 4,
                                         2,  4,  5,  4, 2], 1.0/159.0).setMode($F.MODE.GRAY)*/
             ,canny = $F.CompositeFilter([
-                /*subselection,*/gray, equalize_gray, gauss,
+                gray, equalize_gray, gauss,
                 $F.CannyEdgesFilter(35, 70, false/* use custom pre-bluring */)
-            ]).worker( runInThread )
+            ]).worker(runInThread)
             ,faceDetector = $F.CompositeFilter([
                 gray, //equalize_gray,
                 $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt).params({
-                    scaleIncrement: 1.25,
+                    baseScale: 0.8,
+                    scaleIncrement: 1.2,
                     stepIncrement: 0.15,
                     doCannyPruning: true,
-                    cannyLow: 10,
+                    cannyLow: 2,
                     cannyHigh: 100
                 }),
-                $F.InlineFilter(function(params, im, w, h, meta){
-                    if ( !meta.container.filters[meta.index+1] ) return im;
+                $F.InlineFilter(function(params, im, w, h, meta) {
+                    if (meta.container.filters[meta.index+1]) return im;
                     var feats = meta.container.filters[meta.index-1].metaData().objects;
-                    if ( feats.length )
+                    if (feats.length)
                     {
-                        var sx1, sx2, sy1, sy2, sw, sh, face = feats[0], cx = 0.5*(face.x1+face.x2);
+                        var sx1, sx2, sy1, sy2, sw, sh, face = feats[0], cx = 0.5*(face.x+face.width);
                         // restrict eyes detection on first detected face (amplify selection a bit and focus on upper face, eyes region)
                         sw = (1.2*face.width)|0; sh = (0.8*face.height)|0;
                         sx1 = (cx-0.5*sw)|0; sx2 = (cx+0.5*sh)|0;
-                        sy1 = face.y1;  sy2 = (sy1+sh-1)|0;
+                        sy1 = face.y;  sy2 = (sy1+sh-1)|0;
                         meta.container.filters[meta.index+1].select(sx1, sy1, sx2, sy2, true);
                     }
                     else
@@ -333,37 +324,33 @@
                     cannyLow: 2,
                     cannyHigh: 100
                 })
-            ]).update( false ).worker( runInThread )
-            ,drawDetectedFeatures = function( detector, image ) {
-                var ctx = image.octx, i, l, rect,
+            ]).update(false).worker(runInThread)
+            ,drawDetectedFeatures = function(detector, image) {
+                var ctx = image.domElement.getContext('2d'), i, l, rect,
                     faces = detector.filters[1].metaData().objects,
                     eyes = detector.filters[3].metaData().objects;
                 // draw any features found
                 ctx.lineWidth = 2;
-                ctx.strokeStyle = "rgba(75,221,17,1)"; 
-                for (i=0,l=faces.length; i<l; i++)
+                ctx.strokeStyle = "rgba(75,221,17,1)";
+                for (i=0,l=faces.length; i<l; ++i)
                 {
                     rect = faces[i];
                     ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
                 }
-                ctx.strokeStyle = "rgba(200,2,2,1)"; 
-                for (i=0,l=eyes.length; i<l; i++)
+                ctx.strokeStyle = "rgba(200,2,2,1)";
+                for (i=0,l=eyes.length; i<l; ++i)
                 {
                     rect = eyes[i];
                     ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
                 }
             }
         ;
-        
+
         function Img(id, img, text)
         {
             id = String(id);
             var wrapper = $('<div id="img'+id+'" class="fluid col-1-5 autocol-1-4-864 autocol-1-2-640 autocol-1-2-480 autoadjust image"></div>');
             wrapper.append(img.domElement).append($('<span class="caption">'+id+'. '+String(text)+'</span>'));
-            img.domElement.style.position = 'relative';
-            img.domElement.style.maxWidth = '100%';
-            img.domElement.style.width = '100%';
-            img.domElement.style.height = 'auto';
             /*
             // Set actual size in memory (scaled to account for extra pixel density).
             var scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
@@ -372,16 +359,16 @@
             */
             return wrapper;
         }
-        
-        function init( )
+
+        function init()
         {
-            $('#parallel').on( 'click', function( ) {
+            $('#parallel').on( 'click', function() {
                 location.href = baseUrl + '?parallel=1';
             });
-            $('#synchronous').on( 'click', function( ) {
+            $('#synchronous').on( 'click', function() {
                 location.href = baseUrl + '?synchronous=1';
             });
-            
+
             container
             .append(Img(1, im1, 'Original Image'))
             .append(Img(2, im2, 'Red Channel'))
@@ -400,21 +387,21 @@
             .append(Img(15, im17, 'Seamless Tile (Plugin)'))
             .append(Img(16, im18, 'Canny Edges (Plugin)'))
             .append(Img(17, im19, 'Face and Eyes Composite HAAR Detector (Plugin)'))
-            .append(Img(18, im15, 'Perlin Noise Image'))
+            .append(Img(18, im15, 'Perlin Noise (Plugin)'))
             .append(Img(19, im16, 'Color Flood Fill (Plugin)'))
             .append(Img('M', displacemap, 'Displace Map'))
             ;
-            
+
             applyBt.show().on('click', apply);
             restoreBt.show().on('click', restore);
         }
-        
+
         function apply(evt)
         {
-            //displace.setInput( "map", displacemap );
+            //displace.setInput("map", displacemap);
             displace.scaleX = 100;
             displace.scaleY = 100;
-            
+
             // apply them
             // NOTE these also work:
             // * redChannel.apply( im2, closeThread );
@@ -424,88 +411,62 @@
             // * im2.apply2( redChannel, im2, closeThread );
             // * im2.apply( redChannel, closeThread );
             // etc..
-            
-            im2.apply( redChannel, closeThread );
-            im3.apply( greenChannel, closeThread );
-            im4.apply( blueChannel, closeThread );
+
+            im2.apply(redChannel, closeThread);
+            im3.apply(greenChannel, closeThread);
+            im4.apply(blueChannel, closeThread);
             // apply to right half of image
-            im5.select(0.5, 0, 1, 1).apply( clr, function( ) { 
+            im5.select(0.5, 0, 1, 1).apply(clr, function() {
                 closeThread.call(this);
-                im5.deselect( ); 
+                im5.deselect();
             });
-            im6.apply( grc, closeThread );
-            im7.apply( sepia, closeThread );
-            im8.apply( posterize, closeThread );
-            //im9.apply( gauss, closeThread );
-            im9.apply( halftoned, closeThread );
-            //im10.apply( skinExtractor, closeThread );
-            im10.apply( emboss, closeThread );
-            im11.apply( twirl, closeThread );
-            im12.apply( displace, closeThread );
-            im13.apply( grsb, closeThread );
-            //im13.apply( glow, closeThread );
-            im14.apply( equalize, closeThread );
-            //im15.apply( simplexNoise, closeThread );
-            im16.apply( floodFill, closeThread );
-            im17.apply( seamless, closeThread );
-            im18.apply( canny, closeThread );
-            //im19.apply( halfTone, closeThread );
-            im19.apply(faceDetector, function(){
+            im6.apply(grc, closeThread);
+            im7.apply(sepia, closeThread);
+            im8.apply(posterize, closeThread);
+            //im9.apply(gauss, closeThread);
+            im9.apply(halftoned, closeThread);
+            //im10.apply(skinExtractor, closeThread);
+            im10.apply(emboss, closeThread);
+            im11.apply(twirl, closeThread);
+            im12.apply(displace, closeThread);
+            im13.apply(grsb, closeThread);
+            //im13.apply(glow, closeThread);
+            im14.apply(equalize, closeThread);
+            //im15.apply(simplexNoise, closeThread);
+            im16.apply(floodFill, closeThread);
+            im17.apply(seamless, closeThread);
+            im18.apply(canny, closeThread);
+            //im19.apply(halfTone, closeThread);
+            im19.apply(faceDetector, function() {
                 closeThread.call(this);
-                drawDetectedFeatures( this, im19 );
+                drawDetectedFeatures(this, im19);
             });
-            
-            /*var arry = new $F.Array8U([0,255,255,0,127,127]);
-            console.log(arry);
-            var fourier = $F.Math.fft1d(arry, 6);
-            console.log(fourier);
-            var arry2 = new $F.Array8U($F.Math.fft1d(fourier, 6, -1));
-            console.log(arry2);*/
-            
+
             return false;
         }
-        
+
         function restore(evt)
         {
-            im2.restore( );
-            im3.restore( );
-            im4.restore( );
-            im5.deselect( ).restore( );
-            im6.restore( );
-            im7.restore( );
-            im8.restore( );
-            im9.restore( );
-            im10.restore( );
-            im11.restore( );
-            im12.restore( );
-            im13.restore( );
-            im14.restore( );
-            im15.restore( );
-            im16.restore( );
-            im17.restore( );
-            im18.restore( );
-            im19.restore( );
+            im2.restore();
+            im3.restore();
+            im4.restore();
+            im5.deselect().restore();
+            im6.restore();
+            im7.restore();
+            im8.restore();
+            im9.restore();
+            im10.restore();
+            im11.restore();
+            im12.restore();
+            im13.restore();
+            im14.restore();
+            im15.restore();
+            im16.restore();
+            im17.restore();
+            im18.restore();
+            im19.restore();
             return false;
         }
-        
-        /*function dotest2()
-        {
-            var A=$F.ImArray, a, a2;
-            a = new A([1,2,3]);
-            a2 = new A(a);
-            
-            a[1] = 5;
-            console.log(a[1]);
-            console.log(a2[1]);            
-            
-            // in Opera, a2[1]=5 now, it is copy-by-reference
-            // if a2 is simple Uint8Array, a copy by-value is done, Opera bug??
-            console.log($F.Browser.isOpera);
-            console.log($F.ImArray.toString());
-            console.log(Uint8ClampedArray.toString());
-        }*/
-        //setTimeout(process, 2000);
-        //setTimeout(restore, 5000);
     });
     //]]></script>
 </body>

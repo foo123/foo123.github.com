@@ -10,9 +10,9 @@
 <meta property="og:image" content="https://foo123.github.io/thumbs/filter-video.jpg">
 <meta property="og:url" content="https://foo123.github.io/examples/filter-video/">
 <meta name="twitter:card" content="summary">
-    
+
     <title>Video Processing with Filter.js</title>
-    
+
     <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
     <link rel="stylesheet" type="text/css" href="../common/css/areaselect.min.css" />
     <style type="text/css">
@@ -25,7 +25,7 @@
             margin: 0px;
             padding: 0px;
             height:100%;
-            min-height:900px; 
+            min-height:900px;
             overflow:scroll;
             border: none;
         }
@@ -123,17 +123,17 @@
 </head>
 <body class="responsive-864-container">
     <span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
-    
+
     <header id="header">
         <h1>Video Processing with Filter.js v.<span id="lib-version">0</span></h1><br /><br />
     </header>
-    
+
     <div class="fluid col-1-1 text-left" style="margin-bottom: 10px; padding-left: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
-    
+
     <div id="statsContainer"></div>
-    
+
     <div class="fluid col-1-1">
-    
+
         <div id="container" class="fluid col-2-5 panel">
             <strong>Original Video <a href="http://www.youtube.com/watch?v=alQ7KCaGBec" target="_blnak">on YouTube</a></strong><br /><br />
             <!-- autoplay -->
@@ -145,27 +145,27 @@
                 Video is not supported
             </video>
         </div>
-        
+
         <div id="filters"  class="fluid col-2-5 panel">
             <strong>Post-Processed Video <!--(downsampled)--></strong><br /><br />
         </div>
-    
+
     </div>
-    
+
     <br /><br />
-    
+
     <div class="fluid col-1-1" style="margin-bottom:100px;">
-    
+
         <div class="panel" style="margin-bottom:12px;">
             <strong>You can select part of video to apply filters to (use your mouse or touch on the processed video on the right)</strong>&nbsp;&nbsp;
             <input id="select" type="button" class="button" value="Select" />
             <input id="deselect" type="button" class="button" value="DeSelect" />
         </div>
-        
+
         <div class="panel">
             <strong>Apply Post-Process Filter to Video :</strong><br /><br />
             <select id="filterSelect" title="Filter to use" style="margin-bottom:10px;">
-                <option value='#'>None</option>
+                <option value='#' selected>None</option>
                 <optgroup label="Color Table Filters">
                     <option value='#'>RED Channel</option>
                     <option value='#'>GREEN Channel</option>
@@ -184,6 +184,8 @@
                     <option value='#'>Grayscale and Contrast</option>
                     <option value='#'>YCbCr Color Space</option>
                     <option value='#'>HSV Color Space</option>
+                    <option value='#'>HSL Color Space</option>
+                    <option value='#'>HWB Color Space</option>
                     <option value='#'>CMY Color Space</option>
                     <option value='#'>Hue only as grayscale Image</option>
                     <option value='#'>Extract range of Hues</option>
@@ -216,6 +218,8 @@
                 <optgroup label="Displace/Affine/Geometric Filters">
                     <option value='#'>TwirlMap</option>
                     <option value='#'>SphereMap</option>
+                    <option value='#'>PolarMap</option>
+                    <option value='#'>CartesianMap</option>
                     <!--<option value='#'>RippleMap</option>-->
                     <option value='#'>DisplaceMap with Radial Gradient</option>
                     <option value='#'>DisplaceMap with Perlin Noise</option>
@@ -237,7 +241,7 @@
             </select>
             <select id="flipSelect" title="Flip Output?" style="margin-bottom:10px;">
                 <optgroup label="Flip Output?">
-                <option value='0'>No Flip</option>
+                <option value='0' selected>No Flip</option>
                 <option value='1'>Flip Horizontal</option>
                 <option value='2'>Flip Vertical</option>
                 <option value='3'>Flip Horizontal using Filter</option>
@@ -246,49 +250,42 @@
             </select>
             <select id="blendSelect" title="Blend Mode" style="margin-bottom:10px;">
                 <optgroup label="Blend Mode">
-                <option value='Normal'>Normal</option>
-                <option value='Lighten'>Lighten</option>
-                <option value='Darken'>Darken</option>
-                <option value='Multiply'>Multiply</option>
-                <option value='Average'>Average</option>
-                <option value='Add'>Add</option>
-                <option value='Subtract'>Subtract</option>
-                <option value='Difference'>Difference</option>
-                <option value='Negation'>Negation</option>
-                <option value='Screen'>Screen</option>
-                <option value='Exclusion'>Exclusion</option>
-                <option value='Overlay'>Overlay</option>
-                <option value='SoftLight'>SoftLight</option>
-                <option value='HardLight'>HardLight</option>
-                <option value='ColorDodge'>ColorDodge</option>
-                <option value='ColorBurn'>ColorBurn</option>
-                <option value='LinearLight'>LinearLight</option>
-                <option value='Reflect'>Reflect</option>
-                <option value='Glow'>Glow</option>
-                <option value='Phoenix'>Phoenix</option>
-                <option value='VividLight'>VividLight</option>
-                <option value='PinLight'>PinLight</option>
-                <option value='HardMix'>HardMix</option>
-                <option value='LinearDodge'>LinearDodge (same as Add)</option>
-                <option value='LinearBurn'>LinearBurn (same as Subtract)</option>
+                <option value='normal' selected>Normal</option>
+                <option value='lighten'>Lighten</option>
+                <option value='darken'>Darken</option>
+                <option value='multiply'>Multiply</option>
+                <option value='average'>Average</option>
+                <option value='add'>Add</option>
+                <option value='subtract'>Subtract</option>
+                <option value='difference'>Difference</option>
+                <option value='negation'>Negation</option>
+                <option value='screen'>Screen</option>
+                <option value='exclusion'>Exclusion</option>
+                <option value='overlay'>Overlay</option>
+                <option value='soft-light'>SoftLight</option>
+                <option value='hard-light'>HardLight</option>
+                <option value='color-dodge'>ColorDodge</option>
+                <option value='color-burn'>ColorBurn</option>
+                <option value='linear-light'>LinearLight</option>
+                <option value='linear-dodge'>LinearDodge (same as Add)</option>
+                <option value='linear-burn'>LinearBurn (same as Subtract)</option>
                 </optgroup>
             </select>
             <select id="pixelationPattern" title="Pixelation Pattern" style="margin-bottom:10px;">
                 <optgroup label="Pixelation Pattern">
-                <option value='rectangular'>Rectangular</option>
+                <option value='rectangular' selected>Rectangular</option>
                 <option value='triangular'>Triangular</option>
                 <option value='rhomboidal'>Rhomboidal</option>
                 <option value='hexagonal'>Hexagonal</option>
                 </optgroup>
             </select>
-            <input id="blendAlpha" title="Alpha (0-1)" type="number" value="1.0" min="0.0" max="1.0" step="0.1" style="width:60px" />
             <input id="pixelationScale" title="Scale (1-100)" type="number" value="2" min="1" max="100" step="1" style="width:60px" />
             <input id="paramHue" title="Hue (0-360)" type="number" value="30" step="1" style="width:60px" />
             <input id="paramThresh" title="Threshold (0-1)" type="number" value="0.05" min="0.0" max="1.0" step="0.05" style="width:60px" />
         </div>
-    
+
     </div>
-    
+
     <script>//<![CDATA[
     "use strict";
    /**
@@ -296,9 +293,9 @@
      * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
      */
 
-    if ( !window.requestAnimationFrame ) {
+    if (!window.requestAnimationFrame) {
 
-        window.requestAnimationFrame = ( function() {
+        window.requestAnimationFrame = (function() {
 
             return window.webkitRequestAnimationFrame ||
             window.mozRequestAnimationFrame ||
@@ -310,49 +307,41 @@
 
             };
 
-        } )();
+        })();
 
     }
-    
+
     // utils
-    function addEvent(el, ev, handler) { el.addEventListener(ev, handler, false); }
-    function getEl(id) { return document.getElementById(id); }
-    function add(el, child) { el.appendChild(child); }
-    function addAll(el, childs) { var l=childs.length, i=0; while (i<l) { el.appendChild(childs[i]); i++; } }
-    
-    require.config({
-        paths: {
-            FilterBundle: "filter.bundle"
-        },
-        bundles: {
-            FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_ML", "FILTER_IO", "FILTER_CODECS", "FILTER_FILTERS", "FILTER_PLUGINS"]
-        }
-    });
-    require(['Classy', 'Asynchronous', 'FILTER', 'FILTER_ML', 'FILTER_IO', 'FILTER_CODECS', 'FILTER_FILTERS', 'FILTER_PLUGINS', 'AreaSelect', 'Stats'/*, 'domReady!'*/], 
-        function( _1, _2, _3, _4, _5, _6, _7, $F, AreaSelect, Stats ) {
+    function addEvent(el, ev, handler) {el.addEventListener(ev, handler, false);}
+    function getEl(id) {return document.getElementById(id);}
+    function add(el, child) {el.appendChild(child);}
+    function addAll(el, childs) {var l=childs.length, i=0; while (i<l) {el.appendChild(childs[i]); ++i;}}
+
+    require(['FILTER', 'AreaSelect', 'Stats'/*, 'domReady!'*/],
+        function($F, AreaSelect, Stats) {
         document.getElementById('lib-version').innerHTML = $F.VERSION;
         var icon,
             filterSelect = getEl('filterSelect'),
             flipSelect = getEl('flipSelect'),
             blendSelect = getEl('blendSelect'),
-            blendAlpha = getEl('blendAlpha'),
             pixelationPattern = getEl('pixelationPattern'),
             pixelationScale = getEl('pixelationScale'),
             paramHue = getEl('paramHue'),
             paramThresh = getEl('paramThresh'),
-            video = getEl('video'), 
-            container = getEl('container'), 
+            video = getEl('video'),
+            container = getEl('container'),
             filters = getEl('filters'),
             selectBt = getEl('select'),
             deselectBt = getEl('deselect'),
-            
+
             // images
             displacemap = $F.Image().restorable(false).fill("rgb(128,128,128)", 0, 0, 220, 220),
-            perlinNoise = null,
+            perlinNoise = $F.Image().restorable(false),
+            perlin = null,
             alphamask = $F.Image().restorable(false).fill("rgb(0,0,0)", 0, 0, 200, 200),
             postVideo = $F.Image().restorable(false),
             //postVideo = $F.ScaledImage(0.8, 0.8).restorable(false),
-            
+
              // filters
             flipX = $F.AffineMatrixFilter().flipX(),
             flipY = $F.AffineMatrixFilter().flipY(),
@@ -432,16 +421,21 @@
             displaceFilter = $F.DisplacementMapFilter(displacemap),
             twirlFilter = $F.GeometricMapFilter().twirl(Math.PI/2, 150, 0.5, 0.5),
             sphereFilter = $F.GeometricMapFilter().sphere(150, 0.5, 0.5),
+            polarFilter = $F.GeometricMapFilter().polar(0.5, 0.5),
+            cartesianFilter = $F.GeometricMapFilter().cartesian(0.5, 0.5),
+            eye = $F.CompositeFilter([polarFilter, cartesianFilter]),
             //rippleFilter = $F.GeometricMapFilter().ripple(10, 16, 10, 0, 0.5, 0.5),
             pixelate = $F.PixelateFilter(2, 'rectangular'),
             halftoned = $F.CompositeFilter([
-                gray, $F.HalftoneFilter(1).threshold(0.4)/*.setMode($F.MODE.GRAY)*/
+                gray, $F.HalftoneFilter(1).threshold(0.4).setMode($F.MODE.GRAY)
             ]),
             alphaMask = $F.ChannelCopyFilter($F.CHANNEL.BLUE, $F.CHANNEL.ALPHA, 0.5, 0.5, 0).setMode($F.MODE.COLOR).setInput("source", alphamask),
-            blend = $F.BlendFilter(["normal", 1, 1, 1, 1/*,
-                                    "screen", 50, 40, 0.7, 1*/]),
+            blend = $F.BlendFilter(["normal", 1, 1, 1/*,
+                                    "screen", 50, 40, 1*/]),
             ycbcr = $F.ColorMatrixFilter().RGB2YCbCr(),
             hsv = $F.ColorMapFilter().RGB2HSV(),
+            hsl = $F.ColorMapFilter().RGB2HSL(),
+            hwb = $F.ColorMapFilter().RGB2HWB(),
             cmyk = $F.ColorMapFilter().RGB2CMYK(),
             hueOnly = $F.ColorMapFilter().hue(),
             /*hueE =*/ hueExtractor = $F.ColorMapFilter().setMode($F.MODE.HUE).extract(10, 50),
@@ -450,7 +444,7 @@
             canny = $F.CompositeFilter([gray, $F.CannyEdgesFilter(30, 70)]),
             shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(3, 0),
             perlinDisplaceFilter = $F.DisplacementMapFilter(),
-            
+
             // filter selection list
             videoFilters = [
                 null,
@@ -469,6 +463,8 @@
                 grc,
                 ycbcr,
                 hsv,
+                hsl,
+                hwb,
                 cmyk,
                 hueOnly,
                 hueExtractor,
@@ -495,6 +491,8 @@
                 mlap,
                 twirlFilter,
                 sphereFilter,
+                polarFilter,
+                cartesianFilter,
                 //rippleFilter,
                 displaceFilter,
                 perlinDisplaceFilter,
@@ -514,81 +512,92 @@
             currentSelection = null, areaSelect, doSelect = false, doDeselect = false,
             cX1 = 0, cX2 = 0, cY1 = 0, cY2 = 0, stats
         ;
-        
-        function init( )
+
+        function loadImage(src, cb)
         {
-            blend.setInput(1, icon = $F.IO.HTMLImageLoader.load($F.Browser.isChrome
+            var img = new Image(), fimg = $F.Image();
+            img.onload = function() {
+                fimg.image(img);
+                if (cb) cb();
+            };
+            img.src = src;
+            return fimg;
+        }
+
+        function init()
+        {
+            blend.setInput(1, icon = loadImage($F.Browser.isChrome
             ? "../common/assets/chrome.png"
             : ($F.Browser.isOpera
             ? "../common/assets/opera.png"
             : ($F.Browser.isIE
             ? "../common/assets/ie.png"
             : "../common/assets/firefox.png"))).restorable(false));
-            //blend.setInput(2, $F.IO.HTMLImageLoader.load("../common/assets/chrome.png").restorable(false));
+            //blend.setInput(2, loadImage("../common/assets/chrome.png").restorable(false));
             blendSelect.style.display = "none";
-            blendAlpha.style.display = "none";
             pixelationPattern.style.display = "none";
             pixelationScale.style.display = "none";
             paramHue.style.display = "none";
             paramThresh.style.display = "none";
             selectBt.style.display = "inline";
             deselectBt.style.display = "none";
-            
-            var grd;
+
+            var grd, octx = displacemap.domElement.getContext('2d');
             // create a displace map image
             // create radial gradient
-            grd = displacemap.octx.createRadialGradient(displacemap.width/2, displacemap.height/2, 0, displacemap.width/2, displacemap.height/2, displacemap.width/2);
+            grd = octx.createRadialGradient(displacemap.width/2, displacemap.height/2, 0, displacemap.width/2, displacemap.height/2, displacemap.width/2);
             grd.addColorStop(1, "#808080"); // neutral
             grd.addColorStop(0, "#ffffff"); // white
-            displacemap.octx.fillStyle = grd;
-            displacemap.octx.beginPath();
-            displacemap.octx.arc(displacemap.width/2, displacemap.height/2, displacemap.width/2, 0, Math.PI*2, true);
-            displacemap.octx.fill();
+            octx.fillStyle = grd;
+            octx.beginPath();
+            octx.arc(displacemap.width/2, displacemap.height/2, displacemap.width/2, 0, Math.PI*2, true);
+            octx.closePath();
+            octx.fill();
             displacemap.store();
             displaceFilter.startX=0; displaceFilter.startY=0;
-            displaceFilter.scaleX=120; displaceFilter.scaleY=120; 
+            displaceFilter.scaleX=120; displaceFilter.scaleY=120;
             displaceFilter.componentX=$F.CHANNEL.RED; displaceFilter.componentY=$F.CHANNEL.GREEN;
-            
+
             perlinDisplaceFilter.startX=0; perlinDisplaceFilter.startY=0;
-            perlinDisplaceFilter.scaleX=60; perlinDisplaceFilter.scaleY=60; 
+            perlinDisplaceFilter.scaleX=60; perlinDisplaceFilter.scaleY=60;
             perlinDisplaceFilter.componentX=$F.CHANNEL.RED; perlinDisplaceFilter.componentY=$F.CHANNEL.GREEN;
-            
+
             // create alpha mask image
             // create radial gradient
-            grd = alphamask.octx.createRadialGradient(alphamask.width/2, alphamask.height/2, 0, alphamask.width/2, alphamask.height/2, alphamask.width/2);
+            octx = alphamask.domElement.getContext('2d');
+            grd = octx.createRadialGradient(alphamask.width/2, alphamask.height/2, 0, alphamask.width/2, alphamask.height/2, alphamask.width/2);
             grd.addColorStop(1, "#000000"); // black
             grd.addColorStop(0, "#ffffff"); // white
-            alphamask.octx.fillStyle = grd;
-            alphamask.octx.beginPath();
-            alphamask.octx.arc(alphamask.width/2, alphamask.height/2, alphamask.width/2, 0, Math.PI*2, true);
-            alphamask.octx.fill();
+            octx.fillStyle = grd;
+            octx.beginPath();
+            octx.arc(alphamask.width/2, alphamask.height/2, alphamask.width/2, 0, Math.PI*2, true);
+            octx.closePath();
+            octx.fill();
             alphamask.store();
-            
-            dx = Max(10*rnd(), 5); dy = Max(10*rnd(), 5); 
-            dtheta = Math.PI*Max(2*rnd(), 1)/32;  
+
+            dx = Max(10*rnd(), 5); dy = Max(10*rnd(), 5);
+            dtheta = Math.PI*Max(2*rnd(), 1)/32;
             dr = Max(2*rnd()+1, 1);
-            
+
             add(filters, postVideo.domElement);
-            areaSelect = new AreaSelect( postVideo.domElement );
-            
+            areaSelect = new AreaSelect(postVideo.domElement);
+
             stats = new Stats();
-            stats.setMode( 1 );
-            add(statsContainer, stats.domElement );
-            
+            stats.setMode(1);
+            add(statsContainer, stats.domElement);
+
             // change the video filter applied
-            addEvent(filterSelect, "change", function(){
+            addEvent(filterSelect, "change", function() {
                 currentFilterIndex = filterSelect.selectedIndex || 0;
                 // preview the filter while hovering the option
                 currentFilter = videoFilters[ currentFilterIndex ] || null;
                 if (blend===currentFilter)
                 {
                     blendSelect.style.display = "inline-block";
-                    blendAlpha.style.display = "inline-block";
                 }
                 else
                 {
                     blendSelect.style.display = "none";
-                    blendAlpha.style.display = "none";
                 }
                 if (pixelate===currentFilter)
                 {
@@ -620,64 +629,48 @@
                     paramHue.style.display = "none";
                 }
             });
-            
+
             // change the orientation applied
-            addEvent(flipSelect, "change", function(){
+            addEvent(flipSelect, "change", function() {
                 currentOrientation = flipSelect.selectedIndex || 0;
             });
-            
+
             // change the blend mode
-            addEvent(blendSelect, "change", function(){
+            addEvent(blendSelect, "change", function() {
                 var blendMode = blendSelect.options[blendSelect.selectedIndex || 0].value.toLowerCase();
-                blend.matrix[0]/*mode*/ = blendMode; 
+                blend.matrix[0]/*mode*/ = blendMode;
             });
-            
-            // change the blend alpha
-            addEvent(blendAlpha, "change", function(){
-                var alpha = +blendAlpha.value;
-                if ( alpha < 0 )
-                {
-                    alpha = 0;
-                    blendAlpha.value = alpha;
-                }
-                if ( alpha > 1 )
-                {
-                    alpha = 1;
-                    blendAlpha.value = alpha;
-                }
-                blend.matrix[3]/*alpha*/ = alpha;
-            });
-            
+
             // change the pixelation pattern
-            addEvent(pixelationPattern, "change", function(){
+            addEvent(pixelationPattern, "change", function() {
                 var pattern = pixelationPattern.options[pixelationPattern.selectedIndex || 0].value.toLowerCase();
                 pixelate.pattern = pattern;
             });
-            
+
             // change the pixelation scale
-            addEvent(pixelationScale, "change", function(){
+            addEvent(pixelationScale, "change", function() {
                 var scale = +pixelationScale.value;
-                if ( scale < 0 )
+                if (scale < 0)
                 {
                     scale = 1;
                     pixelationScale.value = scale;
                 }
-                if ( scale > 100 )
+                if (scale > 100)
                 {
                     scale = 100;
                     pixelationScale.value = scale;
                 }
                 pixelate.scale = scale;
             });
-            
-            addEvent(paramHue, "change", function(){
+
+            addEvent(paramHue, "change", function() {
                 var hue = +paramHue.value;
-                if ( 0 > hue )
+                if (0 > hue)
                 {
                     hue += 360;
                     paramHue.value = hue;
                 }
-                if ( 360 < hue )
+                if (360 < hue)
                 {
                     hue -= 360;
                     paramHue.value = hue;
@@ -685,26 +678,26 @@
                 qcc.color = hue;
                 hueExtractor.thresholds = [Math.max(0,hue-20), Math.min(360,hue+20)];
             });
-            addEvent(paramThresh, "change", function(){
+            addEvent(paramThresh, "change", function() {
                 var thresh = +paramThresh.value;
-                binaryThreshold.reset( ).threshold( thresh );
+                binaryThreshold.reset().threshold(thresh);
             });
-            
-            addEvent(selectBt, 'click', function(){
+
+            addEvent(selectBt, 'click', function() {
                 var sel = areaSelect.getSelection();
-                if ( sel )
+                if (sel)
                 {
                     var w = postVideo.width, h = postVideo.height;
-                    currentSelection = [ Math.min(sel.x1/w, 1), Math.min(sel.y1/h, 1), Math.min(sel.x2/w, 1), Math.min(sel.y2/h, 1) ];
+                    currentSelection = [Math.min(sel.x1/w, 1), Math.min(sel.y1/h, 1), Math.min(sel.x2/w, 1), Math.min(sel.y2/h, 1)];
                     areaSelect.hide();
                     doSelect = true;
-                    
+
                     cX1 = sel.x1;
                     cY1 = sel.y1;
                     cX2 = sel.x2;
                     cY2 = sel.y2;
 
-                    setTimeout(function(){
+                    setTimeout(function() {
                         selectBt.style.display = 'none';
                         deselectBt.style.display = 'inline';
                     }, 10);
@@ -715,12 +708,12 @@
                 }
                 return false;
             });
-            
-            addEvent(deselectBt, 'click', function(){
+
+            addEvent(deselectBt, 'click', function() {
                 currentSelection = null;
                 areaSelect.hide();
                 doDeselect = true;
-                
+
                 cX1 = 0;
                 cY1 = 0;
                 cX2 = postVideo.width;
@@ -732,76 +725,74 @@
                 }, 10);
                 return false;
             });
-            
+
             // start process when the video is playing
-            addEvent( video, "play", processVideo );
+            addEvent(video, "play", processVideo);
         }
-        
+
         function processVideo(event)
         {
             if (video.paused || video.ended)  return;
 
             // Render every fixed interval
-            requestAnimationFrame( processVideo );
-            //setTimeout( processVideo, renderInterval );
-            
+            requestAnimationFrame(processVideo);
+
             var vw, vh, brad;
-            
-            stats.begin( );
-            
-            postVideo.image( video );
-            postVideo.domElement.style.position = 'relative';
-            postVideo.domElement.style.maxWidth = '100%';
-            postVideo.domElement.style.height = 'auto';
-            
+
+            stats.begin();
+
+            postVideo.image(video);
+
             vw = postVideo.width; vh = postVideo.height;
-            
-            if ( 0 === cX2 )
+
+            if (0 === cX2)
             {
                 cX1 = 0;
                 cY1 = 0;
                 cX2 = vw;
                 cY2 = vh;
             }
-                
+
             if (doSelect && currentSelection)
             {
-                postVideo.select( currentSelection[0], currentSelection[1], currentSelection[2], currentSelection[3] );
-                blend.matrix[1]/*startX*/ = cX1+1; 
+                postVideo.select(currentSelection[0], currentSelection[1], currentSelection[2], currentSelection[3]);
+                blend.matrix[1]/*startX*/ = cX1+1;
                 blend.matrix[2]/*startY*/ = cY1+1;
                 doSelect = false;
             }
             else if (doDeselect)
             {
-                postVideo.deselect( );
-                blend.matrix[1]/*startX*/ = 1; 
+                postVideo.deselect();
+                blend.matrix[1]/*startX*/ = 1;
                 blend.matrix[2]/*startY*/ = 1;
                 doDeselect = false;
             }
-            
-            if (1==currentOrientation)   postVideo.flipHorizontal( );
-            else if (2==currentOrientation)  postVideo.flipVertical( );
-            else if (3==currentOrientation)   flipX.apply( postVideo );
-            else if (4==currentOrientation)  flipY.apply( postVideo );
-            
+
+            if (1==currentOrientation)   postVideo.flipHorizontal();
+            else if (2==currentOrientation)  postVideo.flipVertical();
+            else if (3==currentOrientation)   flipX.apply(postVideo);
+            else if (4==currentOrientation)  flipY.apply(postVideo);
+
             if (displaceFilter===currentFilter)
             {
                 // animate the displace filter
-                displaceFilter.startX += dx/vw; 
+                displaceFilter.startX += dx/vw;
                 displaceFilter.startY += dy/vh;
                 if (displaceFilter.startX<-0.5 || displaceFilter.startX>0.5) dx = -dx;
                 if (displaceFilter.startY<-0.5 || displaceFilter.startY>0.5) dy = -dy;
             }
             else if (perlinDisplaceFilter===currentFilter)
             {
-                if ( null === perlinNoise )
+                if (null === perlin)
                 {
-                    perlinDisplaceFilter.setInput( "map", perlinNoise = $F.Image.PerlinNoise( vw, vh, 0, true/* seamless */, true/* grayscale */, vw/4, vh/4 ) );
+                    perlin = $F.PerlinNoiseFilter(vw/4, vh/4, 1, true, false, [], 0, true);
+                    perlinNoise.setDimensions(vw, vh).apply(perlin);
+                    perlinDisplaceFilter.setInput("map", perlinNoise);
                 }
                 else
                 {
                     // animate the perlinNoise image
-                    shift.apply( perlinNoise );
+                    shift.apply(perlinNoise);
                 }
             }
             else if (twirlFilter===currentFilter)
@@ -809,7 +800,7 @@
                 // animate the twirl filter
                 twirlFilter.angle += dtheta;
                 if (twirlFilter.angle < -Math.PI/2 || twirlFilter.angle > Math.PI/2) dtheta=-dtheta;
-                twirlFilter.centerX += dx/vw; 
+                twirlFilter.centerX += dx/vw;
                 twirlFilter.centerY += dy/vh;
                 if (twirlFilter.centerX<0 || twirlFilter.centerX>1) dx = -dx;
                 if (twirlFilter.centerY<0 || twirlFilter.centerY>1) dy = -dy;
@@ -817,7 +808,7 @@
             else if (sphereFilter===currentFilter)
             {
                 // animate the sphere filter
-                sphereFilter.centerX += dx/vw; 
+                sphereFilter.centerX += dx/vw;
                 sphereFilter.centerY += dy/vh;
                 if (sphereFilter.centerX<0 || sphereFilter.centerX>1) dx = -dx;
                 if (sphereFilter.centerY<0 || sphereFilter.centerY>1) dy = -dy;
@@ -826,8 +817,8 @@
             {
                 // animate the ripple filter
                 brad = Max(vw, vh);
-                rippleFilter.radius += dr; 
-                rippleFilter.phase += dtheta; 
+                rippleFilter.radius += dr;
+                rippleFilter.phase += dtheta;
                 rippleFilter.wavelength = 25;
                 if (rippleFilter.phase < -Math.PI || rippleFilter.phase > Math.PI) dtheta=-dtheta;
                 if (rippleFilter.radius<0 || rippleFilter.radius>brad) dr = -dr;
@@ -835,7 +826,7 @@
             else if (alphaMask===currentFilter)
             {
                 // animate the mask filter
-                alphaMask.centerX += dx/vw; 
+                alphaMask.centerX += dx/vw;
                 alphaMask.centerY += dy/vh;
                 if (alphaMask.centerX<0 || alphaMask.centerX>1) dx = -dx;
                 if (alphaMask.centerY<0 || alphaMask.centerY>1) dy = -dy;
@@ -843,20 +834,20 @@
             else if (blend===currentFilter)
             {
                 // animate the blend filter
-                blend.matrix[1]/*startX*/ += dx; 
+                blend.matrix[1]/*startX*/ += dx;
                 blend.matrix[2]/*startY*/ += dy;
                 if (blend.matrix[1]<=cX1 || blend.matrix[1]>=cX2) dx = -dx;
                 if (blend.matrix[2]<=cY1 || blend.matrix[2]>=cY2) dy = -dy;
             }
-            
-            if ( currentFilter ) currentFilter.apply( postVideo );
-            
-            stats.end( );
+
+            if (currentFilter) currentFilter.apply(postVideo);
+
+            stats.end();
         }
-        
+
         // play
-        init( );
-        
+        init();
+
     });
     //]]></script>
 </body>

@@ -1,6 +1,6 @@
-!function( require ) {
+!function(require) {
 require.config({
-baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : "/foo123.github.com/examples/common/js"
+baseUrl: /^https?:\/\/foo123\./.test(location.href) ? "/examples/common/js" : "/foo123.github.com/examples/common/js"
 
 ,paths: {
      Storage: "Storage"
@@ -38,7 +38,7 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
     ,Unicache: "Unicache.min"
     ,HAAR: "haar-detector.min"
     ,cascades: "../cascades"
-    //,FilterBundle: "filter.bundle",
+    ,FILTER: "filter.min"
     ,MOD3: "mod3.min"
     ,Sort: "sort.min"
     ,Pattern: "pattern.min"
@@ -96,4 +96,4 @@ baseUrl: /^https?:\/\/foo123\./.test( location.href ) ? "/examples/common/js" : 
 }
 ,waitSeconds: 15
 });
-}( require );
+}(require);

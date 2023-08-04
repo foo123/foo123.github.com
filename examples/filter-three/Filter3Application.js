@@ -6,9 +6,9 @@
  * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
  */
 
-if ( !window.requestAnimationFrame ) {
+if (!window.requestAnimationFrame) {
 
-    window.requestAnimationFrame = ( function() {
+    window.requestAnimationFrame = (function() {
 
         return window.webkitRequestAnimationFrame ||
         window.mozRequestAnimationFrame ||
@@ -20,7 +20,7 @@ if ( !window.requestAnimationFrame ) {
 
         };
 
-    } )();
+    })();
 
 }
 
@@ -65,7 +65,7 @@ var
     dF = new $F.DisplacementMapFilter(displacemap)
 ;
 
-function setDimensions( )
+function setDimensions()
 {
     w = Math.min(window.innerWidth, 1600)-20;
     h = Math.max(window.innerHeight-80, 500);
@@ -73,9 +73,20 @@ function setDimensions( )
     h2 = h/2;
     container.style.width = w+"px";
     container.style.height = h+"px";
-    renderer.setSize( w, h );
+    renderer.setSize(w, h);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+}
+
+function loadImage(src, cb)
+{
+    var img = new Image(), fimg = new $F.Image();
+    img.onload = function() {
+        fimg.image(img);
+        if (cb) cb();
+    };
+    img.src = src;
+    return fimg;
 }
 
 
@@ -91,13 +102,13 @@ var self = {
 
         scene = new THREE.Scene();
 
-        camera = new THREE.PerspectiveCamera( 70, 1.0, 1, 1000 );
+        camera = new THREE.PerspectiveCamera(70, 1.0, 1, 1000);
         camera.position.z = 700;
-        scene.add( camera );
+        scene.add(camera);
 
         renderer = new THREE.CanvasRenderer();
         setDimensions();
-        container.appendChild( renderer.domElement );
+        container.appendChild(renderer.domElement);
 
         cube=new THREE.Object3D();
         scene.add(cube);
@@ -105,7 +116,7 @@ var self = {
         for (var i=0; i<8;i++)
         {
             // set closure callback
-            image[i] = $F.IO.HTMLImageLoader.load(i&1?document.getElementById('Fidel').src:document.getElementById('Che').src, callback(i));
+            image[i] = loadImage(i&1?document.getElementById('Fidel').src:document.getElementById('Che').src, callback(i));
             texture[i] = new THREE.Texture(image[i].domElement);
         }
 
@@ -221,25 +232,22 @@ var self = {
 function callback(ind)
 {
     return function() {
-        image[ind].domElement.style.position = 'relative';
-        image[ind].domElement.style.maxWidth = '100%';
-        image[ind].domElement.style.height = 'auto';
         texture[ind].needsUpdate = true;
         if (ind==7)
         {
-            displacemap.createImageData(image[7].width,image[7].height);
-            displacemap.octx.fillStyle="rgb(128,128,128)";
-            displacemap.octx.fillRect(0,0,displacemap.width,displacemap.height);
+            displacemap.setDimensions(image[7].width,image[7].height);
+            var octx = displacemap.domElement.getContext('2d');
+            octx.fillStyle="rgb(128,128,128)";
+            octx.fillRect(0,0,displacemap.width,displacemap.height);
             // create radial gradient
-            var grd = displacemap.octx.createRadialGradient(displacemap.width/2, displacemap.height/2, 0, displacemap.width/2, displacemap.height/2, displacemap.width/2);
+            var grd = octx.createRadialGradient(displacemap.width/2, displacemap.height/2, 0, displacemap.width/2, displacemap.height/2, displacemap.width/2);
             grd.addColorStop(1, "#808080"); // neutral
             grd.addColorStop(0, "#ffffff"); // white
-            displacemap.octx.fillStyle = grd;
-            displacemap.octx.beginPath();
-            displacemap.octx.arc(displacemap.width/2,displacemap.height/2,displacemap.width/2,0,Math.PI*2,true);
-            displacemap.octx.fill();
+            octx.fillStyle = grd;
+            octx.beginPath();
+            octx.arc(displacemap.width/2,displacemap.height/2,displacemap.width/2,0,Math.PI*2,true);
+            octx.fill();
             displacemap.store();
-            //image[7].setPixelData(displacemap.getPixelData());
         }
     };
 }
@@ -256,7 +264,7 @@ function dotest(event)
     dF.scaleX = 100;
     dF.scaleY = 100;
     dF.apply(image[7]);
-    for (var i=1;i<8;i++)
+    for (var i=1;i<8;++i)
         texture[i].needsUpdate = true;
 }
 function dorestore(event)
