@@ -26,12 +26,16 @@
         }
         .image {
             padding: 4px;
+            margin-bottom: 10px;
         }
         .image > canvas {
             position: relative;
             width: 100% !important;
             height: auto !important;
             display: block;
+        }
+        .image.placeholder {
+            clear: both;
         }
         .image > .caption {
             position: relative;
@@ -123,8 +127,8 @@
 
     <script>//<![CDATA[
     "use strict";
-    require(['cascades/haarcascade_frontalface_alt', 'cascades/haarcascade_eye', 'jQuery', 'FILTER'],
-    function(haarcascade_frontalface_alt, haarcascade_eye, $, $F) {
+    require(['cascades/haarcascade_frontalface_alt', 'cascades/haarcascade_eye', /*'cascades/haarcascade_mcs_mouth',*/ 'jQuery', 'FILTER'],
+    function(haarcascade_frontalface_alt, haarcascade_eye, /*haarcascade_mcs_mouth,*/ $, $F) {
 
         // utils
         var runInThread = /(&|\?)parallel\b/i.test(location.href);
@@ -141,6 +145,7 @@
             ,che = '../common/assets/che.jpg'
             ,face_model = '../common/assets/model_face.jpg'
             ,yinyang = '../common/assets/yin_yang_blank.png'
+            ,model = '../common/assets/model1.jpg'
             ,aside = $('#aside')
             ,applyBt = $('#applyBt')
             ,restoreBt = $('#restoreBt')
@@ -203,6 +208,8 @@
             ,im17 = loadImage(che)
             ,im18 = loadImage(che)
             ,im19 = loadImage(face_model)
+            ,im20 = loadImage(model)
+            ,im21 = loadImage(model)
 
              // filters
             //,redChannel = $F.ColorMatrixFilter().worker(runInThread).redChannel()
@@ -210,8 +217,8 @@
                 // get red channel using an inline filter that can run in parallel worker also
                 for (var i=0,l=im.length; i<l; i+=4)
                 {
-                    im[ i+1 ] = 0;
-                    im[ i+2 ] = 0;
+                    im[ i+1 ] = 0; // remove green channel
+                    im[ i+2 ] = 0; // remove blue channel
                 }
                 return im;
             }).worker(runInThread)
@@ -227,12 +234,6 @@
             //,swapChannels = $F.ColorMatrixFilter().swapChannels($F.CHANNEL.BLUE, $F.CHANNEL.GREEN).worker(runInThread)
             //,maskChannel = $F.ColorMatrixFilter().maskChannel($F.CHANNEL.GREEN).worker(runInThread)
             //,invert = $F.ColorTableFilter().invert().worker(runInThread)
-            /*,erode = $F.MorphologicalFilter().erode([
-                0, 0, 0, 1,
-                0, 0, 1, 0,
-                0, 1, 0, 0,
-                1, 0, 0, 0
-            ]).worker(runInThread)*/
             ,equalize = $F.HistogramEqualizeFilter($F.MODE.INTENSITY).worker(runInThread)
             ,equalize_gray = $F.HistogramEqualizeFilter($F.MODE.GRAY)
             //,rgbequalize = $F.HistogramEqualizeFilter($F.MODE.RGB).worker(runInThread)
@@ -253,9 +254,10 @@
             //,pixelate = $F.PixelateFilter(25, 'hexagonal').worker(runInThread)
             //,connected_components = $F.ConnectedComponentsFilter(4, 0.1, $F.MODE.HUE, 30).worker(runInThread)
             //,hueExtractor = $F.ColorMapFilter().setMode($F.MODE.HUE).extract(10, 36).worker(runInThread) // extract hues corresponding to skin color
-            //,thresh = $F.ColorTableFilter( ).threshold(0.94).worker(runInThread)
+            ,thresh = $F.ColorTableFilter().setMode($F.MODE.GRAY).threshold(0.5)
             //,hsv = $F.ColorMapFilter().RGB2HSV().worker(runInThread)
-            //,skinExtractor = $F.CompositeFilter([hsv, redChannel, invert, gray, thresh]).worker(runInThread) // extract skin region
+            // extract skin region
+            //,skinExtractor = $F.CompositeFilter([hsv, redChannel, invert, gray, thresh]).worker(runInThread)
             //,laplace = $F.ConvolutionMatrixFilter().laplace(7).worker(runInThread)
             ,twirl = $F.GeometricMapFilter().twirl(Math.PI/2, 120, 0.33, 0.27).worker(runInThread)
             //,shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(-50, 0).worker(runInThread)
@@ -291,7 +293,7 @@
                 $F.CannyEdgesFilter(35, 70, false/* use custom pre-bluring */)
             ]).worker(runInThread)
             ,faceDetector = $F.CompositeFilter([
-                gray, //equalize_gray,
+                gray,
                 $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt).params({
                     baseScale: 0.8,
                     scaleIncrement: 1.2,
@@ -301,36 +303,65 @@
                     cannyHigh: 100
                 }),
                 $F.InlineFilter(function(params, im, w, h, meta) {
-                    if (meta.container.filters[meta.index+1]) return im;
-                    var feats = meta.container.filters[meta.index-1].metaData().objects;
-                    if (feats.length)
+                    var feats = meta.container.filters[1].metaData().objects;
+                    if (feats && feats.length)
                     {
-                        var sx1, sx2, sy1, sy2, sw, sh, face = feats[0], cx = 0.5*(face.x+face.width);
-                        // restrict eyes detection on first detected face (amplify selection a bit and focus on upper face, eyes region)
-                        sw = (1.2*face.width)|0; sh = (0.8*face.height)|0;
-                        sx1 = (cx-0.5*sw)|0; sx2 = (cx+0.5*sh)|0;
-                        sy1 = face.y;  sy2 = (sy1+sh-1)|0;
-                        meta.container.filters[meta.index+1].select(sx1, sy1, sx2, sy2, true);
+                        // restrict eyes detection on first detected face
+                        // amplify selection a bit and focus on upper face, eyes region
+                        var faceDetected = feats[0];
+                        var sx1, sx2, sy1, sy2, sw, sh, cx = 0.5*(faceDetected.x+faceDetected.width);
+                        sw = (1.2*faceDetected.width)|0;
+                        sx1 = (cx-0.5*sw)|0; sx2 = (cx+0.5*sw)|0;
+                        sy1 = faceDetected.y;  sy2 = (sy1+0.8*faceDetected.height)|0;
+                        meta.container.filters[3].select(sx1, sy1, sx2, sy2, true);
                     }
                     else
                     {
-                        meta.container.filters[meta.index+1].select(false);
+                        meta.container.filters[3].select(false);
                     }
                     return im;
                 }),
                 $F.HaarDetectorFilter(haarcascade_eye.haarcascade_eye).params({
-                    baseScale: 0.8,
-                    scaleIncrement: 1.2,
-                    stepIncrement: 0.15,
+                    baseScale: 1,
+                    scaleIncrement: 1.25,
+                    stepIncrement: 0.1,
                     doCannyPruning: true,
                     cannyLow: 2,
                     cannyHigh: 100
-                })
+                }),
+                /*$F.InlineFilter(function(params, im, w, h, meta) {
+                    var feats = meta.container.filters[1].metaData().objects;
+                    if (feats && feats.length)
+                    {
+                        // restrict mouth detection on lower region of detected face
+                        var faceDetected = feats[0];
+                        var sx1, sx2, sy1, sy2, sw, sh, cx = 0.5*(faceDetected.x+faceDetected.width);
+                        sw = (0.9*faceDetected.width);
+                        sx1 = (cx-0.5*sw)|0; sx2 = (cx+0.5*sw)|0;
+                        sy2 = (faceDetected.y+2*faceDetected.height)|0;
+                        sy1 = (sy2 - 1*faceDetected.height)|0;
+                        meta.container.filters[5].select(sx1, sy1, sx2, sy2, true);
+                    }
+                    else
+                    {
+                        meta.container.filters[5].select(false);
+                    }
+                    return im;
+                }),
+                $F.HaarDetectorFilter(haarcascade_mcs_mouth.haarcascade_mcs_mouth).params({
+                    baseScale: 0.8,
+                    scaleIncrement: 1.2,
+                    stepIncrement: 0.15,
+                    doCannyPruning: false,
+                    cannyLow: 50,
+                    cannyHigh: 200
+                })*/
             ]).update(false).worker(runInThread)
             ,drawDetectedFeatures = function(detector, image) {
                 var ctx = image.domElement.getContext('2d'), i, l, rect,
                     faces = detector.filters[1].metaData().objects,
-                    eyes = detector.filters[3].metaData().objects;
+                    eyes = detector.filters[3].metaData().objects/*,
+                    mouths = detector.filters[5].metaData().objects*/;
                 // draw any features found
                 ctx.lineWidth = 2;
                 ctx.strokeStyle = "rgba(75,221,17,1)";
@@ -345,20 +376,37 @@
                     rect = eyes[i];
                     ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
                 }
+                /*ctx.strokeStyle = "rgba(200,2,2,1)";
+                for (i=0,l=mouths.length; i<l; ++i)
+                {
+                    rect = mouths[i];
+                    ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                }*/
             }
+            ,cartoonify = $F.CompositeFilter([
+                $F.MorphologicalFilter().erode(7, null, 2)
+                ,$F.ColorTableFilter().quantize(4)
+            ]).worker(runInThread)
+            ,sketchify = $F.CompositeFilter([
+                gray
+                ,$F.MorphologicalFilter().setMode($F.MODE.GRAY).erode(3, null, 2)
+                ,$F.MorphologicalFilter().setMode($F.MODE.GRAY).gradient(5)
+                ,$F.ColorTableFilter().setMode($F.MODE.GRAY).invert().quantize(9)
+            ]).worker(runInThread)
         ;
 
         function Img(id, img, text)
         {
-            id = String(id);
-            var wrapper = $('<div id="img'+id+'" class="fluid col-1-5 autocol-1-4-864 autocol-1-2-640 autocol-1-2-480 autoadjust image"></div>');
-            wrapper.append(img.domElement).append($('<span class="caption">'+id+'. '+String(text)+'</span>'));
-            /*
-            // Set actual size in memory (scaled to account for extra pixel density).
-            var scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
-            img.domElement.width = Math.floor(img.domElement.width * scale);
-            img.domElement.height = Math.floor(img.domElement.height * scale);
-            */
+            if (img)
+            {
+                id = String(id);
+                var wrapper = $('<div id="img'+id+'" class="fluid col-1-5 autocol-1-4-864 autocol-1-2-640 autocol-1-2-480 autoadjust image"></div>');
+                wrapper.append(img.domElement).append($('<span class="caption">'+id+'. '+String(text)+'</span>'));
+            }
+            else
+            {
+                var wrapper = $('<div class="fluid col-1-5 autocol-1-4-864 autocol-1-2-640 autocol-1-2-480 autoadjust image placeholder"></div>');
+            }
             return wrapper;
         }
 
@@ -389,9 +437,12 @@
             .append(Img(15, im17, 'Seamless Tile (Plugin)'))
             .append(Img(16, im18, 'Canny Edges (Plugin)'))
             .append(Img(17, im19, 'Face and Eyes Composite HAAR Detector (Plugin)'))
-            .append(Img(18, im15, 'Perlin Noise (Plugin)'))
-            .append(Img(19, im16, 'Color Flood Fill (Plugin)'))
-            .append(Img('M', displacemap, 'Displace Map'))
+            .append(Img(18, im20, 'Cartoonify'))
+            .append(Img(19, im21, 'Sketchify'))
+            .append(Img('placeholder'))
+            .append(Img(20, im16, 'Color Flood Fill (Plugin)'))
+            .append(Img(21, im15, 'Perlin Noise (Plugin)'))
+            .append(Img('M', displacemap, 'Displacement Map'))
             ;
 
             applyBt.show().on('click', apply);
@@ -443,6 +494,8 @@
                 closeThread.call(this);
                 drawDetectedFeatures(this, im19);
             });
+            im20.apply(cartoonify, closeThread);
+            im21.apply(sketchify, closeThread);
 
             return false;
         }
@@ -467,6 +520,8 @@
             im17.restore();
             im18.restore();
             im19.restore();
+            im20.restore();
+            im21.restore();
             return false;
         }
     });
