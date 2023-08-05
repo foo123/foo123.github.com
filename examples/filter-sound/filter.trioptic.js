@@ -7,7 +7,7 @@
 **/
 
 // upscale
-var upscaleX = 2, upscaleY = 2, invupscaleX = 1.0/upscaleX, invupscaleY = 1.0/upscaleY;
+var upscaleX = 1/*2*/, upscaleY = 1/*2*/, invupscaleX = 1.0/upscaleX, invupscaleY = 1.0/upscaleY;
 // precompute some values
 var i, l=1440, sintable = new FILTER.Array32F(l), squares = new FILTER.ImArray(l<<2),
     Sin = Math.sin, toRad = FILTER.CONST.toRad, toCol = FILTER.Color.Color2RGBA;
@@ -58,7 +58,6 @@ FILTER.Create({
             {
                 off = (s + iw)<<2;
                 im[off] = squares[i4]; im[off+1] = squares[i4+1]; im[off+2] = squares[i4+2];
-                im[off+3] = 255;
             }
 
             j = 0; jw=0;
@@ -70,7 +69,6 @@ FILTER.Create({
                 {
                     off = (~~(x + y*ws))<<2;
                     im[off] = squares[i4]; im[off+1] = squares[i4+1]; im[off+2] = squares[i4+2];
-                    im[off+3] = 255;
                 }
                 ++j; jw+=wr;
             }

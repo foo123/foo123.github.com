@@ -39,6 +39,7 @@
             position: relative;
             max-width: 100% !important;
             height: auto !important;
+            display: block;
         }
         strong {
             font-size:14px;
@@ -423,7 +424,7 @@
             sphereFilter = $F.GeometricMapFilter().sphere(150, 0.5, 0.5),
             polarFilter = $F.GeometricMapFilter().polar(0.5, 0.5),
             cartesianFilter = $F.GeometricMapFilter().cartesian(0.5, 0.5),
-            eye = $F.CompositeFilter([polarFilter, cartesianFilter]),
+            //eye = $F.CompositeFilter([polarFilter, cartesianFilter]),
             //rippleFilter = $F.GeometricMapFilter().ripple(10, 16, 10, 0, 0.5, 0.5),
             pixelate = $F.PixelateFilter(2, 'rectangular'),
             halftoned = $F.CompositeFilter([
@@ -492,7 +493,7 @@
                 twirlFilter,
                 sphereFilter,
                 polarFilter,
-                cartesianFilter,
+                cartesianFilter,//eye,
                 //rippleFilter,
                 displaceFilter,
                 perlinDisplaceFilter,

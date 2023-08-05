@@ -24,6 +24,12 @@
             padding:0;
             z-index:0;
         }
+        canvas {
+            position: relative;
+            width: 100% !important;
+            height: auto !important;
+            display: block;
+        }
         #audio-container {
             position:relative;
             z-index:1000;
@@ -142,7 +148,7 @@
             window.msRequestAnimationFrame ||
             function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
 
-                window.setTimeout( callback, 1000 / 60 );
+                window.setTimeout(callback, 1000 / 60);
 
             };
 
@@ -187,10 +193,8 @@
 
             ,w = window.innerWidth,  h = window.innerHeight
             ,windowHalfX = w / 2,  windowHalfY = h / 2
-            // upscale
             ,upscaleX = 2, upscaleY = 2, invupscaleX = 1.0/upscaleX, invupscaleY = 1.0/upscaleY
-            // downscale
-            ,_width = Math.min(1000, w), _height = Math.min(600, h)
+            ,_width = 360, _height = Math.round(360*h/w) - 60
         ;
 
         $('#parallel').on('click', function() {
@@ -259,8 +263,8 @@
              // prepare down-scaled visualization image
             visualization = $F.Image().restorable(false).fill('rgb(0,0,0)', 0, 0, _width, _height);
             // up-scaled final rendered visualization image
-            downscaled = $F.DimensionFilter('scale', 0, 0, invupscaleX, invupscaleY);
-            upscaled = $F.DimensionFilter('scale', 0, 0, upscaleX, upscaleY);
+            //downscaled = $F.DimensionFilter('scale', 0, 0, invupscaleX, invupscaleY);
+            //upscaled = $F.DimensionFilter('scale', 0, 0, upscaleX, upscaleY);
             container.append(visualization.domElement);
 
 
@@ -273,9 +277,9 @@
             displace.componentX = $F.CHANNEL.BLUE;
             displace.componentY = $F.CHANNEL.GREEN;
 
-            blur = $F.ConvolutionMatrixFilter().boxBlur(3);
+            blur = $F.ConvolutionMatrixFilter().fastGauss(3);
 
-            triopticVisualizer = $F.CompositeFilter([downscaled, trioptic, displace, blur, upscaled]).stable(true);
+            triopticVisualizer = $F.CompositeFilter([/*downscaled,*/ trioptic, displace, blur/*, upscaled*/]).stable(true);
 
             if (useParallelFilters)
             {
