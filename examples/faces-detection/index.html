@@ -187,7 +187,7 @@ require(['jQuery', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'DatGU
             startTime('Feature Detect');
             // detect the feature
             new HAAR.Detector(haarcascade_frontalface_alt.haarcascade_frontalface_alt, useParallel)
-                    .image(canvas, 0.5) // use the image
+                    .image(canvas, 150 / image.width) // use the image
                     .interval(40) // set detection interval for asynchronous detection (if not parallel)
                     .complete(function() {  // onComplete callback
                         
@@ -217,8 +217,8 @@ require(['jQuery', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'DatGU
                         Log(this.objects.toString());
                         alert(l+" Object(s) found");
                     })
-                    .cannyThreshold({low:90, high:200})  // custom thresholds for canny pruning (for best results)
-                    .detect(1, 1.1, 0.12, 1, 0.2, true); // go
+                    .cannyThreshold({low:20, high:600})  // custom thresholds for canny pruning (for best results)
+                    .detect(1, 1.1, 0.1, 1, 0.2, true); // go
         };
         startTime('Image Load');
         image.src = src; // load it
