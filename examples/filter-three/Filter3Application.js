@@ -78,18 +78,6 @@ function setDimensions()
     camera.updateProjectionMatrix();
 }
 
-function loadImage(src, cb)
-{
-    var img = new Image(), fimg = new $F.Image();
-    img.onload = function() {
-        fimg.image(img);
-        if (cb) cb();
-    };
-    img.src = src;
-    return fimg;
-}
-
-
 var self = {
 
     init : function() {
@@ -116,7 +104,7 @@ var self = {
         for (var i=0; i<8;i++)
         {
             // set closure callback
-            image[i] = loadImage(i&1?document.getElementById('Fidel').src:document.getElementById('Che').src, callback(i));
+            image[i] = $F.Image.load(i&1?document.getElementById('Fidel').src:document.getElementById('Che').src, callback(i));
             texture[i] = new THREE.Texture(image[i].domElement);
         }
 

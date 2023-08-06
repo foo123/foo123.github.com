@@ -341,7 +341,6 @@
             perlin = null,
             alphamask = $F.Image().restorable(false).fill("rgb(0,0,0)", 0, 0, 200, 200),
             postVideo = $F.Image().restorable(false),
-            //postVideo = $F.ScaledImage(0.8, 0.8).restorable(false),
 
              // filters
             flipX = $F.AffineMatrixFilter().flipX(),
@@ -515,27 +514,16 @@
             cX1 = 0, cX2 = 0, cY1 = 0, cY2 = 0, stats
         ;
 
-        function loadImage(src, cb)
-        {
-            var img = new Image(), fimg = $F.Image();
-            img.onload = function() {
-                fimg.image(img);
-                if (cb) cb();
-            };
-            img.src = src;
-            return fimg;
-        }
-
         function init()
         {
-            blend.setInput(1, icon = loadImage($F.Browser.isChrome
+            blend.setInput(1, icon = $F.Image.load($F.Browser.isChrome
             ? "../common/assets/chrome.png"
             : ($F.Browser.isOpera
             ? "../common/assets/opera.png"
             : ($F.Browser.isIE
             ? "../common/assets/ie.png"
             : "../common/assets/firefox.png"))).restorable(false));
-            //blend.setInput(2, loadImage("../common/assets/chrome.png").restorable(false));
+            //blend.setInput(2, $F.Image.load("../common/assets/chrome.png").restorable(false));
             blendSelect.style.display = "none";
             pixelationPattern.style.display = "none";
             pixelationScale.style.display = "none";

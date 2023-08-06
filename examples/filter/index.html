@@ -127,8 +127,8 @@
 
     <script>//<![CDATA[
     "use strict";
-    require(['cascades/haarcascade_frontalface_alt', 'cascades/haarcascade_eye', /*'cascades/haarcascade_mcs_mouth',*/ 'jQuery', 'FILTER'],
-    function(haarcascade_frontalface_alt, haarcascade_eye, /*haarcascade_mcs_mouth,*/ $, $F) {
+    require(['cascades/haarcascade_frontalface_alt', 'cascades/haarcascade_eye', 'cascades/haarcascade_mcs_mouth', 'jQuery', 'FILTER'],
+    function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $, $F) {
 
         // utils
         var runInThread = /(&|\?)parallel\b/i.test(location.href);
@@ -158,19 +158,8 @@
             ,perlinNoise = $F.PerlinNoiseFilter(80, 50, 4, true, false, [[0,0],[10,10], [20,10], [10,20]], Math.random(), true)
         ;
 
-        function loadImage(src, cb)
-        {
-            var img = new Image(), fimg = $F.Image();
-            img.onload = function() {
-                fimg.image(img);
-                if (cb) cb();
-            };
-            img.src = src;
-            return fimg;
-        }
-
         // images
-        var im1 = loadImage(che, function() {
+        var im1 = $F.Image.load(che, function() {
                 // create a displace map image
                 displacemap.setDimensions(im1.width, im1.height);
                 var octx = displacemap.domElement.getContext('2d');
@@ -190,26 +179,26 @@
 
                 init();
             })
-            ,im2 = loadImage(che)
-            ,im3 = loadImage(che)
-            ,im4 = loadImage(che)
-            ,im5 = loadImage(che)
-            ,im6 = loadImage(che)
-            ,im7 = loadImage(che)
-            ,im8 = loadImage(che)
-            ,im9 = loadImage(che)
-            ,im10 = loadImage(che)
-            ,im11 = loadImage(che)
-            ,im12 = loadImage(che)
-            ,im13 = loadImage(che)
-            ,im14 = loadImage(che)
+            ,im2 = $F.Image.load(che)
+            ,im3 = $F.Image.load(che)
+            ,im4 = $F.Image.load(che)
+            ,im5 = $F.Image.load(che)
+            ,im6 = $F.Image.load(che)
+            ,im7 = $F.Image.load(che)
+            ,im8 = $F.Image.load(che)
+            ,im9 = $F.Image.load(che)
+            ,im10 = $F.Image.load(che)
+            ,im11 = $F.Image.load(che)
+            ,im12 = $F.Image.load(che)
+            ,im13 = $F.Image.load(che)
+            ,im14 = $F.Image.load(che)
             ,im15 = $F.Image()
-            ,im16 = loadImage(yinyang)
-            ,im17 = loadImage(che)
-            ,im18 = loadImage(che)
-            ,im19 = loadImage(face_model)
-            ,im20 = loadImage(model)
-            ,im21 = loadImage(model)
+            ,im16 = $F.Image.load(yinyang)
+            ,im17 = $F.Image.load(che)
+            ,im18 = $F.Image.load(che)
+            ,im19 = $F.Image.load(model/*face_model*/)
+            ,im20 = $F.Image.load(model)
+            ,im21 = $F.Image.load(model)
 
              // filters
             //,redChannel = $F.ColorMatrixFilter().worker(runInThread).redChannel()
@@ -306,18 +295,41 @@
                     var feats = meta.container.filters[1].metaData().objects;
                     if (feats && feats.length)
                     {
-                        // restrict eyes detection on first detected face
-                        // amplify selection a bit and focus on upper face, eyes region
-                        var faceDetected = feats[0];
-                        var sx1, sx2, sy1, sy2, sw, sh, cx = 0.5*(faceDetected.x+faceDetected.width);
-                        sw = (1.2*faceDetected.width)|0;
-                        sx1 = (cx-0.5*sw)|0; sx2 = (cx+0.5*sw)|0;
-                        sy1 = faceDetected.y;  sy2 = (sy1+0.8*faceDetected.height)|0;
-                        meta.container.filters[3].select(sx1, sy1, sx2, sy2, true);
+                        // 105(y), 165(ey), 215(my), 265(160 h)
+                        var face = feats[0],
+                            fx = face.x,
+                            fy = face.y,
+                            fw = face.width,
+                            fh = face.height,
+                            cx = (fx + fw)/2, // center face vertical line
+                            ey = fy + 0.375*fh, // eye horizontal line from face symmetry
+                            my = fy + 0.6875*fh, // mouth horizontal line from face symmetry
+                            // amplify selection a bit
+                            sx = 1.4/2, sye = 0.6, sym = 1.1,
+                            eyesRegion, mouthRegion
+                        ;
+
+                        // restrict eyeDetector in eyes region of first detected face
+                        eyesRegion = [cx - sx*fw, ey - sye*fh, cx + sx*fw, ey + sye*fh];
+                        meta.container.filters[3].select(
+                        eyesRegion[0],
+                        eyesRegion[1],
+                        eyesRegion[2],
+                        eyesRegion[3],
+                        true);
+                        // restrict mouthDetector in mouth region of first detected face
+                        mouthRegion = [cx - sx*fw, my - sym*fh, cx + sx*fw, my + sym*fh];
+                        meta.container.filters[4].select(
+                        mouthRegion[0],
+                        mouthRegion[1],
+                        mouthRegion[2],
+                        mouthRegion[3],
+                        true);
                     }
                     else
                     {
                         meta.container.filters[3].select(false);
+                        meta.container.filters[4].select(false);
                     }
                     return im;
                 }),
@@ -326,62 +338,53 @@
                     scaleIncrement: 1.25,
                     stepIncrement: 0.1,
                     doCannyPruning: true,
+                    minNeighbors: 2,
                     cannyLow: 2,
                     cannyHigh: 100
                 }),
-                /*$F.InlineFilter(function(params, im, w, h, meta) {
-                    var feats = meta.container.filters[1].metaData().objects;
-                    if (feats && feats.length)
-                    {
-                        // restrict mouth detection on lower region of detected face
-                        var faceDetected = feats[0];
-                        var sx1, sx2, sy1, sy2, sw, sh, cx = 0.5*(faceDetected.x+faceDetected.width);
-                        sw = (0.9*faceDetected.width);
-                        sx1 = (cx-0.5*sw)|0; sx2 = (cx+0.5*sw)|0;
-                        sy2 = (faceDetected.y+2*faceDetected.height)|0;
-                        sy1 = (sy2 - 1*faceDetected.height)|0;
-                        meta.container.filters[5].select(sx1, sy1, sx2, sy2, true);
-                    }
-                    else
-                    {
-                        meta.container.filters[5].select(false);
-                    }
-                    return im;
-                }),
                 $F.HaarDetectorFilter(haarcascade_mcs_mouth.haarcascade_mcs_mouth).params({
-                    baseScale: 0.8,
-                    scaleIncrement: 1.2,
-                    stepIncrement: 0.15,
-                    doCannyPruning: false,
-                    cannyLow: 50,
-                    cannyHigh: 200
-                })*/
+                    baseScale: 1,
+                    scaleIncrement: 1.25,
+                    stepIncrement: 0.1,
+                    doCannyPruning: true,
+                    cannyLow: 2,
+                    cannyHigh: 150
+                })
             ]).update(false).worker(runInThread)
             ,drawDetectedFeatures = function(detector, image) {
                 var ctx = image.domElement.getContext('2d'), i, l, rect,
                     faces = detector.filters[1].metaData().objects,
-                    eyes = detector.filters[3].metaData().objects/*,
-                    mouths = detector.filters[5].metaData().objects*/;
+                    eyes = detector.filters[3].metaData().objects,
+                    mouths = detector.filters[4].metaData().objects;
                 // draw any features found
                 ctx.lineWidth = 2;
-                ctx.strokeStyle = "rgba(75,221,17,1)";
-                for (i=0,l=faces.length; i<l; ++i)
+                if (faces)
                 {
-                    rect = faces[i];
-                    ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                    ctx.strokeStyle = "rgba(75,221,17,1)";
+                    for (i=0,l=faces.length; i<l; ++i)
+                    {
+                        rect = faces[i];
+                        ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                    }
                 }
-                ctx.strokeStyle = "rgba(200,2,2,1)";
-                for (i=0,l=eyes.length; i<l; ++i)
+                if (eyes)
                 {
-                    rect = eyes[i];
-                    ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                    ctx.strokeStyle = "rgba(255,127,0,1)";
+                    for (i=0,l=eyes.length; i<l; ++i)
+                    {
+                        rect = eyes[i];
+                        ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                    }
                 }
-                /*ctx.strokeStyle = "rgba(200,2,2,1)";
-                for (i=0,l=mouths.length; i<l; ++i)
+                if (mouths)
                 {
-                    rect = mouths[i];
-                    ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
-                }*/
+                    ctx.strokeStyle = "rgba(200,2,2,1)";
+                    for (i=0,l=mouths.length; i<l; ++i)
+                    {
+                        rect = mouths[i];
+                        ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                    }
+                }
             }
             ,cartoonify = $F.CompositeFilter([
                 $F.MorphologicalFilter().erode(7, null, 2)
@@ -436,7 +439,7 @@
             .append(Img(14, im14, 'Histogram Equalization (Plugin)'))
             .append(Img(15, im17, 'Seamless Tile (Plugin)'))
             .append(Img(16, im18, 'Canny Edges (Plugin)'))
-            .append(Img(17, im19, 'Face and Eyes Composite HAAR Detector (Plugin)'))
+            .append(Img(17, im19, 'Face, Eyes and Mouth Detector (Plugin)'))
             .append(Img(18, im20, 'Cartoonify'))
             .append(Img(19, im21, 'Sketchify'))
             .append(Img('placeholder'))
