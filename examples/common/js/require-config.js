@@ -38,6 +38,7 @@ baseUrl: /^https?:\/\/foo123\./.test(location.href) ? "/examples/common/js" : "/
     ,Unicache: "Unicache.min"
     ,HAAR: "haar-detector.min"
     ,cascades: "../cascades"
+    //,FILTER: "../../../../FILTER.js/build/filter"
     ,FILTER: "filter.min"
     ,MOD3: "mod3.min"
     ,Sort: "sort.min"

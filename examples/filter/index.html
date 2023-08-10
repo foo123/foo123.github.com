@@ -109,11 +109,13 @@
     <span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
 
     <header id="header" class="fluid col-1-1">
-        <h1>Image Processing with Filter.js v.<span id="lib-version">0</span></h1><br /><br />
+        <h1>Image Processing with Filter.js v.<span id="lib-version">0</span> Mode:<b id="mode"></b></h1>
+        <br /><br />
     </header>
     <div class="fluid col-1-1" style="padding:0;margin:0;position:relative;z-index:1000;margin-left:25px">
         <button id="synchronous" class="button">Synchronous</button>
         <button id="parallel" class="button">Parallel</button>
+        <button id="webgl" class="button">WebGL</button>
         <button id="applyBt" style="display:none" class="button">Apply</button>
         <button id="restoreBt" style="display:none" class="button">Restore</button><br />
         <i style="font-size:11px"><b>Note:</b> images may appear as blurred if scaled from original dimensions due to responsive design</i>
@@ -131,13 +133,20 @@
     function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $, $F) {
 
         // utils
-        var runInThread = /(&|\?)parallel\b/i.test(location.href);
+        var runInThread = /\?parallel\b/i.test(location.href),
+            runInWebGL = /\?webgl\b/i.test(location.href);
 
         if (runInThread && !$F.Browser.supportsWorker)
         {
             alert('Browser does not support workers');
         }
         runInThread = !!($F.Browser.supportsWorker && runInThread);
+        if (runInWebGL && !$F.supportsGLSL())
+        {
+            alert('Browser does not support WebGL');
+        }
+        runInWebGL = !!($F.supportsGLSL() && runInWebGL);
+        document.getElementById('mode').textContent = runInThread ? 'Parallel' : (runInWebGL ? 'WebGL' : 'Synchronous');
 
         document.getElementById('lib-version').innerHTML = $F.VERSION;
 
@@ -201,23 +210,35 @@
             ,im21 = $F.Image.load(model)
 
              // filters
-            //,redChannel = $F.ColorMatrixFilter().worker(runInThread).redChannel()
-            ,redChannel = $F.InlineFilter(function(params, im, w, h) {
-                // get red channel using an inline filter that can run in parallel worker also
-                for (var i=0,l=im.length; i<l; i+=4)
-                {
-                    im[ i+1 ] = 0; // remove green channel
-                    im[ i+2 ] = 0; // remove blue channel
-                }
-                return im;
-            }).worker(runInThread)
-            ,greenChannel = $F.ColorMatrixFilter().greenChannel().worker(runInThread)
+            //,redChannel = $F.ColorMatrixFilter().worker(runInThread).makeGLSL(runInWebGL).redChannel()
+            ,redChannel = $F.InlineFilter({
+                filter: function(params, im, w, h) {
+                    // get red channel using an inline filter that can run in parallel worker also
+                    for (var i=0,l=im.length; i<l; i+=4)
+                    {
+                        im[ i+1 ] = 0; // remove green channel
+                        im[ i+2 ] = 0; // remove blue channel
+                    }
+                    return im;
+                },
+                // provide webgl shader as well
+                shader: [
+                'precision mediump float;',
+                'varying vec2 pix;',
+                'uniform sampler2D img;',
+                'void main(void) {',
+                '   vec4 col = texture2D(img, pix);',
+                '   gl_FragColor = vec4(col.r, 0.0, 0.0, col.a);', // remove green,blue channel
+                '}'
+                ].join('\n')
+            }).worker(runInThread).makeGLSL(runInWebGL)
+            ,greenChannel = $F.ColorMatrixFilter().greenChannel().worker(runInThread).makeGLSL(runInWebGL)
             //,blueChannel = $F.ColorMatrixFilter().blueChannel().worker(runInThread)
-            ,blueChannel = $F.ColorTableFilter().blueChannel().worker(runInThread)
-            ,clr = $F.ColorMatrixFilter().colorize(0xff0000).worker(runInThread)
+            ,blueChannel = $F.ColorTableFilter().blueChannel().worker(runInThread).makeGLSL(runInWebGL)
+            ,clr = $F.ColorMatrixFilter().colorize(0xff0000).worker(runInThread).makeGLSL(runInWebGL)
             //,gamma = $F.ColorTableFilter().gammaCorrection(1.7).worker(runInThread)
             //,solarize = $F.ColorTableFilter().solarize(0.5).worker(runInThread)
-            ,posterize = $F.ColorTableFilter().posterize(4).worker(runInThread)
+            ,posterize = $F.ColorTableFilter().posterize(4).worker(runInThread).makeGLSL(runInWebGL)
             //,extract = $F.ColorTableFilter().extract($F.CHANNEL.RED, [0x75, 0x91]).worker(runInThread)
             //,mask = $F.ColorTableFilter().mask(0xffff7732).worker(runInThread)
             //,swapChannels = $F.ColorMatrixFilter().swapChannels($F.CHANNEL.BLUE, $F.CHANNEL.GREEN).worker(runInThread)
@@ -227,12 +248,12 @@
             ,equalize_gray = $F.HistogramEqualizeFilter($F.MODE.GRAY)
             //,rgbequalize = $F.HistogramEqualizeFilter($F.MODE.RGB).worker(runInThread)
             //,noise = $F.NoiseFilter(-127, 127).worker(runInThread)
-            ,sepia = $F.ColorMatrixFilter().sepia2().worker(runInThread)
+            ,sepia = $F.ColorMatrixFilter().sepia2().worker(runInThread).makeGLSL(runInWebGL)
             ,gray = $F.ColorMatrixFilter().grayscale().worker(runInThread)
             //,binary = $F.ColorTableFilter().threshold(0.6).worker(runInThread)
             //,threshold = $F.ColorMatrixFilter().thresholdRGB(128).worker(runInThread)
-            ,grc = $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread)
-            //,median = $F.StatisticalFilter().median(5).worker(runInThread)
+            ,grc = $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread).makeGLSL(runInWebGL)
+            ,median = $F.StatisticalFilter().median(9)
             //,maximum = $F.StatisticalFilter().maximum(15).worker(runInThread)
             ,halftoned = $F.CompositeFilter([
                 gray,
@@ -248,7 +269,7 @@
             // extract skin region
             //,skinExtractor = $F.CompositeFilter([hsv, redChannel, invert, gray, thresh]).worker(runInThread)
             //,laplace = $F.ConvolutionMatrixFilter().laplace(7).worker(runInThread)
-            ,twirl = $F.GeometricMapFilter().twirl(Math.PI/2, 120, 0.33, 0.27).worker(runInThread)
+            ,twirl = $F.GeometricMapFilter().twirl(Math.PI/2, 120, 0.33, 0.27).worker(runInThread).makeGLSL(runInWebGL)
             //,shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(-50, 0).worker(runInThread)
             //,rotate = $F.AffineMatrixFilter().rotate(-Math.PI).worker(runInThread)
             //,blur = $F.ConvolutionMatrixFilter().boxBlur(3).worker(runInThread)
@@ -256,13 +277,13 @@
             //,vertical = $F.ConvolutionMatrixFilter().verticalBlur(21).worker(runInThread)
             //,diagonal = $F.ConvolutionMatrixFilter().directionalBlur(45, 9).worker(runInThread)
             //,glow = $F.ConvolutionMatrixFilter().glow().worker(runInThread)
-            ,emboss = $F.ConvolutionMatrixFilter().emboss().worker(runInThread)
+            ,emboss = $F.ConvolutionMatrixFilter().emboss().worker(runInThread).makeGLSL(runInWebGL)
             ,grsb = $F.CompositeFilter([
                 gray,
                 $F.ConvolutionMatrixFilter().sobel(3).setMode($F.MODE.GRAY)
                 /*, binary*/
-            ]).worker(runInThread)
-            ,displace = $F.DisplacementMapFilter(displacemap).worker(runInThread)
+            ]).worker(runInThread).makeGLSL(runInWebGL)
+            ,displace = $F.DisplacementMapFilter(displacemap).worker(runInThread).makeGLSL(runInWebGL)
             ,floodFill = $F.CompositeFilter([
                 /*                 x0, y0,  color,   tolerance, exterior border */
                 $F.ColorFillFilter(25, 75,  0xff0000, 0.2,       0x0),
@@ -389,13 +410,13 @@
             ,cartoonify = $F.CompositeFilter([
                 $F.MorphologicalFilter().erode(7, null, 2)
                 ,$F.ColorTableFilter().quantize(4)
-            ]).worker(runInThread)
+            ]).worker(runInThread).makeGLSL(runInWebGL)
             ,sketchify = $F.CompositeFilter([
                 gray
                 ,$F.MorphologicalFilter().setMode($F.MODE.GRAY).erode(3, null, 2)
                 ,$F.MorphologicalFilter().setMode($F.MODE.GRAY).gradient(5)
                 ,$F.ColorTableFilter().setMode($F.MODE.GRAY).invert().quantize(9)
-            ]).worker(runInThread)
+            ]).worker(runInThread).makeGLSL(runInWebGL)
         ;
 
         function Img(id, img, text)
@@ -415,6 +436,9 @@
 
         function init()
         {
+            $('#webgl').on( 'click', function() {
+                location.href = baseUrl + '?webgl=1';
+            });
             $('#parallel').on( 'click', function() {
                 location.href = baseUrl + '?parallel=1';
             });
