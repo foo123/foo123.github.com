@@ -537,12 +537,12 @@
                 location.href = baseUrl + '?synchronous=1';
             });
 
-            blend.setInput(1, icon = $F.Image.load($F.Browser.isChrome
-            ? "../common/assets/chrome.png"
+            blend.setInput(1, icon = $F.Image.load($F.Browser.isIE
+            ? "../common/assets/ie.png"
             : ($F.Browser.isOpera
             ? "../common/assets/opera.png"
-            : ($F.Browser.isIE
-            ? "../common/assets/ie.png"
+            : ($F.Browser.isChrome
+            ? "../common/assets/chrome.png"
             : "../common/assets/firefox.png"))).restorable(false));
             //blend.setInput(2, $F.Image.load("../common/assets/chrome.png").restorable(false));
             blendSelect.style.display = "none";
