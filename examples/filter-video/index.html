@@ -234,6 +234,7 @@
                 <optgroup label="Other Plugins and Composite Filters">
                     <option value='#'>Noise</option>
                     <option value='#'>Alpha Mask (ChannelCopy)</option>
+                    <option value='#'>Automatic Threshold</option>
                     <option value='#'>Equalize Histogram</option>
                     <option value='#'>Bokeh (Depth-of-Field)</option>
                     <option value='#'>Halftone</option>
@@ -395,6 +396,9 @@
             blueCT = $F.ColorTableFilter().blueChannel().makeGLSL(runInWebGL),
             clr = $F.ColorMatrixFilter().colorize(0xfdc171).makeGLSL(runInWebGL),
             equ = $F.HistogramEqualizeFilter($F.MODE.INTENSITY),
+            otsu = $F.CompositeFilter([
+                grc, invert, $F.ThresholdFilter($F.MODE.GRAY)
+            ]),
             minimum = $F.StatisticalFilter().minimum(3).makeGLSL(runInWebGL),
             maximum = $F.StatisticalFilter().maximum(3).makeGLSL(runInWebGL),
             median3 = $F.StatisticalFilter().median(3).makeGLSL(runInWebGL),
@@ -514,6 +518,7 @@
                 blend,
                 noise,
                 alphaMask,
+                otsu,
                 equ,
                 bokeh,
                 halftoned,
