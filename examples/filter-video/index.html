@@ -118,6 +118,11 @@
             padding: 2px 0 !important;
             border-bottom: 1px solid #000 !important;
         }
+        video#video, #filters canvas {
+            position: relative;
+            width: 100% !important;
+            height auto;
+        }
     </style>
     <script src="../common/js/require.js"></script>
     <script src="../common/js/require-config.js"></script>
@@ -144,8 +149,8 @@
             <video id="video" loop="true" controls="true">
                 <!--<source src="../common/assets/minions.mp4" type="video/mp4">
                 <source src="../common/assets/minions.ogv" type="video/ogv">-->
-                <source src="../common/assets/Waddys_Takeoff-The_Aftermath.mp4" type="video/mp4">
-                <source src="../common/assets/Waddys_Takeoff-The_Aftermath.webm" type="video/webm">
+                <source src="../common/assets/waddys-takeoff-the-aftermath_CKWkAZ1r.mp4" type="video/mp4">
+                <source src="../common/assets/waddys-takeoff-the-aftermath_CKWkAZ1r.webm" type="video/webm">
                 Video is not supported
             </video>
         </div>
@@ -299,23 +304,17 @@
      * Provides requestAnimationFrame in a cross browser way.
      * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
      */
-
-    if (!window.requestAnimationFrame) {
-
+    if (!window.requestAnimationFrame)
+    {
         window.requestAnimationFrame = (function() {
-
             return window.webkitRequestAnimationFrame ||
             window.mozRequestAnimationFrame ||
             window.oRequestAnimationFrame ||
             window.msRequestAnimationFrame ||
-            function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
-
-                window.setTimeout( callback, 1000 / 60 );
-
+            function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
+                window.setTimeout(callback, 1000 / 60);
             };
-
         })();
-
     }
 
     // utils
@@ -746,6 +745,15 @@
             addEvent(video, "play", processVideo);
         }
 
+        /*function resizeVideo()
+        {
+            var w = Math.min(container.clientWidth, 300),
+                vw = video.videoWidth, vh = video.videoHeight;
+            console.log(video.videoWidth);
+            video.setAttribute('width', w);
+            video.setAttribute('height', vh*w/vw);
+            console.log(video.videoWidth);
+        }*/
         function processVideo(event)
         {
             if (video.paused || video.ended)  return;
