@@ -449,7 +449,7 @@
             ]),
             alphaMask = $F.ChannelCopyFilter($F.CHANNEL.BLUE, $F.CHANNEL.ALPHA, 0.5, 0.5, 0).setMode($F.MODE.COLOR).setInput("source", alphamask).makeGLSL(runInWebGL),
             blend = $F.BlendFilter(["normal", 1, 1, 1/*,
-                                    "screen", 50, 40, 1*/]),
+                                    "screen", 50, 40, 1*/]).makeGLSL(runInWebGL),
             ycbcr = $F.ColorMatrixFilter().RGB2YCbCr().makeGLSL(runInWebGL),
             hsv = $F.ColorMapFilter().RGB2HSV().makeGLSL(runInWebGL),
             hsl = $F.ColorMapFilter().RGB2HSL().makeGLSL(runInWebGL),
