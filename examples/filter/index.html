@@ -274,7 +274,7 @@
             //,shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(-50, 0).worker(runInThread)
             //,rotate = $F.AffineMatrixFilter().rotate(-Math.PI).worker(runInThread)
             //,blur = $F.ConvolutionMatrixFilter().boxBlur(3).worker(runInThread)
-            ,gauss = $F.ConvolutionMatrixFilter().fastGauss(6, 3).setMode($F.MODE.GRAY).worker(runInThread)//gaussBlur(3)
+            ,gauss = $F.ConvolutionMatrixFilter().fastGauss(3, 5).setMode($F.MODE.GRAY).worker(runInThread)//gaussBlur(3)
             //,vertical = $F.ConvolutionMatrixFilter().verticalBlur(21).worker(runInThread)
             //,diagonal = $F.ConvolutionMatrixFilter().directionalBlur(45, 9).worker(runInThread)
             //,glow = $F.ConvolutionMatrixFilter().glow().worker(runInThread)
@@ -301,7 +301,7 @@
                                         2,  4,  5,  4, 2], 1.0/159.0).setMode($F.MODE.GRAY)*/
             ,canny = $F.CompositeFilter([
                 gray, equalize_gray, gauss,
-                $F.CannyEdgesFilter(20, 100, false/* use custom pre-bluring */)
+                $F.CannyEdgesFilter(40, 78, false/* use custom pre-bluring */)
             ]).worker(runInThread).makeGLSL(runInWebGL)
             ,faceDetector = $F.CompositeFilter([
                 gray,
