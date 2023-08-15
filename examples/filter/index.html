@@ -152,6 +152,7 @@
 
         var baseUrl = location.href.split(/#|\?/)[0]
             ,che = '../common/assets/che.jpg'
+            //,lenna = '../common/assets/lenna.png'
             ,face_model = '../common/assets/model_face.jpg'
             ,yinyang = '../common/assets/yin_yang_blank.png'
             ,model = '../common/assets/model1.jpg'
@@ -204,7 +205,7 @@
             ,im15 = $F.Image()
             ,im16 = $F.Image.load(yinyang)
             ,im17 = $F.Image.load(che)
-            ,im18 = $F.Image.load(che)
+            ,im18 = $F.Image.load(che/*lenna*/)
             ,im19 = $F.Image.load(model/*face_model*/)
             ,im20 = $F.Image.load(model)
             ,im21 = $F.Image.load(model)
@@ -252,7 +253,7 @@
             ,gray = $F.ColorMatrixFilter().grayscale().worker(runInThread)
             //,binary = $F.ColorTableFilter().threshold(0.6).worker(runInThread)
             //,threshold = $F.ColorMatrixFilter().thresholdRGB(128).worker(runInThread)
-            ,grc = $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread).makeGLSL(runInWebGL)
+            //,grc = $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread).makeGLSL(runInWebGL)
             ,median = $F.StatisticalFilter().median(9)
             //,maximum = $F.StatisticalFilter().maximum(15).worker(runInThread)
             ,halftoned = $F.CompositeFilter([
@@ -300,8 +301,8 @@
                                         2,  4,  5,  4, 2], 1.0/159.0).setMode($F.MODE.GRAY)*/
             ,canny = $F.CompositeFilter([
                 gray, equalize_gray, gauss,
-                $F.CannyEdgesFilter(35, 70, false/* use custom pre-bluring */)
-            ]).worker(runInThread)
+                $F.CannyEdgesFilter(20, 100, false/* use custom pre-bluring */)
+            ]).worker(runInThread).makeGLSL(runInWebGL)
             ,faceDetector = $F.CompositeFilter([
                 gray,
                 $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt).params({
@@ -445,6 +446,7 @@
             $('#synchronous').on( 'click', function() {
                 location.href = baseUrl + '?synchronous=1';
             });
+            //console.log($F.devicePixelRatio);
 
             container
             .append(Img(1, im1, 'Original Image'))
@@ -500,7 +502,29 @@
                 closeThread.call(this);
                 im5.deselect();
             });
-            im6.apply(grc, closeThread);
+            //im6.apply(grc, closeThread);
+            // break img in parts and process each part in parallel with mapReduce
+            im6.mapReduce([
+            {
+            from: {x:0, y:0}, to: {x:0.5, y:0.5},
+            filter: $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread)
+            },
+            {
+            from: {x:0.5, y:0}, to: {x:1, y:0.5},
+            filter: $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread)
+            },
+            {
+            from: {x:0.5, y:0.5}, to: {x:1, y:1},
+            filter: $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread)
+            },
+            {
+            from: {x:0, y:0.5}, to: {x:0.5, y:1},
+            filter: $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread)
+            }
+            ], function(img, data, from, to, absolute, filter) {
+                filter.worker(false);
+                img.setDataToSelection(data, from.x, from.y, to.x, to.y, absolute);
+            });
             im7.apply(sepia, closeThread);
             im8.apply(posterize, closeThread);
             //im9.apply(gauss, closeThread);
