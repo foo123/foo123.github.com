@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="description" content="Real-Time Cartoonify with Filter.js" />
+<meta property="og:title" content="Real-Time Cartoonify with Filter.js">
+<meta property="og:description" content="Real-Time Cartoonify with Filter.js">
+<meta property="og:image" content="https://foo123.github.io/thumbs/cartoonify.png">
+<meta property="og:url" content="https://foo123.github.io/examples/cartoonify-yourself/">
+<meta name="twitter:card" content="summary">
+<title>Real-Time Cartoonify with Filter.js</title>
+<link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+<link rel="stylesheet" type="text/css" href="../common/css/datgui.min.css" />
+<style type="text/css">
+body {
+    position: relative;
+    background-color: #121212;
+    font-family: Helvetica, sans-serif;
+    font-size: 16px;
+    color: #aaa;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    border: none;
+    text-align: center;
+}
+.button {
+    -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
+    box-shadow:inset 0px 1px 0px 0px #f5978e;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
+    background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
+    background-color:#f24537;
+    -webkit-border-top-left-radius:20px;
+    -moz-border-radius-topleft:20px;
+    border-top-left-radius:20px;
+    -webkit-border-top-right-radius:20px;
+    -moz-border-radius-topright:20px;
+    border-top-right-radius:20px;
+    -webkit-border-bottom-right-radius:20px;
+    -moz-border-radius-bottomright:20px;
+    border-bottom-right-radius:20px;
+    -webkit-border-bottom-left-radius:20px;
+    -moz-border-radius-bottomleft:20px;
+    border-bottom-left-radius:20px;
+    text-indent:0;
+    border:1px solid #d02718;
+    display:inline-block;
+    color:#ffffff;
+    font-family:Arial;
+    font-size:15px;
+    font-weight:bold;
+    font-style:normal;
+    height:50px;
+    line-height:50px;
+    width:2000px;
+    text-decoration:none;
+    text-align:center;
+    text-shadow:1px 1px 0px #810e05;
+}
+.button:hover {
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
+    background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
+    background-color:#c62d1f;
+}.button:active {
+    position:relative;
+    top:1px;
+}
+.button {
+    font-size:12px;
+    width:100px;
+    height:40px;
+    line-height:40px;
+    cursor:pointer;
+    position:relative;
+}
+#forkongithub a{background:#c83022;color:#fff;}
+#camera,#output {
+    position: relative;
+    margin: 0 auto;
+    padding: 0;
+    border: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+#camera > video,
+#output > canvas {
+    position: relative;
+    width: 100% !important;
+    height: auto !important;
+}
+.guidat {
+    position: relative;
+    width: calc(100% - 20px) !important;
+}
+.guidat-controller.number {
+  border-left: 5px solid #c83022;
+}
+.guidat-controller.string {
+  border-left: 5px solid #c83022;
+}
+.guidat-controller.string input {
+  border: 0;
+  color: #c83022;
+  margin-right: 2px;
+  width: 148px;
+}
+.guidat-controller.boolean {
+  border-left: 5px solid #c83022;
+}
+.guidat-controller.function {
+  border-left: 5px solid #c83022;
+}
+.guidat-controller.number input[type=text] {
+  width: 35px;
+  margin-left: 5px;
+  margin-right: 2px;
+  color: #efefef;
+}
+.guidat-controller .guidat-slider-bg .guidat-slider-fg:hover,
+.guidat-controller.active .guidat-slider-bg .guidat-slider-fg {
+  background-color: #c83022;
+}
+.guidat-slider-fg {
+  background-color: #c83022;
+}
+</style>
+</head>
+<body class="responsive-864-container">
+<span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
+<header id="header">
+<h1>Cartoonify Yourself in Real-Time with Filter.js v.<span id="version"></span>
+<br />Mode:<b id="mode"></b></h1><br /><br />
+<i>note: Not good lighting conditions will have suboptimal results</i>
+</header>
+<br />
+
+<button id="webgl" class="button">WebGL</button>
+<button id="synchronous" class="button">Synchronous</button>
+<!--<button id="parallel" class="button">Parallel</button>-->
+<br />
+<div class="fluid col-1-1" style="margin:60px auto 0 auto;max-width:1280px;display:block;">
+<!--<div id="controls" class="fluid col-1-5"></div>-->
+<div id="camera" class="fluid col-1-2"></div>
+<div id="output" class="fluid col-1-2"></div>
+</div>
+<b id="msg" style="display:inline-block;font-size:2em;padding:20px;">No camera stream</b>
+<br />
+<button id="play" class="button">Start</button>
+
+<script type="text/javascript" src="../common/js/require.js"></script>
+<script type="text/javascript" src="../common/js/require-config.js"></script>
+<script type="text/javascript">//<![CDATA[
+(function(){
+"use strict";
+var F, asking = false, streaming = false,
+    controls, camera, output, button, canProcess = true,
+    runInParallel = false, runInWebGL = false,
+    video, frame, edgesframe, edges, cartoonify;
+function init()
+{
+    camera = document.getElementById('camera');
+    output = document.getElementById('output');
+    button = document.getElementById('play');
+    button.addEventListener('click', function(evt) {
+        if (!asking)
+        {
+            asking = true;
+            navigator.mediaDevices.getUserMedia({video: true, audio: false})
+            .then(function(stream) {
+                if (!video)
+                {
+                    video = document.createElement('video');
+                    camera.textContent = '';
+                    camera.appendChild(video);
+                    video.addEventListener('canplay', function(evt) {
+                        if (!streaming)
+                        {
+                            streaming = true;
+                            requestAnimationFrame(processVideo);
+                        }
+                    }, false);
+                    document.getElementById('msg').remove();
+                }
+                // 640 480
+                video.srcObject = stream;
+                video.play();
+                button.textContent = 'Stop';
+            }).catch(function(err) {
+                alert(err.toString());
+            });
+        }
+        else
+        {
+            video.pause();
+            asking = false;
+            streaming = false;
+            button.textContent = 'Start';
+        }
+    }, false);
+
+    frame = F.Image().restorable(false);
+    edgesframe = F.Image().restorable(false);
+
+    edges = F.CompositeFilter([
+     F.ColorMatrixFilter().grayscale()
+    ,F.StatisticalFilter().median(7).setMode(F.MODE.GRAY)
+    ,F.ConvolutionMatrixFilter().prewitt(5).setMode(F.MODE.GRAY)
+    ,F.ColorTableFilter().threshold(0.97).invert()
+    ,F.MorphologicalFilter().erode(3, null, 1).setMode(F.MODE.GRAY)
+    ]).worker(runInParallel).makeGLSL(runInWebGL);
+
+    cartoonify = F.CompositeFilter([
+     //F.HistogramEqualizeFilter()
+     F.ConvolutionMatrixFilter().bilateral(3, 15, 124)
+    ,F.StatisticalFilter().median(7)
+    //,F.HistogramEqualizeFilter()
+    ,F.ColorTableFilter().quantize(6)
+    ,F.BlendFilter(['multiply', 0, 0, 1]).setInput(1, edgesframe)
+    ]).worker(runInParallel).makeGLSL(runInWebGL);
+
+    output.textContent = '';
+    output.appendChild(frame.domElement);
+
+    /*controls = new DAT.GUI({height: 2*32, domElement: document.getElementById('controls')});
+    var contrast = controls.add({contrast: 0.5}, 'contrast').name('Contrast').min(0).max(1).onFinishChange(function() {
+        cartoonify.filter(1, F.ColorMatrixFilter().contrast(contrast.getValue()));
+    });
+    var edge = controls.add({edges: 1-0.25}, 'edges').name('Edges').min(0).max(1).onFinishChange(function() {
+        silhouete.filter(2, F.ColorTableFilter().threshold(1-edge.getValue()).invert());
+    });*/
+}
+function processVideo()
+{
+    if (video.paused || video.ended) return;
+    requestAnimationFrame(processVideo);
+    frame.image(video);
+    edgesframe.image(video);
+    edgesframe.apply(edges);
+    frame.apply(cartoonify);
+    /*if (canProcess)
+    {
+        canProcess = false;
+        frame.image(video);
+        edgesframe.image(video)
+        edgesframe.apply(edges, function() {
+            frame.apply(cartoonify, function() {
+                canProcess = true;
+            });
+        });
+    }*/
+}
+require(['DatGUI', 'FILTER'], function(DAT, FILTER) {
+    F = FILTER;
+    /*runInParallel = /\?parallel\b/i.test(location.href);
+    if (runInParallel && !F.Browser.supportsWorker)
+    {
+        alert('Browser does not support parallel workers');
+    }
+    runInParallel = !!(F.Browser.supportsWorker && runInParallel);*/
+    runInWebGL = /\?webgl\b/i.test(location.href);
+    if (runInWebGL && !F.supportsGLSL())
+    {
+        alert('Browser does not support WebGL!');
+    }
+    runInWebGL = !!(F.supportsGLSL() && runInWebGL);
+    document.getElementById('version').textContent = F.VERSION;
+    document.getElementById('mode').textContent = /*runInParallel ? 'Parallel' :*/ (runInWebGL ? 'WebGL' : 'Synchronous');
+    var baseUrl = location.href.split(/#|\?/)[0];
+    document.getElementById('synchronous').addEventListener('click', function() {
+        location.href = baseUrl + '?synchronous=1';
+    }, false);
+    /*document.getElementById('parallel').addEventListener('click', function() {
+        location.href = baseUrl + '?parallel=1';
+    }, false);*/
+    document.getElementById('webgl').addEventListener('click', function() {
+        location.href = baseUrl + '?webgl=1';
+    }, false);
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
+        init();
+    else
+        alert('Your browser does not support media devices!');
+});
+})();
+//]]></script>
+</body>
+</html>
