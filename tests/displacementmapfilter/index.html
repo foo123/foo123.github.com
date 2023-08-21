@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<title>Assembly DisplacementMapFilter Test Case</title>
+<style type="text/css">
+body {
+    text-align: center;
+    font-size: 20px;
+}
+canvas,img {
+    position: relative;
+    display: block;
+    margin: 20px auto;
+    max-width: 100%;
+    height: auto;
+}
+</style>
+<body>
+<h2>Assembly DisplacementMapFilter Test Case</h2>
+<a href="displacementmapfilter.wasm">displacementmapfilter.wasm</a>
+<br>
+<a href="displacementmapfilter.wat">displacementmapfilter.wat</a>
+<br>
+<a href="displacementmapfilter.ts">displacementmapfilter.ts</a>
+<br>
+<a href="displacementmapfilter.js">displacementmapfilter.js</a>
+<br>
+<br>
+<script src="displacementmapfilter.js"></script>
+<script>
+(function(){
+"use strict";
+let canvas, map, canvasData, mapData;
+globalThis = window;
+function test(src, wasmuri)
+{
+    const img = new Image();
+    img.onload = () => {
+     canvas = document.createElement('canvas');
+     canvas.width = img.width;
+     canvas.height = img.height;
+     map = document.createElement('canvas');
+     map.width = img.width;
+     map.height = img.height;
+    const ctx = map.getContext('2d');
+    ctx.fillStyle="rgb(128,128,128)";
+    ctx.fillRect(0,0, map.width, map.height);
+    // create radial gradient
+    const grd = ctx.createRadialGradient(map.width/2, map.height/2, 0, map.width/2, map.height/2, map.width/2);
+    grd.addColorStop(1, "#808080"); // neutral
+    grd.addColorStop(0, "#ffffff"); // white
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(map.width/2,map.height/2,map.width/2,0,Math.PI*2,true);
+    ctx.fill();
+    canvas.getContext('2d').drawImage(img, 0, 0);
+    canvasData = canvas.getContext('2d').getImageData(0, 0, img.width, img.height);
+    mapData = map.getContext('2d').getImageData(0, 0, img.width, img.height);
+    document.body.appendChild(document.createTextNode('Test'));
+    document.body.appendChild(canvas);
+    const correct = document.createElement('img');
+    correct.src="correct.png";
+    document.body.appendChild(document.createTextNode('Expected'));
+    document.body.appendChild(correct);
+    fetch(wasmuri).then(res => res.arrayBuffer()).then(wasm => WebAssembly.compile(wasm)).then(module => instantiate(module)).then(exports => {
+    const data = exports.displacementmapfilter(canvasData.data, canvas.width, canvas.height, 2, mapData.data, map.width, map.height, 0, 0, 0, 0, 100, 100, 0);
+    canvasData.data.set(data);
+    canvas.getContext('2d').putImageData(canvasData, 0, 0);
+    });
+    };
+    img.src = src;
+}
+test('../../examples/common/assets/che.jpg', 'displacementmapfilter.wasm');
+})();
+</script>
+</body>
+</html>
