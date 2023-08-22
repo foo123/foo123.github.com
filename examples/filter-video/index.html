@@ -137,6 +137,7 @@
     <div class="fluid col-1-1" style="padding:0;margin-top:-50px;position:relative;z-index:1000;">
         <button id="synchronous" class="button">Synchronous</button>
         <button id="webgl" class="button">WebGL</button>
+        <button id="wasm" class="button">WASM</button>
     </div>
 
     <div id="statsContainer" style="margin-top:40px;"></div>
@@ -329,14 +330,20 @@
     require(['FILTER', 'AreaSelect', 'Stats'/*, 'domReady!'*/],
         function($F, AreaSelect, Stats) {
         document.getElementById('lib-version').innerHTML = $F.VERSION;
-        var runInWebGL = /\?webgl\b/i.test(location.href);
+        var runInWebGL = /\?webgl\b/i.test(location.href),
+            runInWasm = /\?wasm\b/i.test(location.href);
 
         if (runInWebGL && !$F.supportsGLSL())
         {
             alert('Browser does not support WebGL');
         }
         runInWebGL = !!($F.supportsGLSL() && runInWebGL);
-        document.getElementById('fmode').textContent = runInWebGL ? 'WebGL' : 'Synchronous';
+        if (runInWasm && !$F.supportsWASM())
+        {
+            alert('Browser does not support Web Assembly');
+        }
+        runInWasm = !!($F.supportsWASM() && runInWasm);
+        document.getElementById('fmode').textContent = runInWasm ? 'WASM' : (runInWebGL ? 'WebGL' : 'Synchronous');
         var baseUrl = location.href.split(/#|\?/)[0],
             icon,
             filterSelect = getEl('filterSelect'),
@@ -360,46 +367,46 @@
             postVideo = $F.Image().restorable(false),
 
              // filters
-            flipX = $F.AffineMatrixFilter().flipX().makeGLSL(runInWebGL),
-            flipY = $F.AffineMatrixFilter().flipY().makeGLSL(runInWebGL),
-            binary = $F.ColorTableFilter().threshold(0.7).makeGLSL(runInWebGL),
-            binary2 = $F.ColorTableFilter().threshold(0.05).makeGLSL(runInWebGL),
-            binaryThreshold = $F.ColorTableFilter().threshold(0.05).makeGLSL(runInWebGL),
-            solarize = $F.ColorTableFilter().solarize(0.6).makeGLSL(runInWebGL),
-            solarize2 = $F.ColorTableFilter().solarize2(0.4).makeGLSL(runInWebGL),
-            posterize = $F.ColorTableFilter().posterize(8).makeGLSL(runInWebGL),
-            invert = $F.ColorTableFilter().invert().makeGLSL(runInWebGL),
-            gray = $F.ColorMatrixFilter().grayscale().makeGLSL(runInWebGL),
-            grc = $F.ColorMatrixFilter().grayscale().contrast(1).makeGLSL(runInWebGL),
-            blur3g = $F.ConvolutionMatrixFilter().fastGauss(5, 3).setMode($F.MODE.GRAY).makeGLSL(runInWebGL),
-            blur3 = $F.ConvolutionMatrixFilter().fastGauss(3, 3).makeGLSL(runInWebGL),
-            gauss3 = $F.ConvolutionMatrixFilter().gauss(3, 3).makeGLSL(runInWebGL),
-            blur7 = $F.ConvolutionMatrixFilter().fastGauss(3, 7).makeGLSL(runInWebGL),
-            gauss7 = $F.ConvolutionMatrixFilter().gauss(3, 7).makeGLSL(runInWebGL),
-            blur15 = $F.ConvolutionMatrixFilter().fastGauss(3, 15).makeGLSL(runInWebGL),
-            blur51 = $F.ConvolutionMatrixFilter().fastGauss(3, 51).makeGLSL(runInWebGL),
-            sobel = $F.ConvolutionMatrixFilter().sobel(3).setMode($F.MODE.GRAY).makeGLSL(runInWebGL),
-            laplace3 = $F.ConvolutionMatrixFilter().laplace(3).setMode($F.MODE.GRAY).makeGLSL(runInWebGL),
-            laplace5 = $F.ConvolutionMatrixFilter().laplace(5).setMode($F.MODE.GRAY).makeGLSL(runInWebGL),
-            laplace11 = $F.ConvolutionMatrixFilter().laplace(11).setMode($F.MODE.GRAY).makeGLSL(runInWebGL),
-            grs = $F.CompositeFilter([gray, sobel]).makeGLSL(runInWebGL),
-            grsb = $F.CompositeFilter([gray, sobel, binary]).makeGLSL(runInWebGL),
-            grl3 = $F.CompositeFilter([gray, laplace3]).makeGLSL(runInWebGL),
-            grl5 = $F.CompositeFilter([gray, laplace5]).makeGLSL(runInWebGL),
-            grl11 = $F.CompositeFilter([gray, laplace11]).makeGLSL(runInWebGL),
-            grlb5 = $F.CompositeFilter([gray, laplace5, binary]).makeGLSL(runInWebGL),
-            grlb11 = $F.CompositeFilter([gray, laplace11, binary]).makeGLSL(runInWebGL),
-            grglb5 = $F.CompositeFilter([gray, blur3g, laplace3, binary2]).makeGLSL(runInWebGL),
-            bilateral = $F.ConvolutionMatrixFilter().bilateral(9, 50, 50).makeGLSL(runInWebGL),
-            emboss = $F.ConvolutionMatrixFilter().emboss().makeGLSL(runInWebGL),
-            redCGray = $F.ColorMatrixFilter().redChannel(true).makeGLSL(runInWebGL),
-            redC = $F.ColorMatrixFilter().redChannel().makeGLSL(runInWebGL),
-            greenC = $F.ColorMatrixFilter().greenChannel().makeGLSL(runInWebGL),
-            blueC = $F.ColorMatrixFilter().blueChannel().makeGLSL(runInWebGL),
-            redCT = $F.ColorTableFilter().redChannel().makeGLSL(runInWebGL),
-            greenCT = $F.ColorTableFilter().greenChannel().makeGLSL(runInWebGL),
-            blueCT = $F.ColorTableFilter().blueChannel().makeGLSL(runInWebGL),
-            clr = $F.ColorMatrixFilter().colorize(0xfdc171).makeGLSL(runInWebGL),
+            flipX = $F.AffineMatrixFilter().flipX().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            flipY = $F.AffineMatrixFilter().flipY().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            binary = $F.ColorTableFilter().threshold(0.7).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            binary2 = $F.ColorTableFilter().threshold(0.05).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            binaryThreshold = $F.ColorTableFilter().threshold(0.05).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            solarize = $F.ColorTableFilter().solarize(0.6).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            solarize2 = $F.ColorTableFilter().solarize2(0.4).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            posterize = $F.ColorTableFilter().posterize(8).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            invert = $F.ColorTableFilter().invert().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            gray = $F.ColorMatrixFilter().grayscale().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            grc = $F.ColorMatrixFilter().grayscale().contrast(1).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            blur3g = $F.ConvolutionMatrixFilter().fastGauss(5, 3).setMode($F.MODE.GRAY).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            blur3 = $F.ConvolutionMatrixFilter().fastGauss(3, 3).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            gauss3 = $F.ConvolutionMatrixFilter().gauss(3, 3).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            blur7 = $F.ConvolutionMatrixFilter().fastGauss(3, 7).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            gauss7 = $F.ConvolutionMatrixFilter().gauss(3, 7).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            blur15 = $F.ConvolutionMatrixFilter().fastGauss(3, 15).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            blur51 = $F.ConvolutionMatrixFilter().fastGauss(3, 51).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            sobel = $F.ConvolutionMatrixFilter().sobel(3).setMode($F.MODE.GRAY).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            laplace3 = $F.ConvolutionMatrixFilter().laplace(3).setMode($F.MODE.GRAY).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            laplace5 = $F.ConvolutionMatrixFilter().laplace(5).setMode($F.MODE.GRAY).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            laplace11 = $F.ConvolutionMatrixFilter().laplace(11).setMode($F.MODE.GRAY).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            grs = $F.CompositeFilter([gray, sobel]).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            grsb = $F.CompositeFilter([gray, sobel, binary]).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            grl3 = $F.CompositeFilter([gray, laplace3]).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            grl5 = $F.CompositeFilter([gray, laplace5]).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            grl11 = $F.CompositeFilter([gray, laplace11]).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            grlb5 = $F.CompositeFilter([gray, laplace5, binary]).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            grlb11 = $F.CompositeFilter([gray, laplace11, binary]).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            grglb5 = $F.CompositeFilter([gray, blur3g, laplace3, binary2]).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            bilateral = $F.ConvolutionMatrixFilter().bilateral(9, 50, 50).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            emboss = $F.ConvolutionMatrixFilter().emboss().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            redCGray = $F.ColorMatrixFilter().redChannel(true).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            redC = $F.ColorMatrixFilter().redChannel().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            greenC = $F.ColorMatrixFilter().greenChannel().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            blueC = $F.ColorMatrixFilter().blueChannel().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            redCT = $F.ColorTableFilter().redChannel().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            greenCT = $F.ColorTableFilter().greenChannel().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            blueCT = $F.ColorTableFilter().blueChannel().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            clr = $F.ColorMatrixFilter().colorize(0xfdc171).makeGLSL(runInWebGL).makeWASM(runInWasm),
             equ = $F.HistogramEqualizeFilter($F.MODE.INTENSITY),
             otsu = $F.CompositeFilter([
                 grc, invert, $F.ThresholdFilter($F.MODE.GRAY)
@@ -441,20 +448,20 @@
             quantized_connected_components = $F.CompositeFilter([/*equ,*/ qcc, binaryThreshold]),
             quantized_connected_components_contours = $F.CompositeFilter([/*equ,*/ qcc, laplace3, binaryThreshold]),
             noise = $F.NoiseFilter(10, 70),
-            displaceFilter = $F.DisplacementMapFilter(displacemap).makeGLSL(runInWebGL),
-            twirlFilter = $F.GeometricMapFilter().twirl(Math.PI/2, 80, 0.5, 0.5).makeGLSL(runInWebGL),
-            sphereFilter = $F.GeometricMapFilter().sphere(80, 0.5, 0.5).makeGLSL(runInWebGL),
-            polarFilter = $F.GeometricMapFilter().polar(0.5, 0.5, $F.POS.X, $F.POS.Y).setMode($F.MODE.WRAP).makeGLSL(runInWebGL),
-            cartesianFilter = $F.GeometricMapFilter().cartesian(0.5, 0.5, $F.POS.X, $F.POS.Y).setMode($F.MODE.WRAP).makeGLSL(runInWebGL),
+            displaceFilter = $F.DisplacementMapFilter(displacemap).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            twirlFilter = $F.GeometricMapFilter().twirl(Math.PI/2, 80, 0.5, 0.5).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            sphereFilter = $F.GeometricMapFilter().sphere(80, 0.5, 0.5).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            polarFilter = $F.GeometricMapFilter().polar(0.5, 0.5, $F.POS.X, $F.POS.Y).setMode($F.MODE.WRAP).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            cartesianFilter = $F.GeometricMapFilter().cartesian(0.5, 0.5, $F.POS.X, $F.POS.Y).setMode($F.MODE.WRAP).makeGLSL(runInWebGL).makeWASM(runInWasm),
             //eye = $F.CompositeFilter([polarFilter, cartesianFilter]),
             //rippleFilter = $F.GeometricMapFilter().ripple(10, 16, 10, 0, 0.5, 0.5),
-            pixelate = $F.PixelateFilter(2, 'rectangular').makeGLSL(runInWebGL),
+            pixelate = $F.PixelateFilter(2, 'rectangular').makeGLSL(runInWebGL).makeWASM(runInWasm),
             halftoned = $F.CompositeFilter([
                 gray, $F.HalftoneFilter(1).threshold(0.4).setMode($F.MODE.GRAY)
             ]),
-            alphaMask = $F.ChannelCopyFilter($F.CHANNEL.BLUE, $F.CHANNEL.ALPHA, 0.5, 0.5, 0).setMode($F.MODE.COLOR).setInput("source", alphamask).makeGLSL(runInWebGL),
+            alphaMask = $F.ChannelCopyFilter($F.CHANNEL.BLUE, $F.CHANNEL.ALPHA, 0.5, 0.5, 0).setMode($F.MODE.COLOR).setInput("source", alphamask).makeGLSL(runInWebGL).makeWASM(runInWasm),
             blend = $F.BlendFilter(["normal", 1, 1, 1/*,
-                                    "screen", 50, 40, 1*/]).makeGLSL(runInWebGL),
+                                    "screen", 50, 40, 1*/]).makeGLSL(runInWebGL).makeWASM(runInWasm),
             ycbcr = $F.ColorMatrixFilter().RGB2YCbCr().makeGLSL(runInWebGL),
             hsv = $F.ColorMapFilter().RGB2HSV().makeGLSL(runInWebGL),
             hsl = $F.ColorMapFilter().RGB2HSL().makeGLSL(runInWebGL),
@@ -465,8 +472,8 @@
             //hueExtractor = $F.CompositeFilter([hueE, open]),
             bokeh = $F.BokehFilter(0.5, 0.5, 100, 10),
             canny = $F.CompositeFilter([gray, $F.CannyEdgesFilter(10, 90)]).makeGLSL(runInWebGL),
-            shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(3, 0).makeGLSL(runInWebGL),
-            perlinDisplaceFilter = $F.DisplacementMapFilter(),
+            shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(3, 0).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            perlinDisplaceFilter = $F.DisplacementMapFilter(perlinNoise).makeGLSL(runInWebGL).makeWASM(runInWasm),
 
             // filter selection list
             videoFilters = [
@@ -543,6 +550,9 @@
 
         function init()
         {
+            addEvent(document.getElementById('wasm'), 'click', function() {
+                location.href = baseUrl + '?wasm=1';
+            });
             addEvent(document.getElementById('webgl'), 'click', function() {
                 location.href = baseUrl + '?webgl=1';
             });
@@ -550,6 +560,7 @@
                 location.href = baseUrl + '?synchronous=1';
             });
 
+            $F.onReady(function() {
             blend.setInput(1, icon = $F.Image.load($F.Browser.isIE
             ? "../common/assets/ie.png"
             : ($F.Browser.isOpera
@@ -752,6 +763,7 @@
 
             // start process when the video is playing
             addEvent(video, "play", processVideo);
+            });
         }
 
         /*function resizeVideo()
@@ -816,11 +828,10 @@
             }
             else if (perlinDisplaceFilter===currentFilter)
             {
-                if (null === perlin)
+                if (null  == perlin)
                 {
                     perlin = $F.PerlinNoiseFilter(vw/4, vh/4, 1, true, false, [], 0, true);
                     perlinNoise.setDimensions(vw, vh).apply(perlin);
-                    perlinDisplaceFilter.setInput("map", perlinNoise);
                 }
                 else
                 {

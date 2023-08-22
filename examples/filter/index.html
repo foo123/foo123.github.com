@@ -116,6 +116,7 @@
         <button id="synchronous" class="button">Synchronous</button>
         <button id="parallel" class="button">Parallel</button>
         <button id="webgl" class="button">WebGL</button>
+        <button id="wasm" class="button">WASM</button>
         <button id="applyBt" style="display:none" class="button">Apply</button>
         <button id="restoreBt" style="display:none" class="button">Restore</button><br />
         <i style="font-size:11px"><b>Note:</b> images may appear as blurred if scaled from original dimensions due to responsive design</i>
@@ -134,7 +135,8 @@
 
         // utils
         var runInThread = /\?parallel\b/i.test(location.href),
-            runInWebGL = /\?webgl\b/i.test(location.href);
+            runInWebGL = /\?webgl\b/i.test(location.href),
+            runInWasm = /\?wasm\b/i.test(location.href);
 
         if (runInThread && !$F.Browser.supportsWorker)
         {
@@ -146,7 +148,12 @@
             alert('Browser does not support WebGL');
         }
         runInWebGL = !!($F.supportsGLSL() && runInWebGL);
-        document.getElementById('mode').textContent = runInThread ? 'Parallel' : (runInWebGL ? 'WebGL' : 'Synchronous');
+        if (runInWasm && !$F.supportsWASM())
+        {
+            alert('Browser does not support Web Assembly');
+        }
+        runInWasm = !!($F.supportsWASM() && runInWasm);
+        document.getElementById('mode').textContent = runInThread ? 'Parallel' : (runInWasm ? 'Wasm' : (runInWebGL ? 'WebGL' : 'Synchronous'));
 
         document.getElementById('lib-version').innerHTML = $F.VERSION;
 
@@ -232,13 +239,13 @@
                 '}'
                 ].join('\n')
             }).worker(runInThread).makeGLSL(runInWebGL)
-            ,greenChannel = $F.ColorMatrixFilter().greenChannel().worker(runInThread).makeGLSL(runInWebGL)
+            ,greenChannel = $F.ColorMatrixFilter().greenChannel().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
             //,blueChannel = $F.ColorMatrixFilter().blueChannel().worker(runInThread)
-            ,blueChannel = $F.ColorTableFilter().blueChannel().worker(runInThread).makeGLSL(runInWebGL)
-            ,clr = $F.ColorMatrixFilter().colorize(0xff0000).worker(runInThread).makeGLSL(runInWebGL)
+            ,blueChannel = $F.ColorTableFilter().blueChannel().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+            ,clr = $F.ColorMatrixFilter().colorize(0xff0000).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
             //,gamma = $F.ColorTableFilter().gammaCorrection(1.7).worker(runInThread)
             //,solarize = $F.ColorTableFilter().solarize(0.5).worker(runInThread)
-            ,posterize = $F.ColorTableFilter().posterize(4).worker(runInThread).makeGLSL(runInWebGL)
+            ,posterize = $F.ColorTableFilter().posterize(4).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
             //,extract = $F.ColorTableFilter().extract($F.CHANNEL.RED, [0x75, 0x91]).worker(runInThread)
             //,mask = $F.ColorTableFilter().mask(0xffff7732).worker(runInThread)
             //,swapChannels = $F.ColorMatrixFilter().swapChannels($F.CHANNEL.BLUE, $F.CHANNEL.GREEN).worker(runInThread)
@@ -248,7 +255,7 @@
             ,equalize_gray = $F.HistogramEqualizeFilter($F.MODE.GRAY)
             //,rgbequalize = $F.HistogramEqualizeFilter($F.MODE.RGB).worker(runInThread)
             //,noise = $F.NoiseFilter(-127, 127).worker(runInThread)
-            ,sepia = $F.ColorMatrixFilter().sepia2().worker(runInThread).makeGLSL(runInWebGL)
+            ,sepia = $F.ColorMatrixFilter().sepia2().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
             ,gray = $F.ColorMatrixFilter().grayscale().worker(runInThread)
             //,binary = $F.ColorTableFilter().threshold(0.6).worker(runInThread)
             //,threshold = $F.ColorMatrixFilter().thresholdRGB(128).worker(runInThread)
@@ -269,7 +276,7 @@
             // extract skin region
             //,skinExtractor = $F.CompositeFilter([hsv, redChannel, invert, gray, thresh]).worker(runInThread)
             //,laplace = $F.ConvolutionMatrixFilter().laplace(7).worker(runInThread)
-            ,twirl = $F.GeometricMapFilter().twirl(Math.PI/2, 120, 0.33, 0.27).worker(runInThread).makeGLSL(runInWebGL)
+            ,twirl = $F.GeometricMapFilter().twirl(Math.PI/2, 120, 0.33, 0.27).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
             //,shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(-50, 0).worker(runInThread)
             //,rotate = $F.AffineMatrixFilter().rotate(-Math.PI).worker(runInThread)
             //,blur = $F.ConvolutionMatrixFilter().boxBlur(3).worker(runInThread)
@@ -277,13 +284,13 @@
             //,vertical = $F.ConvolutionMatrixFilter().verticalBlur(21).worker(runInThread)
             //,diagonal = $F.ConvolutionMatrixFilter().directionalBlur(45, 9).worker(runInThread)
             //,glow = $F.ConvolutionMatrixFilter().glow().worker(runInThread)
-            ,emboss = $F.ConvolutionMatrixFilter().emboss().worker(runInThread).makeGLSL(runInWebGL)
+            ,emboss = $F.ConvolutionMatrixFilter().emboss().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
             ,grsb = $F.CompositeFilter([
                 gray,
                 $F.ConvolutionMatrixFilter().sobel(3).setMode($F.MODE.GRAY)
                 /*, binary*/
-            ]).worker(runInThread).makeGLSL(runInWebGL)
-            ,displace = $F.DisplacementMapFilter(displacemap).worker(runInThread).makeGLSL(runInWebGL)
+            ]).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+            ,displace = $F.DisplacementMapFilter(displacemap).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
             ,floodFill = $F.CompositeFilter([
                 /*                 x0, y0,  color,   tolerance, exterior border */
                 $F.ColorFillFilter(25, 75,  0xff0000, 0.2,       0x0),
@@ -436,6 +443,9 @@
 
         function init()
         {
+            $('#wasm').on( 'click', function() {
+                location.href = baseUrl + '?wasm=1';
+            });
             $('#webgl').on( 'click', function() {
                 location.href = baseUrl + '?webgl=1';
             });
@@ -447,6 +457,7 @@
             });
             //console.log($F.devicePixelRatio);
 
+            $F.onReady(function() {
             container
             .append(Img(1, im1, 'Original Image'))
             .append(Img(2, im2, 'Red Channel'))
@@ -475,6 +486,7 @@
 
             applyBt.show().on('click', apply);
             restoreBt.show().on('click', restore);
+            });
         }
 
         function apply(evt)
