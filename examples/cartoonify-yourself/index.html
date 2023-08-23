@@ -140,6 +140,7 @@ body {
 <br />
 
 <button id="webgl" class="button">WebGL</button>
+<button id="wasm" class="button">WASM</button>
 <button id="synchronous" class="button">Synchronous</button>
 <!--<button id="parallel" class="button">Parallel</button>-->
 <br />
@@ -161,7 +162,7 @@ body {
 "use strict";
 var F, asking = false, streaming = false,
     controls, camera, output, button, canProcess = true,
-    runInParallel = false, runInWebGL = false,
+    runInParallel = false, runInWebGL = false, runInWasm = false,
     video, frame, edgesframe, edges, cartoonify;
 function init()
 {
@@ -214,7 +215,7 @@ function init()
     ,F.ConvolutionMatrixFilter().prewitt(5).setMode(F.MODE.GRAY)
     ,F.ColorTableFilter().threshold(0.97).invert()
     ,F.MorphologicalFilter().erode(3, null, 1).setMode(F.MODE.GRAY)
-    ]).worker(runInParallel).makeGLSL(runInWebGL);
+    ]).worker(runInParallel).makeGLSL(runInWebGL).makeWASM(runInWasm);
 
     cartoonify = F.CompositeFilter([
      //F.HistogramEqualizeFilter()
@@ -223,7 +224,7 @@ function init()
     //,F.HistogramEqualizeFilter()
     ,F.ColorTableFilter().quantize(6)
     ,F.BlendFilter(['multiply', 0, 0, 1]).setInput(1, edgesframe)
-    ]).worker(runInParallel).makeGLSL(runInWebGL);
+    ]).worker(runInParallel).makeGLSL(runInWebGL).makeWASM(runInWasm);
 
     output.textContent = '';
     output.appendChild(frame.domElement);
@@ -267,11 +268,17 @@ require(['DatGUI', 'FILTER'], function(DAT, FILTER) {
     runInWebGL = /\?webgl\b/i.test(location.href);
     if (runInWebGL && !F.supportsGLSL())
     {
-        alert('Browser does not support WebGL!');
+        alert('Browser does not support WebGL');
     }
     runInWebGL = !!(F.supportsGLSL() && runInWebGL);
+    runInWasm = /\?wasm\b/i.test(location.href);
+    if (runInWasm && !F.supportsWASM())
+    {
+        alert('Browser does not support Web Assembly');
+    }
+    runInWasm = !!(F.supportsWASM() && runInWasm);
     document.getElementById('version').textContent = F.VERSION;
-    document.getElementById('mode').textContent = /*runInParallel ? 'Parallel' :*/ (runInWebGL ? 'WebGL' : 'Synchronous');
+    document.getElementById('mode').textContent = /*runInParallel ? 'Parallel' :*/ (runInWasm ? 'WASM' : (runInWebGL ? 'WebGL' : 'Synchronous'));
     var baseUrl = location.href.split(/#|\?/)[0];
     document.getElementById('synchronous').addEventListener('click', function() {
         location.href = baseUrl + '?synchronous=1';
@@ -282,8 +289,11 @@ require(['DatGUI', 'FILTER'], function(DAT, FILTER) {
     document.getElementById('webgl').addEventListener('click', function() {
         location.href = baseUrl + '?webgl=1';
     }, false);
+    document.getElementById('wasm').addEventListener('click', function() {
+        location.href = baseUrl + '?wasm=1';
+    }, false);
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
-        init();
+        F.onReady(init);
     else
         alert('Your browser does not support media devices!');
 });
