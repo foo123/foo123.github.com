@@ -308,7 +308,7 @@
             ,canny = $F.CompositeFilter([
                 gray, equalize_gray, gauss,
                 $F.CannyEdgesFilter(40, 78, false/* use custom pre-bluring */)
-            ]).worker(runInThread).makeGLSL(runInWebGL)
+            ]).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
             ,faceDetector = $F.CompositeFilter([
                 gray,
                 $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt).params({

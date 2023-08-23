@@ -471,7 +471,7 @@
             /*hueE =*/ hueExtractor = $F.ColorMapFilter().setMode($F.MODE.HUE).extract(10, 50).makeGLSL(runInWebGL),
             //hueExtractor = $F.CompositeFilter([hueE, open]),
             bokeh = $F.BokehFilter(0.5, 0.5, 100, 10),
-            canny = $F.CompositeFilter([gray, $F.CannyEdgesFilter(10, 90)]).makeGLSL(runInWebGL),
+            canny = $F.CompositeFilter([gray, $F.CannyEdgesFilter(10, 90)]).makeGLSL(runInWebGL).makeWASM(runInWasm),
             shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(3, 0).makeGLSL(runInWebGL).makeWASM(runInWasm),
             perlinDisplaceFilter = $F.DisplacementMapFilter(perlinNoise).makeGLSL(runInWebGL).makeWASM(runInWasm),
 
