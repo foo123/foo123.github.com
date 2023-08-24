@@ -409,12 +409,12 @@
             clr = $F.ColorMatrixFilter().colorize(0xfdc171).makeGLSL(runInWebGL).makeWASM(runInWasm),
             equ = $F.HistogramEqualizeFilter($F.MODE.INTENSITY),
             otsu = $F.CompositeFilter([
-                grc, invert, $F.ThresholdFilter($F.MODE.GRAY)
-            ]),
-            minimum = $F.StatisticalFilter().minimum(3).makeGLSL(runInWebGL),
-            maximum = $F.StatisticalFilter().maximum(3).makeGLSL(runInWebGL),
-            median3 = $F.StatisticalFilter().median(3).makeGLSL(runInWebGL),
-            median5 = $F.StatisticalFilter().median(5).makeGLSL(runInWebGL),
+                grc, invert, $F.OtsuThresholdFilter($F.MODE.GRAY)
+            ]).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            minimum = $F.StatisticalFilter().minimum(3).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            maximum = $F.StatisticalFilter().maximum(3).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            median3 = $F.StatisticalFilter().median(3).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            median5 = $F.StatisticalFilter().median(5).makeGLSL(runInWebGL).makeWASM(runInWasm),
             mdilate = $F.MorphologicalFilter().dilate([
                 0, 0, 0, 0, 0, 0, 1,
                 0, 0, 0, 0, 0, 1, 0,
@@ -423,7 +423,7 @@
                 0, 0, 1, 0, 0, 0, 0,
                 0, 1, 0, 0, 0, 0, 0,
                 1, 0, 0, 0, 0, 0, 0
-            ]).makeGLSL(runInWebGL),
+            ]).makeGLSL(runInWebGL).makeWASM(runInWasm),
             merode = $F.MorphologicalFilter().erode([
                 0, 0, 0, 0, 0, 0, 1,
                 0, 0, 0, 0, 0, 1, 0,
@@ -432,18 +432,18 @@
                 0, 0, 1, 0, 0, 0, 0,
                 0, 1, 0, 0, 0, 0, 0,
                 1, 0, 0, 0, 0, 0, 0
-            ]).makeGLSL(runInWebGL),
+            ]).makeGLSL(runInWebGL).makeWASM(runInWasm),
             mgrad = $F.CompositeFilter([
                 gray,
                 $F.MorphologicalFilter().gradient(3).setMode($F.MODE.GRAY),
                 binary2
-            ]).makeGLSL(runInWebGL),
+            ]).makeGLSL(runInWebGL).makeWASM(runInWasm),
             mlap = $F.CompositeFilter([
                 gray,
                 $F.MorphologicalFilter().laplacian(3).setMode($F.MODE.GRAY),
                 binary2
-            ]).makeGLSL(runInWebGL),
-            open = $F.MorphologicalFilter().opening(3).makeGLSL(runInWebGL),
+            ]).makeGLSL(runInWebGL).makeWASM(runInWasm),
+            open = $F.MorphologicalFilter().opening(3).makeGLSL(runInWebGL).makeWASM(runInWasm),
             qcc = $F.ConnectedComponentsFilter(8, 0.15, 30).setMode($F.MODE.HUE),
             quantized_connected_components = $F.CompositeFilter([/*equ,*/ qcc, binaryThreshold]),
             quantized_connected_components_contours = $F.CompositeFilter([/*equ,*/ qcc, laplace3, binaryThreshold]),
@@ -462,13 +462,13 @@
             alphaMask = $F.ChannelCopyFilter($F.CHANNEL.BLUE, $F.CHANNEL.ALPHA, 0.5, 0.5, 0).setMode($F.MODE.COLOR).setInput("source", alphamask).makeGLSL(runInWebGL).makeWASM(runInWasm),
             blend = $F.BlendFilter(["normal", 1, 1, 1/*,
                                     "screen", 50, 40, 1*/]).makeGLSL(runInWebGL).makeWASM(runInWasm),
-            ycbcr = $F.ColorMatrixFilter().RGB2YCbCr().makeGLSL(runInWebGL),
-            hsv = $F.ColorMapFilter().RGB2HSV().makeGLSL(runInWebGL),
-            hsl = $F.ColorMapFilter().RGB2HSL().makeGLSL(runInWebGL),
-            hwb = $F.ColorMapFilter().RGB2HWB().makeGLSL(runInWebGL),
-            cmyk = $F.ColorMapFilter().RGB2CMYK().makeGLSL(runInWebGL),
-            hueOnly = $F.ColorMapFilter().hue().makeGLSL(runInWebGL),
-            /*hueE =*/ hueExtractor = $F.ColorMapFilter().setMode($F.MODE.HUE).extract(10, 50).makeGLSL(runInWebGL),
+            ycbcr = $F.ColorMatrixFilter().RGB2YCbCr().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            hsv = $F.ColorMapFilter().RGB2HSV().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            hsl = $F.ColorMapFilter().RGB2HSL().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            hwb = $F.ColorMapFilter().RGB2HWB().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            cmyk = $F.ColorMapFilter().RGB2CMYK().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            hueOnly = $F.ColorMapFilter().hue().makeGLSL(runInWebGL).makeWASM(runInWasm),
+            /*hueE =*/ hueExtractor = $F.ColorMapFilter().setMode($F.MODE.HUE).extract(10, 50).makeGLSL(runInWebGL).makeWASM(runInWasm),
             //hueExtractor = $F.CompositeFilter([hueE, open]),
             bokeh = $F.BokehFilter(0.5, 0.5, 100, 10),
             canny = $F.CompositeFilter([gray, $F.CannyEdgesFilter(10, 90)]).makeGLSL(runInWebGL).makeWASM(runInWasm),

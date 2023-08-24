@@ -216,6 +216,9 @@
             ,im19 = $F.Image.load(model/*face_model*/)
             ,im20 = $F.Image.load(model)
             ,im21 = $F.Image.load(model)
+            /*,im22 = $F.Image.load(che)
+            ,im23 = $F.Image.load(che)
+            ,im24 = $F.Image.load(che)*/
 
              // filters
             //,redChannel = $F.ColorMatrixFilter().worker(runInThread).makeGLSL(runInWebGL).redChannel()
@@ -256,11 +259,14 @@
             //,rgbequalize = $F.HistogramEqualizeFilter($F.MODE.RGB).worker(runInThread)
             //,noise = $F.NoiseFilter(-127, 127).worker(runInThread)
             ,sepia = $F.ColorMatrixFilter().sepia2().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
-            ,gray = $F.ColorMatrixFilter().grayscale().worker(runInThread)
+            ,gray = $F.ColorMatrixFilter().grayscale()/*.worker(runInThread)*/
             //,binary = $F.ColorTableFilter().threshold(0.6).worker(runInThread)
             //,threshold = $F.ColorMatrixFilter().thresholdRGB(128).worker(runInThread)
             //,grc = $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread).makeGLSL(runInWebGL)
-            ,median = $F.StatisticalFilter().median(9)
+            //,median = $F.StatisticalFilter().median(9)
+            //,scale = $F.DimensionFilter('scale', 0, 0, 0.5, 0.5).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+            //,pad = $F.DimensionFilter('pad', 10, 10, 10, 10).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+            //,crop = $F.DimensionFilter('crop', 20, 20, 50, 50).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
             //,maximum = $F.StatisticalFilter().maximum(15).worker(runInThread)
             ,halftoned = $F.CompositeFilter([
                 gray,
@@ -280,7 +286,7 @@
             //,shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(-50, 0).worker(runInThread)
             //,rotate = $F.AffineMatrixFilter().rotate(-Math.PI).worker(runInThread)
             //,blur = $F.ConvolutionMatrixFilter().boxBlur(3).worker(runInThread)
-            ,gauss = $F.ConvolutionMatrixFilter().fastGauss(3, 5).setMode($F.MODE.GRAY).worker(runInThread)//gaussBlur(3)
+            ,gauss = $F.ConvolutionMatrixFilter().fastGauss(3, 5).setMode($F.MODE.GRAY)/*.worker(runInThread)*///gaussBlur(3)
             //,vertical = $F.ConvolutionMatrixFilter().verticalBlur(21).worker(runInThread)
             //,diagonal = $F.ConvolutionMatrixFilter().directionalBlur(45, 9).worker(runInThread)
             //,glow = $F.ConvolutionMatrixFilter().glow().worker(runInThread)
@@ -415,15 +421,15 @@
                 }
             }
             ,cartoonify = $F.CompositeFilter([
-                $F.MorphologicalFilter().erode(7, null, 2)
+                $F.MorphologicalFilter().erode(5, null, 2)
                 ,$F.ColorTableFilter().quantize(4)
-            ]).worker(runInThread).makeGLSL(runInWebGL)
+            ]).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
             ,sketchify = $F.CompositeFilter([
                 gray
                 ,$F.MorphologicalFilter().setMode($F.MODE.GRAY).erode(3, null, 2)
                 ,$F.MorphologicalFilter().setMode($F.MODE.GRAY).gradient(5)
                 ,$F.ColorTableFilter().setMode($F.MODE.GRAY).invert().quantize(9)
-            ]).worker(runInThread).makeGLSL(runInWebGL)
+            ]).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
         ;
 
         function Img(id, img, text)
@@ -482,6 +488,9 @@
             .append(Img(20, im16, 'Color Flood Fill (Plugin)'))
             .append(Img(21, im15, 'Perlin Noise (Plugin)'))
             .append(Img('M', displacemap, 'Displacement Map'))
+            /*.append(Img(22, im22, 'Scale'))
+            .append(Img(23, im23, 'Pad'))
+            .append(Img(24, im24, 'Crop'))*/
             ;
 
             applyBt.show().on('click', apply);
@@ -558,6 +567,9 @@
             });
             im20.apply(cartoonify, closeThread);
             im21.apply(sketchify, closeThread);
+            /*im22.apply(scale, closeThread);
+            im23.apply(pad, closeThread);
+            im24.apply(crop, closeThread);*/
 
             return false;
         }
@@ -584,6 +596,9 @@
             im19.restore();
             im20.restore();
             im21.restore();
+            /*im22.restore();
+            im23.restore();
+            im24.restore();*/
             return false;
         }
     });

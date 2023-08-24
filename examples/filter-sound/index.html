@@ -122,7 +122,7 @@
         <span id="loading" style="display:inline-block; margin-left:20px">Loading Audio ... </span>
 
         <a href="#" id="synchronous" class="button">Synchronous</a>
-        <a href="#" id="parallel" class="button">Parallel</a>
+        <a href="#" id="webgl" class="button">WebGL</a>
 
         <br />
         <div id="statsContainer"></div>
@@ -177,7 +177,7 @@
         function($, Dancer, Stats, $F) {
 
         document.getElementById('lib-version').innerHTML = $F.VERSION;
-        var useParallelFilters = $F.Browser.supportsWorker && /(&|\?)parallel\b/i.test(location.href)
+        var useWebGLFilters = $F.supportsGLSL() && /(&|\?)webgl\b/i.test(location.href)
             ,baseUrl = location.href.split(/#|\?/)[0]
             ,audio, container, stats, statsContainer
 
@@ -194,11 +194,11 @@
             ,w = window.innerWidth,  h = window.innerHeight
             ,windowHalfX = w / 2,  windowHalfY = h / 2
             ,upscaleX = 2, upscaleY = 2, invupscaleX = 1.0/upscaleX, invupscaleY = 1.0/upscaleY
-            ,_width = 360, _height = Math.round(360*h/w) - 60
+            ,_width = 640, _height = Math.round(640*h/w) - 100
         ;
 
-        $('#parallel').on('click', function() {
-            location.href = baseUrl + '?parallel=1';
+        $('#webgl').on('click', function() {
+            location.href = baseUrl + '?webgl=1';
         });
         $('#synchronous').on('click', function() {
             location.href = baseUrl + '?synchronous=1';
@@ -281,10 +281,10 @@
 
             triopticVisualizer = $F.CompositeFilter([/*downscaled,*/ trioptic, displace, blur/*, upscaled*/]).stable(true);
 
-            if (useParallelFilters)
+            if (useWebGLFilters)
             {
                 // use parallel worker filters, along with the custom Trioptic filter
-                triopticVisualizer.worker(true, [trioptic.path.file])/*.scripts([trioptic.path.file])*/;
+                triopticVisualizer.makeGLSL(true)/*.worker(true, [trioptic.path.file])*//*.scripts([trioptic.path.file])*/;
             }
         }
 
@@ -325,11 +325,12 @@
 
         function init()
         {
-            if (useParallelFilters && !$F.Browser.supportsWorker)
+            if (useWebGLFilters && !$F.supportsGLSL())
             {
-                alert('Browser does not support workers');
+                alert('Browser does not support WebGL');
             }
 
+            $F.onReady(function() {
             window.onunload = function() {
                 if (triopticVisualizer) triopticVisualizer.dispose(true);
                 trioptic = null;
@@ -350,6 +351,7 @@
 
             prepareFilters();
             prepareAudio();
+            });
         }
         //init();
      });
