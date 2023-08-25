@@ -43,10 +43,9 @@ FILTER.Create({
         // w is image width, h is image height
         // for this filter, no need to clone the image data, operate in-place
         var l = im.length, iupx, iupy,
-            s = this.spectrum, res=2,
+            s = this.spectrum, res = 2,
             off, i, j, ii, i4, x, y, iw, jw,
-            ws = upscaleX*w,
-            wr = w*0.5  // w/res
+            ws = upscaleX*w, wr = w/res
         ;
 
         s = ~~s;
