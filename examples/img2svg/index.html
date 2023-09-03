@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en" class="no-ie">
+<head>
+<title>img2svg: vectorize image to svg</title>
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0">
+<meta name="description" content="img2svg: vectorize image to svg using potrace algorithm with color" />
+<meta property="og:title" content="img2svg: vectorize image to svg">
+<meta property="og:description" content="img2svg: vectorize image to svg using potrace algorithm with color">
+<meta property="og:image" content="https://foo123.github.io/thumbs/img2svg.png">
+<meta property="og:url" content="https://foo123.github.io/examples/img2svg/">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" type="text/css" href="../common/css/datgui.min.css" />
+<style type="text/css">
+body {
+    background: #444;
+    color: #ccc;
+    font-size: 16px;
+    font-family: Helvetica, Arial, sans-serif;
+}
+.button {
+    -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
+    box-shadow:inset 0px 1px 0px 0px #f5978e;
+    background:-webkit-gradient( ease, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
+    background:-moz-ease-gradient( center top, #f24537 5%, #c62d1f 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
+    background-color:#f24537;
+    -webkit-border-top-left-radius:20px;
+    -moz-border-radius-topleft:20px;
+    border-top-left-radius:20px;
+    -webkit-border-top-right-radius:20px;
+    -moz-border-radius-topright:20px;
+    border-top-right-radius:20px;
+    -webkit-border-bottom-right-radius:20px;
+    -moz-border-radius-bottomright:20px;
+    border-bottom-right-radius:20px;
+    -webkit-border-bottom-left-radius:20px;
+    -moz-border-radius-bottomleft:20px;
+    border-bottom-left-radius:20px;
+    text-indent:0;
+    border:1px solid #d02718;
+    display:inline-block;
+    color:#ffffff;
+    font-family:Arial;
+    font-size:15px;
+    font-weight:bold;
+    font-style:normal;
+    height:50px;
+    line-height:50px;
+    width:200px;
+    text-decoration:none;
+    text-align:center;
+    text-shadow:1px 1px 0px #810e05;
+}
+.button:hover {
+    background:-webkit-gradient( ease, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
+    background:-moz-ease-gradient( center top, #c62d1f 5%, #f24537 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
+    background-color:#c62d1f;
+}.button:active {
+    position:relative;
+    top:1px;
+}
+.button {
+    margin: 3px 2px;
+    position:relative;
+    cursor:pointer;
+}
+#container {
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+header {
+    position: relative;
+    display: block;
+    text-align: center;
+    margin: 20px auto 30px auto;
+}
+h1 {
+    position: relative;
+    display: inline-block;
+    font-size: 20px;
+    margin: 0;
+    padding: 0;
+}
+input,button {
+    position: relative;
+    font-size: 12px;
+    padding: 4px;
+    width: 200px;
+    max-width: 40%;
+    display: inline-block;
+    box-sizing: border-box;
+    vertical-align: top;
+}
+button {
+    width: 60px;
+}
+#controls {
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+}
+#options {
+    width: 300px;
+    position: relative;
+    display: block;
+    clear: both;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+#img,#svg {
+    position: relative;
+    display: inline-block;
+    margin: 0;
+    margin-left: 5px;
+    margin-bottom: 10px;
+    width: calc(50% - 10px);
+    vertical-align: top;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 10px;
+    min-height: 100px;
+}
+#img img,#svg svg {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    margin: 0;
+    max-width: 100%;
+    height: auto;
+}
+#img,#svg {
+    color: black;
+    font-weight: bold;
+    --space: .25rem;
+    background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100% ), linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);
+    background-position: 0 0, calc(2 * var(--space)) calc(2 * var(--space));
+    background-size: calc(4 * var(--space)) calc(4 * var(--space));
+}
+@media (max-width: 400px) {
+#img,#svg {
+    width: 100%;
+    margin-left: 0;
+    min-height: 50px;
+}
+}
+
+</style>
+</head>
+<body>
+<header><h1>Convert Image to SVG with img2svg</h1></header>
+<div id="container">
+<div id="controls">
+<input type="text" id="image_url" placeholder="url.." />
+<input type="text" id="image_filename" placeholder="file.." /><input type="file" id="image_file" style="position:absolute;opacity:0;z-index:-1;"/>
+<button id="go">GO</button>
+<div id="options"></div>
+</div>
+<div id="img"></div><a id="svg" href="#" download="result.svg" target="_blank"></a>
+</div>
+<script type="text/javascript" src="../common/js/datgui.min.js"></script>
+<script type="text/javascript">//<![CDATA[
+(function() {
+"use strict";
+const worker = new Worker("worker.js?refresh=1");
+const imgContainer = document.getElementById('img');
+const svgContainer = document.getElementById('svg');
+const inpUrl = document.getElementById('image_url');
+const inpFile = document.getElementById('image_file');
+const inpFilename = document.getElementById('image_filename');
+const go = document.getElementById('go');
+let currentImage = null;
+inpFilename.addEventListener('focus', () => {
+    inpFile.click();
+}, false);
+inpFile.addEventListener('change', () => {
+    if (inpFile.files[0])
+    {
+        inpUrl.value = '';
+        inpFilename.value = inpFile.files[0].name;
+        currentImage = inpFile.files[0];
+    }
+    else
+    {
+        inpFilename.value = '';
+        currentImage = null;
+    }
+}, false);
+inpUrl.addEventListener('change', () => {
+    if (inpUrl.value.trim().length)
+    {
+        inpFilename.value = '';
+        currentImage = 'https://api.allorigins.win/raw?url='+encodeURIComponent(inpUrl.value.trim());
+        console.log(currentImage);
+    }
+    else
+    {
+        inpUrl.value = '';
+        currentImage = null;
+    }
+}, false);
+go.addEventListener('click', () => {
+    setTimeout(() => {
+        if (currentImage) convertToSVG(currentImage);
+    }, 100);
+}, false);
+
+const options = new DAT.GUI({height: 9*32, domElement: document.getElementById('options')});
+const grayscale = options.add({gray: false}, 'gray').name('Grayscale');
+const contrast = options.add({contrast: 0}, 'contrast', 0, 1, 0.1).name('Contrast');
+const blur = options.add({radius: 0}, 'radius', 0, 20, 1).name('Blur Radius');
+const depth = options.add({depth: 2}, 'depth', 1, 256, 1).name('Depth');
+const minpathsegments = options.add({mps: 2}, 'mps', 2, 100, 1).name('MinPathSegments');
+const turdsize = options.add({ts: 2}, 'ts', 0, 100, 1).name('TurdSize');
+const alphamax = options.add({a: 1}, 'a', 0, 2, 0.1).name('AlphaMax');
+const optcurve = options.add({opt: true}, 'opt').name('OptCurve');
+const opttolerance = options.add({ot: 0.2}, 'ot', 0, 1, 0.1).name('OptTolerance');
+
+function html2dom(html)
+{
+    const container = document.createElement('div');
+    container.innerHTML = html.trim();
+    return container.firstChild;
+}
+function getImageData(image, done)
+{
+    const img = new Image();
+    img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        done(img, canvas.getContext('2d').getImageData(0, 0, img.width, img.height));
+    };
+    img.onerror = (e) => {
+        done(null, e);
+    };
+    img.crossorigin = "";
+    if (image instanceof File)
+    {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(image);
+    }
+    else
+    {
+        img.src = image;
+    }
+}
+function convertToSVG(image)
+{
+    imgContainer.textContent = 'Please wait..';
+    getImageData(image, (img, result) => {
+        if (!img)
+        {
+            if (svgContainer.href != '#')
+            {
+                URL.revokeObjectURL(svgContainer.href);
+                svgContainer.href = '#';
+            }
+            svgContainer.textContent = 'Cannot read image: ' + result.toString();
+        }
+        else
+        {
+            imgContainer.textContent = '';
+            imgContainer.appendChild(img);
+            svgContainer.textContent = 'Please wait..';
+            worker.onmessage = function(e) {
+                if (svgContainer.href != '#')
+                {
+                    URL.revokeObjectURL(svgContainer.href);
+                    svgContainer.href = '#';
+                }
+                svgContainer.href = URL.createObjectURL(new Blob([e.data], {type: "image/svg+xml"}));
+                svgContainer.textContent = '';
+                svgContainer.appendChild(html2dom(e.data));
+            };
+            worker.postMessage({
+                imageData: result,
+                filters:{
+                    grayscale: grayscale.getValue(),
+                    contrast: {amount:contrast.getValue()},
+                    blur: {radius:blur.getValue()}
+                },
+                params: {
+                    mode: grayscale.getValue() ? "gray" : "color",
+                    depth: depth.getValue(),
+                    turdsize: turdsize.getValue(),
+                    minpathsegments: minpathsegments.getValue(),
+                    alphamax: alphamax.getValue(),
+                    optcurve: optcurve.getValue(),
+                    opttolerance: opttolerance.getValue()
+                }
+            });
+        }
+    });
+}
+
+})();
+//]]></script>
+</body>
+</html>
