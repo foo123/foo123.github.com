@@ -88,34 +88,39 @@ h1 {
     margin: 0;
     padding: 0;
 }
-input,button {
+#controls > input,#controls > button {
     position: relative;
-    font-size: 12px;
+    font-size: 16px;
     padding: 4px;
     width: 200px;
     max-width: 40%;
     display: inline-block;
     box-sizing: border-box;
     vertical-align: top;
+    margin: 4px;
 }
-button {
+#controls > input {
+    background: #343434;
+    color: #fff;
+    border: 1px solid #aaa;
+}
+#controls > button {
     width: 60px;
+    cursor: pointer;
 }
 #controls {
     position: relative;
     display: block;
     margin: 0 auto;
     width: 100%;
-    text-align: left;
+    text-align: center;
     box-sizing: border-box;
 }
 #options {
     width: 300px;
     position: relative;
     display: block;
-    clear: both;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px auto 10px auto;
 }
 #img,#svg {
     position: relative;
@@ -130,6 +135,16 @@ button {
     padding: 10px;
     min-height: 100px;
 }
+#img,#svg {
+    color: black;
+    font-weight: bold;
+    font-size: 18px;
+    text-decoration: none;
+    --space: .25rem;
+    background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100% ), linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);
+    background-position: 0 0, calc(2 * var(--space)) calc(2 * var(--space));
+    background-size: calc(4 * var(--space)) calc(4 * var(--space));
+}
 #img img,#svg svg {
     position: relative;
     display: inline-block;
@@ -138,92 +153,112 @@ button {
     max-width: 100%;
     height: auto;
 }
-#img,#svg {
-    color: black;
-    font-weight: bold;
-    --space: .25rem;
-    background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100% ), linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);
-    background-position: 0 0, calc(2 * var(--space)) calc(2 * var(--space));
-    background-size: calc(4 * var(--space)) calc(4 * var(--space));
-}
-@media (max-width: 400px) {
+@media (max-width: 420px) {
 #img,#svg {
     width: 100%;
     margin-left: 0;
     min-height: 50px;
 }
 }
-
+#forkongithub {
+    position: relative;
+    display: block;
+    margin: 10px 0 10px 0;
+}
+#forkongithub  a {
+    background: #aa0000;
+    color: #fff;
+    text-decoration: none;
+    font-family: arial, sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.4rem;
+    position: relative;
+    transition: all 0.5s;
+}
+#forkongithub a:hover {
+    background: #aa0000;
+    color: #fff;
+}
+#forkongithub a::before, #forkongithub a::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    z-index: 100;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub a::after {
+    bottom: 1px;
+    top: auto;
+}
+@media screen and (min-width:800px) {
+    #forkongithub {
+        position: absolute;
+        display: block;
+        z-index: 100;
+        top: 0;
+        right: 0;
+        width: 200px;
+        overflow: hidden;
+        height: 200px;
+        margin: 0;
+    }
+    #forkongithub a {
+        width: 200px;
+        position: absolute;
+        top: 60px;
+        right: -60px;
+        transform: rotate(45deg);
+        box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    }
+}
 </style>
 </head>
 <body>
-<header><h1>Convert Image to SVG with img2svg</h1></header>
+<span id="forkongithub"><a href="https://github.com/foo123/img2svg">See me on GitHub</a></span>
+<header><h1>Convert Image to SVG with img2svg v.1.0.0</h1></header>
 <div id="container">
 <div id="controls">
 <input type="text" id="image_url" placeholder="url.." />
 <input type="text" id="image_filename" placeholder="file.." /><input type="file" id="image_file" style="position:absolute;opacity:0;z-index:-1;"/>
 <button id="go">GO</button>
 <div id="options"></div>
+<p style="clear:both">Click on SVG to download it</p>
 </div>
-<div id="img"></div><a id="svg" href="#" download="result.svg" target="_blank"></a>
+<div id="img" title="image"></div><a id="svg" href="#" download="result.svg" title="svg:click to download"></a>
 </div>
 <script type="text/javascript" src="../common/js/datgui.min.js"></script>
 <script type="text/javascript">//<![CDATA[
 (function() {
 "use strict";
-const worker = new Worker("worker.js?refresh=1");
 const imgContainer = document.getElementById('img');
 const svgContainer = document.getElementById('svg');
 const inpUrl = document.getElementById('image_url');
 const inpFile = document.getElementById('image_file');
 const inpFilename = document.getElementById('image_filename');
 const go = document.getElementById('go');
-let currentImage = null;
-inpFilename.addEventListener('focus', () => {
-    inpFile.click();
-}, false);
-inpFile.addEventListener('change', () => {
-    if (inpFile.files[0])
-    {
-        inpUrl.value = '';
-        inpFilename.value = inpFile.files[0].name;
-        currentImage = inpFile.files[0];
-    }
-    else
-    {
-        inpFilename.value = '';
-        currentImage = null;
-    }
-}, false);
-inpUrl.addEventListener('change', () => {
-    if (inpUrl.value.trim().length)
-    {
-        inpFilename.value = '';
-        currentImage = 'https://api.allorigins.win/raw?url='+encodeURIComponent(inpUrl.value.trim());
-        console.log(currentImage);
-    }
-    else
-    {
-        inpUrl.value = '';
-        currentImage = null;
-    }
-}, false);
-go.addEventListener('click', () => {
-    setTimeout(() => {
-        if (currentImage) convertToSVG(currentImage);
-    }, 100);
-}, false);
 
-const options = new DAT.GUI({height: 9*32, domElement: document.getElementById('options')});
+const options = new DAT.GUI({height: 10*32, domElement: document.getElementById('options')});
 const grayscale = options.add({gray: false}, 'gray').name('Grayscale');
 const contrast = options.add({contrast: 0}, 'contrast', 0, 1, 0.1).name('Contrast');
 const blur = options.add({radius: 0}, 'radius', 0, 20, 1).name('Blur Radius');
-const depth = options.add({depth: 2}, 'depth', 1, 256, 1).name('Depth');
+const depth = options.add({depth: 5}, 'depth', 1, 256, 1).name('Color Depth');
+const connectedcomponents = options.add({cc: true}, 'cc').name('ConnectedComponents');
 const minpathsegments = options.add({mps: 2}, 'mps', 2, 100, 1).name('MinPathSegments');
-const turdsize = options.add({ts: 2}, 'ts', 0, 100, 1).name('TurdSize');
+const turdsize = options.add({ts: 0}, 'ts', 0, 100, 1).name('TurdSize');
 const alphamax = options.add({a: 1}, 'a', 0, 2, 0.1).name('AlphaMax');
 const optcurve = options.add({opt: true}, 'opt').name('OptCurve');
 const opttolerance = options.add({ot: 0.2}, 'ot', 0, 1, 0.1).name('OptTolerance');
+
+const worker = new Worker("worker.js?refresh=1");
+
+let currentImage = null;
 
 function html2dom(html)
 {
@@ -260,29 +295,27 @@ function getImageData(image, done)
 }
 function convertToSVG(image)
 {
-    imgContainer.textContent = 'Please wait..';
+    imgContainer.textContent = 'loading..';
+    svgContainer.textContent = 'loading..';
+    if (svgContainer.href != '#')
+    {
+        URL.revokeObjectURL(svgContainer.href);
+        svgContainer.href = '#';
+        svgContainer.target = '_self';
+    }
     getImageData(image, (img, result) => {
         if (!img)
         {
-            if (svgContainer.href != '#')
-            {
-                URL.revokeObjectURL(svgContainer.href);
-                svgContainer.href = '#';
-            }
-            svgContainer.textContent = 'Cannot read image: ' + result.toString();
+            svgContainer.textContent = imgContainer.textContent = 'Cannot read image: ' + result.toString();
         }
         else
         {
             imgContainer.textContent = '';
             imgContainer.appendChild(img);
-            svgContainer.textContent = 'Please wait..';
+            svgContainer.textContent = 'tracing..';
             worker.onmessage = function(e) {
-                if (svgContainer.href != '#')
-                {
-                    URL.revokeObjectURL(svgContainer.href);
-                    svgContainer.href = '#';
-                }
                 svgContainer.href = URL.createObjectURL(new Blob([e.data], {type: "image/svg+xml"}));
+                svgContainer.target = '_blank';
                 svgContainer.textContent = '';
                 svgContainer.appendChild(html2dom(e.data));
             };
@@ -296,8 +329,9 @@ function convertToSVG(image)
                 params: {
                     mode: grayscale.getValue() ? "gray" : "color",
                     depth: depth.getValue(),
-                    turdsize: turdsize.getValue(),
+                    connectedcomponents: connectedcomponents.getValue(),
                     minpathsegments: minpathsegments.getValue(),
+                    turdsize: turdsize.getValue(),
                     alphamax: alphamax.getValue(),
                     optcurve: optcurve.getValue(),
                     opttolerance: opttolerance.getValue()
@@ -306,7 +340,46 @@ function convertToSVG(image)
         }
     });
 }
-
+function init()
+{
+    currentImage = null;
+    inpUrl.value = '';
+    inpFilename.value = '';
+    inpFilename.addEventListener('focus', () => {
+        inpFile.click();
+    }, false);
+    inpFile.addEventListener('change', () => {
+        if (inpFile.files[0])
+        {
+            inpUrl.value = '';
+            inpFilename.value = inpFile.files[0].name;
+            currentImage = inpFile.files[0];
+        }
+        else
+        {
+            inpFilename.value = '';
+            currentImage = null;
+        }
+    }, false);
+    inpUrl.addEventListener('change', () => {
+        if (inpUrl.value.trim().length)
+        {
+            inpFilename.value = '';
+            currentImage = 'https://api.allorigins.win/raw?url='+encodeURIComponent(inpUrl.value.trim());
+        }
+        else
+        {
+            inpUrl.value = '';
+            currentImage = null;
+        }
+    }, false);
+    go.addEventListener('click', () => {
+        setTimeout(() => {
+            if (currentImage) convertToSVG(currentImage);
+        }, 40);
+    }, false);
+}
+init();
 })();
 //]]></script>
 </body>
