@@ -275,6 +275,13 @@ function html2dom(html)
     container.innerHTML = html.trim();
     return container.firstChild;
 }
+function base64encode(buffer)
+{
+  const bytes = new Uint8Array(buffer), len = bytes.byteLength;
+  let binary = '';
+  for (let i=0; i<len; ++i) binary += String.fromCharCode(bytes[i]);
+  return window.btoa(binary);
+}
 function getImageData(image, done)
 {
     const img = new Image();
@@ -282,11 +289,15 @@ function getImageData(image, done)
         const canvas = document.createElement('canvas');
         canvas.width = img.width;
         canvas.height = img.height;
+        try {
         canvas.getContext('2d').drawImage(img, 0, 0);
         done(img, canvas.getContext('2d').getImageData(0, 0, img.width, img.height));
+        } catch (e) {
+            done(img, e);
+        }
     };
     img.onerror = (e) => {
-        done(null, e);
+        done(img, e);
     };
     img.crossorigin = "";
     if (image instanceof File)
@@ -299,7 +310,8 @@ function getImageData(image, done)
     }
     else
     {
-        img.src = image;
+        //img.src = image;
+        fetch(image, {}, {headers:{origin:window.location.hostname}}).then(res => res.arrayBuffer()).then(buffer => {img.src = 'data:image/jpg;base64,' + base64encode(buffer);}).catch(e => {done(null, e);});
     }
 }
 function convertToSVG(image)
@@ -313,11 +325,7 @@ function convertToSVG(image)
         svgContainer.target = '_self';
     }
     getImageData(image, (img, result) => {
-        if (!img)
-        {
-            svgContainer.textContent = imgContainer.textContent = 'Cannot read image: ' + result.toString();
-        }
-        else
+        if (result instanceof ImageData)
         {
             imgContainer.textContent = '';
             imgContainer.appendChild(img);
@@ -347,6 +355,19 @@ function convertToSVG(image)
                     opttolerance: opttolerance.getValue()
                 }
             });
+        }
+        else
+        {
+            svgContainer.textContent = 'Cannot read image: ' + result.toString();
+            if (img)
+            {
+                imgContainer.textContent = '';
+                imgContainer.appendChild(img);
+            }
+            else
+            {
+                imgContainer.textContent = svgContainer.textContent;
+            }
         }
     });
 }
