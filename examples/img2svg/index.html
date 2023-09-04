@@ -5,9 +5,9 @@
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, minimum-scale=1.0">
-<meta name="description" content="img2svg: vectorize image to svg using potrace algorithm with color" />
+<meta name="description" content="img2svg: transform image to svg using potrace algorithm with color" />
 <meta property="og:title" content="img2svg: vectorize image to svg">
-<meta property="og:description" content="img2svg: vectorize image to svg using potrace algorithm with color">
+<meta property="og:description" content="img2svg: transform image to svg using potrace algorithm with color">
 <meta property="og:image" content="https://foo123.github.io/thumbs/img2svg.png">
 <meta property="og:url" content="https://foo123.github.io/examples/img2svg/">
 <meta name="twitter:card" content="summary">
@@ -255,7 +255,7 @@ const grayscale = options.add({gray: false}, 'gray').name('Grayscale');
 const contrast = options.add({contrast: 0}, 'contrast', 0, 1, 0.1).name('Contrast');
 const blur = options.add({radius: 0}, 'radius', 0, 20, 1).name('Blur Radius');
 const depth = options.add({depth: 5}, 'depth', 1, 256, 1).name('Color Depth');
-const connectedcomponents = options.add({cc: true}, 'cc').name('ConnectedComponents');
+const connectedcomponents = options.add({cc: false}, 'cc').name('ConnectedComponents');
 const minpathsegments = options.add({mps: 2}, 'mps', 2, 100, 1).name('MinPathSegments');
 const turnpolicy = options.add({tp: "minority"}, 'tp').options({
 "left":"left", "right":"right", "black":"black", "white":"white", "majority":"majority", "minority":"minority"
@@ -267,7 +267,7 @@ const opttolerance = options.add({ot: 0.2}, 'ot', 0, 1, 0.1).name('OptTolerance'
 
 const worker = new Worker("worker.js?refresh=1");
 
-let currentImage = null, imgType = 'jpg';
+let currentImage = null, imgType = 'jpg', img = null, imgData = null, imgChanged = false;
 
 function html2dom(html)
 {
@@ -284,34 +284,60 @@ function base64encode(buffer)
 }
 function getImageData(image, done)
 {
-    const img = new Image();
-    img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        try {
-        canvas.getContext('2d').drawImage(img, 0, 0);
-        done(img, canvas.getContext('2d').getImageData(0, 0, img.width, img.height));
-        } catch (e) {
-            done(img, e);
-        }
-    };
-    img.onerror = (e) => {
-        done(img, e);
-    };
-    img.crossorigin = "";
-    if (image instanceof File)
+    if (imgChanged)
     {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            img.src = e.target.result;
+        imgChanged = false;
+        img = new Image();
+        imgData = null;
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            try {
+                canvas.getContext('2d').drawImage(img, 0, 0);
+                imgData = canvas.getContext('2d').getImageData(0, 0, img.width, img.height);
+            } catch (e) {
+                imgData = e.toString();
+            }
+            done(img, imgData);
         };
-        reader.readAsDataURL(image);
+        img.onerror = (e) => {
+            img = null;
+            imgData = e.message;
+            done(img, imgData);
+        };
+        img.crossorigin = "";
+        if (image instanceof File)
+        {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                img.src = e.target.result;
+            };
+            reader.onerror = (e) => {
+                img = null;
+                imgData = e.message;
+                done(img, imgData);
+            };
+            reader.readAsDataURL(image);
+        }
+        else
+        {
+            //img.src = image;
+            fetch(image, {}, {headers:{origin:window.location.hostname}})
+            .then(res => res.arrayBuffer())
+            .then(buffer => {
+                img.src = 'data:image/'+imgType+';base64,' + base64encode(buffer);
+            })
+            .catch(e => {
+                img = null;
+                imgData = e.toString();
+                done(img, imgData);
+            });
+        }
     }
     else
     {
-        //img.src = image;
-        fetch(image, {}, {headers:{origin:window.location.hostname}}).then(res => res.arrayBuffer()).then(buffer => {img.src = 'data:image/'+imgType+';base64,' + base64encode(buffer);}).catch(e => {done(null, e);});
+        done(img, imgData);
     }
 }
 function convertToSVG(image)
@@ -358,15 +384,15 @@ function convertToSVG(image)
         }
         else
         {
-            svgContainer.textContent = 'Cannot read image: ' + result.toString();
             if (img)
             {
                 imgContainer.textContent = '';
                 imgContainer.appendChild(img);
+                svgContainer.textContent = 'Cannot read image: ' + result.toString();
             }
             else
             {
-                imgContainer.textContent = svgContainer.textContent;
+                imgContainer.textContent = svgContainer.textContent = 'No image';
             }
         }
     });
@@ -378,6 +404,7 @@ function init()
     inpFilename.value = '';
     inpFilename.addEventListener('focus', () => {
         inpFile.click();
+        inpFilename.blur();
     }, false);
     inpFile.addEventListener('change', () => {
         if (inpFile.files[0])
@@ -385,6 +412,7 @@ function init()
             inpUrl.value = '';
             inpFilename.value = inpFile.files[0].name;
             currentImage = inpFile.files[0];
+            imgChanged = true;
         }
         else
         {
@@ -404,6 +432,7 @@ function init()
                 case 'png': imgType = 'png'; break;
                 default: imgType = 'jpg'; break;
             }
+            imgChanged = true;
         }
         else
         {

@@ -19,7 +19,7 @@ function grayscale(img, w, h)
 function contrast(img, w, h, amount)
 {
     const l = img.length, newimg = new Uint8ClampedArray(l),
-        m = 1.0 + amount, b = 128 * (1 - m);
+        m = 1.0 + amount, b = 128*(1 - m);
     for (let i=0; i<l; i+=4)
     {
         newimg[i  ] = uint8(m*img[i  ] + b);
@@ -36,10 +36,12 @@ function blur(img, w, h, radius)
         satG = new Float32Array(size),
         satB = new Float32Array(size),
         newimg = new Uint8ClampedArray(l),
-        w4 = w << 2, r = radius >>> 1;
-    let src = newimg, dst = img, i, j, k,
-        x, y, x0, y0, x1, y1, cR, cG, cB;
-    for (let repeat=0; repeat<4; ++repeat)
+        w4 = w << 2, r = radius >>> 1, radius2 = radius*radius;
+    let src = newimg, dst = img,
+        i, j, p1, p2, p3, p4,
+        x, y, x0, y0, x1, y1,
+        cR, cG, cB;
+    for (let repeat=0; repeat<3; ++repeat)
     {
         let tmp = src;
         src = dst;
@@ -61,7 +63,7 @@ function blur(img, w, h, radius)
         }
         for (i=0,x=0,y=0; i<l; i+=4,++x)
         {
-            if (x >= w) {x = 0; ++y;}
+            if (x >= w) {x=0; ++y;}
             x0 = x - r;
             x1 = x + r;
             y0 = y - r;
@@ -70,11 +72,13 @@ function blur(img, w, h, radius)
             if (x1 >= w) x1 = w-1;
             if (y0 < 0) y0 = 0;
             if (y1 >= h) y1 = h-1;
-            j = x0 + y0*w;
-            k = x1 + y1*w;
-            dst[i  ] = uint8((satR[k] - satR[j])/(k - j + 1));
-            dst[i+1] = uint8((satG[k] - satG[j])/(k - j + 1));
-            dst[i+2] = uint8((satB[k] - satB[j])/(k - j + 1));
+            p1 = x0 + y0*w;
+            p4 = x1 + y1*w;
+            p2 = x1 + y0*w;
+            p3 = x0 + y1*w;
+            dst[i  ] = uint8((satR[p4] - satR[p2] - satR[p3] + satR[p1])/radius2);
+            dst[i+1] = uint8((satG[p4] - satG[p2] - satG[p3] + satG[p1])/radius2);
+            dst[i+2] = uint8((satB[p4] - satB[p2] - satB[p3] + satB[p1])/radius2);
             dst[i+3] = src[i+3];
         }
     }
