@@ -267,7 +267,7 @@ const opttolerance = options.add({ot: 0.2}, 'ot', 0, 1, 0.1).name('OptTolerance'
 
 const worker = new Worker("worker.js?refresh=1");
 
-let currentImage = null;
+let currentImage = null, imgType = 'jpg';
 
 function html2dom(html)
 {
@@ -311,7 +311,7 @@ function getImageData(image, done)
     else
     {
         //img.src = image;
-        fetch(image, {}, {headers:{origin:window.location.hostname}}).then(res => res.arrayBuffer()).then(buffer => {img.src = 'data:image/jpg;base64,' + base64encode(buffer);}).catch(e => {done(null, e);});
+        fetch(image, {}, {headers:{origin:window.location.hostname}}).then(res => res.arrayBuffer()).then(buffer => {img.src = 'data:image/'+imgType+';base64,' + base64encode(buffer);}).catch(e => {done(null, e);});
     }
 }
 function convertToSVG(image)
@@ -397,6 +397,13 @@ function init()
         {
             inpFilename.value = '';
             currentImage = 'https://api.allorigins.win/raw?url='+encodeURIComponent(inpUrl.value.trim());
+            switch(inpUrl.value.trim().split('.').pop().toLowerCase())
+            {
+                case 'webp': imgType = 'webp'; break;
+                case 'gif': imgType = 'gif'; break;
+                case 'png': imgType = 'png'; break;
+                default: imgType = 'jpg'; break;
+            }
         }
         else
         {
