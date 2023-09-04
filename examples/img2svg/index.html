@@ -204,6 +204,21 @@ h1 {
     bottom: 1px;
     top: auto;
 }
+.guidat-propertyname {
+    font-size: 16px;
+}
+.guidat-controller.number input[type="text"] {
+    font-size: 16px;
+}
+.guidat-slider-bg,.guidat-slider-fg {
+    height: 27px;
+}
+.guidat-controller select {
+    font-size: 16px;
+}
+.guidat .guidat-controller.boolean input {
+    font-size: 22px;
+}
 @media screen and (min-width:800px) {
     #forkongithub {
         position: absolute;
@@ -251,7 +266,7 @@ const inpFile = document.getElementById('image_file');
 const inpFilename = document.getElementById('image_filename');
 const go = document.getElementById('go');
 
-const options = new DAT.GUI({height: 11*32, width:340, domElement: document.getElementById('options')});
+const options = new DAT.GUI({height: 11*32.12, width:340, domElement: document.getElementById('options')});
 const grayscale = options.add({gray: false}, 'gray').name('Grayscale');
 const contrast = options.add({contrast: 0}, 'contrast', 0, 1, 0.1).name('Contrast');
 const blur = options.add({radius: 0}, 'radius', 0, 20, 1).name('Blur Radius');
