@@ -4,7 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
-<title>Open-Source Projects, Demos and Showcases | foo123.github.io</title>
+<title>Open-Source Projects, Demos and Showcases | Nikos M. | Code Artist · Architect · Musician</title>
 <meta name="description" content="" />
 <meta property="og:image" content="https://foo123.github.io/image.jpg">
 <meta property="og:url" content="https://foo123.github.io/">
@@ -519,17 +519,27 @@ ul.grid li {
 }
 </style>
 <script type="text/javascript">
-var navigated = false;
+var main = false;
 function navigate()
 {
-    navigated = true;
+    if (!main)
+    {
+        if (0 === window.location.hash.indexOf('#controller_page_'))
+        {
+            main = '#controller_page_main' === window.location.hash;
+        }
+        else
+        {
+            main = true;
+        }
+    }
     return true;
 }
 function goback()
 {
     if (window.history)
     {
-        if (!navigated)
+        if (!main)
         {
             return navigate();
         }
