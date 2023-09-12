@@ -419,7 +419,7 @@ ul.grid li {
     vertical-align: top;
     margin: 0;
     width: 20%;
-    padding: 10px 10px;
+    padding: 0px 5px 25px 5px;
     font-size: 14px;
 }
 .demo {
@@ -436,14 +436,16 @@ ul.grid li {
     transition: transform .3s ease;
 }
 .demo img {
+    position: relative;
     display: inline-block;
     max-width: 100%;
     height: auto;
 }
-.demo img.lozad.ready {
+.demo img.ready {
     width: 100%;
 }
 .demo p {
+    position: relative;
     display: block;
     margin-top: 10px;
     font-size: 12px;
@@ -519,6 +521,66 @@ ul.grid li {
 .links a .icon {
     width: 24px;
 }
+#page_open_source {
+    padding: 10px;
+    padding-top: 60px;
+}
+
+#page_frameworks {
+    padding: 10px;
+    padding-top: 60px;
+}
+
+#page_dsp {
+    padding: 10px;
+    padding-top: 60px;
+}
+
+#page_processors {
+    padding: 10px;
+    padding-top: 60px;
+}
+
+#page_math {
+    padding: 10px;
+    padding-top: 60px;
+}
+
+#page_graphics {
+    padding: 10px;
+    padding-top: 60px;
+}
+
+#page_plugins {
+    padding: 10px;
+    padding-top: 60px;
+}
+
+#page_apps {
+    padding: 10px;
+    padding-top: 60px;
+}
+
+#page_games {
+    padding: 10px;
+    padding-top: 60px;
+}
+
+#page_tools {
+    padding: 10px;
+    padding-top: 60px;
+}
+
+#page_various {
+    padding: 10px;
+    padding-top: 60px;
+}
+
+#page_projects {
+    padding: 10px;
+    padding-top: 60px;
+}
+
 }
 </style>
 <script type="text/javascript">
@@ -629,77 +691,77 @@ function goback()
     <ul class="grid">
         <li>
             <a class="demo" href="#controller_page_frameworks" onclick="return navigate()">
-                <img src="thumbs/contemplate-1.jpg" alt="Frameworks, Libraries, Engines, .." />
+                <img src="thumbs/contemplate-1.jpg" class="ready" alt="Frameworks, Libraries, Engines, .." />
                 <p>Frameworks, Libraries, Engines, ..</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="#controller_page_dsp" onclick="return navigate()">
-                <img src="thumbs/filter.jpg" alt="Signal Processing, Image / Video Processing, Feature Detection, Computer Vision, DSP, Machine Learning, Sound Visualization, .." />
+                <img src="thumbs/filter.jpg" class="ready" alt="Signal Processing, Image / Video Processing, Feature Detection, Computer Vision, DSP, Machine Learning, Sound Visualization, .." />
                 <p>Signal Processing, Image / Video Processing, Feature Detection, Computer Vision, DSP, Machine Learning, Sound Visualization, ..</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="#controller_page_processors" onclick="return navigate()">
-                <img src="thumbs/yo-regex.jpg" alt="Pattern Processing, Parsers, Processors, Template Engines, Grammars, .." />
+                <img src="thumbs/yo-regex.jpg" class="ready" alt="Pattern Processing, Parsers, Processors, Template Engines, Grammars, .." />
                 <p>Pattern Processing, Parsers, Processors, Template Engines, Grammars, ..</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="#controller_page_math" onclick="return navigate()">
-                <img src="thumbs/abacus.jpg" alt="Combinatorics, Mathematics, Logic, Constraints, Optimization, .." />
+                <img src="thumbs/abacus.jpg" class="ready" alt="Combinatorics, Mathematics, Logic, Constraints, Optimization, .." />
                 <p>Combinatorics, Mathematics, Logic, Constraints, Optimization, ..</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="#controller_page_graphics" onclick="return navigate()">
-                <img src="thumbs/carousel3.jpg" alt="Graphics, Animation, 3D, Transition Libraries, Slideshows, .." />
+                <img src="thumbs/carousel3.jpg" class="ready" alt="Graphics, Animation, 3D, Transition Libraries, Slideshows, .." />
                 <p>Graphics, Animation, 3D, Transition Libraries, Slideshows, ..</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="#controller_page_plugins" onclick="return navigate()">
-                <img src="thumbs/plugins.jpg" alt="Plugins, Add-Ons, Extensions, Modules, Scripts, .." />
+                <img src="thumbs/plugins.jpg" class="ready" alt="Plugins, Add-Ons, Extensions, Modules, Scripts, .." />
                 <p>Plugins, Add-Ons, Extensions, Modules, Scripts, ..</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="#controller_page_apps" onclick="return navigate()">
-                <img src="thumbs/sorting-algorithms.jpg" alt="Demo Applications" />
+                <img src="thumbs/sorting-algorithms.jpg" class="ready" alt="Demo Applications" />
                 <p>Demo Applications</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="#controller_page_games" onclick="return navigate()">
-                <img src="thumbs/billiard.jpg" alt="Simple games, game ideas, .." />
+                <img src="thumbs/billiard.jpg" class="ready" alt="Simple games, game ideas, .." />
                 <p>Simple games, game ideas, ..</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="#controller_page_tools" onclick="return navigate()">
-                <img src="thumbs/tools.jpg" alt="Various Tools &amp; Scripts for automation tasks.." />
+                <img src="thumbs/tools.jpg" class="ready" alt="Various Tools &amp; Scripts for automation tasks.." />
                 <p>Various Tools &amp; Scripts for automation tasks..</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="#controller_page_various" onclick="return navigate()">
-                <img src="thumbs/optimization-methods.jpg" alt="Various experiments, studies, demos, .." />
+                <img src="thumbs/optimization-methods.jpg" class="ready" alt="Various experiments, studies, demos, .." />
                 <p>Various experiments, studies, demos, ..</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="#controller_page_projects" onclick="return navigate()">
-                <img src="samples/istavrolexo.png" alt="Samples of Projects and Applications .." />
+                <img src="samples/istavrolexo.png" class="ready" alt="Samples of Projects and Applications .." />
                 <p>Samples of Projects and Applications ..</p>
             </a>
         </li>
@@ -941,6 +1003,13 @@ function goback()
             <a class="demo" href="examples/plot/">
                 <img class="lozad" src="css/5.gif" data-src="thumbs/plot.jpg" style="--src:url('thumbs/plot.jpg')" alt="Plot.js: simple plotting library for Canvas, SVG and plain HTML" />
                 <p>Plot.js: simple plotting library for Canvas, SVG and plain HTML</p>
+            </a>
+        </li>
+    
+        <li>
+            <a class="demo" href="https://github.com/foo123/CanvasLite">
+                <img class="lozad" src="css/5.gif" data-src="thumbs/canvaslite.png" style="--src:url('thumbs/canvaslite.png')" alt="CanvasLite: Lite Canvas alternative for Nodejs in pure JavaScript" />
+                <p>CanvasLite: Lite Canvas alternative for Nodejs in pure JavaScript</p>
             </a>
         </li>
     
@@ -1369,6 +1438,13 @@ function goback()
             <a class="demo" href="examples/plot/">
                 <img class="lozad" src="css/5.gif" data-src="thumbs/plot.jpg" style="--src:url('thumbs/plot.jpg')" alt="Plot.js: simple plotting library for Canvas, SVG and plain HTML" />
                 <p>Plot.js: simple plotting library for Canvas, SVG and plain HTML</p>
+            </a>
+        </li>
+    
+        <li>
+            <a class="demo" href="https://github.com/foo123/CanvasLite">
+                <img class="lozad" src="css/5.gif" data-src="thumbs/canvaslite.png" style="--src:url('thumbs/canvaslite.png')" alt="CanvasLite: Lite Canvas alternative for Nodejs in pure JavaScript" />
+                <p>CanvasLite: Lite Canvas alternative for Nodejs in pure JavaScript</p>
             </a>
         </li>
     
@@ -1846,6 +1922,13 @@ function goback()
             <a class="demo" href="examples/pattern-matching-algorithms/">
                 <img class="lozad" src="css/5.gif" data-src="thumbs/pattern-matching-algorithms.jpg" style="--src:url('thumbs/pattern-matching-algorithms.jpg')" alt="Study &amp; analysis of various Pattern Matching Algorithms in JavaScript" />
                 <p>Study &amp; analysis of various Pattern Matching Algorithms in JavaScript</p>
+            </a>
+        </li>
+    
+        <li>
+            <a class="demo" href="examples/img2svg/">
+                <img class="lozad" src="css/5.gif" data-src="thumbs/img2svg.webp" style="--src:url('thumbs/img2svg.webp')" alt="img2svg: Image to SVG transformer" />
+                <p>img2svg: Image to SVG transformer</p>
             </a>
         </li>
     
