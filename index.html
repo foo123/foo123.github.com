@@ -41,7 +41,7 @@ body {
     backround: none;
     width: 100%;
     height: 100%;
-    background: #fff;
+    background: #000;
     color: #fff;
 }
 .icon {
@@ -517,11 +517,20 @@ ul.grid li {
 }
 </style>
 <script type="text/javascript">
+var navigated = false;
 function goback()
 {
     if (window.history)
     {
-        window.history.back();
+        if (!navigated)
+        {
+            navigated = true;
+            return true;
+        }
+        else
+        {
+            window.history.back();
+        }
         return false;
     }
     return true;
@@ -558,7 +567,7 @@ function goback()
 <span id="controller_page_theses" class="controller"></span>
 <!-- /page controllers -->
 <div id="panel">
-    <a id="backbt" href="#controller_page_main" onclick="goback()" title="Back">&#x2190;</a>
+    <a id="backbt" href="#" onclick="return goback()" title="Back">&#x2190;</a>
 
     <!-- main page -->
     <section id="page_main" class="page">
