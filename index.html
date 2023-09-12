@@ -440,7 +440,7 @@ ul.grid li {
     max-width: 100%;
     height: auto;
 }
-.demo img.lozad[data-loaded="true"] {
+.demo img.lozad.ready {
     width: 100%;
 }
 .demo p {
@@ -2103,7 +2103,19 @@ if (window.lozad)
 {
     var observer = lozad('.lozad', {
         threshold: 0.3,
-        enableAutoReload: false
+        enableAutoReload: false,
+        loaded: function(el) {
+            el.onload = function() {
+                el.onload = null;
+                el.onerror = null;
+                el.classList.add('ready');
+            };
+            el.onerror = function() {
+                el.onload = null;
+                el.onerror = null;
+                el.src = 'css/5.gif';
+            };
+        }
     });
     observer.observe();
 }
