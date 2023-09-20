@@ -16,11 +16,11 @@
     <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
     <style type="text/css">
         html,body {
-            position:relative;
+            position: relative;
             font-family: Monospace;
-            font-size:12px;
+            font-size: 12px;
             background-color: #121212;
-            color:#aaa;
+            color: #aaa;
             margin: 0;
             padding:0;
         }
@@ -304,7 +304,7 @@
                 $F.ColorFillFilter(125,75,  0x0000ff, 0.8           ),
                 $F.ColorFillFilter(75, 36,  0x0000ff, 0.8           )
             ]).worker(runInThread)
-            ,seamless = $F.SeamlessTileFilter().worker(runInThread)
+            ,seamless = $F.SeamlessTileFilter().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
             //,bokeh = $F.BokehFilter(80, 90, 60, 10).worker(runInThread)
             /*$F.ConvolutionMatrixFilter([2,  4,  5,  4, 2,
                                         4,  9, 12,  9, 4,
