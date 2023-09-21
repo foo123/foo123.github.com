@@ -243,9 +243,10 @@
                 <optgroup label="Other Plugins and Composite Filters">
                     <option value='#'>Noise</option>
                     <option value='#'>Alpha Mask (ChannelCopy)</option>
-                    <option value='#'>Automatic Threshold</option>
+                    <option value='#'>Otsu Automatic Threshold</option>
                     <option value='#'>Equalize Histogram</option>
                     <option value='#'>Bokeh (Depth-of-Field)</option>
+                    <option value='#'>Seamless Tile</option>
                     <option value='#'>Halftone</option>
                     <option value='#'>Pixelate</option>
                     <option value='#'>Canny Edges Extractor</option>
@@ -471,6 +472,7 @@
             /*hueE =*/ hueExtractor = $F.ColorMapFilter().setMode($F.MODE.HUE).extract(10, 50).makeGLSL(runInWebGL).makeWASM(runInWasm),
             //hueExtractor = $F.CompositeFilter([hueE, open]),
             bokeh = $F.BokehFilter(0.5, 0.5, 100, 10),
+            seamless = $F.SeamlessTileFilter().makeGLSL(runInWebGL).makeWASM(runInWasm),
             canny = $F.CompositeFilter([gray, $F.CannyEdgesFilter(10, 90)]).makeGLSL(runInWebGL).makeWASM(runInWasm),
             shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(3, 0).makeGLSL(runInWebGL).makeWASM(runInWasm),
             perlinDisplaceFilter = $F.DisplacementMapFilter(perlinNoise).makeGLSL(runInWebGL).makeWASM(runInWasm),
@@ -536,6 +538,7 @@
                 otsu,
                 equ,
                 bokeh,
+                seamless,
                 halftoned,
                 pixelate,
                 canny,
