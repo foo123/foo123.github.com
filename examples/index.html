@@ -23,6 +23,10 @@ a {
 </style>
 </head>
 <body>
-Redirecting to <a href="../#controller_page_open_source">Open Source Projects</a> ..
+Redirecting to <a id="url" href="../#controller_page_open_source">Open Source Projects</a> .. in <span id="secs">2</span> seconds
+<script type="text/javascript">
+var secs = 2;
+setTimeout(function count() {document.getElementById('secs').textContent = --secs; if (0 < secs) setTimeout(count, 1000); else setTimeout(function() {window.location.href = document.getElementById('url').href;}, 100);}, 1000);
+</script>
 </body>
 </html>
