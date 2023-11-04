@@ -141,8 +141,7 @@ body {
 
 <button id="webgl" class="button">WebGL</button>
 <button id="wasm" class="button">WASM</button>
-<button id="synchronous" class="button">Synchronous</button>
-<!--<button id="parallel" class="button">Parallel</button>-->
+<button id="synchronous" class="button">JavaScript</button>
 <br />
 <div class="fluid col-1-1" style="margin:60px auto 0 auto;max-width:1280px;display:block;">
 <!--<div id="controls" class="fluid col-1-5"></div>-->
@@ -153,7 +152,7 @@ body {
 <br />
 <button id="play" class="button">Start</button>
 
-<script src="//cdn.jsdelivr.net/npm/eruda"></script>
+<!--<script src="//cdn.jsdelivr.net/npm/eruda"></script>-->
 <script type="text/javascript">eruda.init();</script>
 <script type="text/javascript" src="../common/js/require.js"></script>
 <script type="text/javascript" src="../common/js/require-config.js"></script>
@@ -163,7 +162,7 @@ body {
 var F, asking = false, streaming = false,
     controls, camera, output, button, canProcess = true,
     runInParallel = false, runInWebGL = false, runInWasm = false,
-    video, frame, edgesframe, edges, cartoonify;
+    scale = 0.5, video, frame, edgesframe, edges, cartoonify;
 function init()
 {
     camera = document.getElementById('camera');
@@ -184,6 +183,8 @@ function init()
                         if (!streaming)
                         {
                             streaming = true;
+                            frame.dimensions(Math.round(scale*video.videoWidth), Math.round(scale*video.videoHeight));
+                            edgesframe.dimensions(Math.round(scale*video.videoWidth), Math.round(scale*video.videoHeight));
                             requestAnimationFrame(processVideo);
                         }
                     }, false);
@@ -241,8 +242,12 @@ function processVideo()
 {
     if (video.paused || video.ended) return;
     requestAnimationFrame(processVideo);
-    frame.image(video);
-    edgesframe.image(video);
+    //frame.image(video);
+    //edgesframe.image(video);
+    frame.oCanvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight, 0, 0, frame.oCanvas.width, frame.oCanvas.height);
+    frame._refresh |= 3;
+    edgesframe.oCanvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight, 0, 0, edgesframe.oCanvas.width, edgesframe.oCanvas.height);
+    edgesframe._refresh |= 3;
     edgesframe.apply(edges);
     frame.apply(cartoonify);
     /*if (canProcess)
