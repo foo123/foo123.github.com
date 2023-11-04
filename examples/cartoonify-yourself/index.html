@@ -223,7 +223,7 @@ function init()
      F.ConvolutionMatrixFilter().bilateral(3, 15, 124)
     ,F.StatisticalFilter().median(7)
     //,F.HistogramEqualizeFilter()
-    ,F.ColorTableFilter().quantize(6)
+    ,F.ColorTableFilter().quantize(5)
     ,F.BlendFilter(['multiply', 0, 0, 1]).setInput(1, edgesframe)
     ]).worker(runInParallel).makeGLSL(runInWebGL).makeWASM(runInWasm);
 
@@ -243,11 +243,9 @@ function processVideo()
     if (video.paused || video.ended) return;
     requestAnimationFrame(processVideo);
     //frame.image(video);
-    //edgesframe.image(video);
     frame.oCanvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight, 0, 0, frame.oCanvas.width, frame.oCanvas.height);
     frame._refresh |= 3;
-    edgesframe.oCanvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight, 0, 0, edgesframe.oCanvas.width, edgesframe.oCanvas.height);
-    edgesframe._refresh |= 3;
+    edgesframe.image(/*video*/frame);
     edgesframe.apply(edges);
     frame.apply(cartoonify);
     /*if (canProcess)
