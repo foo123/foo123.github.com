@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" type="text/css" href="../common/css/minislider.min.css" />
+<script src="../common/js/minislider.min.js"></script>
+<style type="text/css">
+body {
+    background: #fff;
+    color: #555;
+    font-size: 18px;
+    font-family: sans-serif;
+    font-weight: 400;
+    text-align: center;
+    padding: 30px;
+}
+.minislider {
+    width: 100%;
+    margin: 40px auto;
+    --aspect-ratio: calc(16 / 9); /* 16 : 9 */
+}
+.minislider.one {
+    --auto-play: 1;
+    --delay: 3000ms;
+}
+.minislider.two {
+    --slides-per-area: 2;
+}
+#forkongithub  a {
+    background: #aa0000;
+    color: #fff;
+    text-decoration: none;
+    font-family: arial, sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.4rem;
+    position: relative;
+    transition: all 0.5s;
+}
+
+#forkongithub a:hover {
+    background: #aa0000;
+    color: #fff;
+}
+
+#forkongithub a::before, #forkongithub a::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    z-index: 100;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+
+#forkongithub a::after
+{
+    bottom: 1px;
+    top: auto;
+}
+
+@media screen and (min-width:800px) {
+    #forkongithub {
+        position: absolute;
+        display: block;
+        z-index: 100;
+        top: 0;
+        right: 0;
+        width: 200px;
+        overflow: hidden;
+        height: 200px;
+    }
+    #forkongithub a {
+        width: 200px;
+        position: absolute;
+        top: 60px;
+        right: -60px;
+        transform: rotate(45deg);
+        box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    }
+}
+@media (max-width: 1024px) {
+.minislider.one {
+    /* enable/disable autoplay dynamically */
+    --auto-play: 0;
+}
+}
+</style>
+<title>mini slider test demo</title>
+</head>
+<body>
+<span id="forkongithub"><a href="https://github.com/foo123/minislider">View it on GitHub</a></span>
+<h1>mini slider v.<script>document.write(minislider.VERSION);</script> demo</h1>
+
+<div class="minislider one">
+
+<div class="slider" data-slide="1" data-slides="3">
+    <a class="slide" href="https://en.wikipedia.org/wiki/Landscape" target="_blank" style="background-image:url('./imgs/1.jpg')"></a>
+    <a class="slide" href="https://en.wikipedia.org/wiki/Landscape" target="_blank" style="background-image:url('./imgs/3.jpg')"></a>
+    <figure class="slide" style="background-image:url('./imgs/4.jpg')"></figure>
+</div>
+
+<div class="bullets">
+    <a href="javascript:void(0)" class="bullet" data-slide="0" title="1"></a>
+    <a href="javascript:void(0)" class="bullet" data-slide="1" title="2"></a>
+    <a href="javascript:void(0)" class="bullet" data-slide="2" title="3"></a>
+</div>
+
+<a href="javascript:void(0)" class="arrow prev" data-slide="prev" title="Previous"></a>
+<a href="javascript:void(0)" class="arrow next" data-slide="next" title="Next"></a>
+
+</div>
+
+<div class="minislider two">
+
+<div class="slider" data-slide="0">
+    <a class="slide" href="https://en.wikipedia.org/wiki/Landscape" target="_blank" style="background-image:url('./imgs/1.jpg')"></a>
+    <a class="slide" href="https://en.wikipedia.org/wiki/Landscape" target="_blank" style="background-image:url('./imgs/3.jpg')"></a>
+    <figure class="slide" style="background-image:url('./imgs/4.jpg')"></figure>
+    <a class="slide" href="https://en.wikipedia.org/wiki/Landscape" target="_blank" style="background-image:url('./imgs/1.jpg')"></a>
+</div>
+
+<div class="bullets">
+    <a href="javascript:void(0)" class="bullet" data-slide="0" title="1"></a>
+    <a href="javascript:void(0)" class="bullet" data-slide="1" title="2"></a>
+    <a href="javascript:void(0)" class="bullet" data-slide="2" title="3"></a>
+    <a href="javascript:void(0)" class="bullet" data-slide="3" title="4"></a>
+</div>
+
+<a href="javascript:void(0)" class="arrow prev" data-slide="prev" title="Previous"></a>
+<a href="javascript:void(0)" class="arrow next" data-slide="next" title="Next"></a>
+
+</div>
+<script>minislider(document.querySelectorAll('.minislider')).start();</script>
+</body>
+</html>
