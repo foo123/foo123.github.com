@@ -565,7 +565,7 @@ function goback()
     </p>
     </div>
     <div class="footer">
-    email:&nbsp;&nbsp;<b>workingclasscode&commat;gmail&period;com</b>
+    <a id="emailme" href="javascript:void(0)" style="font-weight:bold">workingclasscode&commat;gmail&period;com</a> | <a id="supportme" href="javascript:void(0)" style="font-weight:bold">support me</a>
     <br>
     <a href="https://www.standup4humanrights.org/en/index.html" target="_blank">#Standup4humanrights</a>
     </div>
@@ -2038,10 +2038,27 @@ function goback()
     </section>
     <!-- /theses page -->
 </div>
+<style type="text/css">
+.no-lozad .lozad[data-background-image]:not([data-loaded]),
+.no-js .lozad[data-background-image]:not([data-loaded]) {
+    background-image: var(--bg-img); !important;
+}
+.no-lozad .lozad[data-src]:not([data-loaded]),
+.no-js .lozad[data-src]:not([data-loaded]) {
+    content: var(--src); !important;
+    width: 100%;
+}
+</style>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
 <script type="text/javascript">if (!window.lozad) document.write('<'+'script src="examples/common/js/lozad.min.js"'+'>'+'</'+'script'+'>')</script>
 <script type="text/javascript">//<![CDATA[
 (function() {
+
+(function init() {
+    document.getElementById('emailme').href = 'mail'+'to'+':'+'working'+'class'+'code'+'@'+'gmail'+'.'+'com';
+    document.getElementById('supportme').href = 'ht'+'tps'+'://'+'www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE&ssrt=1704878301984';
+})();
+
 if (window.lozad)
 {
     var observer = lozad('.lozad', {
@@ -2068,16 +2085,5 @@ else
 }
 })();
 //]]></script>
-<style type="text/css">
-.no-lozad .lozad[data-background-image]:not([data-loaded]),
-.no-js .lozad[data-background-image]:not([data-loaded]) {
-    background-image: var(--bg-img); !important;
-}
-.no-lozad .lozad[data-src]:not([data-loaded]),
-.no-js .lozad[data-src]:not([data-loaded]) {
-    content: var(--src); !important;
-    width: 100%;
-}
-</style>
 </body>
 </html>
