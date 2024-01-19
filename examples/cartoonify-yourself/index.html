@@ -153,7 +153,7 @@ body {
 <button id="play" class="button">Start</button>
 
 <!--<script src="//cdn.jsdelivr.net/npm/eruda"></script>-->
-<script type="text/javascript">eruda.init();</script>
+<!--<script type="text/javascript">eruda.init();</script>-->
 <script type="text/javascript" src="../common/js/require.js"></script>
 <script type="text/javascript" src="../common/js/require-config.js"></script>
 <script type="text/javascript">//<![CDATA[
@@ -162,12 +162,43 @@ body {
 var F, asking = false, streaming = false,
     controls, camera, output, button, canProcess = true,
     runInParallel = false, runInWebGL = false, runInWasm = false,
-    scale = 0.5, video, frame, edgesframe, edges, cartoonify;
+    scale = 0.6, video, frame, edgesframe, edges, cartoonify;
 function init()
 {
     camera = document.getElementById('camera');
     output = document.getElementById('output');
     button = document.getElementById('play');
+
+    frame = F.Image().restorable(false);
+    edgesframe = F.Image().restorable(false);
+
+    edges = F.CompositeFilter([
+     F.ColorMatrixFilter().grayscale()
+    ,F.StatisticalFilter().median(7).setMode(F.MODE.GRAY)
+    ,F.ConvolutionMatrixFilter().prewitt(3).setMode(F.MODE.GRAY)
+    ,F.ColorTableFilter().threshold(0.75).invert()
+    ,F.MorphologicalFilter().erode(3, null, 2).setMode(F.MODE.GRAY)
+    ]).worker(runInParallel).makeGLSL(runInWebGL).makeWASM(runInWasm);
+
+    cartoonify = F.CompositeFilter([
+     //F.HistogramEqualizeFilter()
+     F.ConvolutionMatrixFilter().bilateral(3, 15, 110)
+    ,F.StatisticalFilter().median(7)
+    //,F.HistogramEqualizeFilter()
+    ,F.ColorTableFilter().quantize(5)
+    ,F.BlendFilter(['multiply', 0, 0, 1]).setInput(1, edgesframe)
+    ]).worker(runInParallel).makeGLSL(runInWebGL).makeWASM(runInWasm);
+
+    output.textContent = '';
+    output.appendChild(frame.domElement);
+
+    /*controls = new DAT.GUI({height: 2*32, domElement: document.getElementById('controls')});
+    var contrast = controls.add({contrast: 0.5}, 'contrast').name('Contrast').min(0).max(1).onFinishChange(function() {
+        cartoonify.filter(1, F.ColorMatrixFilter().contrast(contrast.getValue()));
+    });
+    var edge = controls.add({edges: 1-0.25}, 'edges').name('Edges').min(0).max(1).onFinishChange(function() {
+        silhouete.filter(2, F.ColorTableFilter().threshold(1-edge.getValue()).invert());
+    });*/
     button.addEventListener('click', function(evt) {
         if (!asking)
         {
@@ -206,46 +237,15 @@ function init()
             button.textContent = 'Start';
         }
     }, false);
-
-    frame = F.Image().restorable(false);
-    edgesframe = F.Image().restorable(false);
-
-    edges = F.CompositeFilter([
-     F.ColorMatrixFilter().grayscale()
-    ,F.StatisticalFilter().median(7).setMode(F.MODE.GRAY)
-    ,F.ConvolutionMatrixFilter().prewitt(5).setMode(F.MODE.GRAY)
-    ,F.ColorTableFilter().threshold(0.97).invert()
-    ,F.MorphologicalFilter().erode(3, null, 1).setMode(F.MODE.GRAY)
-    ]).worker(runInParallel).makeGLSL(runInWebGL).makeWASM(runInWasm);
-
-    cartoonify = F.CompositeFilter([
-     //F.HistogramEqualizeFilter()
-     F.ConvolutionMatrixFilter().bilateral(3, 15, 124)
-    ,F.StatisticalFilter().median(7)
-    //,F.HistogramEqualizeFilter()
-    ,F.ColorTableFilter().quantize(5)
-    ,F.BlendFilter(['multiply', 0, 0, 1]).setInput(1, edgesframe)
-    ]).worker(runInParallel).makeGLSL(runInWebGL).makeWASM(runInWasm);
-
-    output.textContent = '';
-    output.appendChild(frame.domElement);
-
-    /*controls = new DAT.GUI({height: 2*32, domElement: document.getElementById('controls')});
-    var contrast = controls.add({contrast: 0.5}, 'contrast').name('Contrast').min(0).max(1).onFinishChange(function() {
-        cartoonify.filter(1, F.ColorMatrixFilter().contrast(contrast.getValue()));
-    });
-    var edge = controls.add({edges: 1-0.25}, 'edges').name('Edges').min(0).max(1).onFinishChange(function() {
-        silhouete.filter(2, F.ColorTableFilter().threshold(1-edge.getValue()).invert());
-    });*/
 }
 function processVideo()
 {
     if (video.paused || video.ended) return;
-    requestAnimationFrame(processVideo);
-    //frame.image(video);
-    frame.oCanvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight, 0, 0, frame.oCanvas.width, frame.oCanvas.height);
-    frame._refresh |= 3;
-    edgesframe.image(/*video*/frame);
+    // scale it down to our frame dimensions
+    /*frame.oCanvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight, 0, 0, frame.oCanvas.width, frame.oCanvas.height);
+    frame._refresh |= 3;*/
+    frame.image(video, video.videoWidth, video.videoHeight);
+    edgesframe.image(frame);
     edgesframe.apply(edges);
     frame.apply(cartoonify);
     /*if (canProcess)
@@ -259,6 +259,7 @@ function processVideo()
             });
         });
     }*/
+    requestAnimationFrame(processVideo);
 }
 require(['DatGUI', 'FILTER'], function(DAT, FILTER) {
     F = FILTER;

@@ -159,6 +159,7 @@
 
         var baseUrl = location.href.split(/#|\?/)[0]
             ,che = '../common/assets/che.jpg'
+            ,tpl = '../common/assets/che_tpl_sm.png'
             //,lenna = '../common/assets/lenna.png'
             ,face_model = '../common/assets/model_face.jpg'
             ,yinyang = '../common/assets/yin_yang_blank.png'
@@ -196,6 +197,7 @@
 
                 init();
             })
+            ,template = $F.Image.load(tpl)
             ,im2 = $F.Image.load(che)
             ,im3 = $F.Image.load(che)
             ,im4 = $F.Image.load(che)
@@ -213,6 +215,7 @@
             ,im16 = $F.Image.load(yinyang)
             ,im17 = $F.Image.load(che)
             ,im18 = $F.Image.load(che/*lenna*/)
+            ,im182 = $F.Image.load(che)
             ,im19 = $F.Image.load(model/*face_model*/)
             ,im20 = $F.Image.load(model)
             ,im21 = $F.Image.load(model)
@@ -227,8 +230,8 @@
                     // get red channel using an inline filter that can run in parallel worker also
                     for (var i=0,l=im.length; i<l; i+=4)
                     {
-                        im[ i+1 ] = 0; // remove green channel
-                        im[ i+2 ] = 0; // remove blue channel
+                        im[i+1] = 0; // remove green channel
+                        im[i+2] = 0; // remove blue channel
                     }
                     return im;
                 },
@@ -237,8 +240,8 @@
                 'varying vec2 pix;',
                 'uniform sampler2D img;',
                 'void main(void) {',
-                '   vec4 col = texture2D(img, pix);',
-                '   gl_FragColor = vec4(col.r, 0.0, 0.0, col.a);', // remove green,blue channel
+                '   vec4 c = texture2D(img, pix);',
+                '   gl_FragColor = vec4(c.r, 0.0, 0.0, c.a);', // remove green,blue channel
                 '}'
                 ].join('\n')
             }).worker(runInThread).makeGLSL(runInWebGL)
@@ -420,6 +423,24 @@
                     }
                 }
             }
+            ,templateMatcher = $F.TemplateMatcherFilter(template).params({
+                threshold: 0.7
+                ,scales: [1.8, 2.2, 1.1]
+            }).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+            ,drawMatches = function(matcher, image) {
+                var ctx = image.domElement.getContext('2d'), i, l,
+                    matches = matcher.metaData().matches;
+                // draw any matches found
+                ctx.lineWidth = 2;
+                if (matches && matches.length)
+                {
+                    ctx.strokeStyle = "rgba(75,221,17,1)";
+                    for (i=0,l=matches.length; i<l; ++i)
+                    {
+                        ctx.strokeRect(matches[i].x, matches[i].y, matches[i].width, matches[i].height);
+                    }
+                }
+            }
             ,cartoonify = $F.CompositeFilter([
                 $F.MorphologicalFilter().erode(5, null, 2)
                 ,$F.ColorTableFilter().quantize(4)
@@ -481,12 +502,13 @@
             .append(Img(14, im14, 'Histogram Equalization (Plugin)'))
             .append(Img(15, im17, 'Seamless Tile (Plugin)'))
             .append(Img(16, im18, 'Canny Edges (Plugin)'))
-            .append(Img(17, im19, 'Face, Eyes and Mouth Detector (Plugin)'))
-            .append(Img(18, im20, 'Cartoonify'))
-            .append(Img(19, im21, 'Sketchify'))
+            .append(Img(17, im182, 'Template Matcher'))
+            .append(Img(18, im19, 'Face, Eyes and Mouth Detector'))
+            .append(Img(19, im20, 'Cartoonify'))
+            .append(Img(20, im21, 'Sketchify'))
             .append(Img('placeholder'))
-            .append(Img(20, im16, 'Color Flood Fill (Plugin)'))
-            .append(Img(21, im15, 'Perlin Noise (Plugin)'))
+            .append(Img(21, im16, 'Color Flood Fill (Plugin)'))
+            .append(Img(22, im15, 'Perlin Noise (Plugin)'))
             .append(Img('M', displacemap, 'Displacement Map'))
             /*.append(Img(22, im22, 'Scale'))
             .append(Img(23, im23, 'Pad'))
@@ -560,6 +582,10 @@
             im16.apply(floodFill, closeThread);
             im17.apply(seamless, closeThread);
             im18.apply(canny, closeThread);
+            im182.apply(templateMatcher, function() {
+                closeThread.call(this);
+                drawMatches(this, im182);
+            });
             //im19.apply(halfTone, closeThread);
             im19.apply(faceDetector, function() {
                 closeThread.call(this);
@@ -593,6 +619,7 @@
             im16.restore();
             im17.restore();
             im18.restore();
+            im182.restore();
             im19.restore();
             im20.restore();
             im21.restore();
