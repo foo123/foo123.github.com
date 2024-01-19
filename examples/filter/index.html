@@ -159,7 +159,7 @@
 
         var baseUrl = location.href.split(/#|\?/)[0]
             ,che = '../common/assets/che.jpg'
-            ,tpl = '../common/assets/che_tpl_sm.png'
+            ,tpl = '../common/assets/che_tpl_sm_90deg.png'
             //,lenna = '../common/assets/lenna.png'
             ,face_model = '../common/assets/model_face.jpg'
             ,yinyang = '../common/assets/yin_yang_blank.png'
@@ -424,9 +424,10 @@
                 }
             }
             ,templateMatcher = $F.TemplateMatcherFilter(template).params({
+                rotations: [0, 90, 180, 270], // only 4 cardinal clockwise directions supported
                 scales: [1, 3, 1.5],
-                scaleThreshold: function(scale) {return scale >= 2 ? 0.7 : 0.95;}
-            }).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+                scaleThreshold: function(scale) {return scale >= 2 ? 0.6 : 0.9;}
+            }).worker(runInThread)
             ,drawMatches = function(matcher, image) {
                 var ctx = image.domElement.getContext('2d'), i, l,
                     matches = matcher.metaData().matches;
@@ -502,7 +503,7 @@
             .append(Img(14, im14, 'Histogram Equalization (Plugin)'))
             .append(Img(15, im17, 'Seamless Tile (Plugin)'))
             .append(Img(16, im18, 'Canny Edges (Plugin)'))
-            .append(Img(17, im182, 'Template Matcher'))
+            .append(Img(17, im182, 'Rotation/Scale Invariant Template Matcher'))
             .append(Img(18, im19, 'Face, Eyes and Mouth Detector'))
             .append(Img(19, im20, 'Cartoonify'))
             .append(Img(20, im21, 'Sketchify'))
