@@ -13,38 +13,19 @@
 
     <title>Image Processing with Filter.js</title>
 
-    <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+    <link rel="stylesheet" type="text/css" href="../common/css/grid.min.css" />
     <style type="text/css">
-        html,body {
+        body {
             position: relative;
             font-family: Monospace;
-            font-size: 12px;
+            font-size: 14px;
             background-color: #121212;
-            color: #aaa;
-            margin: 0;
-            padding:0;
-        }
-        .image {
-            padding: 4px;
-            margin-bottom: 10px;
-        }
-        .image > canvas {
-            position: relative;
-            width: 100% !important;
-            height: auto !important;
-            display: block;
-        }
-        .image.placeholder {
-            clear: both;
-        }
-        .image > .caption {
-            position: relative;
-            margin-top: 10px;
-            display: block;
-            min-height: 50px;
-        }
-        #forkongithub {
-            width:100%;
+            color: #ccc;
+            margin: 0 auto;
+            padding: 0;
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 2600px;
         }
         .button {
             -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
@@ -99,34 +80,127 @@
             cursor:pointer;
             margin-bottom: 10px;
         }
-        #forkongithub a{background:#c83022;color:#fff;}
+        #forkongithub  a {
+            background: #aa0000;
+            color: #fff;
+            text-decoration: none;
+            font-family: arial, sans-serif;
+            text-align: center;
+            font-weight: bold;
+            padding: 5px 40px;
+            font-size: 0.9rem;
+            line-height: 1.4rem;
+            position: relative;
+            transition: all 0.5s;
+        }
+        #forkongithub a:hover {
+            background: #aa0000;
+            color: #fff;
+        }
+        #forkongithub a::before, #forkongithub a::after {
+            content: "";
+            width: 100%;
+            display: block;
+            position: absolute;
+            z-index: 100;
+            top: 1px;
+            left: 0;
+            height: 1px;
+            background: #fff;
+        }
+        #forkongithub a::after {
+            bottom: 1px;
+            top: auto;
+        }
+        @media screen and (min-width:800px) {
+            #forkongithub {
+                position: absolute;
+                display: block;
+                z-index: 100;
+                top: 0;
+                right: 0;
+                width: 200px;
+                overflow: hidden;
+                height: 200px;
+            }
+            #forkongithub a {
+                width: 200px;
+                position: absolute;
+                top: 60px;
+                right: -60px;
+                transform: rotate(45deg);
+                box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+            }
+        }
+        header,footer,.controls {
+            position: relative:
+            display: block;
+            box-sizing: border-box;
+            width: 100%;
+            padding: 4px;
+        }
+        header {
+            margin-bottom: 20px;
+        }
+        footer {
+            margin-top: 20px;
+        }
+        .controls {
+            padding: 4px;
+        }
+        .image > canvas {
+            position: relative;
+            width: 100% !important;
+            height: auto !important;
+            display: block;
+        }
+        .image > .caption {
+            position: relative;
+            margin-top: 10px;
+            display: block;
+        }
+        #container.grid {
+            display: block;
+            margin: 10px auto;
+            padding: 0 4px;
+            --columns: 5;
+            --row-gap: 20px;
+            --column-gap: 20px;
+        }
+        /*fluid col-1-5 autocol-1-4-864 autocol-1-2-640 autocol-1-2-480 autoadjust image*/
+        @media (max-width:1024px) {
+        #container.grid {
+            --columns: 4;
+        }
+        }
+        @media (max-width:640px) {
+        #container.grid {
+            --columns: 2;
+            --column-gap: 6px;
+        }
+        }
     </style>
     <script src="../common/js/require.js"></script>
     <script src="../common/js/require-config.js"></script>
     <!--<script src="../common/cascades/haarcascade_frontalface_alt.js"></script>-->
 </head>
-<body class="responsive-960-container" style="max-width: 1600px; margin: 0 auto;">
+<body>
     <span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
 
-    <header id="header" class="fluid col-1-1">
-        <h1>Image Processing with Filter.js v.<span id="lib-version">0</span> Mode:<b id="mode"></b></h1>
-        <br /><br />
-    </header>
-    <div class="fluid col-1-1" style="padding:0;margin:0;position:relative;z-index:1000;margin-left:25px">
-        <button id="synchronous" class="button">Synchronous</button>
-        <button id="parallel" class="button">Parallel</button>
-        <button id="webgl" class="button">WebGL</button>
-        <button id="wasm" class="button">WASM</button>
-        <button id="applyBt" style="display:none" class="button">Apply</button>
-        <button id="restoreBt" style="display:none" class="button">Restore</button><br />
-        <i style="font-size:11px"><b>Note:</b> images may appear as blurred if scaled from original dimensions due to responsive design</i>
+    <header><h1>Image Processing with Filter.js v.<span id="lib-version">0</span> Mode:<b id="mode"></b></h1></header>
+    <div class="controls">
+    <button id="synchronous" class="button">Synchronous</button>
+    <button id="parallel" class="button">Parallel</button>
+    <button id="webgl" class="button">WebGL</button>
+    <button id="wasm" class="button">WASM</button>
+    <button id="applyBt" style="display:none" class="button">Apply</button>
+    <button id="restoreBt" style="display:none" class="button">Restore</button><br />
+    <i style="font-size:11px"><b>Note:</b> images may appear as blurred if scaled from original dimensions due to responsive design</i>
     </div>
 
-    <div id="container" class="fluid col-1-1 panel"></div>
+    <ul id="container" class="grid"></ul>
 
-    <footer id="footer" class="fluid col-1-1">
-    <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div><br />
-    </footer>
+    <footer style="margin-top: 10px; padding-right: 20px; text-align: right"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate" style="color:#f24537;">donate</a></footer>
 
     <script>//<![CDATA[
     "use strict";
@@ -459,12 +533,12 @@
             if (img)
             {
                 id = String(id);
-                var wrapper = $('<div id="img'+id+'" class="fluid col-1-5 autocol-1-4-864 autocol-1-2-640 autocol-1-2-480 autoadjust image"></div>');
+                var wrapper = $('<li id="img'+id+'" class="image"></li>');
                 wrapper.append(img.domElement).append($('<span class="caption">'+id+'. '+String(text)+'</span>'));
             }
             else
             {
-                var wrapper = $('<div class="fluid col-1-5 autocol-1-4-864 autocol-1-2-640 autocol-1-2-480 autoadjust image placeholder"></div>');
+                var wrapper = $('<li class="image placeholder"></li>');
             }
             return wrapper;
         }
@@ -507,7 +581,6 @@
             .append(Img(18, im19, 'Face, Eyes and Mouth Detector'))
             .append(Img(19, im20, 'Cartoonify'))
             .append(Img(20, im21, 'Sketchify'))
-            .append(Img('placeholder'))
             .append(Img(21, im16, 'Color Flood Fill (Plugin)'))
             .append(Img(22, im15, 'Perlin Noise (Plugin)'))
             .append(Img('M', displacemap, 'Displacement Map'))
