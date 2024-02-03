@@ -2058,7 +2058,11 @@ function goback()
 
 (function init() {
     document.getElementById('emailme').href = 'mail'+'to'+':'+'working'+'class'+'code'+'@'+'gmail'+'.'+'com';
-    document.getElementById('supportme').href = 'ht'+'tps'+'://'+'www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE&ssrt=1704878301984';
+    //document.getElementById('supportme').href = 'ht'+'tps'+'://'+'www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE&ssrt=1704878301984';
+    document.getElementById('supportme').onclick = function() {
+        window.open('ht'+'tps'+'://'+'www.paypal.com/'+'donate'+'/?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE&ssrt=1704878301984', 'VoluntaryDonationPopup', 'popup');
+        return false;
+    };
 })();
 
 if (window.lozad)
