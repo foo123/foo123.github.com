@@ -34,20 +34,22 @@ body {
     box-sizing: border-box;
     padding: 0;
     width: 100%;
-    margin-bottom: 4px;
+    margin-bottom: 10px;
     text-align: center;
 }
+#controls select,
 #controls button {
     position: relative;
     display: inline-block;
     box-sizing: border-box;
-    padding: 6px 8px;
+    padding: 6px 10px;
     font-size: 16px;
     border-radius: 8px;
     cursor: pointer;
 }
+#controls button + select,
 #controls button + button {
-    margin-left: 6px;
+    margin-left: 3px;
 }
 #chessgame {
     position: relative;
@@ -68,17 +70,24 @@ body {
 }
 @media (max-width:900px) {
 body {
-    padding: 10px 0px;
+    padding: 20px 0px;
 }
 #chessgame {
-    width: 50%;
+    --mrg: 14px;
+    width: 48%;
 }
 }
 @media (max-width:460px) {
 body {
     padding: 10px 0px;
 }
+#controls select,
+#controls button {
+    padding: 4px 6px;
+    font-size: 14px;
+}
 #chessgame {
+    --mrg: 12px;
     width: 100%;
 }
 }
@@ -91,6 +100,14 @@ body {
 <button data-action="flip">Flip</button>
 <button data-action="undo">Undo</button>
 <button data-action="redo">Redo</button>
+<select data-action="promoteto">
+<optgroup label="Promote to..">
+<option value="queen" selected>Queen</option>
+<option value="rook">Rook</option>
+<option value="bishop">Bishop</option>
+<option value="knight">Knight</option>
+</optgroup>
+</select>
 </div>
 <div id="chessgame"></div>
 <div id="moves"></div>

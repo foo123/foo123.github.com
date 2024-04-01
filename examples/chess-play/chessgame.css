@@ -72,19 +72,23 @@
     --y: 0;
     position: absolute;
     display: inline-block;
+    box-sizing: border-box;
+    padding: 0;
     font-family: serif;
     font-size: calc(var(--mrg) * 2 / 3);
     font-weight: 900;
     top: calc(var(--y) * 100% / 8);
     left: calc(var(--x) * 100% / 8);
+    transform-origin: center center;
 }
 .chessboard-numbers.bottom span,
 .chessboard-numbers.top span {
     width: calc(100% / 8);
     height: var(--mrg);
+    line-height: var(--mrg);
     text-align: center;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 .chessboard-numbers.right span,
 .chessboard-numbers.left span {
@@ -94,11 +98,9 @@
     transform: translate(0, calc(50% - var(--mrg) / 3));
 }
 .chessboard-numbers.top span {
-    transform-origin: center center;
     transform: rotate(180deg);
 }
 .chessboard-numbers.right span {
-    transform-origin: center center;
     transform: rotate(180deg) translate(0, calc(50% - var(--mrg) / 3));
 }
 .chessboard-squares {

@@ -124,6 +124,7 @@ function ChessGame(Chess, screen, container, container_moves, controls)
         active_piece = null;
         if (game) game.dispose();
         make(container, container_moves, game = new Chess(), squares = $$('div'), moves = $$('div'));
+        if (controls && controls.querySelector('select[data-action="promoteto"]')) game.promoteTo(controls.querySelector('select[data-action="promoteto"]').value);
     };
     init = function() {
         container.addEventListener('click', function(evt) {
@@ -217,14 +218,24 @@ function ChessGame(Chess, screen, container, container_moves, controls)
             }
             return false;
         }, false);
-        if (controls) controls.addEventListener('click', function(evt) {
-            var bt = evt.target.closest('button'), action = bt ? bt.getAttribute('data-action') : '';
-            if ('new' === action) newgame();
-            else if ('undo' === action) undo();
-            else if ('redo' === action) redo();
-            else if ('flip' === action) flip();
-            return false;
-        }, false);
+        if (controls)
+        {
+            controls.addEventListener('click', function(evt) {
+                var ctrl = evt.target.closest('button'),
+                    action = ctrl ? ctrl.getAttribute('data-action') : '';
+                if ('new' === action) newgame();
+                else if ('undo' === action) undo();
+                else if ('redo' === action) redo();
+                else if ('flip' === action) flip();
+                return false;
+            }, false);
+            controls.addEventListener('change', function(evt) {
+                var ctrl = evt.target.closest('select'),
+                    action = ctrl ? ctrl.getAttribute('data-action') : '';
+                if ('promoteto' === action) game.promoteTo(ctrl.value);
+                return false;
+            }, false);
+        }
         if (screen) screen.classList.add('chessscreen');
         newgame();
     };
