@@ -1,0 +1,218 @@
+.chessscreen {
+    transform-origin: center center;
+    transform: rotate(0deg);
+}
+.chessscreen.flipped {
+    transform: rotate(180deg);
+}
+.chessboard {
+    --mrg: 30px;
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    padding: var(--mrg);
+    margin: 0 auto;
+    max-width: 100%;
+}
+.chessboard-moves {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    padding: 10px;
+    width: 100%;
+    height: auto;
+    min-height: 200px;
+    max-height: 100%;
+    overflow-y: auto;
+    counter-reset: count 0;
+}
+.chessboard-moves span {
+    position: relative;
+    display: block;
+    font-size: 14px;
+    counter-increment: count 1;
+}
+.chessboard-moves span::before {
+    content: counter(count, decimal) '.';
+    position: relative;
+    display: inline-block;
+    padding-right: 6px;
+}
+.chessboard-moves span + span {
+    margin-top: 10px;
+}
+.chessboard-numbers {
+    position: absolute;
+    display: block;
+    box-sizing: border-box;
+    padding: 0;
+}
+.chessboard-numbers.top {
+    top: 0; left: var(--mrg);
+    width: calc(100% - 2 * var(--mrg));
+    height: var(--mrg);
+}
+.chessboard-numbers.bottom {
+    bottom: 0; left: var(--mrg);
+    width: calc(100% - 2 * var(--mrg));
+    height: var(--mrg);
+}
+.chessboard-numbers.left {
+    top: var(--mrg); left: 0;
+    height: calc(100% - 2 * var(--mrg));
+    width: var(--mrg);
+}
+.chessboard-numbers.right {
+    top: var(--mrg); right: 0;
+    height: calc(100% - 2 * var(--mrg));
+    width: var(--mrg);
+}
+.chessboard-numbers span {
+    --x: 0;
+    --y: 0;
+    position: absolute;
+    display: inline-block;
+    font-family: serif;
+    font-size: calc(var(--mrg) * 2 / 3);
+    font-weight: 900;
+    top: calc(var(--y) * 100% / 8);
+    left: calc(var(--x) * 100% / 8);
+}
+.chessboard-numbers.bottom span,
+.chessboard-numbers.top span {
+    width: calc(100% / 8);
+    height: var(--mrg);
+    text-align: center;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+.chessboard-numbers.right span,
+.chessboard-numbers.left span {
+    width: var(--mrg);
+    height: calc(100% / 8);
+    text-align: center;
+    transform: translate(0, calc(50% - var(--mrg) / 3));
+}
+.chessboard-numbers.top span {
+    transform-origin: center center;
+    transform: rotate(180deg);
+}
+.chessboard-numbers.right span {
+    transform-origin: center center;
+    transform: rotate(180deg) translate(0, calc(50% - var(--mrg) / 3));
+}
+.chessboard-squares {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0 auto;
+    width: 100%;
+    cursor: pointer;
+}
+.chessboard-squares::before {
+    content: "";
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    padding: 0;
+    padding-bottom: 100%;
+    z-index: -1;
+}
+.chessboard .square {
+    --piece: none;
+    --x: 0;
+    --y: 0;
+    position: absolute;
+    display: inline-block;
+    box-sizing: border-box;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+    width: calc(100% / 8);
+    height: calc(100% / 8);
+    border: 2px solid var(--cb);
+    background-color: var(--c);
+    top: calc(var(--y) * 100% / 8);
+    left: calc(var(--x) * 100% / 8);
+}
+.chessboard .square::before {
+    content: "";
+    position: absolute;
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    width: 80%;
+    height: 80%;
+    top: 50%; left: 50%;
+    transform-origin: center center;
+    transform: translate(-50%, -50%);
+    background-color: transparent;
+    background-image: var(--piece);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+.chessboard-squares.b-turn .square.piece {
+    transform-origin: center center;
+    transform: rotate(180deg);
+}
+.chessboard-squares {
+    background-color: #E1B777;
+}
+.chessboard .square.white {
+    --c: #E1B777;
+    --cb: #E1B777;
+}
+.chessboard .square.black {
+    --c: #77613F;
+    --cb: #77613F;
+}
+.chessboard .square.active {
+    --c: orange;
+    --cb: white;
+    z-index: 2;
+}
+.chessboard-squares.b-check .square.piece.b-king,
+.chessboard-squares.w-check .square.piece.w-king {
+    border: 2px solid red !important;
+}
+.chessboard .square.w-king {
+    --piece: url(./img/king_w.svg);
+}
+.chessboard .square.b-king {
+    --piece: url(./img/king_b.svg);
+}
+.chessboard .square.w-queen {
+    --piece: url(./img/queen_w.svg);
+}
+.chessboard .square.b-queen {
+    --piece: url(./img/queen_b.svg);
+}
+.chessboard .square.w-bishop {
+    --piece: url(./img/bishop_w.svg);
+}
+.chessboard .square.b-bishop {
+    --piece: url(./img/bishop_b.svg);
+}
+.chessboard .square.w-knight {
+    --piece: url(./img/knight_w.svg);
+}
+.chessboard .square.b-knight {
+    --piece: url(./img/knight_b.svg);
+}
+.chessboard .square.w-rook {
+    --piece: url(./img/rook_w.svg);
+}
+.chessboard .square.b-rook {
+    --piece: url(./img/rook_b.svg);
+}
+.chessboard .square.w-pawn {
+    --piece: url(./img/pawn_w.svg);
+}
+.chessboard .square.b-pawn {
+    --piece: url(./img/pawn_b.svg);
+}
