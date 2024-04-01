@@ -43,13 +43,47 @@ body {
     display: inline-block;
     box-sizing: border-box;
     padding: 6px 10px;
-    font-size: 16px;
     border-radius: 8px;
+    text-align: center;
     cursor: pointer;
+    --img: none;
+    --w: 16px;
+    --aspect-ratio: calc(1 / 1);
+    font-size: var(--w);
+    line-height: var(--w);
 }
 #controls button + select,
 #controls button + button {
     margin-left: 3px;
+}
+#controls button::before {
+    content: "";
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    width: var(--w);
+    height: calc(var(--w) / var(--aspect-ratio));
+    background-color: transparent;
+    background-image: var(--img);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+#controls button[data-action="new"] {
+    --img: url(./play-bt.svg);
+    --aspect-ratio: calc(1 / 1);
+}
+#controls button[data-action="flip"] {
+    --img: url(./updown-arrows.svg);
+    --aspect-ratio: calc(1 / 1);
+}
+#controls button[data-action="undo"] {
+    --img: url(./prev-bt.svg);
+    --aspect-ratio: calc(1 / 1);
+}
+#controls button[data-action="redo"] {
+    --img: url(./next-bt.svg);
+    --aspect-ratio: calc(1 / 1);
 }
 #chessgame {
     position: relative;
@@ -61,7 +95,7 @@ body {
 }
 #moves {
     position: relative;
-    display: none;
+    display: inline-block;
     box-sizing: border-box;
     vertical-align: top;
     padding: 0;
@@ -84,10 +118,10 @@ body {
 #controls select,
 #controls button {
     padding: 4px 6px;
-    font-size: 14px;
+    --w: 14px;
 }
 #chessgame {
-    --mrg: 12px;
+    --mrg: 10px;
     width: 100%;
 }
 }
@@ -96,10 +130,10 @@ body {
 <body>
 <div id="screen">
 <div id="controls">
-<button data-action="new">New</button>
-<button data-action="flip">Flip</button>
-<button data-action="undo">Undo</button>
-<button data-action="redo">Redo</button>
+<button data-action="new" title="New Game"></button>
+<button data-action="flip" title="Flip Sides"></button>
+<button data-action="undo" title="Undo Move"></button>
+<button data-action="redo" title="Redo Move"></button>
 <select data-action="promoteto">
 <optgroup label="Promote to..">
 <option value="queen" selected>Queen</option>
@@ -110,12 +144,12 @@ body {
 </select>
 </div>
 <div id="chessgame"></div>
-<div id="moves"></div>
+<!--<div id="moves"></div>-->
 </div>
 
 <link rel="stylesheet" type="text/css" href="./chessgame.css" />
 <script type="text/javascript" src="./chess.js"></script>
 <script type="text/javascript" src="./chessgame.js"></script>
-<script type="text/javascript">ChessGame(Chess, document.getElementById('screen'), document.getElementById('chessgame'), document.getElementById('moves'), document.getElementById('controls'));</script>
+<script type="text/javascript">ChessGame(Chess, document.getElementById('screen'), document.getElementById('chessgame'), /*document.getElementById('moves')*/null, document.getElementById('controls'));</script>
 </body>
 </html>
