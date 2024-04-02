@@ -177,9 +177,7 @@ function ChessGame(Chess, container, controls, options, container_moves)
         active_piece = null;
         if (game) game.dispose();
         var opts = {};
-        if (options) $('input', options).forEach(function(i) {
-            opts[i.id] = !!i.checked;
-        });
+        if (options) $('input', options).forEach(function(i) {opts[i.id] = !!i.checked;});
         make(container, container_moves, game = new Chess(opts), squares = $$('div'), moves = (container_moves ? $$('div') : null));
         if (controls && controls.querySelector('select[data-action="promoteto"]')) game.promoteTo(controls.querySelector('select[data-action="promoteto"]').value);
         if (msg) msg.innerText = 'Game start. WHITE\'s turn to play.';

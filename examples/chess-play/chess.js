@@ -492,6 +492,8 @@ function ai_move(evaluate, board, color, depth, promotion, cb, interval)
 }
 function Board(options)
 {
+    options = options || {};
+    var c = false !== options.castlingAllowed, ep = false !== options.enPassantAllowed;
     var self = this;
     self.redo = [];
     self.history = [];
@@ -501,7 +503,6 @@ function Board(options)
     self.halfMoves = 0;
     self.idleMoves = 0;
     self._ = new Array(8);
-    var c = false !== options.castlingAllowed;
     for (var i=8; i>=1; --i)
     {
         self._[i-1] = new Array(8);
@@ -534,7 +535,7 @@ function Board(options)
             }
             else if (7 === i || 2 === i)
             {
-                self._[i-1][j] = 7 === i ? {color:BLACK,type:PAWN,_mj2:0} : {color:WHITE,type:PAWN,_mj2:0};
+                self._[i-1][j] = 7 === i ? {color:BLACK,type:PAWN,_ep:ep,_mj2:0} : {color:WHITE,type:PAWN,_ep:ep,_mj2:0};
             }
         }
     }
@@ -639,7 +640,7 @@ Board[proto] = {
             board._idleMoves = board.idleMoves;
             board.idleMoves = 0;
         }
-        if (PAWN === p1.type && 1 < stdMath.abs(y2-y1)) p1._mj2 = board.halfMoves;
+        if (PAWN === p1.type && p1._ep && 1 < stdMath.abs(y2-y1)) p1._mj2 = board.halfMoves;
         return ret_move ? [p1, y1, x1, y2, x2, p2, kc, qc, moved, promotion, ep] : null;
     },
     unmove: function(move) {
@@ -687,7 +688,7 @@ Board[proto] = {
 };
 function Chess(options)
 {
-    options = options || {};
+    options = options || {}; options.ai = options.ai || {};
     var self = this, board, kc = null, kt = null, promotion = QUEEN;
     self.reset = function() {
         if (board) board.dispose();
@@ -710,8 +711,8 @@ function Chess(options)
         var moves = self.getAllMovesFor(self.whoseTurn());
         return moves.length ? moves[stdMath.round(moves.length-1)*stdMath.random()] : null;
     };
-    self.getAIMove = function(depth, evaluate, promotion, cb, interval) {
-        var move = ai_move(evaluate || default_evaluate, board, board.turn, depth || 1, CODE[String(promotion || 'QUEEN').toUpperCase()] || QUEEN, cb, interval);
+    self.getAIMove = function(depth, cb, interval) {
+        var move = ai_move(options.ai.evaluate || default_evaluate, board, board.turn, depth || options.ai.depth || 1, CODE[String(options.ai.promotion || 'QUEEN').toUpperCase()] || QUEEN, cb, interval);
         return move ? {from:xy2s(move[0],move[1]), to:xy2s(move[2],move[3])} : null;
     };
     self.doMove = function(pos1, pos2) {
