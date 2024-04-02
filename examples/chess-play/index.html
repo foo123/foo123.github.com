@@ -69,12 +69,12 @@ body {
     background-repeat: no-repeat;
     background-position: center center;
 }
-#controls button[data-action="new"] {
-    --img: url(./play-bt.svg);
-    --aspect-ratio: calc(1 / 1);
-}
 #controls button[data-action="flip"] {
     --img: url(./updown-arrows.svg);
+    --aspect-ratio: calc(1 / 1);
+}
+#controls button[data-action="new"] {
+    --img: url(./play-bt.svg);
     --aspect-ratio: calc(1 / 1);
 }
 #controls button[data-action="undo"] {
@@ -143,8 +143,8 @@ body {
 <body>
 <div id="screen">
 <div id="controls">
-<button data-action="new" title="New Game"></button>
 <button data-action="flip" title="Flip Sides"></button>
+<button data-action="new" title="New Game"></button>
 <button data-action="undo" title="Undo Move"></button>
 <button data-action="redo" title="Redo Move"></button>
 <select data-action="promoteto">

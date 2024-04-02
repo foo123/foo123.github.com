@@ -226,10 +226,10 @@ function ChessGame(Chess, screen, container, controls, container_moves)
                 var ctrl = evt.target.closest('button'),
                     action = ctrl ? ctrl.getAttribute('data-action') : '';
                 evt.preventDefault && evt.preventDefault();
-                if ('new' === action) newgame();
+                if ('flip' === action) flip();
+                else if ('new' === action) newgame();
                 else if ('undo' === action) undo();
                 else if ('redo' === action) redo();
-                else if ('flip' === action) flip();
                 return false;
             }, {capture:false,passive:false});
             addEvent(controls, 'change', function(evt) {
