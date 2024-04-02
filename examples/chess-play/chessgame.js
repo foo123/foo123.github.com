@@ -4,9 +4,9 @@ ChessGame Visual GUI
 (function(window) {
 "use strict";
 
-function ChessGame(Chess, screen, container, controls, container_moves)
+function ChessGame(Chess, container, controls, options, container_moves)
 {
-    var game, squares, moves, msg, active_piece, newgame, undo, redo, flip, init;
+    var game, screen = container.parentNode, squares, moves, msg, active_piece, newgame, undo, redo, flip, init;
     var update_gui = function() {
         var isCheck = game.isCheck(), player = game.whoseTurn();
         removeClass(squares, 'w-check'); removeClass(squares, 'b-check');
@@ -124,7 +124,11 @@ function ChessGame(Chess, screen, container, controls, container_moves)
     newgame = function() {
         active_piece = null;
         if (game) game.dispose();
-        make(container, container_moves, game = new Chess(), squares = $$('div'), moves = (container_moves ? $$('div') : null));
+        var opts = {};
+        if (options) $('input', options).forEach(function(i) {
+            opts[i.id] = !!i.checked;
+        });
+        make(container, container_moves, game = new Chess(opts), squares = $$('div'), moves = (container_moves ? $$('div') : null));
         if (controls && controls.querySelector('select[data-action="promoteto"]')) game.promoteTo(controls.querySelector('select[data-action="promoteto"]').value);
         if (msg) msg.innerText = 'Game start. WHITE\'s turn to play.';
     };

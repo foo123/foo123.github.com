@@ -9,6 +9,16 @@
 <meta property="og:image" content="https://foo123.github.io/examples/chess-play/screenshot.png">
 <meta property="og:url" content="https://foo123.github.io/examples/chess-play/">
 <meta name="twitter:card" content="summary">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=0.9.0">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=0.9.0">
+<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png?v=0.9.0">
+<link rel="manifest" href="./site.webmanifest?v=0.9.0">
+<link rel="mask-icon" href="./safari-pinned-tab.svg?v=0.9.0" color="#454545">
+<link rel="shortcut icon" href="./favicon.ico?v=0.9.0">
+<meta name="apple-mobile-web-app-title" content="Chess">
+<meta name="application-name" content="Chess">
+<meta name="msapplication-TileColor" content="#454545">
+<meta name="theme-color" content="#454545">
 <style type="text/css">
 body {
     box-sizing: border-box;
@@ -36,6 +46,28 @@ body {
     width: 100%;
     margin-bottom: 10px;
     text-align: center;
+}
+#options {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    padding: 0;
+    padding-top: 10px;
+    padding-left: 30px;
+    border-top: 1px dotted #efefef;
+    margin: 20px auto 0 auto;
+    width: 50%;
+    font-size: 16px;
+    text-align: left;
+}
+#options li {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    margin: 0;
+}
+#options li + li {
+    margin-top: 6px;
 }
 #controls select,
 #controls button {
@@ -114,6 +146,10 @@ body {
 body {
     padding: 20px 0px;
 }
+#options {
+    width: 48%;
+    padding-left: 10px;
+}
 #chessgame {
     --mrg: 14px;
     --piecesz: 0.9;
@@ -131,6 +167,11 @@ body {
 }
 #controls .msg {
     font-size: 10px;
+}
+#options {
+    width: 100%;
+    padding-left: 6px;
+    font-size: 13px;
 }
 #chessgame {
     --mrg: 10px;
@@ -160,10 +201,15 @@ body {
 <div id="chessgame"></div>
 <!--<div id="moves"></div>-->
 </div>
+<ul id="options">
+<li><input type="checkbox" id="castlingAllowed" name="castlingAllowed" value="1" checked /> <label for="castlingAllowed">Castling Allowed</label></li>
+</ul>
+
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" style="position:fixed;display:inline-block;color:#f90b13;z-index:10;bottom:10px;right:10px;font-size:14px;">donate</a>
 
 <link rel="stylesheet" type="text/css" href="./chessgame.css" />
 <script type="text/javascript" src="./chess.js"></script>
 <script type="text/javascript" src="./chessgame.js"></script>
-<script type="text/javascript">ChessGame(Chess, document.getElementById('screen'), document.getElementById('chessgame'), document.getElementById('controls') /*, document.getElementById('moves')*/);</script>
+<script type="text/javascript">ChessGame(Chess, document.getElementById('chessgame'), document.getElementById('controls'), document.getElementById('options') /*, document.getElementById('moves')*/);</script>
 </body>
 </html>
