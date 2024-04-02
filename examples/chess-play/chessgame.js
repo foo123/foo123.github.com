@@ -13,7 +13,7 @@ function ChessGame(Chess, screen, container, controls, container_moves)
         if (isCheck) addClass(squares, 'BLACK' === player ? 'b-check' : 'w-check');
         if ('BLACK' === player) addClass(squares, 'b-turn');
         else removeClass(squares, 'b-turn');
-        if (msg) msg.innerText = game.isCheckMate() ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' wins with checkmate! Game over.') : (isCheck ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' checks!'+player+'\'s turn to play.') : (player+'\'s turn to play.'));
+        if (msg) msg.innerText = game.isCheckMate() ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' wins with checkmate! Game over.') : (isCheck ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' checks! '+player+'\'s turn to play.') : (player+'\'s turn to play.'));
     };
     var clear_active = function() {
         $('.square.active', container).forEach(function(s) {removeClass(s, 'active');});
