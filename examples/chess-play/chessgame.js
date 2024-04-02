@@ -13,7 +13,7 @@ function ChessGame(Chess, container, controls, options, container_moves)
         if (isCheck) addClass(squares, 'BLACK' === player ? 'b-check' : 'w-check');
         if ('BLACK' === player) addClass(squares, 'b-turn');
         else removeClass(squares, 'b-turn');
-        if (msg) msg.innerText = game.isCheckMate() ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' wins with checkmate! Game over.') : (isCheck ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' checks! '+player+'\'s turn to play.') : (player+'\'s turn to play.'));
+        if (msg) msg.innerText = game.isCheckMate() ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' wins with checkmate! Game over.') : (game.isDraw() ? ('It is a draw! Game over.') : (isCheck ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' checks! '+player+'\'s turn to play.') : (player+'\'s turn to play.')));
     };
     var clear_active = function() {
         $('.square.active', container).forEach(function(s) {removeClass(s, 'active');});
@@ -38,6 +38,32 @@ function ChessGame(Chess, container, controls, options, container_moves)
             }
             sq1 = el(pos1=mov[0]); sq2 = el(pos2=mov[2]);
             empty(sq1); empty(sq2); add(sq1, piece=mov[1]); add(sq2, mov[3]);
+            if ('PAWN' === piece.type)
+            {
+                // handle en passants
+                if ('BLACK' === piece.color && '3' === pos2.charAt(1))
+                {
+                    add(el('a4'), game.getPieceAt('a4'));
+                    add(el('b4'), game.getPieceAt('b4'));
+                    add(el('c4'), game.getPieceAt('c4'));
+                    add(el('d4'), game.getPieceAt('d4'));
+                    add(el('e4'), game.getPieceAt('e4'));
+                    add(el('f4'), game.getPieceAt('f4'));
+                    add(el('g4'), game.getPieceAt('g4'));
+                    add(el('h4'), game.getPieceAt('h4'));
+                }
+                if ('WHITE' === piece.color && '6' === pos2.charAt(1))
+                {
+                    add(el('a5'), game.getPieceAt('a5'));
+                    add(el('b5'), game.getPieceAt('b5'));
+                    add(el('c5'), game.getPieceAt('c5'));
+                    add(el('d5'), game.getPieceAt('d5'));
+                    add(el('e5'), game.getPieceAt('e5'));
+                    add(el('f5'), game.getPieceAt('f5'));
+                    add(el('g5'), game.getPieceAt('g5'));
+                    add(el('h5'), game.getPieceAt('h5'));
+                }
+            }
             if ('KING' === piece.type)
             {
                 if ('e1' === pos1)
@@ -84,6 +110,32 @@ function ChessGame(Chess, container, controls, options, container_moves)
             pos1 = mov[0];
             pos2 = mov[1];
             move(piece = game.getPieceAt(pos2), el(pos1), el(pos2));
+            if ('PAWN' === piece.type)
+            {
+                // handle en passants
+                if ('BLACK' === piece.color && '3' === pos2.charAt(1))
+                {
+                    maybe_remove(el('a4'), game.getPieceAt('a4'));
+                    maybe_remove(el('b4'), game.getPieceAt('b4'));
+                    maybe_remove(el('c4'), game.getPieceAt('c4'));
+                    maybe_remove(el('d4'), game.getPieceAt('d4'));
+                    maybe_remove(el('e4'), game.getPieceAt('e4'));
+                    maybe_remove(el('f4'), game.getPieceAt('f4'));
+                    maybe_remove(el('g4'), game.getPieceAt('g4'));
+                    maybe_remove(el('h4'), game.getPieceAt('h4'));
+                }
+                if ('WHITE' === piece.color && '6' === pos2.charAt(1))
+                {
+                    maybe_remove(el('a5'), game.getPieceAt('a5'));
+                    maybe_remove(el('b5'), game.getPieceAt('b5'));
+                    maybe_remove(el('c5'), game.getPieceAt('c5'));
+                    maybe_remove(el('d5'), game.getPieceAt('d5'));
+                    maybe_remove(el('e5'), game.getPieceAt('e5'));
+                    maybe_remove(el('f5'), game.getPieceAt('f5'));
+                    maybe_remove(el('g5'), game.getPieceAt('g5'));
+                    maybe_remove(el('h5'), game.getPieceAt('h5'));
+                }
+            }
             if ('KING' === piece.type)
             {
                 if ('e1' === pos1)
@@ -157,6 +209,32 @@ function ChessGame(Chess, container, controls, options, container_moves)
                     }
                     game.doMove(pos1, pos2);
                     move(piece = game.getPieceAt(pos2), el(pos1), el(pos2));
+                    if ('PAWN' === piece.type)
+                    {
+                        // handle en passants
+                        if ('BLACK' === piece.color && '3' === pos2.charAt(1))
+                        {
+                            maybe_remove(el('a4'), game.getPieceAt('a4'));
+                            maybe_remove(el('b4'), game.getPieceAt('b4'));
+                            maybe_remove(el('c4'), game.getPieceAt('c4'));
+                            maybe_remove(el('d4'), game.getPieceAt('d4'));
+                            maybe_remove(el('e4'), game.getPieceAt('e4'));
+                            maybe_remove(el('f4'), game.getPieceAt('f4'));
+                            maybe_remove(el('g4'), game.getPieceAt('g4'));
+                            maybe_remove(el('h4'), game.getPieceAt('h4'));
+                        }
+                        if ('WHITE' === piece.color && '6' === pos2.charAt(1))
+                        {
+                            maybe_remove(el('a5'), game.getPieceAt('a5'));
+                            maybe_remove(el('b5'), game.getPieceAt('b5'));
+                            maybe_remove(el('c5'), game.getPieceAt('c5'));
+                            maybe_remove(el('d5'), game.getPieceAt('d5'));
+                            maybe_remove(el('e5'), game.getPieceAt('e5'));
+                            maybe_remove(el('f5'), game.getPieceAt('f5'));
+                            maybe_remove(el('g5'), game.getPieceAt('g5'));
+                            maybe_remove(el('h5'), game.getPieceAt('h5'));
+                        }
+                    }
                     if ('KING' === piece.type)
                     {
                         if ('e1' === pos1)
@@ -419,6 +497,10 @@ function add(square, piece)
         addClass(square, ('BLACK' === piece.color ? 'b-' : 'w-')+piece.type.toLowerCase());
         addClass(square, 'piece');
     }
+}
+function maybe_remove(square, piece)
+{
+    if (square && !piece) empty(square);
 }
 function move(piece, square1, square2)
 {

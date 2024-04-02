@@ -200,6 +200,16 @@ function possible_moves_at(board, y, x, promotion)
             {
                 check_and_add(board, K, color, moves, y, x, y-1, x+1, promotion);
             }
+            if (3 === y && x-1 >= 0 && board.halfMoves && board.halfMoves === board._[y][x-1]._mj2 && WHITE === board._[y][x-1].color && EMPTY === board._[y-1][x-1].color)
+            {
+                // en passant left
+                check_and_add(board, K, color, moves, y, x, y-1, x-1, promotion);
+            }
+            if (3 === y && x+1 < 8 && board.halfMoves && board.halfMoves === board._[y][x+1]._mj2 && WHITE === board._[y][x+1].color && EMPTY === board._[y-1][x+1].color)
+            {
+                // en passant right
+                check_and_add(board, K, color, moves, y, x, y-1, x+1, promotion);
+            }
         }
         else
         {
@@ -217,6 +227,16 @@ function possible_moves_at(board, y, x, promotion)
             }
             if (y+1 < 8 && x+1 < 8 && BLACK === board._[y+1][x+1].color)
             {
+                check_and_add(board, K, color, moves, y, x, y+1, x+1, promotion);
+            }
+            if (4 === y && x-1 >= 0 && board.halfMoves && board.halfMoves === board._[y][x-1]._mj2 && BLACK === board._[y][x-1].color && EMPTY === board._[y+1][x-1].color)
+            {
+                // en passant left
+                check_and_add(board, K, color, moves, y, x, y+1, x-1, promotion);
+            }
+            if (4 === y && x+1 < 8 && board.halfMoves && board.halfMoves === board._[y][x+1]._mj2 && BLACK === board._[y][x+1].color && EMPTY === board._[y+1][x+1].color)
+            {
+                // en passant right
                 check_and_add(board, K, color, moves, y, x, y+1, x+1, promotion);
             }
         }
@@ -479,6 +499,7 @@ function Board(options)
     self.left = {WHITE:{PAWN:0,KNIGHT:0,BISHOP:0,ROOK:0,QUEEN:0}, BLACK:{PAWN:0,KNIGHT:0,BISHOP:0,ROOK:0,QUEEN:0}};
     self.turn = WHITE;
     self.halfMoves = 0;
+    self.idleMoves = 0;
     self._ = new Array(8);
     var c = false !== options.castlingAllowed;
     for (var i=8; i>=1; --i)
@@ -513,7 +534,7 @@ function Board(options)
             }
             else if (7 === i || 2 === i)
             {
-                self._[i-1][j] = 7 === i ? {color:BLACK,type:PAWN} : {color:WHITE,type:PAWN};
+                self._[i-1][j] = 7 === i ? {color:BLACK,type:PAWN,_mj2:0} : {color:WHITE,type:PAWN,_mj2:0};
             }
         }
     }
@@ -532,6 +553,8 @@ Board[proto] = {
     redo: null,
     turn: 0,
     halfMoves: 0,
+    idleMoves: 0,
+    _idleMoves: 0,
     king: null,
     left: null,
     _: null,
@@ -554,7 +577,7 @@ Board[proto] = {
         return xy ? this.at(xy.y, xy.x) : null;
     },
     move: function(y1, x1, y2, x2, ret_move, promotion) {
-        var board = this, p1 = board._[y1][x1], p2 = board._[y2][x2], R, y,
+        var board = this, p1 = board._[y1][x1], p2 = board._[y2][x2], ep, R, y,
             K = board.king[COLOR[p1.color]], kc = K._kc, qc = K._qc, moved = p1._m;
         promotion = promotion || QUEEN;
         board._[y1][x1] = NONE;
@@ -565,6 +588,12 @@ Board[proto] = {
         else
         {
             board._[y2][x2] = p1;
+        }
+        if (PAWN === p1.type && NONE === p2 && PAWN === board._[y1][x2].type && p1.color === OPPOSITE[board._[y1][x2].color])
+        {
+            // en passant
+            ep = board._[y1][x2];
+            board._[y1][x2] = NONE;
         }
         if (KING === p1.type)
         {
@@ -601,14 +630,26 @@ Board[proto] = {
             if (7 === x1) K._kc = false;
         }
         ++board.halfMoves;
-        return ret_move ? [p1, y1, x1, y2, x2, p2, kc, qc, moved, promotion] : null;
+        if (NONE === p2 && PAWN !== p1.type)
+        {
+            ++board.idleMoves;
+        }
+        else
+        {
+            board._idleMoves = board.idleMoves;
+            board.idleMoves = 0;
+        }
+        if (PAWN === p1.type && 1 < stdMath.abs(y2-y1)) p1._mj2 = board.halfMoves;
+        return ret_move ? [p1, y1, x1, y2, x2, p2, kc, qc, moved, promotion, ep] : null;
     },
     unmove: function(move) {
         var board = this, K = board.king[COLOR[move[0].color]], R, x1, x2, y;
         board._[move[1]][move[2]] = move[0];
         board._[move[3]][move[4]] = move[5];
+        if (move[10]) board._[move[1]][move[4]] = move[10]; // en passant
         K._kc = move[6];
         K._qc = move[7];
+        if (PAWN === move[0].type && 1 < stdMath.abs(move[3]-move[1])) move[0]._mj2 = 0;
         if (KING === move[0].type)
         {
             K.y = move[1];
@@ -640,6 +681,8 @@ Board[proto] = {
             move[0]._m = move[8];
         }
         --board.halfMoves;
+        if (NONE === move[5] && PAWN !== move[0].type) --board.idleMoves;
+        else board.idleMoves = board._idleMoves;
     }
 };
 function Chess(options)
@@ -729,8 +772,19 @@ function Chess(options)
     self.isStaleMate = function() {
         return !self.isCheck() && self.isKingTrapped();
     };
-    self.isDraw = function() {
+    self.isFiftyMoves = function() {
+        return 100 <= board.idleMoves;
+    };
+    self.isRepetition = function() {
+        // todo
         return false;
+    };
+    self.isDeadPosition = function() {
+        // todo
+        return false;
+    };
+    self.isDraw = function() {
+        return self.isFiftyMoves() || self.isStaleMate() || self.isRepetition() || self.isDeadPosition();
     };
     self.dispose = function() {
         if (board) board.dispose();
@@ -757,9 +811,12 @@ Chess[proto] = {
     isKingTrapped: null,
     isCheckMate: null,
     isStaleMate: null,
+    isFiftyMoves: null,
+    isRepetition: null,
+    isDeadPosition: null,
     isDraw: null
 };
-Chess.VERSION = "0.9.0";
+Chess.VERSION = "0.9.5";
 
 // export it
 return Chess;
