@@ -1,24 +1,28 @@
+/*
+ChessGame Visual GUI
+*/
 (function(window) {
 "use strict";
 
-function ChessGame(Chess, screen, container, container_moves, controls)
+function ChessGame(Chess, screen, container, controls, container_moves)
 {
-    var game, squares, moves, active_piece, newgame, undo, redo, flip, init;
-    var show_check = function(isCheck, color) {
-        squares.classList.remove('w-check');
-        squares.classList.remove('b-check');
-        if (isCheck) squares.classList.add('BLACK' === color ? 'b-check' : 'w-check');
-        if ('BLACK' === color) squares.classList.add('b-turn');
-        else squares.classList.remove('b-turn');
+    var game, squares, moves, msg, active_piece, newgame, undo, redo, flip, init;
+    var update_gui = function() {
+        var isCheck = game.isCheck(), player = game.whoseTurn();
+        removeClass(squares, 'w-check'); removeClass(squares, 'b-check');
+        if (isCheck) addClass(squares, 'BLACK' === player ? 'b-check' : 'w-check');
+        if ('BLACK' === player) addClass(squares, 'b-turn');
+        else removeClass(squares, 'b-turn');
+        if (msg) msg.innerText = game.isCheckMate() ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' wins with checkmate! Game over.') : (isCheck ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' checks!'+player+'\'s turn to play.') : (player+'\'s turn to play.'));
     };
     var clear_active = function() {
-        [].forEach.call(container.querySelectorAll('.square.active'), function(s) {s.classList.remove('active');});
+        $('.square.active', container).forEach(function(s) {removeClass(s, 'active');});
     };
     flip = function() {
         if (screen)
         {
-            if (screen.classList.contains('flipped')) screen.classList.remove('flipped');
-            else screen.classList.add('flipped');
+            if (hasClass(screen, 'flipped')) removeClass(screen, 'flipped');
+            else addClass(screen, 'flipped');
         }
     };
     undo = function() {
@@ -27,13 +31,10 @@ function ChessGame(Chess, screen, container, container_moves, controls)
         {
             clear_active();
             active_piece = null;
-            if ('WHITE' === game.whoseTurn())
+            if (container_moves)
             {
-                moves.removeChild(moves.lastChild);
-            }
-            else
-            {
-                moves.lastChild.innerText = moves.lastChild.innerText.split(' ')[0];
+                if ('WHITE' === game.whoseTurn()) moves.removeChild(moves.lastChild);
+                else moves.lastChild.innerText = moves.lastChild.innerText.split(' ')[0];
             }
             sq1 = el(pos1=mov[0]); sq2 = el(pos2=mov[2]);
             empty(sq1); empty(sq2); add(sq1, piece=mov[1]); add(sq2, mov[3]);
@@ -44,12 +45,12 @@ function ChessGame(Chess, screen, container, container_moves, controls)
                     if ('g1' === pos2)
                     {
                         // small castling white
-                        move(el('f1'), el('h1'), game.getPieceAt('h1'));
+                        move(game.getPieceAt('h1'), el('f1'), el('h1'));
                     }
                     else if ('c1' === pos2)
                     {
                         // large castling white
-                        move(el('d1'), el('a1'), game.getPieceAt('a1'));
+                        move(game.getPieceAt('a1'), el('d1'), el('a1'));
                     }
                 }
                 else if ('e8' === pos1)
@@ -57,16 +58,16 @@ function ChessGame(Chess, screen, container, container_moves, controls)
                     if ('g8' === pos2)
                     {
                         // small castling black
-                        move(el('f8'), el('h8'), game.getPieceAt('h8'));
+                        move(game.getPieceAt('h8'), el('f8'), el('h8'));
                     }
                     else if ('c8' === pos2)
                     {
                         // large castling black
-                        move(el('d8'), el('a8'), game.getPieceAt('a8'));
+                        move(game.getPieceAt('a8'), el('d8'), el('a8'));
                     }
                 }
             }
-            show_check(game.isCheck(), game.whoseTurn());
+            update_gui();
         }
     };
     redo = function() {
@@ -75,17 +76,14 @@ function ChessGame(Chess, screen, container, container_moves, controls)
         {
             clear_active();
             active_piece = null;
-            if ('BLACK' === game.whoseTurn())
+            if (container_moves)
             {
-                moves.appendChild(m = $$('span'));
-            }
-            else
-            {
-                m = moves.lastChild;
+                if ('BLACK' === game.whoseTurn()) moves.appendChild(m = $$('span'));
+                else m = moves.lastChild;
             }
             pos1 = mov[0];
             pos2 = mov[1];
-            move(el(pos1), el(pos2), piece = game.getPieceAt(pos2));
+            move(piece = game.getPieceAt(pos2), el(pos1), el(pos2));
             if ('KING' === piece.type)
             {
                 if ('e1' === pos1)
@@ -93,12 +91,12 @@ function ChessGame(Chess, screen, container, container_moves, controls)
                     if ('g1' === pos2)
                     {
                         // small castling white
-                        move(el('h1'), el('f1'), game.getPieceAt('f1'));
+                        move(game.getPieceAt('f1'), el('h1'), el('f1'));
                     }
                     else if ('c1' === pos2)
                     {
                         // large castling white
-                        move(el('a1'), el('d1'), game.getPieceAt('d1'));
+                        move(game.getPieceAt('d1'), el('a1'), el('d1'));
                     }
                 }
                 else if ('e8' === pos1)
@@ -106,28 +104,33 @@ function ChessGame(Chess, screen, container, container_moves, controls)
                     if ('g8' === pos2)
                     {
                         // small castling black
-                        move(el('h8'), el('f8'), game.getPieceAt('f8'));
+                        move(game.getPieceAt('f8'), el('h8'), el('f8'));
                     }
                     else if ('c8' === pos2)
                     {
                         // large castling black
-                        move(el('a8'), el('d8'), game.getPieceAt('d8'));
+                        move(game.getPieceAt('d8'), el('a8'), el('d8'));
                     }
                 }
             }
-            // Smith chess notation
-            m.innerText += (m.innerText.length ? ' ' : '') + (pos1+pos2).toLowerCase() + (game.isCheckMate() ? '#' : (game.isCheck() ? '+' : ''));
-            show_check(game.isCheck(), game.whoseTurn());
+            if (container_moves)
+            {
+                // Smith chess notation
+                m.innerText += (m.innerText.length ? ' ' : '') + (pos1+pos2).toLowerCase() + (game.isCheckMate() ? '#' : (game.isCheck() ? '+' : ''));
+            }
+            update_gui();
         }
     };
     newgame = function() {
         active_piece = null;
         if (game) game.dispose();
-        make(container, container_moves, game = new Chess(), squares = $$('div'), moves = $$('div'));
+        make(container, container_moves, game = new Chess(), squares = $$('div'), moves = (container_moves ? $$('div') : null));
         if (controls && controls.querySelector('select[data-action="promoteto"]')) game.promoteTo(controls.querySelector('select[data-action="promoteto"]').value);
+        if (msg) msg.innerText = 'Game start. WHITE\'s turn to play.';
     };
     init = function() {
-        container.addEventListener('click', function(evt) {
+        addEvent(container, 'click', function(evt) {
+            evt.preventDefault && evt.preventDefault();
             var square = evt.target.closest('.square'), pos1, pos2, piece, m;
             if (active_piece)
             {
@@ -137,22 +140,19 @@ function ChessGame(Chess, screen, container, container_moves, controls)
                     active_piece = null;
                     return false;
                 }
-                if (square.classList.contains('active'))
+                if (hasClass(square, 'active'))
                 {
                     pos1 = active_piece.id;
                     pos2 = square.id;
                     clear_active();
                     active_piece = null;
-                    if ('WHITE' === game.whoseTurn())
+                    if (container_moves)
                     {
-                        moves.appendChild(m = $$('span'));
-                    }
-                    else
-                    {
-                        m = moves.lastChild;
+                        if ('WHITE' === game.whoseTurn()) moves.appendChild(m = $$('span'));
+                        else m = moves.lastChild;
                     }
                     game.doMove(pos1, pos2);
-                    move(el(pos1), el(pos2), piece = game.getPieceAt(pos2));
+                    move(piece = game.getPieceAt(pos2), el(pos1), el(pos2));
                     if ('KING' === piece.type)
                     {
                         if ('e1' === pos1)
@@ -160,12 +160,12 @@ function ChessGame(Chess, screen, container, container_moves, controls)
                             if ('g1' === pos2)
                             {
                                 // small castling white
-                                move(el('h1'), el('f1'), game.getPieceAt('f1'));
+                                move(game.getPieceAt('f1'), el('h1'), el('f1'));
                             }
                             else if ('c1' === pos2)
                             {
                                 // large castling white
-                                move(el('a1'), el('d1'), game.getPieceAt('d1'));
+                                move(game.getPieceAt('d1'), el('a1'), el('d1'));
                             }
                         }
                         else if ('e8' === pos1)
@@ -173,18 +173,21 @@ function ChessGame(Chess, screen, container, container_moves, controls)
                             if ('g8' === pos2)
                             {
                                 // small castling black
-                                move(el('h8'), el('f8'), game.getPieceAt('f8'));
+                                move(game.getPieceAt('f8'), el('h8'), el('f8'));
                             }
                             else if ('c8' === pos2)
                             {
                                 // large castling black
-                                move(el('a8'), el('d8'), game.getPieceAt('d8'));
+                                move(game.getPieceAt('d8'), el('a8'), el('d8'));
                             }
                         }
                     }
-                    // Smith chess notation
-                    m.innerText += (m.innerText.length ? ' ' : '') + (pos1+pos2).toLowerCase() + (game.isCheckMate() ? '#' : (game.isCheck() ? '+' : ''));
-                    show_check(game.isCheck(), game.whoseTurn());
+                    if (container_moves)
+                    {
+                        // Smith chess notation
+                        m.innerText += (m.innerText.length ? ' ' : '') + (pos1+pos2).toLowerCase() + (game.isCheckMate() ? '#' : (game.isCheck() ? '+' : ''));
+                    }
+                    update_gui();
                     return false;
                 }
                 else
@@ -193,17 +196,15 @@ function ChessGame(Chess, screen, container, container_moves, controls)
                     active_piece = null;
                 }
             }
-            if (square.classList.contains('piece'))
+            if (hasClass(square, 'piece'))
             {
                 piece = game.getPieceAt(square.id);
                 if (piece && (piece.color === game.whoseTurn()))
                 {
                     active_piece = square;
                     clear_active();
-                    square.classList.add('active');
-                    game.getPossibleMovesAt(square.id).forEach(function(m) {
-                        el(m).classList.add('active');
-                    });
+                    addClass(square, 'active');
+                    game.getPossibleMovesAt(square.id).forEach(function(m) {addClass(el(m), 'active');});
                 }
                 else
                 {
@@ -217,26 +218,27 @@ function ChessGame(Chess, screen, container, container_moves, controls)
                 active_piece = null;
             }
             return false;
-        }, false);
+        }, {capture:false,passive:false});
         if (controls)
         {
-            controls.addEventListener('click', function(evt) {
+            msg = controls.querySelector('.msg');
+            addEvent(controls, 'click', function(evt) {
                 var ctrl = evt.target.closest('button'),
                     action = ctrl ? ctrl.getAttribute('data-action') : '';
+                evt.preventDefault && evt.preventDefault();
                 if ('new' === action) newgame();
                 else if ('undo' === action) undo();
                 else if ('redo' === action) redo();
                 else if ('flip' === action) flip();
                 return false;
-            }, false);
-            controls.addEventListener('change', function(evt) {
+            }, {capture:false,passive:false});
+            addEvent(controls, 'change', function(evt) {
                 var ctrl = evt.target.closest('select'),
                     action = ctrl ? ctrl.getAttribute('data-action') : '';
                 if ('promoteto' === action) game.promoteTo(ctrl.value);
-                return false;
-            }, false);
+            }, {capture:false,passive:true});
         }
-        if (screen) screen.classList.add('chessscreen');
+        if (screen) addClass(screen, 'chessscreen');
         newgame();
     };
     init();
@@ -244,42 +246,104 @@ function ChessGame(Chess, screen, container, container_moves, controls)
 window.ChessGame = ChessGame;
 
 // utils
+function el(id)
+{
+    return document.getElementById(id);
+}
+function $(sel, el)
+{
+    return Array.prototype.slice.call((el || document).querySelectorAll(sel) || []);
+}
 function $$(tag)
 {
     return document.createElement(tag);
 }
-function el(id)
+function hasEventOptions()
 {
-    return document.getElementById(id);
+    if (null == hasEventOptions.supported)
+    {
+        var passiveSupported = false, options = {};
+        try {
+            Object.defineProperty(options, 'passive', {
+                get: function(){
+                    passiveSupported = true;
+                    return false;
+                }
+            });
+            window.addEventListener('test', null, options);
+            window.removeEventListener('test', null, options);
+        } catch(e) {
+            passiveSupported = false;
+        }
+        hasEventOptions.supported = passiveSupported;
+    }
+    return hasEventOptions.supported;
+}
+function addEvent(target, event, handler, options)
+{
+    if (target.attachEvent) target.attachEvent('on' + event, handler);
+    else target.addEventListener(event, handler, hasEventOptions() ? options : ('object' === typeof(options) ? !!options.capture : !!options));
+}
+function removeEvent(target, event, handler, options)
+{
+    // if (el.removeEventListener) not working in IE11
+    if (target.detachEvent) target.detachEvent('on' + event, handler);
+    else target.removeEventListener(event, handler, hasEventOptions() ? options : ('object' === typeof(options) ? !!options.capture : !!options));
+}
+function hasClass(el, className)
+{
+    if (el)
+    {
+        return el.classList
+            ? el.classList.contains(className)
+            : -1 !== (' ' + el.className + ' ').indexOf(' ' + className + ' ')
+        ;
+    }
+}
+function addClass(el, className)
+{
+    if (el)
+    {
+        if (el.classList) el.classList.add(className);
+        else if (!hasClass(el, className)) el.className = '' === el.className ? className : (el.className + ' ' + className);
+    }
+}
+function removeClass(el, className)
+{
+    if (el)
+    {
+        if (el.classList) el.classList.remove(className);
+        else el.className = ((' ' + el.className + ' ').replace(' ' + className + ' ', ' ')).trim();
+    }
 }
 function make(container, container_moves, game, squares, moves)
 {
     var nt, nb, nl, nr, span, i, j, square, piece;
     container.textContent = '';
-    container.classList.add('chessboard');
-    squares.classList.add('chessboard-squares');
+    addClass(container, 'chessboard');
+    addClass(squares, 'chessboard-squares');
     container.appendChild(squares);
-    moves.classList.add('chessboard-moves');
-    if (container_moves)
+    if (container_moves && moves)
     {
+        addClass(moves, 'chessboard-moves');
         container_moves.textContent = '';
         container_moves.appendChild(moves);
     }
     nt = $$('div');
-    nt.classList.add('chessboard-numbers');
-    nt.classList.add('top');
+    addClass(nt, 'chessboard-numbers');
+    addClass(nt, 'top');
     container.appendChild(nt);
     nb = $$('div');
-    nb.classList.add('chessboard-numbers');
-    nb.classList.add('bottom');
+    addClass(nb, 'chessboard-numbers');
+    addClass(nb, 'bottom');
     container.appendChild(nb);
     nl = $$('div');
-    nl.classList.add('chessboard-numbers');
-    nl.classList.add('left');
+    addClass(nl, 'chessboard-numbers');
+    addClass(nl, 'left');
     container.appendChild(nl);
     nr = $$('div');
-    nr.classList.add('chessboard-numbers');
-    nr.classList.add('right');
+    addClass(nr, 'chessboard-numbers');
+    addClass(nr, 'right');
     container.appendChild(nr);
     for (i=8; i>=1; --i)
     {
@@ -313,13 +377,13 @@ function make(container, container_moves, game, squares, moves)
             square.id = String.fromCharCode('a'.charCodeAt(0) + j)+''+String(i);
             square.style.setProperty('--x', String(j));
             square.style.setProperty('--y', String(8-i));
-            square.classList.add('square');
-            square.classList.add(i & 1 ? (j & 1 ? 'white' : 'black') : (j & 1 ? 'black' : 'white'));
+            addClass(square, 'square');
+            addClass(square, i & 1 ? (j & 1 ? 'white' : 'black') : (j & 1 ? 'black' : 'white'));
             piece = game.getPieceAt(square.id);
             if (piece)
             {
-                square.classList.add('piece');
-                square.classList.add(('BLACK' === piece.color ? 'b-' : 'w-')+piece.type.toLowerCase());
+                addClass(square, ('BLACK' === piece.color ? 'b-' : 'w-')+piece.type.toLowerCase());
+                addClass(square, 'piece');
             }
             squares.appendChild(square);
         }
@@ -329,30 +393,30 @@ function empty(square)
 {
     if (square)
     {
-        square.classList.remove('piece');
-        square.classList.remove('w-pawn');
-        square.classList.remove('b-pawn');
-        square.classList.remove('w-rook');
-        square.classList.remove('b-rook');
-        square.classList.remove('w-knight');
-        square.classList.remove('b-knight');
-        square.classList.remove('w-bishop');
-        square.classList.remove('b-bishop');
-        square.classList.remove('w-queen');
-        square.classList.remove('b-queen');
-        square.classList.remove('w-king');
-        square.classList.remove('b-king');
+        removeClass(square, 'piece');
+        removeClass(square, 'w-pawn');
+        removeClass(square, 'b-pawn');
+        removeClass(square, 'w-rook');
+        removeClass(square, 'b-rook');
+        removeClass(square, 'w-knight');
+        removeClass(square, 'b-knight');
+        removeClass(square, 'w-bishop');
+        removeClass(square, 'b-bishop');
+        removeClass(square, 'w-queen');
+        removeClass(square, 'b-queen');
+        removeClass(square, 'w-king');
+        removeClass(square, 'b-king');
     }
 }
 function add(square, piece)
 {
     if (square && piece)
     {
-        square.classList.add(('BLACK' === piece.color ? 'b-' : 'w-')+piece.type.toLowerCase());
-        square.classList.add('piece');
+        addClass(square, ('BLACK' === piece.color ? 'b-' : 'w-')+piece.type.toLowerCase());
+        addClass(square, 'piece');
     }
 }
-function move(square1, square2, piece)
+function move(piece, square1, square2)
 {
     empty(square1);
     empty(square2);

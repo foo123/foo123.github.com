@@ -85,6 +85,14 @@ body {
     --img: url(./next-bt.svg);
     --aspect-ratio: calc(1 / 1);
 }
+#controls .msg {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+}
 #chessgame {
     position: relative;
     display: inline-block;
@@ -108,6 +116,7 @@ body {
 }
 #chessgame {
     --mrg: 14px;
+    --piecesz: 0.9;
     width: 48%;
 }
 }
@@ -120,8 +129,12 @@ body {
     padding: 4px 6px;
     --w: 14px;
 }
+#controls .msg {
+    font-size: 10px;
+}
 #chessgame {
     --mrg: 10px;
+    --piecesz: 1.1;
     width: 100%;
 }
 }
@@ -142,6 +155,7 @@ body {
 <option value="knight">Knight</option>
 </optgroup>
 </select>
+<p class="msg">Play chess..</p>
 </div>
 <div id="chessgame"></div>
 <!--<div id="moves"></div>-->
@@ -150,6 +164,6 @@ body {
 <link rel="stylesheet" type="text/css" href="./chessgame.css" />
 <script type="text/javascript" src="./chess.js"></script>
 <script type="text/javascript" src="./chessgame.js"></script>
-<script type="text/javascript">ChessGame(Chess, document.getElementById('screen'), document.getElementById('chessgame'), /*document.getElementById('moves')*/null, document.getElementById('controls'));</script>
+<script type="text/javascript">ChessGame(Chess, document.getElementById('screen'), document.getElementById('chessgame'), document.getElementById('controls') /*, document.getElementById('moves')*/);</script>
 </body>
 </html>

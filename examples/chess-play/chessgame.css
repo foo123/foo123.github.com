@@ -7,12 +7,26 @@
 }
 .chessboard {
     --mrg: 30px;
+    --piecesz: 0.8;
     position: relative;
     display: block;
     box-sizing: border-box;
     padding: var(--mrg);
     margin: 0 auto;
+    border: 0;
     max-width: 100%;
+    /*.no-select*/
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.chessboard:focus {
+    /*.no-select*/
+    outline: none !important;
 }
 .chessboard-moves {
     position: relative;
@@ -140,17 +154,16 @@
     top: calc(var(--y) * 100% / 8);
     left: calc(var(--x) * 100% / 8);
 }
-.chessboard .square::before {
+.chessboard .square.piece::before {
     content: "";
     position: absolute;
     display: inline-block;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    width: 80%;
-    height: 80%;
+    width: calc(var(--piecesz) * 100%);
+    height: calc(var(--piecesz) * 100%);
     top: 50%; left: 50%;
-    transform-origin: center center;
     transform: translate(-50%, -50%);
     background-color: transparent;
     background-image: var(--piece);
