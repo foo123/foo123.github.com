@@ -440,16 +440,20 @@ function ai_move(evaluate, board, color, depth, promotion, cb, interval)
     if ("function" === typeof cb)
     {
         // async
+        interval = interval || 40;
         setTimeout(function next() {
-            if (i >= n) return cb(best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
-            var mov = moves[i++];
-            var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
-            var score = ab_minmax(evaluate, board, OPPOSITE[color], depth-1, promotion, alpha, beta, false);
-            board.unmove(move);
-            if (score === alpha) {best_move.push(mov);}
-            if (score > alpha)   {alpha = score; best_move = [mov];}
-            setTimeout(next, interval || 40);
-        }, interval || 40);
+            if (i < n)
+            {
+                var mov = moves[i++];
+                var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
+                var score = ab_minmax(evaluate, board, OPPOSITE[color], depth-1, promotion, alpha, beta, false);
+                board.unmove(move);
+                if (score === alpha) {best_move.push(mov);}
+                if (score > alpha)   {alpha = score; best_move = [mov];}
+            }
+            if (i >= n) cb(best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
+            else setTimeout(next, interval);
+        }, interval);
     }
     else
     {
@@ -526,7 +530,7 @@ Board[proto] = {
     },
     history: null,
     redo: null,
-    turn: null,
+    turn: 0,
     halfMoves: 0,
     king: null,
     left: null,
@@ -664,7 +668,7 @@ function Chess(options)
         return moves.length ? moves[stdMath.round(moves.length-1)*stdMath.random()] : null;
     };
     self.getAIMove = function(depth, evaluate, promotion, cb, interval) {
-        var move = ai_move(evaluate || default_evaluate, board, board.turn, depth || 1, promotion || QUEEN, cb, interval);
+        var move = ai_move(evaluate || default_evaluate, board, board.turn, depth || 1, CODE[String(promotion || 'QUEEN').toUpperCase()] || QUEEN, cb, interval);
         return move ? {from:xy2s(move[0],move[1]), to:xy2s(move[2],move[3])} : null;
     };
     self.doMove = function(pos1, pos2) {
