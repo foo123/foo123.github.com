@@ -44,12 +44,12 @@ function ChessGame(Chess, screen, container, controls, container_moves)
                 {
                     if ('g1' === pos2)
                     {
-                        // small castling white
+                        // kingside castling white
                         move(game.getPieceAt('h1'), el('f1'), el('h1'));
                     }
                     else if ('c1' === pos2)
                     {
-                        // large castling white
+                        // queenside castling white
                         move(game.getPieceAt('a1'), el('d1'), el('a1'));
                     }
                 }
@@ -57,12 +57,12 @@ function ChessGame(Chess, screen, container, controls, container_moves)
                 {
                     if ('g8' === pos2)
                     {
-                        // small castling black
+                        // kingside castling black
                         move(game.getPieceAt('h8'), el('f8'), el('h8'));
                     }
                     else if ('c8' === pos2)
                     {
-                        // large castling black
+                        // queenside castling black
                         move(game.getPieceAt('a8'), el('d8'), el('a8'));
                     }
                 }
@@ -90,12 +90,12 @@ function ChessGame(Chess, screen, container, controls, container_moves)
                 {
                     if ('g1' === pos2)
                     {
-                        // small castling white
+                        // kingside castling white
                         move(game.getPieceAt('f1'), el('h1'), el('f1'));
                     }
                     else if ('c1' === pos2)
                     {
-                        // large castling white
+                        // queenside castling white
                         move(game.getPieceAt('d1'), el('a1'), el('d1'));
                     }
                 }
@@ -103,12 +103,12 @@ function ChessGame(Chess, screen, container, controls, container_moves)
                 {
                     if ('g8' === pos2)
                     {
-                        // small castling black
+                        // kingside castling black
                         move(game.getPieceAt('f8'), el('h8'), el('f8'));
                     }
                     else if ('c8' === pos2)
                     {
-                        // large castling black
+                        // queenside castling black
                         move(game.getPieceAt('d8'), el('a8'), el('d8'));
                     }
                 }
@@ -159,12 +159,12 @@ function ChessGame(Chess, screen, container, controls, container_moves)
                         {
                             if ('g1' === pos2)
                             {
-                                // small castling white
+                                // kingside castling white
                                 move(game.getPieceAt('f1'), el('h1'), el('f1'));
                             }
                             else if ('c1' === pos2)
                             {
-                                // large castling white
+                                // queenside castling white
                                 move(game.getPieceAt('d1'), el('a1'), el('d1'));
                             }
                         }
@@ -172,12 +172,12 @@ function ChessGame(Chess, screen, container, controls, container_moves)
                         {
                             if ('g8' === pos2)
                             {
-                                // small castling black
+                                // kingside castling black
                                 move(game.getPieceAt('f8'), el('h8'), el('f8'));
                             }
                             else if ('c8' === pos2)
                             {
-                                // large castling black
+                                // queenside castling black
                                 move(game.getPieceAt('d8'), el('a8'), el('d8'));
                             }
                         }

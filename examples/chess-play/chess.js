@@ -344,14 +344,14 @@ function possible_moves_at(board, y, x, promotion)
         {
             moves.push([y+1, x-1]);
         }
-        if (K._c0 && EMPTY === board._[y][x+1].color && EMPTY === board._[y][x+2].color && !threatened_at_by(board, y,x, OPPOSITE[color]) && !threatened_at_by(board, y,x+1, OPPOSITE[color]) && !threatened_at_by(board, y,x+2, OPPOSITE[color]))
+        if (K._kc && EMPTY === board._[y][x+1].color && EMPTY === board._[y][x+2].color && !threatened_at_by(board, y,x, OPPOSITE[color]) && !threatened_at_by(board, y,x+1, OPPOSITE[color]) && !threatened_at_by(board, y,x+2, OPPOSITE[color]))
         {
-            // small castling
+            // kingside castling
             moves.push([y,x+2]);
         }
-        if (K._c1 && EMPTY === board._[y][x-1].color && EMPTY === board._[y][x-2].color && EMPTY === board._[y][x-3].color && !threatened_at_by(board, y,x, OPPOSITE[color]) && !threatened_at_by(board, y,x-1, OPPOSITE[color]) && !threatened_at_by(board, y,x-2, OPPOSITE[color]))
+        if (K._qc && EMPTY === board._[y][x-1].color && EMPTY === board._[y][x-2].color && EMPTY === board._[y][x-3].color && !threatened_at_by(board, y,x, OPPOSITE[color]) && !threatened_at_by(board, y,x-1, OPPOSITE[color]) && !threatened_at_by(board, y,x-2, OPPOSITE[color]))
         {
-            // grand castling
+            // queenside castling
             moves.push([y,x-2]);
         }
     }
@@ -432,23 +432,41 @@ function ab_minmax(evaluate, board, color, depth, promotion, alpha, beta, isMax)
         return beta;
     }
 }
-function ai_move(evaluate, board, color, depth, promotion)
+function ai_move(evaluate, board, color, depth, promotion, cb, interval)
 {
     var alpha = -Infinity, beta = Infinity,
         moves = shuffle(all_moves_for(board, color, promotion)),
-        i, n, mov, move, score, best_move = [];
-    for (i=0,n=moves.length; i<n; ++i)
+        i = 0, n = moves.length, best_move = [];
+    if ("function" === typeof cb)
     {
-        mov = moves[i];
-        move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
-        score = ab_minmax(evaluate, board, OPPOSITE[color], depth-1, promotion, alpha, beta, false);
-        board.unmove(move);
-        if (score === alpha) {best_move.push(mov);}
-        if (score > alpha)   {alpha = score; best_move = [mov];}
+        // async
+        setTimeout(function next() {
+            if (i >= n) return cb(best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
+            var mov = moves[i++];
+            var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
+            var score = ab_minmax(evaluate, board, OPPOSITE[color], depth-1, promotion, alpha, beta, false);
+            board.unmove(move);
+            if (score === alpha) {best_move.push(mov);}
+            if (score > alpha)   {alpha = score; best_move = [mov];}
+            setTimeout(next, interval || 40);
+        }, interval || 40);
     }
-    return best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null;
+    else
+    {
+        // sync
+        for (; i<n; ++i)
+        {
+            var mov = moves[i];
+            var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
+            var score = ab_minmax(evaluate, board, OPPOSITE[color], depth-1, promotion, alpha, beta, false);
+            board.unmove(move);
+            if (score === alpha) {best_move.push(mov);}
+            if (score > alpha)   {alpha = score; best_move = [mov];}
+        }
+        return best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null;
+    }
 }
-function Board()
+function Board(options)
 {
     var self = this;
     self.redo = [];
@@ -456,7 +474,9 @@ function Board()
     self.king = {WHITE:null,BLACK:null};
     self.left = {WHITE:{PAWN:0,KNIGHT:0,BISHOP:0,ROOK:0,QUEEN:0}, BLACK:{PAWN:0,KNIGHT:0,BISHOP:0,ROOK:0,QUEEN:0}};
     self.turn = WHITE;
+    self.halfMoves = 0;
     self._ = new Array(8);
+    var c = false !== options.castlingAllowed;
     for (var i=8; i>=1; --i)
     {
         self._[i-1] = new Array(8);
@@ -484,7 +504,7 @@ function Board()
                 else if (4 === j)
                 {
                     self._[i-1][j] = 8 === i ? {color:BLACK,type:KING} : {color:WHITE,type:KING};
-                    if (8 === i) self.king.BLACK = {y:i-1,x:j,_c0:1,_c1:1}; else self.king.WHITE = {y:i-1,x:j,_c0:1,_c1:1};
+                    if (8 === i) self.king.BLACK = {y:i-1,x:j,_kc:c,_qc:c}; else self.king.WHITE = {y:i-1,x:j,_kc:c,_qc:c};
                 }
             }
             else if (7 === i || 2 === i)
@@ -507,6 +527,7 @@ Board[proto] = {
     history: null,
     redo: null,
     turn: null,
+    halfMoves: 0,
     king: null,
     left: null,
     _: null,
@@ -530,7 +551,7 @@ Board[proto] = {
     },
     move: function(y1, x1, y2, x2, ret_move, promotion) {
         var board = this, p1 = board._[y1][x1], p2 = board._[y2][x2], R, y,
-            K = board.king[COLOR[p1.color]], c0 = K._c0, c1 = K._c1, moved = p1._m;
+            K = board.king[COLOR[p1.color]], kc = K._kc, qc = K._qc, moved = p1._m;
         promotion = promotion || QUEEN;
         board._[y1][x1] = NONE;
         if (PAWN === p1.type && ((WHITE === p1.color && 7 === y2) || (BLACK === p1.color && 0 === y2)))
@@ -546,22 +567,22 @@ Board[proto] = {
             K.y = y2;
             K.x = x2;
             // no castling
-            K._c0 = 0;
-            K._c1 = 0;
+            K._kc = false;
+            K._qc = false;
             if (y1 === y2 && 1 < stdMath.abs(x2-x1))
             {
                 // castling
                 y = y1;
                 if (x2 > x1)
                 {
-                    // small castling
+                    // kingside castling
                     R = board._[y][7]; R._m = 1;
                     board._[y][7] = NONE;
                     board._[y][x2-1] = R;
                 }
                 if (x2 < x1)
                 {
-                    // grand castling
+                    // queenside castling
                     R = board._[y][0]; R._m = 1;
                     board._[y][0] = NONE;
                     board._[y][x2+1] = R;
@@ -572,17 +593,18 @@ Board[proto] = {
         {
             // no castling
             p1._m = 1;
-            if (0 === x1) K._c1 = 0;
-            if (7 === x1) K._c0 = 0;
+            if (0 === x1) K._qc = false;
+            if (7 === x1) K._kc = false;
         }
-        return ret_move ? [p1, y1, x1, y2, x2, p2, c0, c1, moved, promotion] : null;
+        ++board.halfMoves;
+        return ret_move ? [p1, y1, x1, y2, x2, p2, kc, qc, moved, promotion] : null;
     },
     unmove: function(move) {
         var board = this, K = board.king[COLOR[move[0].color]], R, x1, x2, y;
         board._[move[1]][move[2]] = move[0];
         board._[move[3]][move[4]] = move[5];
-        K._c0 = move[6];
-        K._c1 = move[7];
+        K._kc = move[6];
+        K._qc = move[7];
         if (KING === move[0].type)
         {
             K.y = move[1];
@@ -595,14 +617,14 @@ Board[proto] = {
                 x2 = move[4];
                 if (x2 > x1)
                 {
-                    // small castling
+                    // kingside castling
                     R = board._[y][x2-1]; R._m = 0;
                     board._[y][7] = R;
                     board._[y][x2-1] = NONE;
                 }
                 if (x2 < x1)
                 {
-                    // grand castling
+                    // queenside castling
                     R = board._[y][x2+1]; R._m = 0;
                     board._[y][0] = R;
                     board._[y][x2+1] = NONE;
@@ -613,14 +635,16 @@ Board[proto] = {
         {
             move[0]._m = move[8];
         }
+        --board.halfMoves;
     }
 };
-function Chess()
+function Chess(options)
 {
+    options = options || {};
     var self = this, board, kc = null, kt = null, promotion = QUEEN;
     self.reset = function() {
         if (board) board.dispose();
-        board = new Board();
+        board = new Board(options);
         kc = kt = null;
         return self;
     };
@@ -639,8 +663,8 @@ function Chess()
         var moves = self.getAllMovesFor(self.whoseTurn());
         return moves.length ? moves[stdMath.round(moves.length-1)*stdMath.random()] : null;
     };
-    self.getAIMove = function(depth, evaluate, promotion) {
-        var move = ai_move(evaluate || default_evaluate, board, board.turn, depth || 1, promotion || QUEEN);
+    self.getAIMove = function(depth, evaluate, promotion, cb, interval) {
+        var move = ai_move(evaluate || default_evaluate, board, board.turn, depth || 1, promotion || QUEEN, cb, interval);
         return move ? {from:xy2s(move[0],move[1]), to:xy2s(move[2],move[3])} : null;
     };
     self.doMove = function(pos1, pos2) {
