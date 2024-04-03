@@ -43,25 +43,11 @@ function ChessGame(Chess, container, controls, options, container_moves)
                 // handle en passants
                 if ('BLACK' === piece.color && '3' === pos2.charAt(1))
                 {
-                    add(el('a4'), game.getPieceAt('a4'));
-                    add(el('b4'), game.getPieceAt('b4'));
-                    add(el('c4'), game.getPieceAt('c4'));
-                    add(el('d4'), game.getPieceAt('d4'));
-                    add(el('e4'), game.getPieceAt('e4'));
-                    add(el('f4'), game.getPieceAt('f4'));
-                    add(el('g4'), game.getPieceAt('g4'));
-                    add(el('h4'), game.getPieceAt('h4'));
+                    add(el(pos2.charAt(0)+'4'), game.getPieceAt(pos2.charAt(0)+'4'));
                 }
                 if ('WHITE' === piece.color && '6' === pos2.charAt(1))
                 {
-                    add(el('a5'), game.getPieceAt('a5'));
-                    add(el('b5'), game.getPieceAt('b5'));
-                    add(el('c5'), game.getPieceAt('c5'));
-                    add(el('d5'), game.getPieceAt('d5'));
-                    add(el('e5'), game.getPieceAt('e5'));
-                    add(el('f5'), game.getPieceAt('f5'));
-                    add(el('g5'), game.getPieceAt('g5'));
-                    add(el('h5'), game.getPieceAt('h5'));
+                    add(el(pos2.charAt(0)+'5'), game.getPieceAt(pos2.charAt(0)+'5'));
                 }
             }
             if ('KING' === piece.type)
@@ -115,25 +101,11 @@ function ChessGame(Chess, container, controls, options, container_moves)
                 // handle en passants
                 if ('BLACK' === piece.color && '3' === pos2.charAt(1))
                 {
-                    maybe_remove(el('a4'), game.getPieceAt('a4'));
-                    maybe_remove(el('b4'), game.getPieceAt('b4'));
-                    maybe_remove(el('c4'), game.getPieceAt('c4'));
-                    maybe_remove(el('d4'), game.getPieceAt('d4'));
-                    maybe_remove(el('e4'), game.getPieceAt('e4'));
-                    maybe_remove(el('f4'), game.getPieceAt('f4'));
-                    maybe_remove(el('g4'), game.getPieceAt('g4'));
-                    maybe_remove(el('h4'), game.getPieceAt('h4'));
+                    maybe_remove(el(pos2.charAt(0)+'4'), game.getPieceAt(pos2.charAt(0)+'4'));
                 }
                 if ('WHITE' === piece.color && '6' === pos2.charAt(1))
                 {
-                    maybe_remove(el('a5'), game.getPieceAt('a5'));
-                    maybe_remove(el('b5'), game.getPieceAt('b5'));
-                    maybe_remove(el('c5'), game.getPieceAt('c5'));
-                    maybe_remove(el('d5'), game.getPieceAt('d5'));
-                    maybe_remove(el('e5'), game.getPieceAt('e5'));
-                    maybe_remove(el('f5'), game.getPieceAt('f5'));
-                    maybe_remove(el('g5'), game.getPieceAt('g5'));
-                    maybe_remove(el('h5'), game.getPieceAt('h5'));
+                    maybe_remove(el(pos2.charAt(0)+'5'), game.getPieceAt(pos2.charAt(0)+'5'));
                 }
             }
             if ('KING' === piece.type)
@@ -212,25 +184,11 @@ function ChessGame(Chess, container, controls, options, container_moves)
                         // handle en passants
                         if ('BLACK' === piece.color && '3' === pos2.charAt(1))
                         {
-                            maybe_remove(el('a4'), game.getPieceAt('a4'));
-                            maybe_remove(el('b4'), game.getPieceAt('b4'));
-                            maybe_remove(el('c4'), game.getPieceAt('c4'));
-                            maybe_remove(el('d4'), game.getPieceAt('d4'));
-                            maybe_remove(el('e4'), game.getPieceAt('e4'));
-                            maybe_remove(el('f4'), game.getPieceAt('f4'));
-                            maybe_remove(el('g4'), game.getPieceAt('g4'));
-                            maybe_remove(el('h4'), game.getPieceAt('h4'));
+                            maybe_remove(el(pos2.charAt(0)+'4'), game.getPieceAt(pos2.charAt(0)+'4'));
                         }
                         if ('WHITE' === piece.color && '6' === pos2.charAt(1))
                         {
-                            maybe_remove(el('a5'), game.getPieceAt('a5'));
-                            maybe_remove(el('b5'), game.getPieceAt('b5'));
-                            maybe_remove(el('c5'), game.getPieceAt('c5'));
-                            maybe_remove(el('d5'), game.getPieceAt('d5'));
-                            maybe_remove(el('e5'), game.getPieceAt('e5'));
-                            maybe_remove(el('f5'), game.getPieceAt('f5'));
-                            maybe_remove(el('g5'), game.getPieceAt('g5'));
-                            maybe_remove(el('h5'), game.getPieceAt('h5'));
+                            maybe_remove(el(pos2.charAt(0)+'5'), game.getPieceAt(pos2.charAt(0)+'5'));
                         }
                     }
                     if ('KING' === piece.type)

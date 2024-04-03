@@ -144,7 +144,21 @@ body {
     width: 100%;
     height: 400px;
 }
-@media (max-width:900px) {
+@media (max-width:1200px) {
+body {
+    padding: 20px 10px;
+}
+#options {
+    width: 66%;
+    padding-left: 20px;
+}
+#chessgame {
+    --mrg: 20px;
+    --piecesz: 0.94;
+    width: 66%;
+}
+}
+@media (max-height:400px) {
 body {
     padding: 20px 0px;
 }
@@ -154,7 +168,7 @@ body {
 }
 #chessgame {
     --mrg: 14px;
-    --piecesz: 0.9;
+    --piecesz: 0.94;
     width: 48%;
 }
 }

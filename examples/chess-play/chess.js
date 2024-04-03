@@ -40,6 +40,10 @@ var proto = 'prototype',
     NONE = {color:EMPTY, type:EMPTY}
 ;
 
+function is_function(f)
+{
+    return "function" === typeof f;
+}
 function prep()
 {
     if (XY && SQ) return;
@@ -71,6 +75,10 @@ function s2xy(s)
     /*var xy = s.split('');
     return {y:parseInt(xy[1])-1, x:xy[0].charCodeAt(0)-'a'.charCodeAt(0)};*/
     return XY[s];
+}
+function encode_move(move)
+{
+    return move && move.length ? (4 > move.length ? xy2s(move[0],move[1]) : {from:xy2s(move[0],move[1]), to:xy2s(move[2],move[3])}) : move;
 }
 function shuffle(a, a0, a1)
 {
@@ -457,7 +465,7 @@ function ai_move(evaluate, board, color, depth, promotion, cb, interval)
     var alpha = -Infinity, beta = Infinity,
         moves = shuffle(all_moves_for(board, color, promotion)),
         i = 0, n = moves.length, best_move = [];
-    if ("function" === typeof cb)
+    if (is_function(cb))
     {
         // async
         interval = interval || 40;
@@ -702,18 +710,18 @@ function Chess(options)
     };
     self.getPossibleMovesAt = function(pos) {
         var coords = s2xy(pos);
-        return coords.x >= 0 && coords.x < 8 && coords.y >= 0 && coords.y < 8 ? possible_moves_at(board, coords.y, coords.x, promotion).map(function(move) {return xy2s(move[0],move[1]);}) : [];
+        return coords.x >= 0 && coords.x < 8 && coords.y >= 0 && coords.y < 8 ? possible_moves_at(board, coords.y, coords.x, promotion).map(encode_move) : [];
     };
     self.getAllMovesFor = function(col) {
-        return all_moves_for(board, null == col ? board.turn : ('BLACK' === col ? BLACK : WHITE), promotion).map(function(move) {return {from:xy2s(move[0],move[1]), to:xy2s(move[2],move[3])};});
+        return all_moves_for(board, null == col ? board.turn : ('BLACK' === col ? BLACK : WHITE), promotion).map(encode_move);
     };
     self.getRandomMove = function() {
         var moves = self.getAllMovesFor(self.whoseTurn());
         return moves.length ? moves[stdMath.round(moves.length-1)*stdMath.random()] : null;
     };
     self.getAIMove = function(depth, cb, interval) {
-        var move = ai_move(options.ai.evaluate || default_evaluate, board, board.turn, depth || options.ai.depth || 1, CODE[String(options.ai.promotion || 'QUEEN').toUpperCase()] || QUEEN, cb, interval);
-        return move ? {from:xy2s(move[0],move[1]), to:xy2s(move[2],move[3])} : null;
+        var move = ai_move(options.ai.evaluate || default_evaluate, board, board.turn, depth || options.ai.depth || 1, CODE[String(options.ai.promotion || 'QUEEN').toUpperCase()] || QUEEN, is_function(cb) ? function(move) {cb(encode_move(move));} : cb, interval);
+        return encode_move(move);
     };
     self.doMove = function(pos1, pos2) {
         var coords1 = s2xy(pos1),
