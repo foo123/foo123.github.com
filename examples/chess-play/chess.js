@@ -76,6 +76,10 @@ function s2xy(s)
     return {y:parseInt(xy[1])-1, x:xy[0].charCodeAt(0)-'a'.charCodeAt(0)};*/
     return XY[s];
 }
+function sqcol(y, x)
+{
+    return (y+1) & 1 ? (x & 1 ? WHITE : BLACK) : (x & 1 ? BLACK : WHITE);
+}
 function encode_move(move)
 {
     return move && move.length ? (4 > move.length ? xy2s(move[0],move[1]) : {from:xy2s(move[0],move[1]), to:xy2s(move[2],move[3])}) : move;
@@ -557,6 +561,7 @@ Board[proto] = {
         self.king = null;
         self.left = null;
         self._ = null;
+        self._pieces = null;
     },
     history: null,
     redo: null,
@@ -566,9 +571,16 @@ Board[proto] = {
     _idleMoves: 0,
     king: null,
     left: null,
+    _pieces: null,
     _: null,
     xy: function(s, i) {
         return null != i ? i2xy(i) : s2xy(s);
+    },
+    sq: function(y, x) {
+        if (x >= 0 && x < 8 && y >= 0 && y < 8)
+        {
+            return {color:COLOR[sqcol(y, x)],symbol:xy2s(y, x),x:x+1,y:y+1};
+        }
     },
     at: function(y, x) {
         if (x >= 0 && x < 8 && y >= 0 && y < 8)
@@ -584,6 +596,40 @@ Board[proto] = {
     at_i: function(i) {
         var xy = i2xy(i);
         return xy ? this.at(xy.y, xy.x) : null;
+    },
+    pieces: function() {
+        var board = this;
+        if (null == board._pieces)
+        {
+            var p = board._pieces = {
+                    WHITE: {
+                        pieces: [
+                            {piece:board._[board.king.WHITE.y][board.king.WHITE.x],x:board.king.WHITE.x,y:board.king.WHITE.y}
+                        ],
+                        counts: {KING:1,QUEEN:0,ROOK:0,BISHOP:0,KNIGHT:0,PAWN:0}
+                    },
+                    BLACK: {
+                        pieces: [
+                            {piece:board._[board.king.BLACK.y][board.king.BLACK.x],x:board.king.BLACK.x,y:board.king.BLACK.y}
+                        ],
+                        counts: {KING:1,QUEEN:0,ROOK:0,BISHOP:0,KNIGHT:0,PAWN:0}
+                    }
+                }, pi, pp, y, x;
+            for (y=0; y<8; ++y)
+            {
+                for (x=0; x<8; ++x)
+                {
+                    pi = board._[y][x];
+                    if (NONE !== pi && KING !== pi.type)
+                    {
+                        pp = p[COLOR[pi.color]];
+                        pp.pieces.push({piece:pi,x:x,y:y});
+                        ++pp.counts[PIECE[pi.type]];
+                    }
+                }
+            }
+        }
+        return board._pieces;
     },
     move: function(y1, x1, y2, x2, ret_move, promotion) {
         var board = this, p1 = board._[y1][x1], p2 = board._[y2][x2], ep, R, y,
@@ -649,6 +695,7 @@ Board[proto] = {
             board.idleMoves = 0;
         }
         if (PAWN === p1.type && p1._ep && 1 < stdMath.abs(y2-y1)) p1._mj2 = board.halfMoves;
+        board._pieces = null;
         return ret_move ? [p1, y1, x1, y2, x2, p2, kc, qc, moved, promotion, ep] : null;
     },
     unmove: function(move) {
@@ -692,12 +739,13 @@ Board[proto] = {
         --board.halfMoves;
         if (NONE === move[5] && PAWN !== move[0].type) --board.idleMoves;
         else board.idleMoves = board._idleMoves;
+        board._pieces = null;
     }
 };
 function Chess(options)
 {
     options = options || {}; options.ai = options.ai || {};
-    var self = this, board, kc = null, kt = null, promotion = QUEEN;
+    var self = this, board, kc = null, kt = null, cmi = null, promotion = QUEEN;
     self.reset = function() {
         if (board) board.dispose();
         board = new Board(options);
@@ -734,7 +782,7 @@ function Chess(options)
         board.redo = [];
         board.turn = OPPOSITE[board.turn];
         if (piece2.type) ++board.left[COLOR[piece2.color]][PIECE[piece2.type]];
-        kc = kt = null;
+        kc = kt = cmi = null;
         return self;
     };
     self.undoMove = function() {
@@ -745,7 +793,7 @@ function Chess(options)
             board.unmove(move);
             if (piece2.type) --board.left[COLOR[piece2.color]][PIECE[piece2.type]];
             board.turn = OPPOSITE[board.turn];
-            kc = kt = null;
+            kc = kt = cmi = null;
             return [xy2s(move[1],move[2]), {color:COLOR[piece1.color],type:PIECE[piece1.type]}, xy2s(move[3],move[4]), piece2.type ? {color:COLOR[piece2.color],type:PIECE[piece2.type]} : null];
         }
     };
@@ -784,6 +832,45 @@ function Chess(options)
     self.isFiftyMoves = function() {
         return 100 <= board.idleMoves;
     };
+    self.isCheckMateImpossible = function() {
+        if (null == cmi)
+        {
+            cmi = false;
+
+            var onBoard = board.pieces(), c = null;
+
+            // if material is insufficient
+
+            // k vs k
+            if (1 === onBoard.WHITE.pieces.ength && 1 === onBoard.BLACK.pieces.length)
+            {
+                cmi = true;
+            }
+
+            // k vs kb or k vs kn
+            else if ((1 === onBoard.WHITE.pieces.length && 2 === onBoard.BLACK.pieces.length && (BISHOP === onBoard.BLACK.pieces[1].piece.type || KNIGHT === onBoard.BLACK.pieces[1].piece.type)) || (1 === onBoard.BLACK.pieces.length && 2 === onBoard.WHITE.pieces.length && (BISHOP === onBoard.WHITE.pieces[1].piece.type || KNIGHT === onBoard.WHITE.pieces[1].piece.type)))
+            {
+                cmi = true;
+            }
+
+            // kb vs kb all on same color
+            else if (onBoard.WHITE.pieces.length+onBoard.BLACK.pieces.length === onBoard.WHITE.counts.BISHOP+onBoard.BLACK.counts.BISHOP+2)
+            {
+                cmi = onBoard.WHITE.counts.BISHOP+onBoard.BLACK.counts.BISHOP === onBoard.WHITE.pieces.slice(1).concat(onBoard.BLACK.pieces.slice(1)).filter(function(b) {
+                    if (null == c)
+                    {
+                        c = sqcol(b.y, b.x);
+                        return true;
+                    }
+                    else
+                    {
+                        return c === sqcol(b.y, b.x);
+                    }
+                }).length;
+            }
+        }
+        return cmi;
+    };
     self.isRepetition = function() {
         // todo
         return false;
@@ -793,7 +880,7 @@ function Chess(options)
         return false;
     };
     self.isDraw = function() {
-        return self.isFiftyMoves() || self.isStaleMate() || self.isRepetition() || self.isDeadPosition();
+        return self.isFiftyMoves() || self.isCheckMateImpossible() || self.isStaleMate() || self.isRepetition() || self.isDeadPosition();
     };
     self.dispose = function() {
         if (board) board.dispose();
@@ -821,6 +908,7 @@ Chess[proto] = {
     isCheckMate: null,
     isStaleMate: null,
     isFiftyMoves: null,
+    isCheckMateImpossible: null,
     isRepetition: null,
     isDeadPosition: null,
     isDraw: null
