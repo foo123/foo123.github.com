@@ -1,9 +1,7 @@
 /**
 *  chess.js
 *  A simple class to play chess
-*  @VERSION: 0.9.0
-*
-*  https://github.com/foo123/chess.js
+*  @VERSION: 0.9.7
 *
 **/
 !function(root, name, factory) {
@@ -507,6 +505,7 @@ function Board(options)
     options = options || {};
     var c = false !== options.castlingAllowed, ep = false !== options.enPassantAllowed;
     var self = this;
+    self.hash = {};
     self.redo = [];
     self.history = [];
     self.king = {WHITE:null,BLACK:null};
@@ -556,6 +555,7 @@ Board[proto] = {
     constructor: Board,
     dispose: function() {
         var self = this;
+        self.hash = null;
         self.history = null;
         self.redo = null;
         self.king = null;
@@ -563,6 +563,7 @@ Board[proto] = {
         self._ = null;
         self._pieces = null;
     },
+    hash: null,
     history: null,
     redo: null,
     turn: 0,
@@ -571,6 +572,7 @@ Board[proto] = {
     _idleMoves: 0,
     king: null,
     left: null,
+    _pos: null,
     _pieces: null,
     _: null,
     xy: function(s, i) {
@@ -597,38 +599,52 @@ Board[proto] = {
         var xy = i2xy(i);
         return xy ? this.at(xy.y, xy.x) : null;
     },
-    pieces: function() {
-        var board = this;
-        if (null == board._pieces)
+    _upd: function() {
+        var board = this,
+            p = {
+                WHITE: {
+                    pieces: [
+                        {piece:board._[board.king.WHITE.y][board.king.WHITE.x],x:board.king.WHITE.x,y:board.king.WHITE.y}
+                    ],
+                    counts: {KING:1,QUEEN:0,ROOK:0,BISHOP:0,KNIGHT:0,PAWN:0}
+                },
+                BLACK: {
+                    pieces: [
+                        {piece:board._[board.king.BLACK.y][board.king.BLACK.x],x:board.king.BLACK.x,y:board.king.BLACK.y}
+                    ],
+                    counts: {KING:1,QUEEN:0,ROOK:0,BISHOP:0,KNIGHT:0,PAWN:0}
+                }
+            }, pi, pp, y, x,
+            pos = (BLACK === board.turn ? 'b' : 'w')+(board._[board.king.WHITE.y][board.king.WHITE.x]._kc ? 'wkc' : '')+(board._[board.king.WHITE.y][board.king.WHITE.x]._qc ? 'wqc' : '')+(board._[board.king.BLACK.y][board.king.BLACK.x]._kc ? 'bkc' : '')+(board._[board.king.BLACK.y][board.king.BLACK.x]._qc ? 'bqc' : '')
+        ;
+        for (y=0; y<8; ++y)
         {
-            var p = board._pieces = {
-                    WHITE: {
-                        pieces: [
-                            {piece:board._[board.king.WHITE.y][board.king.WHITE.x],x:board.king.WHITE.x,y:board.king.WHITE.y}
-                        ],
-                        counts: {KING:1,QUEEN:0,ROOK:0,BISHOP:0,KNIGHT:0,PAWN:0}
-                    },
-                    BLACK: {
-                        pieces: [
-                            {piece:board._[board.king.BLACK.y][board.king.BLACK.x],x:board.king.BLACK.x,y:board.king.BLACK.y}
-                        ],
-                        counts: {KING:1,QUEEN:0,ROOK:0,BISHOP:0,KNIGHT:0,PAWN:0}
-                    }
-                }, pi, pp, y, x;
-            for (y=0; y<8; ++y)
+            for (x=0; x<8; ++x)
             {
-                for (x=0; x<8; ++x)
+                pi = board._[y][x];
+                if (NONE !== pi)
                 {
-                    pi = board._[y][x];
-                    if (NONE !== pi && KING !== pi.type)
+                    if (KING !== pi.type)
                     {
                         pp = p[COLOR[pi.color]];
                         pp.pieces.push({piece:pi,x:x,y:y});
                         ++pp.counts[PIECE[pi.type]];
                     }
+                    pos += xy2s(y, x)+(BLACK === pi.color ? 'b' : 'w')+PIECE_SHORT[pi.type];
                 }
             }
         }
+        board._pieces = p;
+        board._pos = pos;
+    },
+    pos: function() {
+        var board = this;
+        if (null == board._pos) board._upd();
+        return board._pos;
+    },
+    pieces: function() {
+        var board = this;
+        if (null == board._pieces) board._upd();
         return board._pieces;
     },
     move: function(y1, x1, y2, x2, ret_move, promotion) {
@@ -695,7 +711,6 @@ Board[proto] = {
             board.idleMoves = 0;
         }
         if (PAWN === p1.type && p1._ep && 1 < stdMath.abs(y2-y1)) p1._mj2 = board.halfMoves;
-        board._pieces = null;
         return ret_move ? [p1, y1, x1, y2, x2, p2, kc, qc, moved, promotion, ep] : null;
     },
     unmove: function(move) {
@@ -739,7 +754,6 @@ Board[proto] = {
         --board.halfMoves;
         if (NONE === move[5] && PAWN !== move[0].type) --board.idleMoves;
         else board.idleMoves = board._idleMoves;
-        board._pieces = null;
     }
 };
 function Chess(options)
@@ -776,23 +790,30 @@ function Chess(options)
             coords2 = s2xy(pos2),
             piece1 = board._[coords1.y][coords1.x],
             piece2 = board._[coords2.y][coords2.x],
-            move;
+            move, pos;
         move = board.move(coords1.y, coords1.x, coords2.y, coords2.x, true, promotion);
+        board._pos = null;
+        board._pieces = null;
         board.history.push(move);
         board.redo = [];
         board.turn = OPPOSITE[board.turn];
         if (piece2.type) ++board.left[COLOR[piece2.color]][PIECE[piece2.type]];
+        pos = board.pos();
+        board.hash[pos] = (board.hash[pos]||0)+1;
         kc = kt = cmi = null;
         return self;
     };
     self.undoMove = function() {
         if (board.history.length)
         {
-            var move = board.history.pop(), piece1 = move[0], piece2 = move[5];
+            var move = board.history.pop(), piece1 = move[0], piece2 = move[5], pos = board.pos();
             board.redo.push(move);
             board.unmove(move);
+            board._pos = null;
+            board._pieces = null;
             if (piece2.type) --board.left[COLOR[piece2.color]][PIECE[piece2.type]];
             board.turn = OPPOSITE[board.turn];
+            board.hash[pos] = stdMath.max(0, (board.hash[pos]||0)-1);
             kc = kt = cmi = null;
             return [xy2s(move[1],move[2]), {color:COLOR[piece1.color],type:PIECE[piece1.type]}, xy2s(move[3],move[4]), piece2.type ? {color:COLOR[piece2.color],type:PIECE[piece2.type]} : null];
         }
@@ -829,8 +850,8 @@ function Chess(options)
     self.isStaleMate = function() {
         return !self.isCheck() && self.isKingTrapped();
     };
-    self.isFiftyMoves = function() {
-        return 100 <= board.idleMoves;
+    self.idleMovesGreaterThan = function(count) {
+        return 2*(count||1) <= board.idleMoves;
     };
     self.isCheckMateImpossible = function() {
         if (null == cmi)
@@ -871,16 +892,11 @@ function Chess(options)
         }
         return cmi;
     };
-    self.isRepetition = function() {
-        // todo
-        return false;
-    };
-    self.isDeadPosition = function() {
-        // todo
-        return false;
+    self.isRepetition = function(count) {
+        return (count||1) <= (board.hash[board.pos()]||0);
     };
     self.isDraw = function() {
-        return self.isFiftyMoves() || self.isCheckMateImpossible() || self.isStaleMate() || self.isRepetition() || self.isDeadPosition();
+        return self.idleMovesGreaterThan(50) || self.isStaleMate() || self.isCheckMateImpossible() || self.isRepetition(3);
     };
     self.dispose = function() {
         if (board) board.dispose();
@@ -907,13 +923,12 @@ Chess[proto] = {
     isKingTrapped: null,
     isCheckMate: null,
     isStaleMate: null,
-    isFiftyMoves: null,
     isCheckMateImpossible: null,
+    idleMovesGreaterThan: null,
     isRepetition: null,
-    isDeadPosition: null,
     isDraw: null
 };
-Chess.VERSION = "0.9.5";
+Chess.VERSION = "0.9.7";
 
 // export it
 return Chess;
