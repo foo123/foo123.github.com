@@ -194,10 +194,6 @@ function possible_moves_at(board, y, x, promotion)
     {
         if (BLACK === color)
         {
-            if (6 === y && EMPTY === board._[y-2][x].color)
-            {
-                check_and_add(board, K, color, moves, y, x, y-2, x, promotion);
-            }
             if (y-1 >= 0 && EMPTY === board._[y-1][x].color)
             {
                 check_and_add(board, K, color, moves, y, x, y-1, x, promotion);
@@ -209,6 +205,10 @@ function possible_moves_at(board, y, x, promotion)
             if (y-1 >= 0 && x+1 < 8 && WHITE === board._[y-1][x+1].color)
             {
                 check_and_add(board, K, color, moves, y, x, y-1, x+1, promotion);
+            }
+            if (piece._p2 && 6 === y && EMPTY === board._[y-1][x].color && EMPTY === board._[y-2][x].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y-2, x, promotion);
             }
             if (3 === y && x-1 >= 0 && board.halfMoves && board.halfMoves === board._[y][x-1]._mj2 && WHITE === board._[y][x-1].color && EMPTY === board._[y-1][x-1].color)
             {
@@ -223,10 +223,6 @@ function possible_moves_at(board, y, x, promotion)
         }
         else
         {
-            if (1 === y && EMPTY === board._[y+2][x].color)
-            {
-                check_and_add(board, K, color, moves, y, x, y+2, x, promotion);
-            }
             if (y+1 < 8 && EMPTY === board._[y+1][x].color)
             {
                 check_and_add(board, K, color, moves, y, x, y+1, x, promotion);
@@ -238,6 +234,10 @@ function possible_moves_at(board, y, x, promotion)
             if (y+1 < 8 && x+1 < 8 && BLACK === board._[y+1][x+1].color)
             {
                 check_and_add(board, K, color, moves, y, x, y+1, x+1, promotion);
+            }
+            if (piece._p2 && 1 === y && EMPTY === board._[y+1][x].color && EMPTY === board._[y+2][x].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y+2, x, promotion);
             }
             if (4 === y && x-1 >= 0 && board.halfMoves && board.halfMoves === board._[y][x-1]._mj2 && BLACK === board._[y][x-1].color && EMPTY === board._[y+1][x-1].color)
             {
@@ -503,7 +503,9 @@ function ai_move(evaluate, board, color, depth, promotion, cb, interval)
 function Board(options)
 {
     options = options || {};
-    var c = false !== options.castlingAllowed, ep = false !== options.enPassantAllowed;
+    var c = false !== options.castlingAllowed,
+        ep = false !== options.enPassantAllowed,
+        p2 = false !== options.pawnDoubleStepAllowed;
     var self = this;
     self.hash = {};
     self.redo = [];
@@ -546,7 +548,7 @@ function Board(options)
             }
             else if (7 === i || 2 === i)
             {
-                self._[i-1][j] = 7 === i ? {color:BLACK,type:PAWN,_ep:ep,_mj2:0} : {color:WHITE,type:PAWN,_ep:ep,_mj2:0};
+                self._[i-1][j] = 7 === i ? {color:BLACK,type:PAWN,_p2:p2,_ep:ep,_mj2:0} : {color:WHITE,type:PAWN,_p2:p2,_ep:ep,_mj2:0};
             }
         }
     }
@@ -812,8 +814,8 @@ function Chess(options)
             board._pos = null;
             board._pieces = null;
             if (piece2.type) --board.left[COLOR[piece2.color]][PIECE[piece2.type]];
-            board.turn = OPPOSITE[board.turn];
             board.hash[pos] = stdMath.max(0, (board.hash[pos]||0)-1);
+            board.turn = OPPOSITE[board.turn];
             kc = kt = cmi = null;
             return [xy2s(move[1],move[2]), {color:COLOR[piece1.color],type:PIECE[piece1.type]}, xy2s(move[3],move[4]), piece2.type ? {color:COLOR[piece2.color],type:PIECE[piece2.type]} : null];
         }
@@ -832,8 +834,8 @@ function Chess(options)
     self.whoseTurn = function() {
         return BLACK === board.turn ? 'BLACK' : 'WHITE';
     };
-    self.promoteTo = function(rank) {
-        promotion = CODE[String(rank).toUpperCase()] || QUEEN;
+    self.promoteTo = function(piece) {
+        promotion = CODE[String(piece).toUpperCase()] || QUEEN;
         return self;
     };
     self.isCheck = function() {
