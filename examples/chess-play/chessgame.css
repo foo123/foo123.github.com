@@ -172,10 +172,6 @@
     background-position: center center;
     background-size: cover;
 }
-.chessboard-squares.b-turn .square.piece {
-    transform-origin: center center;
-    transform: rotate(180deg);
-}
 .chessboard-squares {
     background-color: #E1B777;
 }
@@ -232,4 +228,22 @@
 }
 .chessboard-squares .piece.b-pawn {
     --piece: url(./pieceset/default/pawn_b.svg);
+}
+.chessboard-squares.b-turn {
+    transform-origin: center center;
+    transform: rotate(180deg);
+}
+.chessboard-squares.b-turn .square.piece {
+    transform-origin: center center;
+    transform: rotate(180deg);
+}
+@media (max-width:800px) {
+.chessboard-squares.b-turn {
+    transform-origin: center center;
+    transform: rotate(0deg);
+}
+.chessboard-squares.b-turn .square.piece {
+    transform-origin: center center;
+    transform: rotate(180deg);
+}
 }
