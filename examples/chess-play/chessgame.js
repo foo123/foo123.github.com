@@ -11,8 +11,8 @@ function ChessGame(Chess, container, controls, options, container_moves)
         var isCheck = game.isCheck(), player = game.whoseTurn();
         removeClass(squares, 'w-check'); removeClass(squares, 'b-check');
         if (isCheck) addClass(squares, 'BLACK' === player ? 'b-check' : 'w-check');
-        if ('BLACK' === player) addClass(squares, 'b-turn');
-        else removeClass(squares, 'b-turn');
+        if ('BLACK' === player) addClass(container, 'b-turn');
+        else removeClass(container, 'b-turn');
         if (msg) msg.innerText = game.isCheckMate() ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' wins with checkmate! Game over.') : (game.isDraw() ? ('It is a draw! Game over.') : (isCheck ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' checks! '+player+'\'s turn to play.') : (player+'\'s turn to play.')));
     };
     var clear_active = function() {
