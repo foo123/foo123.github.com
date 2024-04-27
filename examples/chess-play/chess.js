@@ -178,9 +178,8 @@ function threatened_at_by(board, y, x, col)
 }
 function check_and_add(board, K, color, moves, y1, x1, y, x, promotion)
 {
-    var move = board.move(y1, x1, y, x, true, promotion), Kx = K.x, Ky = K.y, king_threatened;
-    if (K.x === x1 && K.y === y1) {Kx = x; Ky = y;}
-    king_threatened = threatened_at_by(board, Ky, Kx, OPPOSITE[color]);
+    var move = board.move(y1, x1, y, x, true, promotion),
+        king_threatened = threatened_at_by(board, K.y, K.x, OPPOSITE[color]);
     board.unmove(move);
     if (!king_threatened) moves.push([y, x]);
 }
