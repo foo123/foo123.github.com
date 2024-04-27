@@ -178,7 +178,9 @@ function threatened_at_by(board, y, x, col)
 }
 function check_and_add(board, K, color, moves, y1, x1, y, x, promotion)
 {
-    var move = board.move(y1, x1, y, x, true, promotion), king_threatened = threatened_at_by(board, K.y, K.x, OPPOSITE[color]);
+    var move = board.move(y1, x1, y, x, true, promotion), Kx = K.x, Ky = K.y, king_threatened;
+    if (K.x === x1 && K.y === y1) {Kx = x; Ky = y;}
+    king_threatened = threatened_at_by(board, Ky, Kx, OPPOSITE[color]);
     board.unmove(move);
     if (!king_threatened) moves.push([y, x]);
 }
@@ -342,37 +344,37 @@ function possible_moves_at(board, y, x, promotion)
     }
     if (KING === type)
     {
-        if (y+1 < 8 && color !== board._[y+1][x].color && !threatened_at_by(board, y+1,x, OPPOSITE[color]))
+        if (y+1 < 8 && color !== board._[y+1][x].color)
         {
-            moves.push([y+1, x]);
+            check_and_add(board, K, color, moves, y, x, y+1, x);
         }
-        if (y+1 < 8 && x+1 < 8 && color !== board._[y+1][x+1].color && !threatened_at_by(board, y+1,x+1, OPPOSITE[color]))
+        if (y+1 < 8 && x+1 < 8 && color !== board._[y+1][x+1].color)
         {
-            moves.push([y+1, x+1]);
+            check_and_add(board, K, color, moves, y, x, y+1, x+1);
         }
-        if (x+1 < 8 && color !== board._[y][x+1].color && !threatened_at_by(board, y,x+1, OPPOSITE[color]))
+        if (x+1 < 8 && color !== board._[y][x+1].color)
         {
-            moves.push([y, x+1]);
+            check_and_add(board, K, color, moves, y, x, y, x+1);
         }
-        if (y-1 >= 0 && x+1 < 8 && color !== board._[y-1][x+1].color && !threatened_at_by(board, y-1,x+1, OPPOSITE[color]))
+        if (y-1 >= 0 && x+1 < 8 && color !== board._[y-1][x+1].color)
         {
-            moves.push([y-1, x+1]);
+            check_and_add(board, K, color, moves, y, x, y-1, x+1);
         }
-        if (y-1 >= 0 && color !== board._[y-1][x].color && !threatened_at_by(board, y-1,x, OPPOSITE[color]))
+        if (y-1 >= 0 && color !== board._[y-1][x].color)
         {
-            moves.push([y-1, x]);
+            check_and_add(board, K, color, moves, y, x, y-1, x);
         }
-        if (y-1 >= 0 && x-1 >= 0 && color !== board._[y-1][x-1].color && !threatened_at_by(board, y-1,x-1, OPPOSITE[color]))
+        if (y-1 >= 0 && x-1 >= 0 && color !== board._[y-1][x-1].color)
         {
-            moves.push([y-1, x-1]);
+            check_and_add(board, K, color, moves, y, x, y-1, x-1);
         }
-        if (x-1 >= 0 && color !== board._[y][x-1].color && !threatened_at_by(board, y,x-1, OPPOSITE[color]))
+        if (x-1 >= 0 && color !== board._[y][x-1].color)
         {
-            moves.push([y, x-1]);
+            check_and_add(board, K, color, moves, y, x, y, x-1);
         }
-        if (y+1 < 8 && x-1 >= 0 && color !== board._[y+1][x-1].color && !threatened_at_by(board, y+1,x-1, OPPOSITE[color]))
+        if (y+1 < 8 && x-1 >= 0 && color !== board._[y+1][x-1].color)
         {
-            moves.push([y+1, x-1]);
+            check_and_add(board, K, color, moves, y, x, y+1, x-1);
         }
         if (K._kc && EMPTY === board._[y][x+1].color && EMPTY === board._[y][x+2].color && !threatened_at_by(board, y,x, OPPOSITE[color]) && !threatened_at_by(board, y,x+1, OPPOSITE[color]) && !threatened_at_by(board, y,x+2, OPPOSITE[color]))
         {
