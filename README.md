@@ -10,4 +10,4 @@ foo123.github.com
 
 [Projects List](https://github.com/foo123/foo123)
 
-*Cause until the philosophy, which holds one superior and another inferior, is finally, and permanently, discredited and abandoned..*
+*Cause until the philosophy, which holds one superior and another inferior, is finally, and permanently, discredited and abandoned..* [#Standup4HumanRights](https://www.standup4humanrights.org/en/index.html)
