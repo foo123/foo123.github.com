@@ -5,7 +5,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 <title>Redirecting to Open Source Projects ..</title>
-<meta http-equiv="refresh" content="3; URL=../#controller_page_open_source" />
+<!--<meta http-equiv="refresh" content="3; URL=../#controller_page_open_source" />-->
+<meta http-equiv="refresh" content="3; URL=https://github.com/foo123" />
 <style type="text/css">
 body {
     background: #121212;
@@ -23,7 +24,7 @@ a {
 </style>
 </head>
 <body>
-Redirecting to <a id="url" href="../#controller_page_open_source">Open Source Projects</a> in <span id="secs">3</span> second(s)..
+Redirecting to <a id="url" href="https://github.com/foo123">Open Source Projects</a><!--<a id="url" href="../#controller_page_open_source">Open Source Projects</a>--> in <span id="secs">3</span> second(s)..
 <script type="text/javascript">
 var secs = 3;
 setTimeout(function count() {document.getElementById('secs').textContent = --secs; if (0 < secs) setTimeout(count, 1000); else setTimeout(function() {window.location.href = document.getElementById('url').href;}, 100);}, 1000);
