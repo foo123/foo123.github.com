@@ -2,23 +2,26 @@
 <html lang="en" class="no-js">
 <head>
 <title>JSCode</title>
-<!--<meta http-equiv="content-type" content="text/html; charset=UTF-8">-->
-<meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width">
 <meta name="description" content="JSCode" />
-<meta property="og:title" content="JSCode">
-<meta property="og:description" content="JSCode">
 <meta property="og:image" content="https://foo123.github.io/examples/jscode/js.png">
 <meta property="og:url" content="https://foo123.github.io/examples/jscode/">
 <meta name="twitter:card" content="summary">
-<style type="text/css" media="screen">
+<style type="text/css">
 body {
-    background: #fff;
-    color: #232323;
+    --theme: light;
+    --bg-col: #fff;
+    --txt-col: #343434;
+    --b-col: rgba(0,0,0,0.25);
+    --b-col-h: rgba(0,0,0,0.9);
+    --fnt-sz: 16px;
+    background: var(--bg-col);
+    color: var(--txt-col);
+    font-size: var(--fnt-sz);
     font-family: sans-serif;
-    font-size: 16px;
 }
-#wrapper {
+#code {
     position: relative;
     display: block;
     box-sizing: border-box;
@@ -27,8 +30,9 @@ body {
     height: auto;
     width: 60%;
     margin: 10px auto 0 auto;
+    --aspect-ratio: calc(4 / 3);
 }
-#wrapper::before {
+#code::before {
     position: relative;
     display: block;
     box-sizing: border-box;
@@ -37,7 +41,7 @@ body {
     margin: 0;
     width: 100%;
     height: 0;
-    padding-bottom: 100%;
+    padding-bottom: calc(100% / var(--aspect-ratio, 1));
 }
 #editor {
     position: absolute;
@@ -46,6 +50,7 @@ body {
     bottom: 0;
     left: 0;
     z-index: 2;
+    border: 1px solid var(--b-col);
 }
 #runner {
     position: relative;
@@ -58,54 +63,78 @@ body {
 #run {
     position: relative;
     display: inline-block;
-    background: #fff;
-    color: #343434;
+    background: var(--bg-col);
+    color: var(--txt-col);
     text-align: center;
     font-family: sans-serif;
     font-weight: bold;
-    font-size:20px;
-    padding: 4px 24px;
-    border: 2px solid rgba(0,0,0,0.3);
+    font-size: inherit;
+    padding: 3px 22px;
+    border: 2px solid var(--b-col);
     border-radius: 16px;
     cursor: pointer;
     vertical-align: middle;
 }
 #run:hover,
 #run:active {
-    border-color: rgba(0,0,0,0.9);
+    border-color: var(--b-col-h);
 }
 @media (max-width: 1024px) {
 #runner,
-#wrapper {
+#code {
     width: calc(100% - 20px);
+}
+}
+@media (prefers-color-scheme: dark) {
+body {
+    --theme: dark;
+    --bg-col: #232323;
+    --txt-col: #dfdfdf;
+    --b-col: rgba(255,255,255,0.25);
+    --b-col-h: rgba(255,255,255,0.9);
 }
 }
 </style>
 </head>
 <body>
-<p style="text-align:center;font-size:20px;line-height:30px;"><b>Write your code below and</b> <button id="run">Run</button></p>
-<div id="wrapper"><div id="editor">/* write your code here */</div></div>
+<p style="text-align:center;font-size:calc(1.25 * var(--fnt-sz));line-height:calc(1.875 * var(--fnt-sz));"><b>Write your code and</b> <button id="run">Run</button> it</p>
+<div id="code"><div id="editor">/* write your js code here */</div></div>
 <!--<script src="https://cdn.jsdelivr.net/gh/c-kick/mobileConsole/hnl.mobileconsole.min.js" type="text/javascript" charset="utf-8"></script>-->
 <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.35.4/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-<script>
+<script type="text/javascript">
 (function() {
-var editor = ace.edit("editor",  {
-    theme: "ace/theme/textmate",
-    mode: "ace/mode/javascript",
+var style = window.getComputedStyle(document.body);
+var options = {
+    mode: 'ace/mode/javascript',
+    theme: {light: 'ace/theme/textmate', dark: 'ace/theme/gruvbox'},
+    tabSize: 4,
+    useSoftTabs: true,
+    fontSize: style.getPropertyValue('font-size') || '16px',
     //autoScrollEditorIntoView: true,
     //maxLines: 30,
     wrap: true
+};
+var editor = ace.edit('editor',  {
+    mode: options.mode,
+    theme: options.theme[style.getPropertyValue('--theme') || 'light'],
+    fontSize: options.fontSize,
+    tabSize: options.tabSize,
+    useSoftTabs: options.useSoftTabs,
+    wrap: options.wrap
 });
-//editor.setTheme("ace/theme/textmate");
-//editor.session.setMode("ace/mode/javascript");
-var runbt = document.getElementById('run'), iframe = null;
-runbt.addEventListener('click', function() {
+//editor.session.setMode(options.mode);
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(evt) {
+    editor.setTheme(evt.matches ? options.theme.dark : options.theme.light);
+});
+var runbt = document.getElementById('run');
+var iframe = null;
+runbt.addEventListener('click', function(evt) {
     if (iframe) {iframe.parentNode.removeChild(iframe); iframe = null;}
     iframe = document.createElement('iframe');
     iframe.id = 'runner';
     document.body.appendChild(iframe);
     iframe.contentWindow.document.open();
-    iframe.contentWindow.document.write('<!DOCTYPE html><html lang="en"><body><scr'+'ipt src="https://cdn.jsdelivr.net/gh/c-kick/mobileConsole/hnl.mobileconsole.min.js" type="text/javascr'+'ipt" charset="utf-8"></scr'+'ipt><scr'+'ipt type="text/javascr'+'ipt" src="'+URL.createObjectURL(new Blob([editor.getValue()], {type:'application/javascript'}))+'"></scr'+'ipt></body></html>');
+    iframe.contentWindow.document.write('<!DOCTYPE html><html lang="en"><body><scr'+'ipt src="https://cdn.jsdelivr.net/gh/c-kick/mobileConsole/hnl.mobileconsole.min.js" type="text/javascript" charset="utf-8"></scr'+'ipt><scr'+'ipt type="text/javascript" src="'+URL.createObjectURL(new Blob([editor.getValue()], {type:'application/javascript'}))+'"></scr'+'ipt></body></html>');
     iframe.contentWindow.document.close();
 }, false);
 })();
