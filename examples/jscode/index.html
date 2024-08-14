@@ -11,6 +11,7 @@
 <style type="text/css">
 body {
     --theme: light;
+    --fontSize: 18px;
     --bg-col: #fff;
     --txt-col: #343434;
     --b-col: rgba(0,0,0,0.25);
@@ -80,6 +81,10 @@ body {
     border-color: var(--b-col-h);
 }
 @media (max-width: 1024px) {
+body {
+    --fnt-sz: 15px;
+    --fontSize: 12px;
+}
 #runner,
 #code {
     width: calc(100% - 20px);
@@ -103,40 +108,66 @@ body {
 <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.35.4/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 (function() {
-var style = window.getComputedStyle(document.body);
+function debounce(func, wait, immediate)
+{
+    var timeout;
+    return function() {
+        var context = this, args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+}
+function iframe(editor)
+{
+    if (iframe.el && iframe.el.parentNode) iframe.el.parentNode.removeChild(iframe.el);
+    iframe.el = document.createElement('iframe');
+    iframe.el.id = 'runner';
+    document.body.appendChild(iframe.el);
+    iframe.el.contentWindow.document.open();
+    iframe.el.contentWindow.document.write('<!DOCTYPE html><html lang="en"><body><scr'+'ipt src="https://cdn.jsdelivr.net/gh/c-kick/mobileConsole/hnl.mobileconsole.min.js" type="text/javascript" charset="utf-8"></scr'+'ipt><scr'+'ipt type="text/javascript" src="'+URL.createObjectURL(new Blob([editor.getValue()], {type:'application/javascript'}))+'"></scr'+'ipt></body></html>');
+    iframe.el.contentWindow.document.close();
+}
+function style()
+{
+   if (null != style.t) {clearTimeout(style.t); style.t = null;}
+    if (null == style.styl) {style.styl = window.getComputedStyle(document.body);}
+    style.t = setTimeout(function() {style.styl = null;}, 100);
+    return style.styl;
+}
 var options = {
     mode: 'ace/mode/javascript',
     theme: {light: 'ace/theme/textmate', dark: 'ace/theme/gruvbox'},
     tabSize: 4,
     useSoftTabs: true,
-    fontSize: style.getPropertyValue('font-size') || '16px',
+    fontSize: style().getPropertyValue('--fontSize'),
     //autoScrollEditorIntoView: true,
     //maxLines: 30,
     wrap: true
 };
 var editor = ace.edit('editor',  {
     mode: options.mode,
-    theme: options.theme[style.getPropertyValue('--theme') || 'light'],
+    theme: options.theme[style().getPropertyValue('--theme')],
     fontSize: options.fontSize,
     tabSize: options.tabSize,
     useSoftTabs: options.useSoftTabs,
     wrap: options.wrap
 });
 //editor.session.setMode(options.mode);
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(evt) {
+window.addEventListener('resize', debounce(function(evt) {
+    editor.setOption('fontSize', style().getPropertyValue('--fontSize'));
+}, 200), false);
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', debounce(function(evt) {
     editor.setTheme(evt.matches ? options.theme.dark : options.theme.light);
-});
-var runbt = document.getElementById('run');
-var iframe = null;
-runbt.addEventListener('click', function(evt) {
-    if (iframe) {iframe.parentNode.removeChild(iframe); iframe = null;}
-    iframe = document.createElement('iframe');
-    iframe.id = 'runner';
-    document.body.appendChild(iframe);
-    iframe.contentWindow.document.open();
-    iframe.contentWindow.document.write('<!DOCTYPE html><html lang="en"><body><scr'+'ipt src="https://cdn.jsdelivr.net/gh/c-kick/mobileConsole/hnl.mobileconsole.min.js" type="text/javascript" charset="utf-8"></scr'+'ipt><scr'+'ipt type="text/javascript" src="'+URL.createObjectURL(new Blob([editor.getValue()], {type:'application/javascript'}))+'"></scr'+'ipt></body></html>');
-    iframe.contentWindow.document.close();
-}, false);
+}, 200));
+document.getElementById('run').addEventListener('click', debounce(function(evt) {
+    iframe(editor);
+}, 200), false);
 })();
 </script>
 </body>
