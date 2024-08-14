@@ -83,7 +83,7 @@ body {
 @media (max-width: 1024px) {
 body {
     --fnt-sz: 15px;
-    --fontSize: 12px;
+    --fontSize: 13px;
 }
 #runner,
 #code {
@@ -135,20 +135,24 @@ function iframe(editor)
 }
 function style()
 {
-   if (null != style.t) {clearTimeout(style.t); style.t = null;}
+    if (null != style.t) {clearTimeout(style.t); style.t = null;}
     if (null == style.styl) {style.styl = window.getComputedStyle(document.body);}
     style.t = setTimeout(function() {style.styl = null;}, 100);
     return style.styl;
 }
+// https://ace.c9.io/api/interfaces/ace.Ace.EditorOptions.html
 var options = {
     mode: 'ace/mode/javascript',
     theme: {light: 'ace/theme/textmate', dark: 'ace/theme/gruvbox'},
     tabSize: 4,
     useSoftTabs: true,
     fontSize: style().getPropertyValue('--fontSize'),
-    //autoScrollEditorIntoView: true,
     //maxLines: 30,
-    wrap: true
+    printMargin: false,
+    wrap: true,
+    wrapMethod: /*"code" | "text" |*/"auto",
+    //autoScrollEditorIntoView: true,
+    enableBasicAutocompletion: true
 };
 var editor = ace.edit('editor',  {
     mode: options.mode,
@@ -156,11 +160,14 @@ var editor = ace.edit('editor',  {
     fontSize: options.fontSize,
     tabSize: options.tabSize,
     useSoftTabs: options.useSoftTabs,
-    wrap: options.wrap
+    printMargin: options.printMargin,
+    wrap: options.wrap,
+    wrapMethod: options.wrapMethod,
+    enableBasicAutocompletion: options.enableBasicAutocompletion
 });
 //editor.session.setMode(options.mode);
 window.addEventListener('resize', debounce(function(evt) {
-    editor.setOption('fontSize', style().getPropertyValue('--fontSize'));
+    editor.setOption('fontSize', options.fontSize = style().getPropertyValue('--fontSize'));
 }, 200), false);
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', debounce(function(evt) {
     editor.setTheme(evt.matches ? options.theme.dark : options.theme.light);
