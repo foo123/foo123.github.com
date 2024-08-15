@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="en">
 <head>
 <title>JSCode</title>
+<meta name="description" content="JSCode Mini App: Write or load your JavaScript code and run it in your browser everywhere, desktop or mobile." />
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="description" content="JSCode" />
 <meta property="og:image" content="https://foo123.github.io/examples/jscode/js.png">
 <meta property="og:url" content="https://foo123.github.io/examples/jscode/">
 <meta name="twitter:card" content="summary">
@@ -53,6 +53,15 @@ body {
     height: 0;
     padding-bottom: calc(100% / var(--aspect-ratio, 1));
 }
+#controls {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    border: 0;
+    padding: 0;
+    width: 100%;
+    margin: 0 auto;
+}
 #controls > input {
     position: relative;
     font-size: var(--fnt-sz);
@@ -81,7 +90,7 @@ body {
     display: block;
     box-sizing: border-box;
     padding: 0;
-    width: 60%;
+    width: 70%;
     margin: 2px auto 10px auto;
 }
 .bt {
@@ -107,7 +116,7 @@ body {
 @media (max-width: 1024px) {
 body {
     --fnt-sz: 15px;
-    --fontSize: 13px;
+    --fontSize: 12px;
 }
 #runner,
 #wrapper {
@@ -126,8 +135,8 @@ body {
 </style>
 </head>
 <body>
-<p style="text-align:center;font-size:calc(1.25 * var(--fnt-sz));line-height:calc(1.875 * var(--fnt-sz));"><b>Write your code and</b> <button id="run" class="bt">Run</button> it</p>
-<div id="wrapper"><div id="controls"><input type="text" id="image_url" placeholder="url.." /> <input type="text" id="image_filename" placeholder="file.." /><input type="file" id="image_file" style="position:absolute;opacity:0;z-index:-1;"/> <button id="load" class="bt">Load</button>
+<p style="font-weight:bold;text-align:center;font-size:calc(1.25 * var(--fnt-sz));line-height:calc(1.875 * var(--fnt-sz));"><button id="run" class="bt">Run</button> your JS code</p>
+<div id="wrapper"><div id="controls"><input type="text" id="input_url" placeholder="url.." /> <input type="text" id="input_filename" placeholder="file.." /><input type="file" id="input_file" style="position:absolute;opacity:0;z-index:-1;"/> <button id="load" class="bt">Load</button>
 </div>
 <p style="font-size:calc(0.85 * var(--fnt-sz))"><button id="clear" class="bt">Clear</button> <span>ACE Editor</span></p><div id="code"><div id="editor">/* write or load your js code here */</div></div></div>
 <!--<script src="https://cdn.jsdelivr.net/gh/c-kick/mobileConsole/hnl.mobileconsole.min.js" type="text/javascript" charset="utf-8"></script>-->
@@ -240,9 +249,9 @@ function init()
         editor.setValue('');
     }, false);
 
-    const inpUrl = document.getElementById('image_url');
-    const inpFile = document.getElementById('image_file');
-    const inpFilename = document.getElementById('image_filename');
+    const inpUrl = document.getElementById('input_url');
+    const inpFile = document.getElementById('input_file');
+    const inpFilename = document.getElementById('input_filename');
     let currentFile = null;
     inpUrl.value = '';
     inpFilename.value = '';
