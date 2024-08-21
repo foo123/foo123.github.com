@@ -14,54 +14,42 @@
 <link rel="stylesheet" type="text/css" href="../common/css/datgui.min.css" />
 <style type="text/css">
 body {
-    background: #444;
-    color: #ccc;
-    font-size: 16px;
+    --fntsz: 16px;
+    --bg: #444;
+    --fnt: #ccc;
+    --bt: #ccc;
+    --bd-h: #eee;
+    --bd: #aaa;
+    --bxsd: #ddd;
+    --bttxt: #444;
+    --txtsd: #555;
+    background: var(--bg);
+    color: var(--fnt);
+    font-size: var(--fntsz);
     font-family: Helvetica, Arial, sans-serif;
 }
 .button {
-    -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
-    -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
-    box-shadow:inset 0px 1px 0px 0px #f5978e;
-    background:-webkit-gradient( ease, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
-    background:-moz-ease-gradient( center top, #f24537 5%, #c62d1f 100% );
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
-    background-color:#f24537;
-    -webkit-border-top-left-radius:20px;
-    -moz-border-radius-topleft:20px;
-    border-top-left-radius:20px;
-    -webkit-border-top-right-radius:20px;
-    -moz-border-radius-topright:20px;
-    border-top-right-radius:20px;
-    -webkit-border-bottom-right-radius:20px;
-    -moz-border-radius-bottomright:20px;
-    border-bottom-right-radius:20px;
-    -webkit-border-bottom-left-radius:20px;
-    -moz-border-radius-bottomleft:20px;
-    border-bottom-left-radius:20px;
-    text-indent:0;
-    border:1px solid #d02718;
-    display:inline-block;
-    color:#ffffff;
-    font-family:Arial;
-    font-size:15px;
-    font-weight:bold;
-    font-style:normal;
-    height:50px;
-    line-height:50px;
-    width:200px;
-    text-decoration:none;
-    text-align:center;
-    text-shadow:1px 1px 0px #810e05;
+    box-shadow:inset 0px 1px 0px 0px var(--bxsd);
+    background-color: var(--bt);
+    border-radius: 20px;
+    text-indent: 0;
+    border: 1px solid var(--bd);
+    display: inline-block;
+    color: var(--bttxt);
+    font-family: sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    font-style: normal;
+    height: 50px;
+    line-height: 50px;
+    width: 200px;
+    text-decoration: none;
+    text-align: center;
+    text-shadow:1px 1px 0px var(--txtsd);
 }
+.button:active,
 .button:hover {
-    background:-webkit-gradient( ease, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
-    background:-moz-ease-gradient( center top, #c62d1f 5%, #f24537 100% );
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
-    background-color:#c62d1f;
-}.button:active {
-    position:relative;
-    top:1px;
+    border-color: var(--bd-h);
 }
 .button {
     margin: 3px 2px;
@@ -101,9 +89,9 @@ h1 {
     margin: 4px;
 }
 #controls > input {
-    background: #343434;
-    color: #fff;
-    border: 1px solid #aaa;
+    background: var(--bg);
+    color: var(--fnt);
+    border: 1px solid var(--bd);
 }
 #controls > button {
     width: 60px;
@@ -239,6 +227,30 @@ h1 {
         transform: rotate(45deg);
         box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
     }
+}
+@media (prefers-color-scheme:light) {
+body {
+    --bg: #efefef;
+    --fnt: #444;
+    --bt: #444;
+    --bd-h: #555;
+    --bd: #343434;
+    --bxsd: #343434;
+    --bttxt: #efefef;
+    --txtsd: #ddd;
+}
+#controls .guidat-controller {
+  border-bottom-color: #aaa;
+  background-color: #efefef;
+  color: #444;
+}
+#controls .guidat-controller input {
+  color: #444;
+  background-color: #efefef;
+}
+#controls .guidat-slider-bg {
+  background-color: #efefef;
+}
 }
 </style>
 </head>
