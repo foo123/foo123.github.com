@@ -140,13 +140,13 @@ body {
 </div>
 <p style="font-size:calc(0.85 * var(--fnt-sz))"><button id="clear" class="bt">Clear</button> <span>ACE Editor</span></p><div id="code"><div id="editor">/* write or load your js code here */</div></div></div>
 <!--<script src="https://cdn.jsdelivr.net/gh/c-kick/mobileConsole/hnl.mobileconsole.min.js" type="text/javascript" charset="utf-8"></script>-->
-<script src="https://cdn.jsdelivr.net/npm/ace-builds@1.35.4/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="https://cdn.jsdelivr.net/npm/ace-builds@1.35.4/src-min-noconflict/ext-language_tools.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ace-builds@1.35.5/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdn.jsdelivr.net/npm/ace-builds@1.35.5/src-min-noconflict/ext-language_tools.js"></script>
 <script type="text/javascript">
 (function() {
 function debounce(func, wait, immediate)
 {
-    var timeout;
+    let timeout;
     return function() {
         const context = this, args = arguments;
         const later = function() {
@@ -174,7 +174,7 @@ function style()
 {
     if (null != style.t) {clearTimeout(style.t); style.t = null;}
     if (null == style.styl) {style.styl = window.getComputedStyle(document.body);}
-    style.t = setTimeout(() => {style.styl = null;}, 100);
+    style.t = setTimeout(() => {style.styl = null; style.t = null;}, 100);
     return style.styl;
 }
 function loadCode(file, editor)
@@ -183,27 +183,19 @@ function loadCode(file, editor)
     {
         if (file instanceof File)
         {
-            editor.setValue('// Loading local file "'+file.name+'"..');
+            editor.setValue('// Loading local file "'+file.name+'"..', -1);
             const reader = new FileReader();
-            reader.onload = (e) => {
-                editor.setValue(e.target.result);
-            };
-            reader.onerror = (e) => {
-                editor.setValue('// Loading local file "'+file.name+'"..'+"\n"+'// '+e.message);
-            };
+            reader.onload = (e) => {editor.setValue(e.target.result);};
+            reader.onerror = (e) => {editor.setValue('// Loading local file "'+file.name+'"..'+"\n"+'// '+e.message, -1);};
             reader.readAsText(file);
         }
         else
         {
-            editor.setValue('// Loading remote file "'+file+'"..');
+            editor.setValue('// Loading remote file "'+file+'"..', -1);
             fetch(file, {}, {headers:{origin:window.location.hostname}})
             .then(res => res.text())
-            .then(code => {
-                editor.setValue(code);
-            })
-            .catch(e => {
-                editor.setValue('// Loading remote file "'+file+'"..'+"\n"+'// '+e.toString());
-            });
+            .then(code => {editor.setValue(code);})
+            .catch(e => {editor.setValue('// Loading remote file "'+file+'"..'+"\n"+'// '+e.toString(), -1);});
         }
     }
 }
@@ -224,7 +216,7 @@ function init()
         enableBasicAutocompletion: true
     };
     ace.require("ace/ext/language_tools");
-    const editor = ace.edit('editor',  {
+    const editor = ace.edit('editor', {
         mode: options.mode,
         theme: options.theme[style().getPropertyValue('--theme')],
         fontSize: options.fontSize,
@@ -246,7 +238,7 @@ function init()
         iframe(editor);
     }, 200), false);
     document.getElementById('clear').addEventListener('click', function(evt) {
-        editor.setValue('');
+        editor.setValue('', -1);
     }, false);
 
     const inpUrl = document.getElementById('input_url');
