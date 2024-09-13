@@ -28,6 +28,61 @@ body {
     font-size: 16px;
     padding: 30px 16px;
 }
+.hide {
+    display: none !important;
+}
+.show {
+    display: var(--displ, block);
+}
+.break {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 0;
+}
+.hourglass {
+    --ico: url(./img/hourglass.svg);
+    --aspect-ratio: calc(1 / 1);
+    --displ: inline-block;
+    position: relative;
+    display: var(--displ);
+    box-sizing: border-box;
+    vertical-align: middle;
+    width: 20px;
+    height: auto;
+    margin: 0;
+    transform-origin: center center;
+    z-index: 2;
+    visibility: hidden;
+    animation: none;
+}
+.hourglass::before {
+    content: "";
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    margin: 0;
+    width: 100%;
+    height: auto;
+    padding: 0;
+    padding-bottom: calc(100% / var(--aspect-ratio));
+    background-color: transparent;
+    background-image: var(--ico);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.hourglass.spinning {
+    visibility: visible;
+    animation: 2s ease 0s infinite normal both running rotate;
+}
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
 #screen {
     position: relative;
     display: block;
@@ -46,6 +101,7 @@ body {
     width: 100%;
     margin-bottom: 10px;
     text-align: center;
+    line-height: 2.2;
 }
 #options {
     position: relative;
@@ -72,6 +128,7 @@ body {
     margin-top: 6px;
 }
 #controls select,
+#controls input,
 #controls button {
     position: relative;
     display: inline-block;
@@ -86,6 +143,11 @@ body {
     font-size: var(--w);
     line-height: var(--w);
 }
+#controls input {
+    background: #eee;
+}
+#controls input + input,
+#controls select + input,
 #controls button + select,
 #controls button + button {
     margin-left: 3px;
@@ -126,6 +188,11 @@ body {
     width: 100%;
     text-align: center;
     font-size: 14px;
+}
+#controls .msg span {
+    position: relative;
+    display: inline-block;
+    margin-left: 5px;
 }
 #chessgame {
     position: relative;
@@ -176,6 +243,12 @@ body {
 body {
     padding: 10px 0px;
 }
+.break {
+    display: block !important;
+}
+.hourglass {
+    width: 15px;
+}
 #controls select,
 #controls button {
     padding: 4px 6px;
@@ -200,11 +273,25 @@ body {
 <body>
 <div id="screen">
 <div id="controls">
+<select data-action="playwith" title="Play with..">
+<optgroup label="Play with..">
+<option value="human-human" selected>Human-Human</option>
+<option value="human-stockfish">Human-Stockfish</option>
+<option value="stockfish-human">Stockfish-Human</option>
+<option value="human-mcts">Human-MonteCarlo</option>
+<option value="mcts-human">MonteCarlo-Human</option>
+<option value="human-random">Human-Random</option>
+<option value="random-human">Random-Human</option>
+</optgroup>
+</select>
+<input data-action="depth" title="Depth of Search" type="number" min="1" max="50" step="1" value="6" />
+<input data-action="skill" title="Skill" type="number" min="0" max="20" step="1" value="1" />
+<span class="break"></span>
 <button data-action="flip" title="Flip Sides"></button>
 <button data-action="new" title="New Game"></button>
 <button data-action="undo" title="Undo Move"></button>
 <button data-action="redo" title="Redo Move"></button>
-<select data-action="promoteto">
+<select data-action="promoteto" title="Promote to..">
 <optgroup label="Promote to..">
 <option value="queen" selected>Queen</option>
 <option value="rook">Rook</option>
@@ -212,7 +299,7 @@ body {
 <option value="knight">Knight</option>
 </optgroup>
 </select>
-<p class="msg">Play chess..</p>
+<p class="msg"><i id="hourglass" class="hourglass"></i><span>Play chess..</span></p>
 </div>
 <div id="chessgame"></div>
 <!--<div id="moves"></div>-->
@@ -225,9 +312,18 @@ body {
 
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" style="position:fixed;display:inline-block;color:#f90b13;z-index:10;bottom:10px;right:10px;font-size:14px;">donate</a>
 
-<link rel="stylesheet" type="text/css" href="./chessgame.css" />
+<link rel="stylesheet" type="text/css" href="./chessapp.css" />
 <script type="text/javascript" src="./chess.js"></script>
-<script type="text/javascript" src="./chessgame.js"></script>
-<script type="text/javascript">ChessGame(Chess, document.getElementById('chessgame'), document.getElementById('controls'), document.getElementById('options') /*, document.getElementById('moves')*/);</script>
+<script type="text/javascript" src="./chessapp.js"></script>
+<script type="text/javascript">
+ChessApp({
+    Chess: Chess
+    ,stockfishjs: './stockfish/stockfish-16.1-lite-single.js'
+    ,container: document.getElementById('chessgame')
+    ,controls: document.getElementById('controls')
+    ,options: document.getElementById('options')
+    //,moves: document.getElementById('moves')
+});
+</script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 /**
 *  chess.js
 *  A simple class to play chess
-*  @VERSION: 0.9.7
+*  @VERSION: 0.9.8
 *
 **/
 !function(root, name, factory) {
@@ -38,9 +38,30 @@ var proto = 'prototype',
     NONE = {color:EMPTY, type:EMPTY}
 ;
 
+function return_true()
+{
+    return true;
+}
+function return_false()
+{
+    return false;
+}
 function is_function(f)
 {
     return "function" === typeof f;
+}
+function shuffle(a, a0, a1)
+{
+    // O(n)
+    if (null == a0) a0 = 0;
+    if (null == a1) a1 = a.length-1;
+    var N = a1-a0+1;
+    while (1 < N--)
+    {
+        var perm = stdMath.round(N*stdMath.random()), swap = a[a0+N];
+        a[a0+N] = a[a0+perm]; a[a0+perm] = swap;
+    }
+    return a;
 }
 function prep()
 {
@@ -80,409 +101,107 @@ function sqcol(y, x)
 }
 function encode_move(move)
 {
-    return move && move.length ? (4 > move.length ? xy2s(move[0],move[1]) : {from:xy2s(move[0],move[1]), to:xy2s(move[2],move[3])}) : move;
+    return move && move.length ? (4 > move.length ? (xy2s(move[0],move[1])+(move[11]?PIECE_SHORT[move[11]].toLowerCase():'')) : {from:xy2s(move[0],move[1]), to:xy2s(move[2],move[3]), promotion:move[11]?PIECE_SHORT[move[11]].toLowerCase():undef}) : move;
 }
-function shuffle(a, a0, a1)
+function clone_piece(piece)
 {
-    // O(n)
-    if (null == a0) a0 = 0;
-    if (null == a1) a1 = a.length-1;
-    var N = a1-a0+1;
-    while (N--)
-    {
-        var perm = stdMath.round(N*stdMath.random()), swap = a[a0+N];
-        a[a0+N] = a[a0+perm]; a[a0+perm] = swap;
-    }
-    return a;
+    if (!piece || (NONE === piece)) return piece;
+    var cloned = {color:piece.color,type:piece.type};
+    if (ROOK === piece.type) {cloned._m = piece._m;}
+    if (PAWN === piece.type) {cloned._p2 = piece._p2; cloned._ep = piece._ep; cloned._mj2 = piece._mj2;}
+    return cloned;
 }
-function threatened_at_by(board, y, x, col)
+function clone_move(move)
 {
-    var i, j, p;
-    if (
-    (BLACK === col && y+1 < 8 && x-1 >= 0 && PAWN === board._[y+1][x-1].type && col === board._[y+1][x-1].color) ||
-    (BLACK === col && y+1 < 8 && x+1 < 8 && PAWN === board._[y+1][x+1].type && col === board._[y+1][x+1].color) ||
-
-    (WHITE === col && y-1 >= 0 && x-1 >= 0 && PAWN === board._[y-1][x-1].type && col === board._[y-1][x-1].color) ||
-    (WHITE === col && y-1 >= 0 && x+1 < 8 && PAWN === board._[y-1][x+1].type && col === board._[y-1][x+1].color) ||
-
-    (y+2 < 8 && x+1 < 8 && KNIGHT === board._[y+2][x+1].type && col === board._[y+2][x+1].color) ||
-    (y+2 < 8 && x-1 >= 0 && KNIGHT === board._[y+2][x-1].type && col === board._[y+2][x-1].color) ||
-    (y-2 >= 0 && x+1 < 8 && KNIGHT === board._[y-2][x+1].type && col === board._[y-2][x+1].color) ||
-    (y-2 >= 0 && x-1 >= 0 && KNIGHT === board._[y-2][x-1].type && col === board._[y-2][x-1].color) ||
-    (x+2 < 8 && y+1 < 8 && KNIGHT === board._[y+1][x+2].type && col === board._[y+1][x+2].color) ||
-    (x+2 < 8 && y-1 >= 0 && KNIGHT === board._[y-1][x+2].type && col === board._[y-1][x+2].color) ||
-    (x-2 >= 0 && y+1 < 8 && KNIGHT === board._[y+1][x-2].type && col === board._[y+1][x-2].color) ||
-    (x-2 >= 0 && y-1 >= 0 && KNIGHT === board._[y-1][x-2].type && col === board._[y-1][x-2].color)
-    )
-    {
-        return true;
-    }
-    for (i=1; i<8 && x+i<8; ++i)
-    {
-        p = board._[y][x+i];
-        if ((ROOK === p.type || QUEEN === p.type) && col === p.color) return true;
-        if (EMPTY !== p.color) break;
-    }
-    for (i=1; i<8 && x-i>=0; ++i)
-    {
-        p = board._[y][x-i];
-        if ((ROOK === p.type || QUEEN === p.type) && col === p.color) return true;
-        if (EMPTY !== p.color) break;
-    }
-    for (i=1; i<8 && y+i<8; ++i)
-    {
-        p = board._[y+i][x];
-        if ((ROOK === p.type || QUEEN === p.type) && col === p.color) return true;
-        if (EMPTY !== p.color) break;
-    }
-    for (i=1; i<8 && y-i>=0; ++i)
-    {
-        p = board._[y-i][x];
-        if ((ROOK === p.type || QUEEN === p.type) && col === p.color) return true;
-        if (EMPTY !== p.color) break;
-    }
-    for (i=1; i<8 && x+i<8 && y+i<8; ++i)
-    {
-        p = board._[y+i][x+i];
-        if ((BISHOP === p.type || QUEEN === p.type) && col === p.color) return true;
-        if (EMPTY !== p.color) break;
-    }
-    for (i=1; i<8 && x-i>=0 && y-i>=0; ++i)
-    {
-        p = board._[y-i][x-i];
-        if ((BISHOP === p.type || QUEEN === p.type) && col === p.color) return true;
-        if (EMPTY !== p.color) break;
-    }
-    for (i=1; i<8 && x-i>=0 && y+i<8; ++i)
-    {
-        p = board._[y+i][x-i];
-        if ((BISHOP === p.type || QUEEN === p.type) && col === p.color) return true;
-        if (EMPTY !== p.color) break;
-    }
-    for (i=1; i<8 && x+i<8 && y-i>=0; ++i)
-    {
-        p = board._[y-i][x+i];
-        if ((BISHOP === p.type || QUEEN === p.type) && col === p.color) return true;
-        if (EMPTY !== p.color) break;
-    }
-    for (i=-1; i<=1; ++i)
-    {
-        for (j=-1; j<=1; ++j)
-        {
-            if ((!i && !j) || y+j<0 || y+j>=8 || x+i<0 || x+i>=8) continue;
-            p = board._[y+j][x+i];
-            if (KING === p.type && col === p.color) return true;
-        }
-    }
-    return false;
+    return move && move.length ? [clone_piece(move[0]), move[1], move[2], move[3], move[4], clone_piece(move[5]), move[6], move[7], move[8], move[9], move[10], move[11]] : move;
 }
 function check_and_add(board, K, color, moves, y1, x1, y, x, promotion)
 {
     var move = board.move(y1, x1, y, x, true, promotion),
-        king_threatened = threatened_at_by(board, K.y, K.x, OPPOSITE[color]);
+        king_threatened = board.threatened_at_by(K.y, K.x, OPPOSITE[color]);
     board.unmove(move);
-    if (!king_threatened) moves.push([y, x]);
+    if (!king_threatened) moves[moves.cnt++] = [y, x];
 }
-function possible_moves_at(board, y, x, promotion)
-{
-    var piece = board._[y][x],
-        moves = [], type, color, p, c, i, K;
-    if (!piece.type) return moves;
-    color = piece.color;
-    type = piece.type;
-    K = board.king[COLOR[color]];
-    if (PAWN === type)
-    {
-        if (BLACK === color)
-        {
-            if (y-1 >= 0 && EMPTY === board._[y-1][x].color)
-            {
-                check_and_add(board, K, color, moves, y, x, y-1, x, promotion);
-            }
-            if (y-1 >= 0 && x-1 >= 0 && WHITE === board._[y-1][x-1].color)
-            {
-                check_and_add(board, K, color, moves, y, x, y-1, x-1, promotion);
-            }
-            if (y-1 >= 0 && x+1 < 8 && WHITE === board._[y-1][x+1].color)
-            {
-                check_and_add(board, K, color, moves, y, x, y-1, x+1, promotion);
-            }
-            if (piece._p2 && 6 === y && EMPTY === board._[y-1][x].color && EMPTY === board._[y-2][x].color)
-            {
-                check_and_add(board, K, color, moves, y, x, y-2, x, promotion);
-            }
-            if (3 === y && x-1 >= 0 && board.halfMoves && board.halfMoves === board._[y][x-1]._mj2 && WHITE === board._[y][x-1].color && EMPTY === board._[y-1][x-1].color)
-            {
-                // en passant left
-                check_and_add(board, K, color, moves, y, x, y-1, x-1, promotion);
-            }
-            if (3 === y && x+1 < 8 && board.halfMoves && board.halfMoves === board._[y][x+1]._mj2 && WHITE === board._[y][x+1].color && EMPTY === board._[y-1][x+1].color)
-            {
-                // en passant right
-                check_and_add(board, K, color, moves, y, x, y-1, x+1, promotion);
-            }
-        }
-        else
-        {
-            if (y+1 < 8 && EMPTY === board._[y+1][x].color)
-            {
-                check_and_add(board, K, color, moves, y, x, y+1, x, promotion);
-            }
-            if (y+1 < 8 && x-1 >= 0 && BLACK === board._[y+1][x-1].color)
-            {
-                check_and_add(board, K, color, moves, y, x, y+1, x-1, promotion);
-            }
-            if (y+1 < 8 && x+1 < 8 && BLACK === board._[y+1][x+1].color)
-            {
-                check_and_add(board, K, color, moves, y, x, y+1, x+1, promotion);
-            }
-            if (piece._p2 && 1 === y && EMPTY === board._[y+1][x].color && EMPTY === board._[y+2][x].color)
-            {
-                check_and_add(board, K, color, moves, y, x, y+2, x, promotion);
-            }
-            if (4 === y && x-1 >= 0 && board.halfMoves && board.halfMoves === board._[y][x-1]._mj2 && BLACK === board._[y][x-1].color && EMPTY === board._[y+1][x-1].color)
-            {
-                // en passant left
-                check_and_add(board, K, color, moves, y, x, y+1, x-1, promotion);
-            }
-            if (4 === y && x+1 < 8 && board.halfMoves && board.halfMoves === board._[y][x+1]._mj2 && BLACK === board._[y][x+1].color && EMPTY === board._[y+1][x+1].color)
-            {
-                // en passant right
-                check_and_add(board, K, color, moves, y, x, y+1, x+1, promotion);
-            }
-        }
-    }
-    if (KNIGHT === type)
-    {
-        if (y+2 < 8 && x+1 < 8 && color !== board._[y+2][x+1].color)
-        {
-            check_and_add(board, K, color, moves, y, x, y+2, x+1);
-        }
-        if (y+2 < 8 && x-1 >= 0 && color !== board._[y+2][x-1].color)
-        {
-            check_and_add(board, K, color, moves, y, x, y+2, x-1);
-        }
-        if (y-2 >= 0 && x+1 < 8 && color !== board._[y-2][x+1].color)
-        {
-            check_and_add(board, K, color, moves, y, x, y-2, x+1);
-        }
-        if (y-2 >= 0 && x-1 >= 0 && color !== board._[y-2][x-1].color)
-        {
-            check_and_add(board, K, color, moves, y, x, y-2, x-1);
-        }
-        if (x+2 < 8 && y+1 < 8 && color !== board._[y+1][x+2].color)
-        {
-            check_and_add(board, K, color, moves, y, x, y+1, x+2);
-        }
-        if (x+2 < 8 && y-1 >= 0 && color !== board._[y-1][x+2].color)
-        {
-            check_and_add(board, K, color, moves, y, x, y-1, x+2);
-        }
-        if (x-2 >= 0 && y+1 < 8 && color !== board._[y+1][x-2].color)
-        {
-            check_and_add(board, K, color, moves, y, x, y+1, x-2);
-        }
-        if (x-2 >= 0 && y-1 >= 0 && color !== board._[y-1][x-2].color)
-        {
-            check_and_add(board, K, color, moves, y, x, y-1, x-2);
-        }
-    }
-    if (BISHOP === type || QUEEN === type)
-    {
-        for (i=1; i<8 && y+i<8 && x+i<8; ++i)
-        {
-            c = board._[y+i][x+i].color;
-            if (color !== c) check_and_add(board, K, color, moves, y, x, y+i, x+i);
-            if (EMPTY !== c) break;
-        }
-        for (i=1; i<8 && y+i<8 && x-i>=0; ++i)
-        {
-            c = board._[y+i][x-i].color;
-            if (color !== c) check_and_add(board, K, color, moves, y, x, y+i, x-i);
-            if (EMPTY !== c) break;
-        }
-        for (i=1; i<8 && y-i>=0 && x+i<8; ++i)
-        {
-            c = board._[y-i][x+i].color;
-            if (color !== c) check_and_add(board, K, color, moves, y, x, y-i, x+i);
-            if (EMPTY !== c) break;
-        }
-        for (i=1; i<8 && y-i>=0 && x-i>=0; ++i)
-        {
-            c = board._[y-i][x-i].color;
-            if (color !== c) check_and_add(board, K, color, moves, y, x, y-i, x-i);
-            if (EMPTY !== c) break;
-        }
-    }
-    if (ROOK === type || QUEEN === type)
-    {
-        for (i=1; i<8 && x+i<8; ++i)
-        {
-            c = board._[y][x+i].color;
-            if (color !== c) check_and_add(board, K, color, moves, y, x, y, x+i);
-            if (EMPTY !== c) break;
-        }
-        for (i=1; i<8 && x-i>=0; ++i)
-        {
-            c = board._[y][x-i].color;
-            if (color !== c) check_and_add(board, K, color, moves, y, x, y, x-i);
-            if (EMPTY !== c) break;
-        }
-        for (i=1; i<8 && y+i<8; ++i)
-        {
-            c = board._[y+i][x].color;
-            if (color !== c) check_and_add(board, K, color, moves, y, x, y+i, x);
-            if (EMPTY !== c) break;
-        }
-        for (i=1; i<8 && y-i>=0; ++i)
-        {
-            c = board._[y-i][x].color;
-            if (color !== c) check_and_add(board, K, color, moves, y, x, y-i, x);
-            if (EMPTY !== c) break;
-        }
-    }
-    if (KING === type)
-    {
-        if (y+1 < 8 && color !== board._[y+1][x].color)
-        {
-            check_and_add(board, K, color, moves, y, x, y+1, x);
-        }
-        if (y+1 < 8 && x+1 < 8 && color !== board._[y+1][x+1].color)
-        {
-            check_and_add(board, K, color, moves, y, x, y+1, x+1);
-        }
-        if (x+1 < 8 && color !== board._[y][x+1].color)
-        {
-            check_and_add(board, K, color, moves, y, x, y, x+1);
-        }
-        if (y-1 >= 0 && x+1 < 8 && color !== board._[y-1][x+1].color)
-        {
-            check_and_add(board, K, color, moves, y, x, y-1, x+1);
-        }
-        if (y-1 >= 0 && color !== board._[y-1][x].color)
-        {
-            check_and_add(board, K, color, moves, y, x, y-1, x);
-        }
-        if (y-1 >= 0 && x-1 >= 0 && color !== board._[y-1][x-1].color)
-        {
-            check_and_add(board, K, color, moves, y, x, y-1, x-1);
-        }
-        if (x-1 >= 0 && color !== board._[y][x-1].color)
-        {
-            check_and_add(board, K, color, moves, y, x, y, x-1);
-        }
-        if (y+1 < 8 && x-1 >= 0 && color !== board._[y+1][x-1].color)
-        {
-            check_and_add(board, K, color, moves, y, x, y+1, x-1);
-        }
-        if (K._kc && EMPTY === board._[y][x+1].color && EMPTY === board._[y][x+2].color && !threatened_at_by(board, y,x, OPPOSITE[color]) && !threatened_at_by(board, y,x+1, OPPOSITE[color]) && !threatened_at_by(board, y,x+2, OPPOSITE[color]))
-        {
-            // kingside castling
-            moves.push([y,x+2]);
-        }
-        if (K._qc && EMPTY === board._[y][x-1].color && EMPTY === board._[y][x-2].color && EMPTY === board._[y][x-3].color && !threatened_at_by(board, y,x, OPPOSITE[color]) && !threatened_at_by(board, y,x-1, OPPOSITE[color]) && !threatened_at_by(board, y,x-2, OPPOSITE[color]))
-        {
-            // queenside castling
-            moves.push([y,x-2]);
-        }
-    }
-    return moves;
-}
-function all_moves_for(board, color, promotion, except)
-{
-    except = except || 0;
-    var moves = [], m, x, y;
-    for (y=0; y<8; ++y)
-    {
-        for (x=0; x<8; ++x)
-        {
-            if (color === board._[y][x].color && board._[y][x].type !== except)
-            {
-                m = possible_moves_at(board, y, x, promotion);
-                if (m.length) moves.push.apply(moves, m.map(function(m) {return [y, x, m[0], m[1]];}));
-            }
-        }
-    }
-    return moves;
-}
-function is_king_trapped(board, color, completely, promotion)
-{
-    var K = board.king[COLOR[color]], y, x, i, n, m, move, king_threatened;
-    if (0 < possible_moves_at(board, K.y, K.x, promotion).length) return false;
-    if (false !== completely)
-    {
-        for (y=0; y<8; ++y)
-        {
-            for (x=0; x<8; ++x)
-            {
-                if (color === board._[y][x].color && board._[y][x].type !== KING && 0 < possible_moves_at(board, y, x, promotion).length)
-                {
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-}
-function default_evaluate(board, color)
-{
-    return 0; // constant random
-}
-function my_evaluate(board, color)
+function evaluate_board(board, color)
 {
     /*
-    Chess evaluation: a) material balance, b) average mobility, c) average control, d) closeness to opposite king,  e) avoidance of centroids of overpopulated areas, ..
+    Chess evaluation function: a) material balance, b) average mobility, c) average control, d) closeness to opposite king,  e) avoidance of centroids of overpopulated areas, ..
     */
+    return 0; // random
 }
-function ab_minmax(evaluate, board, color, depth, promotion, alpha, beta, isMax)
+function evaluate_move(board, move, color)
 {
-    if (0 >= depth) return (isMax ? 1 : -1)*evaluate(board, color);
-    var moves = shuffle(all_moves_for(board, color, promotion)), i, n, mov, move, score;
-    if (isMax)
+    var opK = board.king[COLOR[OPPOSITE[color]]],
+        moved = move[0], placed = board._[move[3]][move[4]], taken = move[5],
+        promotion_gain = VALUE[placed.type-1]-VALUE[moved.type-1],
+        capture_gain = !taken || (NONE === taken) ? 0 : VALUE[taken.type-1],
+        material_gain = promotion_gain + capture_gain,
+        closeness_to_king = 0, d1, d2;
+    if (!material_gain)
     {
-        for (i=0,n=moves.length; i<n; ++i)
+        d1 = stdMath.abs(move[2]-opK.x)+stdMath.abs(move[1]-opK.y);
+        d2 = stdMath.abs(move[4]-opK.x)+stdMath.abs(move[3]-opK.y);
+        closeness_to_king = 0.1*(d2 > d1 ? (-d2) : (d2 < d1 ? (16-d2) : 0));
+    }
+    return material_gain + closeness_to_king;
+}
+function alphabeta(evaluate, d, depth, board, color, promotion, alpha, beta, is_max, aborted)
+{
+    // Alpha-Beta MiniMax with given evaluation function algorithm
+    if (aborted()) return 0;
+    if (d >= depth) return (is_max ? 1 : -1)*evaluate(board, color);
+    var moves = shuffle(board.all_moves_for(color, promotion)), i, n, mov, move, score;
+    for (i=0,n=moves.length; i<n; ++i)
+    {
+        mov = moves[i]; move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
+        score = alphabeta(evaluate, d+1, depth, board, OPPOSITE[color], promotion, alpha, beta, !is_max, aborted);
+        board.unmove(move);
+        if (aborted()) return 0;
+        if (is_max)
         {
-            mov = moves[i]; move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
-            score = ab_minmax(evaluate, board, OPPOSITE[color], depth-1, promotion, alpha, beta, !isMax);
-            board.unmove(move);
             if (score >= beta) return beta;   // fail hard beta-cutoff
             if (score > alpha) alpha = score; // alpha acts like max in MiniMax
         }
-        return alpha;
-    }
-    else
-    {
-        for (i=0,n=moves.length; i<n; ++i)
+        else
         {
-            mov = moves[i]; move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
-            score = ab_minmax(evaluate, board, OPPOSITE[color], depth-1, promotion, alpha, beta, !isMax);
-            board.unmove(move);
             if (score <= alpha) return alpha; // fail hard alpha-cutoff
             if (score < beta)   beta = score; // beta acts like min in MiniMax
         }
-        return beta;
     }
+    return is_max ? alpha : beta;
 }
-function ai_move(evaluate, board, color, depth, promotion, cb, interval)
+function minimax_move(evaluate, depth, board, color, promotion, cb, interval, aborted)
 {
-    var alpha = -Infinity, beta = Infinity,
-        moves = shuffle(all_moves_for(board, color, promotion)),
-        i = 0, n = moves.length, best_move = [];
+    // Find next move by MiniMax Tree Search with Alpha-Beta Pruning
+    var moves = shuffle(board.all_moves_for(color, promotion)),
+        i = 0, n = moves.length, best_move = [], alpha = -Infinity, beta = Infinity,
+        ret = is_function(cb) ?
+        function(move) {
+            board.dispose();
+            cb(move);
+        } :
+        function(move) {
+            board.dispose();
+            return move;
+        };
+    depth = stdMath.max(depth||0, 1);
+    if (depth&1) ++depth; // make it even
     if (is_function(cb))
     {
         // async
-        interval = interval || 40;
+        interval = interval || 60;
         setTimeout(function next() {
+            if (aborted()) return ret(null);
             if (i < n)
             {
                 var mov = moves[i++];
                 var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
-                var score = ab_minmax(evaluate, board, OPPOSITE[color], depth-1, promotion, alpha, beta, false);
+                var score = alphabeta(evaluate, 2, depth, board, OPPOSITE[color], promotion, alpha, beta, false, aborted);
                 board.unmove(move);
                 if (score === alpha) {best_move.push(mov);}
                 if (score > alpha)   {alpha = score; best_move = [mov];}
             }
-            if (i >= n) cb(best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
+            if (i >= n) ret(best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
             else setTimeout(next, interval);
         }, interval);
     }
@@ -493,63 +212,256 @@ function ai_move(evaluate, board, color, depth, promotion, cb, interval)
         {
             var mov = moves[i];
             var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
-            var score = ab_minmax(evaluate, board, OPPOSITE[color], depth-1, promotion, alpha, beta, false);
+            var score = alphabeta(evaluate, 2, depth, board, OPPOSITE[color], promotion, alpha, beta, false, aborted);
             board.unmove(move);
+            if (aborted()) return ret(null);
             if (score === alpha) {best_move.push(mov);}
             if (score > alpha)   {alpha = score; best_move = [mov];}
         }
-        return best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null;
+        return ret(!aborted() && best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
+    }
+}
+function mcts_playout(moves, d, depth, board, color, promotion, sgn, aborted)
+{
+    // Monte Carlo Tree Search with random rollout evaluation algorithm
+    if (aborted()) return 0;
+    if (d >= depth) return 0;
+    if (!moves) moves = board.all_moves_for(color, promotion);
+    if (!moves.length) return -sgn*10000;
+    moves = shuffle(moves);
+    var mov = moves[0];
+    var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
+    var score = sgn*evaluate_move(board, move, color) + mcts_playout(null, d+1, depth, board, OPPOSITE[color], promotion, -sgn, aborted);
+    board.unmove(move);
+    return score;
+}
+function mcts_move(iter, depth, board, color, promotion, cb, interval, aborted)
+{
+    // Find next move by Monte Carlo Tree Search
+    var moves = shuffle(board.all_moves_for(color, promotion)),
+        i = 0, n = moves.length, best_move = [], max = -Infinity,
+        ret = is_function(cb) ?
+        function(move) {
+            board.dispose();
+            cb(move);
+        } :
+        function(move) {
+            board.dispose();
+            return move;
+        };
+    iter = stdMath.max(iter||0, 0);
+    depth = stdMath.max(depth||0, 1);
+    if (depth&1) ++depth; // make it even
+    if (is_function(cb))
+    {
+        // async
+        interval = interval || 60;
+        setTimeout(function next() {
+            if (aborted()) return ret(null);
+            if (i < n)
+            {
+                var mov = moves[i++];
+                var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
+                var moves_next = board.all_moves_for(OPPOSITE[color], promotion);
+                var score = evaluate_move(board, move, color);
+                for (var j=0; j<iter; ++j) score += mcts_playout(moves_next, 2, depth, board, OPPOSITE[color], promotion, -1, aborted);
+                board.unmove(move);
+                if (score === max) {best_move.push(mov);}
+                if (score > max)   {max = score; best_move = [mov];}
+            }
+            if (i >= n) ret(best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
+            else setTimeout(next, interval);
+        }, interval);
+    }
+    else
+    {
+        // sync
+        for (; i<n; ++i)
+        {
+            var mov = moves[i++];
+            var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
+            var moves_next = board.all_moves_for(OPPOSITE[color], promotion);
+            var score = evaluate_move(board, move, color);
+            for (var j=0; j<iter; ++j) score += mcts_playout(moves_next, 2, depth, board, OPPOSITE[color], promotion, -1, aborted);
+            board.unmove(move);
+            if (aborted()) return ret(null);
+            if (score === max) {best_move.push(mov);}
+            if (score > max)   {max = score; best_move = [mov];}
+        }
+        return ret(!aborted() && best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
     }
 }
 function Board(options)
 {
-    options = options || {};
-    var c = false !== options.castlingAllowed,
-        ep = false !== options.enPassantAllowed,
+    var self = this, other = null, fen = null, c, ep, p2, i, j, e, p, piece, epsq;
+    if (options instanceof Board)
+    {
+        other = options;
+        options = null;
+    }
+    else if ('string' === typeof options)
+    {
+        // DEFAULT FEN 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+        fen = options.trim().split(' ');
+        fen[0] = fen[0].split('/');
+        epsq = '-' === fen[3] ? s2xy(fen[3]) : null;
+        options = null;
+    }
+    else
+    {
+        options = options || {};
+        c = false !== options.castlingAllowed;
+        ep = false !== options.enPassantAllowed;
         p2 = false !== options.pawnDoubleStepAllowed;
-    var self = this;
-    self.hash = {};
-    self.redo = [];
-    self.history = [];
-    self.king = {WHITE:null,BLACK:null};
-    self.left = {WHITE:{PAWN:0,KNIGHT:0,BISHOP:0,ROOK:0,QUEEN:0}, BLACK:{PAWN:0,KNIGHT:0,BISHOP:0,ROOK:0,QUEEN:0}};
-    self.turn = WHITE;
-    self.halfMoves = 0;
-    self.idleMoves = 0;
+    }
+    if (other)
+    {
+        self.hash = Object.keys(other.hash).reduce(function(hash, k) {
+            hash[k] = other.hash[k];
+            return hash;
+        }, {});
+        self.history = other.history.map(clone_move);
+        self.redo = other.redo.map(clone_move);
+        self.king = {WHITE:{y:other.king.WHITE.y,x:other.king.WHITE.x,_kc:other.king.WHITE._kc,_qc:other.king.WHITE._qc,_c:other.king.WHITE._c},BLACK:{y:other.king.BLACK.y,x:other.king.BLACK.x,_kc:other.king.BLACK._kc,_qc:other.king.BLACK._qc,_c:other.king.BLACK._c}};
+        self.left = {WHITE:{PAWN:other.left.WHITE.PAWN,KNIGHT:other.left.WHITE.KNIGHT,BISHOP:other.left.WHITE.BISHOP,ROOK:other.left.WHITE.ROOK,QUEEN:other.left.WHITE.QUEEN}, BLACK:{PAWN:other.left.BLACK.PAWN,KNIGHT:other.left.BLACK.KNIGHT,BISHOP:other.left.BLACK.BISHOP,ROOK:other.left.BLACK.ROOK,QUEEN:other.left.BLACK.QUEEN}};
+        self.turn = other.turn;
+        self.halfMoves = other.halfMoves;
+        self.idleMoves = other.idleMoves;
+    }
+    else if (fen)
+    {
+        self.hash = {};
+        self.history = [];
+        self.redo = [];
+        self.king = {WHITE:null,BLACK:null};
+        self.left = {WHITE:{PAWN:0,KNIGHT:0,BISHOP:0,ROOK:0,QUEEN:0}, BLACK:{PAWN:0,KNIGHT:0,BISHOP:0,ROOK:0,QUEEN:0}};
+        self.turn = 'b' === fen[1] ? BLACK : WHITE;
+        self.halfMoves = (((parseInt(fen[5]) || 1) - 1) << 1) + (BLACK === self.turn ? 1 : 0);
+        self.idleMoves = parseInt(fen[4]) || 0;
+    }
+    else
+    {
+        self.hash = {};
+        self.history = [];
+        self.redo = [];
+        self.king = {WHITE:null,BLACK:null};
+        self.left = {WHITE:{PAWN:0,KNIGHT:0,BISHOP:0,ROOK:0,QUEEN:0}, BLACK:{PAWN:0,KNIGHT:0,BISHOP:0,ROOK:0,QUEEN:0}};
+        self.turn = WHITE;
+        self.halfMoves = 0;
+        self.idleMoves = 0;
+    }
     self._ = new Array(8);
-    for (var i=8; i>=1; --i)
+    for (i=8; i>=1; --i)
     {
         self._[i-1] = new Array(8);
-        for (var j=0; j<8; ++j)
+        e = 0;
+        for (j=0; j<8; ++j)
         {
-            self._[i-1][j] = NONE;
-            if (8 === i || 1 === i)
+            if (other)
             {
-                if (0 === j || 7 === j)
+                self._[i-1][j] = clone_piece(other._[i-1][j]);
+            }
+            else if (fen)
+            {
+                if (0 < e)
                 {
-                    self._[i-1][j] = 8 === i ? {color:BLACK,type:ROOK,_m:0} : {color:WHITE,type:ROOK,_m:0};
+                    self._[i-1][j] = NONE;
+                    --e;
                 }
-                else if (1 === j || 6 === j)
+                else
                 {
-                    self._[i-1][j] = 8 === i ? {color:BLACK,type:KNIGHT} : {color:WHITE,type:KNIGHT};
-                }
-                else if (2 === j || 5 === j)
-                {
-                    self._[i-1][j] = 8 === i ? {color:BLACK,type:BISHOP} : {color:WHITE,type:BISHOP};
-                }
-                else if (3 === j)
-                {
-                    self._[i-1][j] = 8 === i ? {color:BLACK,type:QUEEN} : {color:WHITE,type:QUEEN};
-                }
-                else if (4 === j)
-                {
-                    self._[i-1][j] = 8 === i ? {color:BLACK,type:KING} : {color:WHITE,type:KING};
-                    if (8 === i) self.king.BLACK = {y:i-1,x:j,_kc:c,_qc:c}; else self.king.WHITE = {y:i-1,x:j,_kc:c,_qc:c};
+                    p = fen[0][8-i].charAt(0);
+                    fen[0][8-i] = fen[0][8-i].slice(1);
+                    if ('1' <= p && p <= '8')
+                    {
+                        e = parseInt(p);
+                        self._[i-1][j] = NONE;
+                        --e;
+                    }
+                    else
+                    {
+                        switch (p.toUpperCase())
+                        {
+                            case 'N':
+                            piece = {color:'n'===p?BLACK:WHITE,type:KNIGHT};
+                            break;
+                            case 'B':
+                            piece = {color:'b'===p?BLACK:WHITE,type:BISHOP};
+                            break;
+                            case 'R':
+                            piece = {color:'r'===p?BLACK:WHITE,type:ROOK,_m:1};
+                            if (BLACK === piece.color)
+                            {
+                                if (8===i && 7===j && -1 < fen[2].indexOf('k')) piece._m = 0;
+                                else if (8===i && 0===j && -1 < fen[2].indexOf('q')) piece._m = 0;
+                            }
+                            else
+                            {
+                                if (1===i && 7===j && -1 < fen[2].indexOf('K')) piece._m = 0;
+                                else if (1===i && 0===j && -1 < fen[2].indexOf('Q')) piece._m = 0;
+                            }
+                            break;
+                            case 'Q':
+                            piece = {color:'q'===p?BLACK:WHITE,type:QUEEN};
+                            break;
+                            case 'K':
+                            piece = {color:'k'===p?BLACK:WHITE,type:KING};
+                            if (BLACK === piece.color)
+                            {
+                                self.king.BLACK = {y:i-1,x:j,_kc:-1<fen[2].indexOf('k'),_qc:-1<fen[2].indexOf('q'),_c:0};
+                            }
+                            else
+                            {
+                                self.king.WHITE = {y:i-1,x:j,_kc:-1<fen[2].indexOf('K'),_qc:-1<fen[2].indexOf('Q'),_c:0};
+                            }
+                            break;
+                            case 'P':
+                            piece = {color:'p'===p?BLACK:WHITE,type:PAWN,_p2:true,_ep:true,_mj2:0};
+                            if (epsq)
+                            {
+                                if (BLACK === piece.color && epsq.x === j && epsq.y === i) piece._mj2 = self.halfMoves;
+                                else if (WHITE === piece.color && epsq.x === j && epsq.y === i-2) piece._mj2 = self.halfMoves;
+                            }
+                            break;
+                            default:
+                            piece = NONE;
+                            break;
+                        }
+                        self._[i-1][j] = piece;
+                    }
                 }
             }
-            else if (7 === i || 2 === i)
+            else
             {
-                self._[i-1][j] = 7 === i ? {color:BLACK,type:PAWN,_p2:p2,_ep:ep,_mj2:0} : {color:WHITE,type:PAWN,_p2:p2,_ep:ep,_mj2:0};
+                self._[i-1][j] = NONE;
+                if (8 === i || 1 === i)
+                {
+                    if (0 === j || 7 === j)
+                    {
+                        self._[i-1][j] = 8 === i ? {color:BLACK,type:ROOK,_m:0} : {color:WHITE,type:ROOK,_m:0};
+                    }
+                    else if (1 === j || 6 === j)
+                    {
+                        self._[i-1][j] = 8 === i ? {color:BLACK,type:KNIGHT} : {color:WHITE,type:KNIGHT};
+                    }
+                    else if (2 === j || 5 === j)
+                    {
+                        self._[i-1][j] = 8 === i ? {color:BLACK,type:BISHOP} : {color:WHITE,type:BISHOP};
+                    }
+                    else if (3 === j)
+                    {
+                        self._[i-1][j] = 8 === i ? {color:BLACK,type:QUEEN} : {color:WHITE,type:QUEEN};
+                    }
+                    else if (4 === j)
+                    {
+                        self._[i-1][j] = 8 === i ? {color:BLACK,type:KING} : {color:WHITE,type:KING};
+                        if (8 === i) self.king.BLACK = {y:i-1,x:j,_kc:c,_qc:c,_c:0}; else self.king.WHITE = {y:i-1,x:j,_kc:c,_qc:c,_c:0};
+                    }
+                }
+                else if (7 === i || 2 === i)
+                {
+                    self._[i-1][j] = 7 === i ? {color:BLACK,type:PAWN,_p2:p2,_ep:ep,_mj2:0} : {color:WHITE,type:PAWN,_p2:p2,_ep:ep,_mj2:0};
+                }
             }
         }
     }
@@ -565,6 +477,9 @@ Board[proto] = {
         self.left = null;
         self._ = null;
         self._pieces = null;
+    },
+    clone: function() {
+        return new Board(this);
     },
     hash: null,
     history: null,
@@ -633,7 +548,7 @@ Board[proto] = {
                         pp.pieces.push({piece:pi,x:x,y:y});
                         ++pp.counts[PIECE[pi.type]];
                     }
-                    pos += xy2s(y, x)+(BLACK === pi.color ? 'b' : 'w')+PIECE_SHORT[pi.type];
+                    pos += xy2s(y, x)+PIECE_SHORT[pi.type][BLACK === pi.color ? 'toLowerCase' : 'toUpperCase']();
                 }
             }
         }
@@ -651,13 +566,14 @@ Board[proto] = {
         return board._pieces;
     },
     move: function(y1, x1, y2, x2, ret_move, promotion) {
-        var board = this, p1 = board._[y1][x1], p2 = board._[y2][x2], ep, R, y,
+        var board = this, p1 = board._[y1][x1], p2 = board._[y2][x2], ep, pp, R, y,
             K = board.king[COLOR[p1.color]], kc = K._kc, qc = K._qc, moved = p1._m;
         promotion = promotion || QUEEN;
         board._[y1][x1] = NONE;
         if (PAWN === p1.type && ((WHITE === p1.color && 7 === y2) || (BLACK === p1.color && 0 === y2)))
         {
             board._[y2][x2] = {color:p1.color,type:promotion};
+            pp = promotion;
         }
         else
         {
@@ -683,6 +599,7 @@ Board[proto] = {
                 if (x2 > x1)
                 {
                     // kingside castling
+                    K._c = 1;
                     R = board._[y][7]; R._m = 1;
                     board._[y][7] = NONE;
                     board._[y][x2-1] = R;
@@ -690,6 +607,7 @@ Board[proto] = {
                 if (x2 < x1)
                 {
                     // queenside castling
+                    K._c = 2;
                     R = board._[y][0]; R._m = 1;
                     board._[y][0] = NONE;
                     board._[y][x2+1] = R;
@@ -714,7 +632,7 @@ Board[proto] = {
             board.idleMoves = 0;
         }
         if (PAWN === p1.type && p1._ep && 1 < stdMath.abs(y2-y1)) p1._mj2 = board.halfMoves;
-        return ret_move ? [p1, y1, x1, y2, x2, p2, kc, qc, moved, promotion, ep] : null;
+        return ret_move ? [p1, y1, x1, y2, x2, p2, kc, qc, moved, promotion, ep, pp] : null;
     },
     unmove: function(move) {
         var board = this, K = board.king[COLOR[move[0].color]], R, x1, x2, y;
@@ -731,6 +649,7 @@ Board[proto] = {
             if (move[3] === move[1] && 1 < stdMath.abs(move[4]-move[2]))
             {
                 // castling
+                K._c = 0;
                 y = move[1];
                 x1 = move[2];
                 x2 = move[4];
@@ -757,17 +676,436 @@ Board[proto] = {
         --board.halfMoves;
         if (NONE === move[5] && PAWN !== move[0].type) --board.idleMoves;
         else board.idleMoves = board._idleMoves;
+    },
+    threatened_at_by: function(y, x, col) {
+        var board = this, i, j, p;
+        if (
+        (BLACK === col && y+1 < 8 && x-1 >= 0 && PAWN === board._[y+1][x-1].type && col === board._[y+1][x-1].color) ||
+        (BLACK === col && y+1 < 8 && x+1 < 8 && PAWN === board._[y+1][x+1].type && col === board._[y+1][x+1].color) ||
+
+        (WHITE === col && y-1 >= 0 && x-1 >= 0 && PAWN === board._[y-1][x-1].type && col === board._[y-1][x-1].color) ||
+        (WHITE === col && y-1 >= 0 && x+1 < 8 && PAWN === board._[y-1][x+1].type && col === board._[y-1][x+1].color) ||
+
+        (y+2 < 8 && x+1 < 8 && KNIGHT === board._[y+2][x+1].type && col === board._[y+2][x+1].color) ||
+        (y+2 < 8 && x-1 >= 0 && KNIGHT === board._[y+2][x-1].type && col === board._[y+2][x-1].color) ||
+        (y-2 >= 0 && x+1 < 8 && KNIGHT === board._[y-2][x+1].type && col === board._[y-2][x+1].color) ||
+        (y-2 >= 0 && x-1 >= 0 && KNIGHT === board._[y-2][x-1].type && col === board._[y-2][x-1].color) ||
+        (x+2 < 8 && y+1 < 8 && KNIGHT === board._[y+1][x+2].type && col === board._[y+1][x+2].color) ||
+        (x+2 < 8 && y-1 >= 0 && KNIGHT === board._[y-1][x+2].type && col === board._[y-1][x+2].color) ||
+        (x-2 >= 0 && y+1 < 8 && KNIGHT === board._[y+1][x-2].type && col === board._[y+1][x-2].color) ||
+        (x-2 >= 0 && y-1 >= 0 && KNIGHT === board._[y-1][x-2].type && col === board._[y-1][x-2].color)
+        )
+        {
+            return true;
+        }
+        for (i=1; i<8 && x+i<8; ++i)
+        {
+            p = board._[y][x+i];
+            if ((ROOK === p.type || QUEEN === p.type) && col === p.color) return true;
+            if (EMPTY !== p.color) break;
+        }
+        for (i=1; i<8 && x-i>=0; ++i)
+        {
+            p = board._[y][x-i];
+            if ((ROOK === p.type || QUEEN === p.type) && col === p.color) return true;
+            if (EMPTY !== p.color) break;
+        }
+        for (i=1; i<8 && y+i<8; ++i)
+        {
+            p = board._[y+i][x];
+            if ((ROOK === p.type || QUEEN === p.type) && col === p.color) return true;
+            if (EMPTY !== p.color) break;
+        }
+        for (i=1; i<8 && y-i>=0; ++i)
+        {
+            p = board._[y-i][x];
+            if ((ROOK === p.type || QUEEN === p.type) && col === p.color) return true;
+            if (EMPTY !== p.color) break;
+        }
+        for (i=1; i<8 && x+i<8 && y+i<8; ++i)
+        {
+            p = board._[y+i][x+i];
+            if ((BISHOP === p.type || QUEEN === p.type) && col === p.color) return true;
+            if (EMPTY !== p.color) break;
+        }
+        for (i=1; i<8 && x-i>=0 && y-i>=0; ++i)
+        {
+            p = board._[y-i][x-i];
+            if ((BISHOP === p.type || QUEEN === p.type) && col === p.color) return true;
+            if (EMPTY !== p.color) break;
+        }
+        for (i=1; i<8 && x-i>=0 && y+i<8; ++i)
+        {
+            p = board._[y+i][x-i];
+            if ((BISHOP === p.type || QUEEN === p.type) && col === p.color) return true;
+            if (EMPTY !== p.color) break;
+        }
+        for (i=1; i<8 && x+i<8 && y-i>=0; ++i)
+        {
+            p = board._[y-i][x+i];
+            if ((BISHOP === p.type || QUEEN === p.type) && col === p.color) return true;
+            if (EMPTY !== p.color) break;
+        }
+        for (i=-1; i<=1; ++i)
+        {
+            for (j=-1; j<=1; ++j)
+            {
+                if ((!i && !j) || y+j<0 || y+j>=8 || x+i<0 || x+i>=8) continue;
+                p = board._[y+j][x+i];
+                if (KING === p.type && col === p.color) return true;
+            }
+        }
+        return false;
+    },
+    is_king_trapped: function(color, completely, promotion) {
+        var board = this, K = board.king[COLOR[color]], y, x, i, n, m, move, king_threatened;
+        if (0 < board.possible_moves_at(K.y, K.x, promotion).length) return false;
+        if (false !== completely)
+        {
+            for (y=0; y<8; ++y)
+            {
+                for (x=0; x<8; ++x)
+                {
+                    if (color === board._[y][x].color && board._[y][x].type !== KING && 0 < board.possible_moves_at(y, x, promotion).length)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    },
+    possible_moves_at: function(y, x, promotion) {
+        var board = this, piece = board._[y][x],
+            moves, type, color, p, c, i, K;
+        if (!piece.type) return [];
+        moves = new Array(64);
+        moves.cnt = 0;
+        color = piece.color;
+        type = piece.type;
+        K = board.king[COLOR[color]];
+        if (PAWN === type)
+        {
+            if (BLACK === color)
+            {
+                if (y-1 >= 0 && EMPTY === board._[y-1][x].color)
+                {
+                    check_and_add(board, K, color, moves, y, x, y-1, x, promotion);
+                }
+                if (y-1 >= 0 && x-1 >= 0 && WHITE === board._[y-1][x-1].color)
+                {
+                    check_and_add(board, K, color, moves, y, x, y-1, x-1, promotion);
+                }
+                if (y-1 >= 0 && x+1 < 8 && WHITE === board._[y-1][x+1].color)
+                {
+                    check_and_add(board, K, color, moves, y, x, y-1, x+1, promotion);
+                }
+                if (piece._p2 && 6 === y && EMPTY === board._[y-1][x].color && EMPTY === board._[y-2][x].color)
+                {
+                    check_and_add(board, K, color, moves, y, x, y-2, x, promotion);
+                }
+                if (3 === y && x-1 >= 0 && board.halfMoves && board.halfMoves === board._[y][x-1]._mj2 && WHITE === board._[y][x-1].color && EMPTY === board._[y-1][x-1].color)
+                {
+                    // en passant left
+                    check_and_add(board, K, color, moves, y, x, y-1, x-1, promotion);
+                }
+                if (3 === y && x+1 < 8 && board.halfMoves && board.halfMoves === board._[y][x+1]._mj2 && WHITE === board._[y][x+1].color && EMPTY === board._[y-1][x+1].color)
+                {
+                    // en passant right
+                    check_and_add(board, K, color, moves, y, x, y-1, x+1, promotion);
+                }
+            }
+            else
+            {
+                if (y+1 < 8 && EMPTY === board._[y+1][x].color)
+                {
+                    check_and_add(board, K, color, moves, y, x, y+1, x, promotion);
+                }
+                if (y+1 < 8 && x-1 >= 0 && BLACK === board._[y+1][x-1].color)
+                {
+                    check_and_add(board, K, color, moves, y, x, y+1, x-1, promotion);
+                }
+                if (y+1 < 8 && x+1 < 8 && BLACK === board._[y+1][x+1].color)
+                {
+                    check_and_add(board, K, color, moves, y, x, y+1, x+1, promotion);
+                }
+                if (piece._p2 && 1 === y && EMPTY === board._[y+1][x].color && EMPTY === board._[y+2][x].color)
+                {
+                    check_and_add(board, K, color, moves, y, x, y+2, x, promotion);
+                }
+                if (4 === y && x-1 >= 0 && board.halfMoves && board.halfMoves === board._[y][x-1]._mj2 && BLACK === board._[y][x-1].color && EMPTY === board._[y+1][x-1].color)
+                {
+                    // en passant left
+                    check_and_add(board, K, color, moves, y, x, y+1, x-1, promotion);
+                }
+                if (4 === y && x+1 < 8 && board.halfMoves && board.halfMoves === board._[y][x+1]._mj2 && BLACK === board._[y][x+1].color && EMPTY === board._[y+1][x+1].color)
+                {
+                    // en passant right
+                    check_and_add(board, K, color, moves, y, x, y+1, x+1, promotion);
+                }
+            }
+        }
+        if (KNIGHT === type)
+        {
+            if (y+2 < 8 && x+1 < 8 && color !== board._[y+2][x+1].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y+2, x+1);
+            }
+            if (y+2 < 8 && x-1 >= 0 && color !== board._[y+2][x-1].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y+2, x-1);
+            }
+            if (y-2 >= 0 && x+1 < 8 && color !== board._[y-2][x+1].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y-2, x+1);
+            }
+            if (y-2 >= 0 && x-1 >= 0 && color !== board._[y-2][x-1].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y-2, x-1);
+            }
+            if (x+2 < 8 && y+1 < 8 && color !== board._[y+1][x+2].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y+1, x+2);
+            }
+            if (x+2 < 8 && y-1 >= 0 && color !== board._[y-1][x+2].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y-1, x+2);
+            }
+            if (x-2 >= 0 && y+1 < 8 && color !== board._[y+1][x-2].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y+1, x-2);
+            }
+            if (x-2 >= 0 && y-1 >= 0 && color !== board._[y-1][x-2].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y-1, x-2);
+            }
+        }
+        if (BISHOP === type || QUEEN === type)
+        {
+            for (i=1; i<8 && y+i<8 && x+i<8; ++i)
+            {
+                c = board._[y+i][x+i].color;
+                if (color !== c) check_and_add(board, K, color, moves, y, x, y+i, x+i);
+                if (EMPTY !== c) break;
+            }
+            for (i=1; i<8 && y+i<8 && x-i>=0; ++i)
+            {
+                c = board._[y+i][x-i].color;
+                if (color !== c) check_and_add(board, K, color, moves, y, x, y+i, x-i);
+                if (EMPTY !== c) break;
+            }
+            for (i=1; i<8 && y-i>=0 && x+i<8; ++i)
+            {
+                c = board._[y-i][x+i].color;
+                if (color !== c) check_and_add(board, K, color, moves, y, x, y-i, x+i);
+                if (EMPTY !== c) break;
+            }
+            for (i=1; i<8 && y-i>=0 && x-i>=0; ++i)
+            {
+                c = board._[y-i][x-i].color;
+                if (color !== c) check_and_add(board, K, color, moves, y, x, y-i, x-i);
+                if (EMPTY !== c) break;
+            }
+        }
+        if (ROOK === type || QUEEN === type)
+        {
+            for (i=1; i<8 && x+i<8; ++i)
+            {
+                c = board._[y][x+i].color;
+                if (color !== c) check_and_add(board, K, color, moves, y, x, y, x+i);
+                if (EMPTY !== c) break;
+            }
+            for (i=1; i<8 && x-i>=0; ++i)
+            {
+                c = board._[y][x-i].color;
+                if (color !== c) check_and_add(board, K, color, moves, y, x, y, x-i);
+                if (EMPTY !== c) break;
+            }
+            for (i=1; i<8 && y+i<8; ++i)
+            {
+                c = board._[y+i][x].color;
+                if (color !== c) check_and_add(board, K, color, moves, y, x, y+i, x);
+                if (EMPTY !== c) break;
+            }
+            for (i=1; i<8 && y-i>=0; ++i)
+            {
+                c = board._[y-i][x].color;
+                if (color !== c) check_and_add(board, K, color, moves, y, x, y-i, x);
+                if (EMPTY !== c) break;
+            }
+        }
+        if (KING === type)
+        {
+            if (y+1 < 8 && color !== board._[y+1][x].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y+1, x);
+            }
+            if (y+1 < 8 && x+1 < 8 && color !== board._[y+1][x+1].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y+1, x+1);
+            }
+            if (x+1 < 8 && color !== board._[y][x+1].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y, x+1);
+            }
+            if (y-1 >= 0 && x+1 < 8 && color !== board._[y-1][x+1].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y-1, x+1);
+            }
+            if (y-1 >= 0 && color !== board._[y-1][x].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y-1, x);
+            }
+            if (y-1 >= 0 && x-1 >= 0 && color !== board._[y-1][x-1].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y-1, x-1);
+            }
+            if (x-1 >= 0 && color !== board._[y][x-1].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y, x-1);
+            }
+            if (y+1 < 8 && x-1 >= 0 && color !== board._[y+1][x-1].color)
+            {
+                check_and_add(board, K, color, moves, y, x, y+1, x-1);
+            }
+            if (K._kc && EMPTY === board._[y][x+1].color && EMPTY === board._[y][x+2].color && !board.threatened_at_by(y,x, OPPOSITE[color]) && !board.threatened_at_by(y,x+1, OPPOSITE[color]) && !board.threatened_at_by(y,x+2, OPPOSITE[color]))
+            {
+                // kingside castling
+                moves[moves.cnt++] = [y,x+2];
+            }
+            if (K._qc && EMPTY === board._[y][x-1].color && EMPTY === board._[y][x-2].color && EMPTY === board._[y][x-3].color && !board.threatened_at_by(y,x, OPPOSITE[color]) && !board.threatened_at_by(y,x-1, OPPOSITE[color]) && !board.threatened_at_by(y,x-2, OPPOSITE[color]))
+            {
+                // queenside castling
+                moves[moves.cnt++] = [y,x-2];
+            }
+        }
+        // truncate if needed
+        if (moves.length > moves.cnt) moves.length = moves.cnt;
+        return moves;
+    },
+    all_moves_for: function(color, promotion, except) {
+        except = except || 0;
+        var board = this, moves = [], m, x, y;
+        for (y=0; y<8; ++y)
+        {
+            for (x=0; x<8; ++x)
+            {
+                if (color === board._[y][x].color && board._[y][x].type !== except)
+                {
+                    m = board.possible_moves_at(y, x, promotion);
+                    if (m.length) moves.push.apply(moves, m.map(function(m) {return [y, x, m[0], m[1]];}));
+                }
+            }
+        }
+        return moves;
+    },
+    _epsq: function() {
+        var board = this, col = board.turn, y = WHITE === col ? 4 : 3, x, p, m, k, K = board.king[COLOR[col]];
+        for (x=0; x<8; ++x)
+        {
+            p = board._[y][x];
+            if (PAWN !== p.type) continue;
+            if (BLACK === col)
+            {
+                if (x-1 >= 0 && board.halfMoves && board.halfMoves === board._[y][x-1]._mj2 && WHITE === board._[y][x-1].color && EMPTY === board._[y-1][x-1].color)
+                {
+                    // en passant left
+                    m = board.move(y, x, y-1, x-1, true, QUEEN);
+                    k = board.threatened_at_by(K.y, K.x, OPPOSITE[col]);
+                    board.unmove(m);
+                    if (!k) return xy2s(y-1, x-1);
+                }
+                if (x+1 < 8 && board.halfMoves && board.halfMoves === board._[y][x+1]._mj2 && WHITE === board._[y][x+1].color && EMPTY === board._[y-1][x+1].color)
+                {
+                    // en passant right
+                    m = board.move(y, x, y-1, x+1, true, QUEEN);
+                    k = board.threatened_at_by(K.y, K.x, OPPOSITE[col]);
+                    board.unmove(m);
+                    if (!k) return xy2s(y-1, x+1);
+                }
+            }
+            else
+            {
+                if (x-1 >= 0 && board.halfMoves && board.halfMoves === board._[y][x-1]._mj2 && BLACK === board._[y][x-1].color && EMPTY === board._[y+1][x-1].color)
+                {
+                    // en passant left
+                    m = board.move(y, x, y+1, x-1, true, QUEEN);
+                    k = board.threatened_at_by(K.y, K.x, OPPOSITE[col]);
+                    board.unmove(m);
+                    if (!k) return xy2s(y+1, x-1);
+                }
+                if (x+1 < 8 && board.halfMoves && board.halfMoves === board._[y][x+1]._mj2 && BLACK === board._[y][x+1].color && EMPTY === board._[y+1][x+1].color)
+                {
+                    // en passant right
+                    m = board.move(y, x, y+1, x+1, true, QUEEN);
+                    k = board.threatened_at_by(K.y, K.x, OPPOSITE[col]);
+                    board.unmove(m);
+                    if (!k) return xy2s(y+1, x+1);
+                }
+            }
+        }
+    },
+    fen: function() {
+        // DEFAULT FEN 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+        var board = this, fen = '', castling = '', e, y, x, p;
+        for (y=7; y>=0; --y)
+        {
+            e = 0;
+            for (x=0; x<8; ++x)
+            {
+                p = board._[y][x];
+                if (NONE === p)
+                {
+                    ++e;
+                }
+                else
+                {
+                    if (e > 0) {fen += String(e); e = 0;}
+                    fen += p.color === WHITE ? PIECE_SHORT[p.type].toUpperCase() : PIECE_SHORT[p.type].toLowerCase();
+                }
+            }
+            if (e > 0) fen += String(e);
+            if (y > 0) fen += '/'
+        }
+
+        if (board.king.WHITE._kc) castling += 'K';
+        if (board.king.WHITE._qc) castling += 'Q';
+        if (board.king.BLACK._kc) castling += 'k';
+        if (board.king.BLACK._qc) castling += 'q';
+        if (!castling.length) castling = '-';
+
+        return (
+                fen
+        + ' ' + (WHITE === board.turn ? 'w' : 'b')
+        + ' ' + castling
+        + ' ' + (board._epsq() || '-')
+        + ' ' + String(board.idleMoves)
+        + ' ' + String((board.halfMoves >>> 1) + 1)
+        );
     }
 };
 function Chess(options)
 {
+    if ('string' === typeof options) options = {fen:options};
     options = options || {}; options.ai = options.ai || {};
-    var self = this, board, kc = null, kt = null, cmi = null, promotion = QUEEN;
+    var self = this, board, fen, kc = null, kt = null, cmi = null, promotion = QUEEN;
     self.reset = function() {
         if (board) board.dispose();
-        board = new Board(options);
-        kc = kt = null;
+        board = new Board('string' === typeof options.fen ? options.fen : options);
+        kc = kt = cmi = null;
         return self;
+    };
+    self.getBoard = function() {
+        return board;
+    };
+    self.getMoves = function() {
+        return board.history.map(function(m) {
+            //[p1, y1, x1, y2, x2, p2, kc, qc, moved, promotion, ep, pp]
+            return xy2s(m[1], m[2]) + xy2s(m[3], m[4]) + (m[11] ? PIECE_SHORT[m[11]].toLowerCase() : '');
+        });
+    };
+    self.getFEN = function() {
+        return board.fen();
     };
     self.getPieceAt = function(pos) {
         var coords = s2xy(pos);
@@ -775,26 +1113,43 @@ function Chess(options)
     };
     self.getPossibleMovesAt = function(pos) {
         var coords = s2xy(pos);
-        return coords.x >= 0 && coords.x < 8 && coords.y >= 0 && coords.y < 8 ? possible_moves_at(board, coords.y, coords.x, promotion).map(encode_move) : [];
+        return coords.x >= 0 && coords.x < 8 && coords.y >= 0 && coords.y < 8 ? board.possible_moves_at(coords.y, coords.x, promotion).map(encode_move) : [];
     };
     self.getAllMovesFor = function(col) {
-        return all_moves_for(board, null == col ? board.turn : ('BLACK' === col ? BLACK : WHITE), promotion).map(encode_move);
+        return board.all_moves_for(null == col ? board.turn : ('BLACK' === col ? BLACK : WHITE), promotion).map(encode_move);
     };
     self.getRandomMove = function() {
         var moves = self.getAllMovesFor(self.whoseTurn());
-        return moves.length ? moves[stdMath.round(moves.length-1)*stdMath.random()] : null;
+        return moves.length ? moves[stdMath.round((moves.length-1)*stdMath.random())] : null;
     };
-    self.getAIMove = function(depth, cb, interval) {
-        var move = ai_move(options.ai.evaluate || default_evaluate, board, board.turn, depth || options.ai.depth || 1, CODE[String(options.ai.promotion || 'QUEEN').toUpperCase()] || QUEEN, is_function(cb) ? function(move) {cb(encode_move(move));} : cb, interval);
+    self.getAIMove = function(algorithm, _, depth, cb, interval, is_aborted) {
+        var boardc, move = null;
+        if (('minimax' === algorithm || 'alphabeta' === algorithm) && is_function(_))
+        {
+            boardc = board.clone();
+            move = minimax_move(_, depth, boardc, boardc.turn, CODE[String(options.ai.promotion || 'QUEEN').toUpperCase()] || QUEEN, is_function(cb) ? function(move) {cb(encode_move(move));} : cb, interval, is_aborted || return_false);
+        }
+        else if ('mcts' === algorithm)
+        {
+            boardc = board.clone();
+            move = mcts_move(_, depth, boardc, boardc.turn, CODE[String(options.ai.promotion || 'QUEEN').toUpperCase()] || QUEEN, is_function(cb) ? function(move) {cb(encode_move(move));} : cb, interval, is_aborted || return_false);
+        }
         return encode_move(move);
     };
-    self.doMove = function(pos1, pos2) {
+    self.doMove = function(pos1, pos2, promoted) {
         var coords1 = s2xy(pos1),
             coords2 = s2xy(pos2),
             piece1 = board._[coords1.y][coords1.x],
             piece2 = board._[coords2.y][coords2.x],
-            move, pos;
-        move = board.move(coords1.y, coords1.x, coords2.y, coords2.x, true, promotion);
+            move, pos, promo = promotion;
+        switch ((promoted || '').toLowerCase())
+        {
+            case 'queen': case 'q': promo = QUEEN; break;
+            case 'rook': case 'r': promo = ROOK; break;
+            case 'bishop': case 'b': promo = BISHOP; break;
+            case 'knight': case 'n': promo = KNIGHT; break;
+        }
+        move = board.move(coords1.y, coords1.x, coords2.y, coords2.x, true, promo);
         board._pos = null;
         board._pieces = null;
         board.history.push(move);
@@ -840,11 +1195,11 @@ function Chess(options)
         return self;
     };
     self.isCheck = function() {
-        if (null == kc) kc = threatened_at_by(board, board.king[COLOR[board.turn]].y, board.king[COLOR[board.turn]].x, OPPOSITE[board.turn]);
+        if (null == kc) kc = board.threatened_at_by(board.king[COLOR[board.turn]].y, board.king[COLOR[board.turn]].x, OPPOSITE[board.turn]);
         return kc;
     };
     self.isKingTrapped = function() {
-        if (null == kt) kt = is_king_trapped(board, board.turn, true, promotion);
+        if (null == kt) kt = board.is_king_trapped(board.turn, true, promotion);
         return kt;
     };
     self.isCheckMate = function() {
@@ -901,6 +1256,12 @@ function Chess(options)
     self.isDraw = function() {
         return self.idleMovesGreaterThan(50) || self.isStaleMate() || self.isCheckMateImpossible() || self.isRepetition(3);
     };
+    self.isGameOver = function() {
+        return self.isCheckMate() || self.isDraw();
+    };
+    self.winner = function() {
+        return self.isCheckMate() ? (WHITE === board.turn ? 'BLACK' : 'WHITE') : (self.isDraw() ? 'DRAW' : '');
+    };
     self.dispose = function() {
         if (board) board.dispose();
         board = null;
@@ -915,6 +1276,9 @@ Chess[proto] = {
     reset: null,
     promoteTo: null,
     whoseTurn: null,
+    getBoard: null,
+    getMoves: null,
+    getFEN: null,
     getPieceAt: null,
     getPossibleMovesAt: null,
     getAllMovesFor: null,
@@ -929,9 +1293,11 @@ Chess[proto] = {
     isCheckMateImpossible: null,
     idleMovesGreaterThan: null,
     isRepetition: null,
-    isDraw: null
+    isDraw: null,
+    isGameOver: null,
+    winner: null
 };
-Chess.VERSION = "0.9.7";
+Chess.VERSION = "0.9.8";
 
 // export it
 return Chess;
