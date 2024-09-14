@@ -250,6 +250,7 @@ body {
     width: 15px;
 }
 #controls select,
+#controls input,
 #controls button {
     padding: 4px 6px;
     --w: 14px;
@@ -286,8 +287,9 @@ body {
 <option value="random-human">Random-Human</option>
 </optgroup>
 </select>
-<input data-action="depth" title="Depth of Search" type="number" min="1" max="50" step="1" value="6" />
-<input data-action="skill" title="Skill" type="number" min="0" max="20" step="1" value="1" />
+<span class="break"></span>
+<input style="--displ:inline-block" data-action="depth" title="Depth of Search" type="number" min="1" max="50" step="1" value="6" />
+<input style="--displ:inline-block" data-action="skill" title="Skill" type="number" min="0" max="20" step="1" value="1" />
 <span class="break"></span>
 <button data-action="flip" title="Flip Sides"></button>
 <button data-action="new" title="New Game"></button>
