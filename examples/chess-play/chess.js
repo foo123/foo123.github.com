@@ -253,7 +253,7 @@ function mcts_move(opts, board, color, promotion)
             board.dispose();
             return move;
         };
-    opts.iter = stdMath.max(opts.iter||0, 0);
+    opts.iterations = stdMath.max(opts.iterations||0, 0);
     opts.depth = stdMath.max(opts.depth||0, 1);
     if (opts.depth&1) ++opts.depth; // make it even
     if (is_function(opts.cb))
@@ -268,7 +268,7 @@ function mcts_move(opts, board, color, promotion)
                 var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
                 var moves_next = board.all_moves_for(OPPOSITE[color], promotion);
                 var score = evaluate_move(board, move, color);
-                for (var j=0,jm=opts.iter; j<jm; ++j) score += mcts_playout(opts, board, color, promotion, 2, -1, moves_next);
+                for (var j=0,jm=opts.iterations; j<jm; ++j) score += mcts_playout(opts, board, color, promotion, 2, -1, moves_next);
                 board.unmove(move);
                 if (score === max) {best_move.push(mov);}
                 if (score > max)   {max = score; best_move = [mov];}
@@ -286,7 +286,7 @@ function mcts_move(opts, board, color, promotion)
             var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
             var moves_next = board.all_moves_for(OPPOSITE[color], promotion);
             var score = evaluate_move(board, move, color);
-            for (var j=0,jm=opts.iter; j<jm; ++j) score += mcts_playout(opts, board, color, promotion, 2, -1, moves_next);
+            for (var j=0,jm=opts.iterations; j<jm; ++j) score += mcts_playout(opts, board, color, promotion, 2, -1, moves_next);
             board.unmove(move);
             if (opts.aborted()) return ret(null);
             if (score === max) {best_move.push(mov);}

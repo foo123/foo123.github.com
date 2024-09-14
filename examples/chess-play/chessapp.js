@@ -9,7 +9,7 @@ function ChessApp(args)
     args = args || {};
     var container = args.container, controls = args.controls, options = args.options,
         game, screen = container.parentNode, squares, moves,
-        msg, active_piece, abort_move = null, sf_move = null,
+        msg, active_piece, move_waiting = null, abort_move = null, sf_move = null,
         play_with_computer = false, computer_plays = false,
         is_stockfish = false, is_random = false,
         stockfish = {
@@ -24,7 +24,7 @@ function ChessApp(args)
         T = 1000/30,
         ai = {
             algo: 'mcts',
-            mcts: {iter:2000, depth:6, cb:null, interval:T, aborted:null},
+            mcts: {iterations:1000, depth:6, cb:null, interval:T, aborted:null},
             minimax: {evaluate:null, depth:6, nmax:function(depth){return depth > 10 ? 2 : (depth > 4 ? 3 : Infinity);}, cb:null, interval:T, aborted:null}
         };
 
@@ -88,6 +88,11 @@ function ChessApp(args)
         abort_move = null;
         sf_move = null;
         if (computer_plays && is_stockfish) stockfish.sendCMD('stop');
+        if (move_waiting)
+        {
+            clearTimeout(move_waiting);
+            move_waiting = null;
+        }
     }
 
     function stockfish_move(then)
@@ -265,7 +270,8 @@ function ChessApp(args)
                 }
             }
             update_gui();
-            setTimeout(machine_move, 1000);
+            clearTimeout(move_waiting);
+            move_waiting = setTimeout(machine_move, 1500);
         }
     }
 
@@ -337,7 +343,8 @@ function ChessApp(args)
                 m.innerText += (m.innerText.length ? ' ' : '') + (pos1+pos2).toLowerCase() + (game.isCheckMate() ? '#' : (game.isCheck() ? '+' : ''));
             }
             update_gui();
-            setTimeout(machine_move, 1000);
+            clearTimeout(move_waiting);
+            move_waiting = setTimeout(machine_move, 1500);
         }
     }
 
@@ -352,12 +359,14 @@ function ChessApp(args)
         removeClass(container, 'computer-human');
         var playwith = (controls  ? (controls.querySelector('select[data-action="playwith"]')||{}).value : null) || 'human-human',
             skill = controls ? parseInt(controls.querySelector('input[data-action="skill"]').value) : 1,
+            iter = controls ? parseInt(controls.querySelector('input[data-action="iterations"]').value) : 1000,
             depth = controls ? parseInt(controls.querySelector('input[data-action="depth"]').value) : 6,
             opts = {ai:{promotion:'QUEEN'}};
         play_with_computer = playwith !== 'human-human';
         stockfish.skill = String(skill);
         stockfish.depth = String(depth);
         ai.minimax.depth = ai.mcts.depth = depth;
+        ai.mcts.iterations = iter;
         computer_plays = play_with_computer && (-1 < playwith.indexOf('-human'));
         is_random = play_with_computer && (-1 < playwith.indexOf('random'));
         is_stockfish = play_with_computer /*&& (null != stockfish.engine)*/ && (-1 < playwith.indexOf('stockfish'));
@@ -388,6 +397,28 @@ function ChessApp(args)
             removeClass(el('hourglass'), 'show');
             addClass(el('hourglass'), 'hide');
             addClass(container, 'human-human');
+        }
+    }
+
+    function inputs(playwith)
+    {
+        if ('human-human' === playwith || -1 < playwith.indexOf('random'))
+        {
+            addClass(removeClass(controls.querySelector('input[data-action="skill"]'), 'show'), 'hide');
+            addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'show'), 'hide');
+            addClass(removeClass(controls.querySelector('input[data-action="iterations"]'), 'show'), 'hide');
+        }
+        else if (-1 < playwith.indexOf('stockfish'))
+        {
+            addClass(removeClass(controls.querySelector('input[data-action="skill"]'), 'hide'), 'show');
+            addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'hide'), 'show');
+            addClass(removeClass(controls.querySelector('input[data-action="iterations"]'), 'show'), 'hide');
+        }
+        else
+        {
+            addClass(removeClass(controls.querySelector('input[data-action="skill"]'), 'show'), 'hide');
+            addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'hide'), 'show');
+            addClass(removeClass(controls.querySelector('input[data-action="iterations"]'), -1 < playwith.indexOf('minimax') ? 'show' : 'hide'), -1 < playwith.indexOf('minimax') ? 'hide' : 'show');
         }
     }
 
@@ -467,41 +498,12 @@ function ChessApp(args)
                 }
                 else if ('playwith' === action)
                 {
-                    if ('human-human' === ctrl.value || -1 < ctrl.value.indexOf('random'))
-                    {
-                        addClass(removeClass(controls.querySelector('input[data-action="skill"]'), 'show'), 'hide');
-                        addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'show'), 'hide');
-                    }
-                    else if (-1 < ctrl.value.indexOf('stockfish'))
-                    {
-                        addClass(removeClass(controls.querySelector('input[data-action="skill"]'), 'hide'), 'show');
-                        addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'hide'), 'show');
-                    }
-                    else
-                    {
-                        addClass(removeClass(controls.querySelector('input[data-action="skill"]'), 'show'), 'hide');
-                        addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'hide'), 'show');
-                    }
+                    inputs(ctrl.value);
                 }
             }, {capture:false,passive:true});
         }
         if (screen) addClass(screen, 'chessscreen');
-        var playwith = controls ? controls.querySelector('select[data-action="playwith"]').value : 'human-human';
-        if ('human-human' === playwith || -1 < playwith.indexOf('random'))
-        {
-            addClass(removeClass(controls.querySelector('input[data-action="skill"]'), 'show'), 'hide');
-            addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'show'), 'hide');
-        }
-        else if (-1 < playwith.indexOf('stockfish'))
-        {
-            addClass(removeClass(controls.querySelector('input[data-action="skill"]'), 'hide'), 'show');
-            addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'hide'), 'show');
-        }
-        else
-        {
-            addClass(removeClass(controls.querySelector('input[data-action="skill"]'), 'show'), 'hide');
-            addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'hide'), 'show');
-        }
+        inputs(controls ? controls.querySelector('select[data-action="playwith"]').value : 'human-human');
         newgame();
     }
     init();
