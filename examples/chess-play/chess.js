@@ -145,18 +145,22 @@ function evaluate_move(board, move, color)
     }
     return material_gain + closeness_to_king;
 }
-function alphabeta(evaluate, d, depth, board, color, promotion, alpha, beta, is_max, aborted)
+function alphabeta(opts, board, color, promotion, d, alpha, beta, is_max)
 {
     // Alpha-Beta MiniMax with given evaluation function algorithm
-    if (aborted()) return 0;
-    if (d >= depth) return (is_max ? 1 : -1)*evaluate(board, color);
-    var moves = shuffle(board.all_moves_for(color, promotion)), i, n, mov, move, score;
-    for (i=0,n=moves.length; i<n; ++i)
+    var moves = null, i = 0, n = 0, mov = null, move = null, score = 0, sgn = 1;
+    if (opts.aborted()) return 0;
+    sgn = is_max ? 1 : -1;
+    if (d >= opts.depth) return opts.evaluate ? sgn*opts.evaluate(board, color) : 0;
+    moves = shuffle(board.all_moves_for(color, promotion));
+    if (!moves.length) return -sgn*10000;
+    n = opts.nmax ? stdMath.min(opts.nmax(d), moves.length) : moves.length;
+    for (i=0; i<n; ++i)
     {
         mov = moves[i]; move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
-        score = alphabeta(evaluate, d+1, depth, board, OPPOSITE[color], promotion, alpha, beta, !is_max, aborted);
+        score = (opts.evaluate ? 0 : (sgn*evaluate_move(board, move, color))) + alphabeta(opts, board, color, promotion, d+1, alpha, beta, !is_max);
         board.unmove(move);
-        if (aborted()) return 0;
+        if (opts.aborted()) return 0;
         if (is_max)
         {
             if (score >= beta) return beta;   // fail hard beta-cutoff
@@ -170,40 +174,40 @@ function alphabeta(evaluate, d, depth, board, color, promotion, alpha, beta, is_
     }
     return is_max ? alpha : beta;
 }
-function minimax_move(evaluate, depth, board, color, promotion, cb, interval, aborted)
+function minimax_move(opts, board, color, promotion)
 {
     // Find next move by MiniMax Tree Search with Alpha-Beta Pruning
     var moves = shuffle(board.all_moves_for(color, promotion)),
         i = 0, n = moves.length, best_move = [], alpha = -Infinity, beta = Infinity,
-        ret = is_function(cb) ?
+        ret = is_function(opts.cb) ?
         function(move) {
             board.dispose();
-            cb(move);
+            opts.cb(move);
         } :
         function(move) {
             board.dispose();
             return move;
         };
-    depth = stdMath.max(depth||0, 1);
-    if (depth&1) ++depth; // make it even
-    if (is_function(cb))
+    opts.depth = stdMath.max(opts.depth||0, 1);
+    if (opts.depth&1) ++opts.depth; // make it even
+    if (is_function(opts.cb))
     {
         // async
-        interval = interval || 60;
+        opts.interval = opts.interval || 60;
         setTimeout(function next() {
-            if (aborted()) return ret(null);
+            if (opts.aborted()) return ret(null);
             if (i < n)
             {
                 var mov = moves[i++];
                 var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
-                var score = alphabeta(evaluate, 2, depth, board, OPPOSITE[color], promotion, alpha, beta, false, aborted);
+                var score = (opts.evaluate ? 0 : evaluate_move(board, move, color)) + alphabeta(opts, board, OPPOSITE[color], promotion, 2, alpha, beta, false);
                 board.unmove(move);
                 if (score === alpha) {best_move.push(mov);}
                 if (score > alpha)   {alpha = score; best_move = [mov];}
             }
             if (i >= n) ret(best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
-            else setTimeout(next, interval);
-        }, interval);
+            else setTimeout(next, opts.interval);
+        }, opts.interval);
     }
     else
     {
@@ -212,66 +216,66 @@ function minimax_move(evaluate, depth, board, color, promotion, cb, interval, ab
         {
             var mov = moves[i];
             var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
-            var score = alphabeta(evaluate, 2, depth, board, OPPOSITE[color], promotion, alpha, beta, false, aborted);
+            var score = (opts.evaluate ? 0 : evaluate_move(board, move, color)) + alphabeta(opts, board, OPPOSITE[color], promotion, 2, alpha, beta, false);
             board.unmove(move);
-            if (aborted()) return ret(null);
+            if (opts.aborted()) return ret(null);
             if (score === alpha) {best_move.push(mov);}
             if (score > alpha)   {alpha = score; best_move = [mov];}
         }
-        return ret(!aborted() && best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
+        return ret(!opts.aborted() && best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
     }
 }
-function mcts_playout(moves, d, depth, board, color, promotion, sgn, aborted)
+function mcts_playout(opts, board, color, promotion, d, sgn, moves)
 {
     // Monte Carlo Tree Search with random rollout evaluation algorithm
-    if (aborted()) return 0;
-    if (d >= depth) return 0;
+    if (opts.aborted()) return 0;
+    if (d >= opts.depth) return 0;
     if (!moves) moves = board.all_moves_for(color, promotion);
     if (!moves.length) return -sgn*10000;
     moves = shuffle(moves);
     var mov = moves[0];
     var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
-    var score = sgn*evaluate_move(board, move, color) + mcts_playout(null, d+1, depth, board, OPPOSITE[color], promotion, -sgn, aborted);
+    var score = sgn*evaluate_move(board, move, color) + mcts_playout(opts, board, color, promotion, d+1, -sgn);
     board.unmove(move);
     return score;
 }
-function mcts_move(iter, depth, board, color, promotion, cb, interval, aborted)
+function mcts_move(opts, board, color, promotion)
 {
     // Find next move by Monte Carlo Tree Search
     var moves = shuffle(board.all_moves_for(color, promotion)),
         i = 0, n = moves.length, best_move = [], max = -Infinity,
-        ret = is_function(cb) ?
+        ret = is_function(opts.cb) ?
         function(move) {
             board.dispose();
-            cb(move);
+            opts.cb(move);
         } :
         function(move) {
             board.dispose();
             return move;
         };
-    iter = stdMath.max(iter||0, 0);
-    depth = stdMath.max(depth||0, 1);
-    if (depth&1) ++depth; // make it even
-    if (is_function(cb))
+    opts.iter = stdMath.max(opts.iter||0, 0);
+    opts.depth = stdMath.max(opts.depth||0, 1);
+    if (opts.depth&1) ++opts.depth; // make it even
+    if (is_function(opts.cb))
     {
         // async
-        interval = interval || 60;
+        opts.interval = opts.interval || 60;
         setTimeout(function next() {
-            if (aborted()) return ret(null);
+            if (opts.aborted()) return ret(null);
             if (i < n)
             {
                 var mov = moves[i++];
                 var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
                 var moves_next = board.all_moves_for(OPPOSITE[color], promotion);
                 var score = evaluate_move(board, move, color);
-                for (var j=0; j<iter; ++j) score += mcts_playout(moves_next, 2, depth, board, OPPOSITE[color], promotion, -1, aborted);
+                for (var j=0,jm=opts.iter; j<jm; ++j) score += mcts_playout(opts, board, color, promotion, 2, -1, moves_next);
                 board.unmove(move);
                 if (score === max) {best_move.push(mov);}
                 if (score > max)   {max = score; best_move = [mov];}
             }
             if (i >= n) ret(best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
-            else setTimeout(next, interval);
-        }, interval);
+            else setTimeout(next, opts.interval);
+        }, opts.interval);
     }
     else
     {
@@ -282,13 +286,13 @@ function mcts_move(iter, depth, board, color, promotion, cb, interval, aborted)
             var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
             var moves_next = board.all_moves_for(OPPOSITE[color], promotion);
             var score = evaluate_move(board, move, color);
-            for (var j=0; j<iter; ++j) score += mcts_playout(moves_next, 2, depth, board, OPPOSITE[color], promotion, -1, aborted);
+            for (var j=0,jm=opts.iter; j<jm; ++j) score += mcts_playout(opts, board, color, promotion, 2, -1, moves_next);
             board.unmove(move);
-            if (aborted()) return ret(null);
+            if (opts.aborted()) return ret(null);
             if (score === max) {best_move.push(mov);}
             if (score > max)   {max = score; best_move = [mov];}
         }
-        return ret(!aborted() && best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
+        return ret(!opts.aborted() && best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
     }
 }
 function Board(options)
@@ -1122,17 +1126,25 @@ function Chess(options)
         var moves = self.getAllMovesFor(self.whoseTurn());
         return moves.length ? moves[stdMath.round((moves.length-1)*stdMath.random())] : null;
     };
-    self.getAIMove = function(algorithm, _, depth, cb, interval, is_aborted) {
-        var boardc, move = null;
-        if (('minimax' === algorithm || 'alphabeta' === algorithm) && is_function(_))
+    self.getAIMove = function(algorithm, opts) {
+        var boardc, move = null, cb;
+        if ('minimax' === algorithm || 'alphabeta' === algorithm)
         {
             boardc = board.clone();
-            move = minimax_move(_, depth, boardc, boardc.turn, CODE[String(options.ai.promotion || 'QUEEN').toUpperCase()] || QUEEN, is_function(cb) ? function(move) {cb(encode_move(move));} : cb, interval, is_aborted || return_false);
+            opts = opts || {};
+            opts.aborted = opts.aborted || return_false;
+            cb = opts.cb;
+            opts.cb = is_function(cb) ? function(move) {cb(encode_move(move));} : cb;
+            move = minimax_move(opts, boardc, boardc.turn, CODE[String(options.ai.promotion || 'QUEEN').toUpperCase()] || QUEEN);
         }
         else if ('mcts' === algorithm)
         {
             boardc = board.clone();
-            move = mcts_move(_, depth, boardc, boardc.turn, CODE[String(options.ai.promotion || 'QUEEN').toUpperCase()] || QUEEN, is_function(cb) ? function(move) {cb(encode_move(move));} : cb, interval, is_aborted || return_false);
+            opts = opts || {};
+            opts.aborted = opts.aborted || return_false;
+            cb = opts.cb;
+            opts.cb = is_function(cb) ? function(move) {cb(encode_move(move));} : cb;
+            move = mcts_move(opts, boardc, boardc.turn, CODE[String(options.ai.promotion || 'QUEEN').toUpperCase()] || QUEEN);
         }
         return encode_move(move);
     };

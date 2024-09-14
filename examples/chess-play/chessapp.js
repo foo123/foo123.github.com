@@ -14,18 +14,19 @@ function ChessApp(args)
         is_stockfish = false, is_random = false,
         stockfish = {
             engine: args.stockfishjs ? new Worker(args.stockfishjs) : null,
-            skill: 0,
+            skill: '0',
             depth: '6',
             sendCMD: function(cmd) {
                 //console.log('send:"'+cmd+'"');
                 if (stockfish.engine) stockfish.engine.postMessage(cmd);
             }
         },
+        T = 1000/30,
         ai = {
-            mcts: {_:10000, depth:6},
-            minimax: {_:null, depth:6}
-        },
-        T = 1000/30;
+            algo: 'mcts',
+            mcts: {iter:2000, depth:6, cb:null, interval:T, aborted:null},
+            minimax: {evaluate:null, depth:6, nmax:function(depth){return depth > 10 ? 2 : (depth > 4 ? 3 : Infinity);}, cb:null, interval:T, aborted:null}
+        };
 
     if (stockfish.engine)
     {
@@ -93,8 +94,7 @@ function ChessApp(args)
     {
         sf_move = function(move) {
             sf_move = null;
-            if (move) domove(move.from, move.to, move.promotion);
-            if (then) then();
+            if (then) then(move);
         };
         stockfish.sendCMD('position startpos moves ' + game.getMoves().join(' '));
         stockfish.sendCMD('go ' + (stockfish.depth && stockfish.depth.length ? ('depth ' + stockfish.depth) : ''));
@@ -109,21 +109,34 @@ function ChessApp(args)
             {
                 setTimeout(function() {
                     var computer_move = game.getRandomMove();
-                    if (computer_plays && computer_move) domove(computer_move.from, computer_move.to, computer_move.promotion);
+                    if (computer_plays && computer_move)
+                    {
+                        domove(computer_move.from, computer_move.to, computer_move.promotion);
+                    }
                 }, 10);
             }
             else if (is_stockfish)
             {
                 setTimeout(function() {
-                    stockfish_move();
+                    stockfish_move(function(computer_move) {
+                        if (computer_plays && computer_move)
+                        {
+                            domove(computer_move.from, computer_move.to, computer_move.promotion);
+                        }
+                    });
                 }, 10);
             }
             else
             {
                 setTimeout(function() {
-                    game.getAIMove('mcts', ai.mcts._, ai.mcts.depth, function(computer_move) {
-                        if (computer_plays && computer_move) domove(computer_move.from, computer_move.to, computer_move.promotion);
-                    }, T, abort_move = do_abort());
+                    ai[ai.algo].cb = function(computer_move) {
+                        if (computer_plays && computer_move)
+                        {
+                            domove(computer_move.from, computer_move.to, computer_move.promotion);
+                        }
+                    };
+                    ai[ai.algo].aborted = abort_move = do_abort();
+                    game.getAIMove(ai.algo, ai[ai.algo]);
                 }, 10);
             }
         }
@@ -196,7 +209,11 @@ function ChessApp(args)
         if (mov)
         {
             abort_move_in_progress();
-            if (is_stockfish) stockfish.sendCMD('ucinewgame');
+            if (is_stockfish)
+            {
+                stockfish.sendCMD('ucinewgame');
+                stockfish.sendCMD('isready');
+            }
             clear_active();
             active_piece = null;
             if (args.moves)
@@ -248,7 +265,7 @@ function ChessApp(args)
                 }
             }
             update_gui();
-            machine_move();
+            setTimeout(machine_move, 1000);
         }
     }
 
@@ -258,7 +275,11 @@ function ChessApp(args)
         if (mov)
         {
             abort_move_in_progress();
-            if (is_stockfish) stockfish.sendCMD('ucinewgame');
+            if (is_stockfish)
+            {
+                stockfish.sendCMD('ucinewgame');
+                stockfish.sendCMD('isready');
+            }
             clear_active();
             active_piece = null;
             if (args.moves)
@@ -316,7 +337,7 @@ function ChessApp(args)
                 m.innerText += (m.innerText.length ? ' ' : '') + (pos1+pos2).toLowerCase() + (game.isCheckMate() ? '#' : (game.isCheck() ? '+' : ''));
             }
             update_gui();
-            machine_move();
+            setTimeout(machine_move, 1000);
         }
     }
 
@@ -340,6 +361,7 @@ function ChessApp(args)
         computer_plays = play_with_computer && (-1 < playwith.indexOf('-human'));
         is_random = play_with_computer && (-1 < playwith.indexOf('random'));
         is_stockfish = play_with_computer /*&& (null != stockfish.engine)*/ && (-1 < playwith.indexOf('stockfish'));
+        ai.algo = -1 < playwith.indexOf('minimax') ? 'minimax' : 'mcts';
         if (options) $('input', options).forEach(function(i) {
             if (is_stockfish) i.checked = true;
             opts[i.id] = !!i.checked;
@@ -357,7 +379,9 @@ function ChessApp(args)
                 stockfish.sendCMD('uci');
                 stockfish.sendCMD('setoption name Skill Level value ' + stockfish.skill);
                 stockfish.sendCMD('ucinewgame');
+                stockfish.sendCMD('isready');
             }
+            machine_move();
         }
         else
         {
@@ -365,7 +389,6 @@ function ChessApp(args)
             addClass(el('hourglass'), 'hide');
             addClass(container, 'human-human');
         }
-        machine_move();
     }
 
     function init()
