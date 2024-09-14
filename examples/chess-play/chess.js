@@ -148,13 +148,19 @@ function evaluate_move(board, move, color)
 function alphabeta(opts, board, color, promotion, d, alpha, beta, is_max)
 {
     // Alpha-Beta MiniMax with given evaluation function algorithm
+    /*
+    The principle behind it is to keep track of the best value that can be achieved by each player: alpha is the minimum score the maximising player is guaranteed, beta is the maximum score the minimising player is guaranteed. The initial values are -infinity and infinity respectively.
+
+    If at any point during the tree search the maximising player finds a move that is valued greater than beta, the search from that parent is stopped. This is because the minimising player on the previous move already has a better option, so will not select that node as a child node during its search. Equally, if the minimising player ever finds a move worth less than alpha, it will stop its search.
+    */
     var moves = null, i = 0, n = 0, mov = null, move = null, score = 0, sgn = 1;
     if (opts.aborted()) return 0;
     sgn = is_max ? 1 : -1;
     if (d >= opts.depth) return opts.evaluate ? sgn*opts.evaluate(board, color) : 0;
-    moves = shuffle(board.all_moves_for(color, promotion));
+    moves = board.all_moves_for(color, promotion);
     if (!moves.length) return -sgn*10000;
-    n = opts.nmax ? stdMath.min(opts.nmax(d), moves.length) : moves.length;
+    shuffle(moves);
+    n = opts.nmax ? stdMath.min(opts.nmax(d, opts.depth), moves.length) : moves.length;
     for (i=0; i<n; ++i)
     {
         mov = moves[i]; move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
@@ -182,20 +188,32 @@ function minimax_move(opts, board, color, promotion)
         ret = is_function(opts.cb) ?
         function(move) {
             board.dispose();
+            opts.depth = opts.depth0;
             opts.cb(move);
         } :
         function(move) {
             board.dispose();
+            opts.depth = opts.depth0;
             return move;
         };
     opts.depth = stdMath.max(opts.depth||0, 1);
     if (opts.depth&1) ++opts.depth; // make it even
+    opts.depth0 = opts.depth;
+    //opts.hash = {};
+    if (opts.deepen) opts.depth = 2;
     if (is_function(opts.cb))
     {
         // async
         opts.interval = opts.interval || 60;
         setTimeout(function next() {
             if (opts.aborted()) return ret(null);
+            if (i >= n)
+            {
+                i = 0;
+                ++opts.depth;
+                if (opts.depth <= opts.depth0) best_move = [];
+                else return ret(best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
+            }
             if (i < n)
             {
                 var mov = moves[i++];
@@ -205,14 +223,16 @@ function minimax_move(opts, board, color, promotion)
                 if (score === alpha) {best_move.push(mov);}
                 if (score > alpha)   {alpha = score; best_move = [mov];}
             }
-            if (i >= n) ret(best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
-            else setTimeout(next, opts.interval);
+            setTimeout(next, opts.interval);
         }, opts.interval);
     }
     else
     {
         // sync
-        for (; i<n; ++i)
+        do
+        {
+        best_move = [];
+        for (i=0; i<n; ++i)
         {
             var mov = moves[i];
             var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
@@ -222,6 +242,8 @@ function minimax_move(opts, board, color, promotion)
             if (score === alpha) {best_move.push(mov);}
             if (score > alpha)   {alpha = score; best_move = [mov];}
         }
+        ++opts.depth;
+        } while (opts.depth <= opts.depth0);
         return ret(!opts.aborted() && best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
     }
 }
@@ -510,7 +532,7 @@ Board[proto] = {
         if (x >= 0 && x < 8 && y >= 0 && y < 8)
         {
             var piece = this._[y][x];
-            if (piece.type) return {color:COLOR[piece.color],type:PIECE[piece.type],symbol:PIECE_SHORT[piece.type]};
+            if (piece.type) return {color:COLOR[piece.color],type:PIECE[piece.type],symbol:PIECE_SHORT[piece.type][BLACK===piece.color ? 'toLowerCase' : 'toUpperCase']()};
         }
     },
     at_s: function(s) {
