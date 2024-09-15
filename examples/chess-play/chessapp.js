@@ -24,8 +24,9 @@ function ChessApp(args)
         T = 1000/30,
         ai = {
             algo: 'mcts',
-            mcts: {iterations:1000, depth:6, search:0, cb:null, interval:T, aborted:null},
-            minimax: {evaluate:null, depth:6, deepen:false, nmax:function(depth){return depth > 10 ? 2 : (depth > 4 ? 4 : Infinity);}, cb:null, interval:T, aborted:null}
+            mcts: {iterations:1000, depth:6, cb:null, interval:T, aborted:null},
+            minimax: {evaluate:null, depth:6, /*deepen:false,*/ nmax:function(depth){return depth > 10 ? 2 : (depth > 4 ? 4 : Infinity);}, cb:null, interval:T, aborted:null},
+            minimaxmcts: {evaluate:null, depth:6, montecarlo:{depth:3, iterations:500}, cb:null, interval:T, aborted:null},
         };
 
     if (stockfish.engine)
@@ -141,7 +142,7 @@ function ChessApp(args)
                         }
                     };
                     ai[ai.algo].aborted = abort_move = do_abort();
-                    game.getAIMove(ai.algo, ai[ai.algo]);
+                    game.getAIMove('minimaxmcts' === ai.algo ? 'minimax' : ai.algo, ai[ai.algo]);
                 }, 10);
             }
         }
@@ -365,12 +366,13 @@ function ChessApp(args)
         play_with_computer = playwith !== 'human-human';
         stockfish.skill = String(skill);
         stockfish.depth = String(depth);
-        ai.minimax.depth = ai.mcts.depth = depth;
+        ai.minimaxmcts.depth = ai.minimax.depth = ai.mcts.depth = depth;
+        ai.minimaxmcts.montecarlo.depth = Math.min(3, Math.round(depth/2));
         ai.mcts.iterations = iter;
         computer_plays = play_with_computer && (-1 < playwith.indexOf('-human'));
         is_random = play_with_computer && (-1 < playwith.indexOf('random'));
         is_stockfish = play_with_computer /*&& (null != stockfish.engine)*/ && (-1 < playwith.indexOf('stockfish'));
-        ai.algo = -1 < playwith.indexOf('minimax') ? 'minimax' : 'mcts';
+        ai.algo = -1 < playwith.indexOf('minimaxmcts') ? 'minimaxmcts' : (-1 < playwith.indexOf('minimax') ? 'minimax' : 'mcts');
         if (options) $('input', options).forEach(function(i) {
             if (is_stockfish) i.checked = true;
             opts[i.id] = !!i.checked;

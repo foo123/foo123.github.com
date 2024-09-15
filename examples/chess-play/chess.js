@@ -153,7 +153,7 @@ function alphabeta(opts, board, color, promotion, d, alpha, beta, is_max)
 
     If at any point during the tree search the maximising player finds a move that is valued greater than beta, the search from that parent is stopped. This is because the minimising player on the previous move already has a better option, so will not select that node as a child node during its search. Equally, if the minimising player ever finds a move worth less than alpha, it will stop its search.
     */
-    var moves = null, i = 0, n = 0, mov = null, move = null, score = 0, sgn = 1;
+    var moves = null, moves_next = null, i = 0, n = 0, j, jj, mov = null, move = null, score = 0, sgn = 1;
     if (opts.aborted()) return 0;
     sgn = is_max ? 1 : -1;
     if (d >= opts.depth) return opts.evaluate ? sgn*opts.evaluate(board, color) : 0;
@@ -164,7 +164,18 @@ function alphabeta(opts, board, color, promotion, d, alpha, beta, is_max)
     for (i=0; i<n; ++i)
     {
         mov = moves[i]; move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
-        score = (opts.evaluate ? 0 : (sgn*evaluate_move(board, move, color))) + alphabeta(opts, board, color, promotion, d+1, alpha, beta, !is_max);
+        score = 0;
+        if (opts.montecarlo && (d === opts.montecarlo.depth))
+        {
+            moves_next = board.all_moves_for(OPPOSITE[color], promotion);
+            for (j=0,jj=opts.montecarlo.iterations||0; j<jj; ++j) score += mcts_playout(opts, board, OPPOSITE[color], promotion, d+1, -sgn, moves_next);
+            score /= jj;
+        }
+        else
+        {
+            score = alphabeta(opts, board, OPPOSITE[color], promotion, d+1, alpha, beta, !is_max);
+        }
+        score += opts.evaluate ? 0 : (sgn*evaluate_move(board, move, color));
         board.unmove(move);
         if (opts.aborted()) return 0;
         if (is_max)
@@ -182,7 +193,7 @@ function alphabeta(opts, board, color, promotion, d, alpha, beta, is_max)
 }
 function minimax_move(opts, board, color, promotion)
 {
-    // Find next move by MiniMax Tree Search with Alpha-Beta Pruning and Iterative Deepening
+    // Find next move by MiniMax Tree Search with Alpha-Beta Pruning (optional MonteCarlo playout evaluation and Iterative Deepening)
     var moves = shuffle(board.all_moves_for(color, promotion)),
         i = 0, n = moves.length, best_move = [],
         alpha = -Infinity, beta = Infinity,
@@ -248,7 +259,7 @@ function minimax_move(opts, board, color, promotion)
         return ret(!opts.aborted() && best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
     }
 }
-function mcts_playout(opts, board, color, promotion, d, alpha, beta, sgn, moves)
+function mcts_playout(opts, board, color, promotion, d, sgn, moves)
 {
     // Monte Carlo Tree Search with random playout evaluation algorithm
     if (opts.aborted()) return 0;
@@ -257,59 +268,11 @@ function mcts_playout(opts, board, color, promotion, d, alpha, beta, sgn, moves)
     if (!moves.length) return -sgn*10000;
     moves = shuffle(moves);
     var mov, move, score, i, n, j, m, moves_next;
-    /*if (!opts.search || (d > opts.search))
-    {*/
-        mov = moves[0];
-        move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
-        score = sgn*evaluate_move(board, move, color) + mcts_playout(opts, board, OPPOSITE[color], promotion, d+1, alpha, beta, -sgn);
-        board.unmove(move);
-        return score;
-    /*}*/
-    /*else if (d < opts.search)
-    {
-        for (i=0,n=moves.length; i<n; ++i)
-        {
-            mov = moves[i]; move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
-            score = sgn*evaluate_move(board, move, color) + mcts_playout(opts, board, color, promotion, d+1, alpha, beta, -sgn);
-            board.unmove(move);
-            if (opts.aborted()) return 0;
-            if (0 < sgn)
-            {
-                if (score >= beta) return beta;   // fail hard beta-cutoff
-                if (score > alpha) alpha = score; // alpha acts like max in MiniMax
-            }
-            else
-            {
-                if (score <= alpha) return alpha; // fail hard alpha-cutoff
-                if (score < beta)   beta = score; // beta acts like min in MiniMax
-            }
-        }
-        return 0 < sgn ? alpha : beta;
-    }
-    else //if (d === opts.search)
-    {
-        for (i=0,n=moves.length; i<n; ++i)
-        {
-            mov = moves[i];
-            move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
-            moves_next = board.all_moves_for(OPPOSITE[color], promotion);
-            score = sgn*evaluate_move(board, move, color);
-            for (j=0,m=opts.iterations; j<m; ++j) score += mcts_playout(opts, board, color, promotion, d+1, alpha, beta, -sgn, moves_next);
-            board.unmove(move);
-            if (opts.aborted()) return 0;
-            if (0 < sgn)
-            {
-                if (score >= beta) return beta;   // fail hard beta-cutoff
-                if (score > alpha) alpha = score; // alpha acts like max in MiniMax
-            }
-            else
-            {
-                if (score <= alpha) return alpha; // fail hard alpha-cutoff
-                if (score < beta)   beta = score; // beta acts like min in MiniMax
-            }
-        }
-        return 0 < sgn ? alpha : beta;
-    }*/
+    mov = moves[0];
+    move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
+    score = sgn*evaluate_move(board, move, color) + mcts_playout(opts, board, OPPOSITE[color], promotion, d+1, -sgn);
+    board.unmove(move);
+    return score;
 }
 function mcts_move(opts, board, color, promotion)
 {
@@ -341,7 +304,7 @@ function mcts_move(opts, board, color, promotion)
                 var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
                 var moves_next = board.all_moves_for(OPPOSITE[color], promotion);
                 var score = evaluate_move(board, move, color);
-                for (var j=0,jm=opts.iterations; j<jm; ++j) score += mcts_playout(opts, board, OPPOSITE[color], promotion, 2, alpha, beta, -1, moves_next);
+                for (var j=0,jm=opts.iterations; j<jm; ++j) score += mcts_playout(opts, board, OPPOSITE[color], promotion, 2, -1, moves_next);
                 board.unmove(move);
                 if (score === alpha) {best_move.push(mov);}
                 if (score > alpha)   {alpha = score; best_move = [mov];}
@@ -359,7 +322,7 @@ function mcts_move(opts, board, color, promotion)
             var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
             var moves_next = board.all_moves_for(OPPOSITE[color], promotion);
             var score = evaluate_move(board, move, color);
-            for (var j=0,jm=opts.iterations; j<jm; ++j) score += mcts_playout(opts, board, OPPOSITE[color], promotion, 2, alpha, beta, -1, moves_next);
+            for (var j=0,jm=opts.iterations; j<jm; ++j) score += mcts_playout(opts, board, OPPOSITE[color], promotion, 2, -1, moves_next);
             board.unmove(move);
             if (opts.aborted()) return ret(null);
             if (score === alpha) {best_move.push(mov);}
