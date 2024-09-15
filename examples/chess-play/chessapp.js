@@ -24,7 +24,7 @@ function ChessApp(args)
         T = 1000/30,
         ai = {
             algo: 'mcts',
-            mcts: {iterations:1000, depth:6, cb:null, interval:T, aborted:null},
+            mcts: {iterations:1000, depth:6, search:0, cb:null, interval:T, aborted:null},
             minimax: {evaluate:null, depth:6, deepen:false, nmax:function(depth){return depth > 10 ? 2 : (depth > 4 ? 4 : Infinity);}, cb:null, interval:T, aborted:null}
         };
 

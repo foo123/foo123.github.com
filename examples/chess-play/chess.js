@@ -182,9 +182,10 @@ function alphabeta(opts, board, color, promotion, d, alpha, beta, is_max)
 }
 function minimax_move(opts, board, color, promotion)
 {
-    // Find next move by MiniMax Tree Search with Alpha-Beta Pruning
+    // Find next move by MiniMax Tree Search with Alpha-Beta Pruning and Iterative Deepening
     var moves = shuffle(board.all_moves_for(color, promotion)),
-        i = 0, n = moves.length, best_move = [], alpha = -Infinity, beta = Infinity,
+        i = 0, n = moves.length, best_move = [],
+        alpha = -Infinity, beta = Infinity,
         ret = is_function(opts.cb) ?
         function(move) {
             board.dispose();
@@ -247,25 +248,75 @@ function minimax_move(opts, board, color, promotion)
         return ret(!opts.aborted() && best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
     }
 }
-function mcts_playout(opts, board, color, promotion, d, sgn, moves)
+function mcts_playout(opts, board, color, promotion, d, alpha, beta, sgn, moves)
 {
-    // Monte Carlo Tree Search with random rollout evaluation algorithm
+    // Monte Carlo Tree Search with random playout evaluation algorithm
     if (opts.aborted()) return 0;
     if (d >= opts.depth) return 0;
     if (!moves) moves = board.all_moves_for(color, promotion);
     if (!moves.length) return -sgn*10000;
     moves = shuffle(moves);
-    var mov = moves[0];
-    var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
-    var score = sgn*evaluate_move(board, move, color) + mcts_playout(opts, board, color, promotion, d+1, -sgn);
-    board.unmove(move);
-    return score;
+    var mov, move, score, i, n, j, m, moves_next;
+    /*if (!opts.search || (d > opts.search))
+    {*/
+        mov = moves[0];
+        move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
+        score = sgn*evaluate_move(board, move, color) + mcts_playout(opts, board, OPPOSITE[color], promotion, d+1, alpha, beta, -sgn);
+        board.unmove(move);
+        return score;
+    /*}*/
+    /*else if (d < opts.search)
+    {
+        for (i=0,n=moves.length; i<n; ++i)
+        {
+            mov = moves[i]; move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
+            score = sgn*evaluate_move(board, move, color) + mcts_playout(opts, board, color, promotion, d+1, alpha, beta, -sgn);
+            board.unmove(move);
+            if (opts.aborted()) return 0;
+            if (0 < sgn)
+            {
+                if (score >= beta) return beta;   // fail hard beta-cutoff
+                if (score > alpha) alpha = score; // alpha acts like max in MiniMax
+            }
+            else
+            {
+                if (score <= alpha) return alpha; // fail hard alpha-cutoff
+                if (score < beta)   beta = score; // beta acts like min in MiniMax
+            }
+        }
+        return 0 < sgn ? alpha : beta;
+    }
+    else //if (d === opts.search)
+    {
+        for (i=0,n=moves.length; i<n; ++i)
+        {
+            mov = moves[i];
+            move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
+            moves_next = board.all_moves_for(OPPOSITE[color], promotion);
+            score = sgn*evaluate_move(board, move, color);
+            for (j=0,m=opts.iterations; j<m; ++j) score += mcts_playout(opts, board, color, promotion, d+1, alpha, beta, -sgn, moves_next);
+            board.unmove(move);
+            if (opts.aborted()) return 0;
+            if (0 < sgn)
+            {
+                if (score >= beta) return beta;   // fail hard beta-cutoff
+                if (score > alpha) alpha = score; // alpha acts like max in MiniMax
+            }
+            else
+            {
+                if (score <= alpha) return alpha; // fail hard alpha-cutoff
+                if (score < beta)   beta = score; // beta acts like min in MiniMax
+            }
+        }
+        return 0 < sgn ? alpha : beta;
+    }*/
 }
 function mcts_move(opts, board, color, promotion)
 {
     // Find next move by Monte Carlo Tree Search
     var moves = shuffle(board.all_moves_for(color, promotion)),
-        i = 0, n = moves.length, best_move = [], max = -Infinity,
+        i = 0, n = moves.length, best_move = [],
+        alpha = -Infinity, beta = Infinity,
         ret = is_function(opts.cb) ?
         function(move) {
             board.dispose();
@@ -290,10 +341,10 @@ function mcts_move(opts, board, color, promotion)
                 var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
                 var moves_next = board.all_moves_for(OPPOSITE[color], promotion);
                 var score = evaluate_move(board, move, color);
-                for (var j=0,jm=opts.iterations; j<jm; ++j) score += mcts_playout(opts, board, color, promotion, 2, -1, moves_next);
+                for (var j=0,jm=opts.iterations; j<jm; ++j) score += mcts_playout(opts, board, OPPOSITE[color], promotion, 2, alpha, beta, -1, moves_next);
                 board.unmove(move);
-                if (score === max) {best_move.push(mov);}
-                if (score > max)   {max = score; best_move = [mov];}
+                if (score === alpha) {best_move.push(mov);}
+                if (score > alpha)   {alpha = score; best_move = [mov];}
             }
             if (i >= n) ret(best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
             else setTimeout(next, opts.interval);
@@ -308,11 +359,11 @@ function mcts_move(opts, board, color, promotion)
             var move = board.move(mov[0], mov[1], mov[2], mov[3], true, promotion);
             var moves_next = board.all_moves_for(OPPOSITE[color], promotion);
             var score = evaluate_move(board, move, color);
-            for (var j=0,jm=opts.iterations; j<jm; ++j) score += mcts_playout(opts, board, color, promotion, 2, -1, moves_next);
+            for (var j=0,jm=opts.iterations; j<jm; ++j) score += mcts_playout(opts, board, OPPOSITE[color], promotion, 2, alpha, beta, -1, moves_next);
             board.unmove(move);
             if (opts.aborted()) return ret(null);
-            if (score === max) {best_move.push(mov);}
-            if (score > max)   {max = score; best_move = [mov];}
+            if (score === alpha) {best_move.push(mov);}
+            if (score > alpha)   {alpha = score; best_move = [mov];}
         }
         return ret(!opts.aborted() && best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
     }
@@ -559,7 +610,7 @@ Board[proto] = {
                     counts: {KING:1,QUEEN:0,ROOK:0,BISHOP:0,KNIGHT:0,PAWN:0}
                 }
             }, pi, pp, y, x,
-            pos = (BLACK === board.turn ? 'b' : 'w')+(board._[board.king.WHITE.y][board.king.WHITE.x]._kc ? 'wkc' : '')+(board._[board.king.WHITE.y][board.king.WHITE.x]._qc ? 'wqc' : '')+(board._[board.king.BLACK.y][board.king.BLACK.x]._kc ? 'bkc' : '')+(board._[board.king.BLACK.y][board.king.BLACK.x]._qc ? 'bqc' : '')
+            pos = (BLACK === board.turn ? 'b' : 'w')+(board.king.WHITE._kc ? 'K' : '')+(board.king.WHITE._qc ? 'Q' : '')+(board.king.BLACK._kc ? 'k' : '')+(board.king.BLACK._qc ? 'q' : '')+(board._epsq() ? '1' : '0')
         ;
         for (y=0; y<8; ++y)
         {
@@ -580,6 +631,53 @@ Board[proto] = {
         }
         board._pieces = p;
         board._pos = pos;
+    },
+    _epsq: function() {
+        // find current en passant square on board
+        var board = this, col = board.turn, y = WHITE === col ? 4 : 3, x, p, m, k, K = board.king[COLOR[col]];
+        for (x=0; x<8; ++x)
+        {
+            p = board._[y][x];
+            if (PAWN !== p.type) continue;
+            if (BLACK === col)
+            {
+                if (x-1 >= 0 && board.halfMoves && board.halfMoves === board._[y][x-1]._mj2 && WHITE === board._[y][x-1].color && EMPTY === board._[y-1][x-1].color)
+                {
+                    // en passant left
+                    m = board.move(y, x, y-1, x-1, true, QUEEN);
+                    k = board.threatened_at_by(K.y, K.x, OPPOSITE[col]);
+                    board.unmove(m);
+                    if (!k) return xy2s(y-1, x-1);
+                }
+                if (x+1 < 8 && board.halfMoves && board.halfMoves === board._[y][x+1]._mj2 && WHITE === board._[y][x+1].color && EMPTY === board._[y-1][x+1].color)
+                {
+                    // en passant right
+                    m = board.move(y, x, y-1, x+1, true, QUEEN);
+                    k = board.threatened_at_by(K.y, K.x, OPPOSITE[col]);
+                    board.unmove(m);
+                    if (!k) return xy2s(y-1, x+1);
+                }
+            }
+            else
+            {
+                if (x-1 >= 0 && board.halfMoves && board.halfMoves === board._[y][x-1]._mj2 && BLACK === board._[y][x-1].color && EMPTY === board._[y+1][x-1].color)
+                {
+                    // en passant left
+                    m = board.move(y, x, y+1, x-1, true, QUEEN);
+                    k = board.threatened_at_by(K.y, K.x, OPPOSITE[col]);
+                    board.unmove(m);
+                    if (!k) return xy2s(y+1, x-1);
+                }
+                if (x+1 < 8 && board.halfMoves && board.halfMoves === board._[y][x+1]._mj2 && BLACK === board._[y][x+1].color && EMPTY === board._[y+1][x+1].color)
+                {
+                    // en passant right
+                    m = board.move(y, x, y+1, x+1, true, QUEEN);
+                    k = board.threatened_at_by(K.y, K.x, OPPOSITE[col]);
+                    board.unmove(m);
+                    if (!k) return xy2s(y+1, x+1);
+                }
+            }
+        }
     },
     pos: function() {
         var board = this;
@@ -1025,52 +1123,6 @@ Board[proto] = {
         }
         return moves;
     },
-    _epsq: function() {
-        var board = this, col = board.turn, y = WHITE === col ? 4 : 3, x, p, m, k, K = board.king[COLOR[col]];
-        for (x=0; x<8; ++x)
-        {
-            p = board._[y][x];
-            if (PAWN !== p.type) continue;
-            if (BLACK === col)
-            {
-                if (x-1 >= 0 && board.halfMoves && board.halfMoves === board._[y][x-1]._mj2 && WHITE === board._[y][x-1].color && EMPTY === board._[y-1][x-1].color)
-                {
-                    // en passant left
-                    m = board.move(y, x, y-1, x-1, true, QUEEN);
-                    k = board.threatened_at_by(K.y, K.x, OPPOSITE[col]);
-                    board.unmove(m);
-                    if (!k) return xy2s(y-1, x-1);
-                }
-                if (x+1 < 8 && board.halfMoves && board.halfMoves === board._[y][x+1]._mj2 && WHITE === board._[y][x+1].color && EMPTY === board._[y-1][x+1].color)
-                {
-                    // en passant right
-                    m = board.move(y, x, y-1, x+1, true, QUEEN);
-                    k = board.threatened_at_by(K.y, K.x, OPPOSITE[col]);
-                    board.unmove(m);
-                    if (!k) return xy2s(y-1, x+1);
-                }
-            }
-            else
-            {
-                if (x-1 >= 0 && board.halfMoves && board.halfMoves === board._[y][x-1]._mj2 && BLACK === board._[y][x-1].color && EMPTY === board._[y+1][x-1].color)
-                {
-                    // en passant left
-                    m = board.move(y, x, y+1, x-1, true, QUEEN);
-                    k = board.threatened_at_by(K.y, K.x, OPPOSITE[col]);
-                    board.unmove(m);
-                    if (!k) return xy2s(y+1, x-1);
-                }
-                if (x+1 < 8 && board.halfMoves && board.halfMoves === board._[y][x+1]._mj2 && BLACK === board._[y][x+1].color && EMPTY === board._[y+1][x+1].color)
-                {
-                    // en passant right
-                    m = board.move(y, x, y+1, x+1, true, QUEEN);
-                    k = board.threatened_at_by(K.y, K.x, OPPOSITE[col]);
-                    board.unmove(m);
-                    if (!k) return xy2s(y+1, x+1);
-                }
-            }
-        }
-    },
     fen: function() {
         // DEFAULT FEN 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
         var board = this, fen = '', castling = '', e, y, x, p;
@@ -1243,6 +1295,9 @@ function Chess(options)
         return !self.isCheck() && self.isKingTrapped();
     };
     self.idleMovesGreaterThan = function(count) {
+        /*
+        The fifty-move rule in chess states that a player can claim a draw if no capture has been made and no pawn has been moved in the last fifty moves (for this purpose a "move" consists of a player completing a turn followed by the opponent completing a turn). The purpose of this rule is to prevent a player with no chance of winning from obstinately continuing to play indefinitely[1] or seeking to win by tiring the opponent.
+        */
         return 2*(count||1) <= board.idleMoves;
     };
     self.isCheckMateImpossible = function() {
@@ -1285,6 +1340,9 @@ function Chess(options)
         return cmi;
     };
     self.isRepetition = function(count) {
+        /*
+        In chess, the threefold repetition rule states that a player may claim a draw if the same position occurs three times during the game. The rule is also known as repetition of position and, in the USCF rules, as triple occurrence of position. Two positions are by definition "the same" if the same types of pieces occupy the same squares, the same player has the move, the remaining castling rights are the same and the possibility to capture en passant is the same. The repeated positions need not occur in succession. The reasoning behind the rule is that if the position occurs three times, no real progress is being made and the game could hypothetically continue indefinitely.
+        */
         return (count||1) <= (board.hash[board.pos()]||0);
     };
     self.isDraw = function() {
