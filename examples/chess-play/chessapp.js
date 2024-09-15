@@ -24,9 +24,9 @@ function ChessApp(args)
         T = 1000/30,
         ai = {
             algo: 'mcts',
-            mcts: {iterations:1000, depth:6, cb:null, interval:T, aborted:null},
-            minimax: {evaluate:null, depth:6, /*deepen:false,*/ nmax:function(depth){return depth > 10 ? 2 : (depth > 4 ? 4 : Infinity);}, cb:null, interval:T, aborted:null},
-            minimaxmcts: {evaluate:null, depth:6, montecarlo:{depth:4, iterations:500}, cb:null, interval:T, aborted:null},
+            mcts: {depth:6, montecarlo:{startAtDepth:1, iterations:1000}, stopped:null, cb:null, interval:T},
+            minimax: {depth:6, maxBreadth:function(depth, maxDepth){return depth > 10 ? 2 : (depth > 4 ? 4 : Infinity);}, stopped:null, cb:null, interval:T},
+            minimaxmcts: {depth:6, montecarlo:{startAtDepth:3, iterations:100}, stopped:null, cb:null, interval:T},
         };
 
     if (stockfish.engine)
@@ -141,8 +141,8 @@ function ChessApp(args)
                             domove(computer_move.from, computer_move.to, computer_move.promotion);
                         }
                     };
-                    ai[ai.algo].aborted = abort_move = do_abort();
-                    game.getAIMove('minimaxmcts' === ai.algo ? 'minimax' : ai.algo, ai[ai.algo]);
+                    ai[ai.algo].stopped = abort_move = do_abort();
+                    game.getAIMove(ai.algo, ai[ai.algo]);
                 }, 10);
             }
         }
@@ -367,8 +367,8 @@ function ChessApp(args)
         stockfish.skill = String(skill);
         stockfish.depth = String(depth);
         ai.minimaxmcts.depth = ai.minimax.depth = ai.mcts.depth = depth;
-        ai.minimaxmcts.montecarlo.depth = depth < 6 ? Math.round(depth/2) : 4;
-        ai.mcts.iterations = iter;
+        ai.minimaxmcts.montecarlo.startAtDepth = depth <= 6 ? Math.round(depth/2) : 4;
+        ai.mcts.montecarlo.iterations = iter;
         computer_plays = play_with_computer && (-1 < playwith.indexOf('-human'));
         is_random = play_with_computer && (-1 < playwith.indexOf('random'));
         is_stockfish = play_with_computer /*&& (null != stockfish.engine)*/ && (-1 < playwith.indexOf('stockfish'));
