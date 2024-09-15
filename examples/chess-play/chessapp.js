@@ -26,7 +26,7 @@ function ChessApp(args)
             algo: 'mcts',
             mcts: {iterations:1000, depth:6, cb:null, interval:T, aborted:null},
             minimax: {evaluate:null, depth:6, /*deepen:false,*/ nmax:function(depth){return depth > 10 ? 2 : (depth > 4 ? 4 : Infinity);}, cb:null, interval:T, aborted:null},
-            minimaxmcts: {evaluate:null, depth:6, montecarlo:{depth:3, iterations:500}, cb:null, interval:T, aborted:null},
+            minimaxmcts: {evaluate:null, depth:6, montecarlo:{depth:4, iterations:500}, cb:null, interval:T, aborted:null},
         };
 
     if (stockfish.engine)
@@ -367,7 +367,7 @@ function ChessApp(args)
         stockfish.skill = String(skill);
         stockfish.depth = String(depth);
         ai.minimaxmcts.depth = ai.minimax.depth = ai.mcts.depth = depth;
-        ai.minimaxmcts.montecarlo.depth = Math.min(3, Math.round(depth/2));
+        ai.minimaxmcts.montecarlo.depth = depth < 6 ? Math.round(depth/2) : 4;
         ai.mcts.iterations = iter;
         computer_plays = play_with_computer && (-1 < playwith.indexOf('-human'));
         is_random = play_with_computer && (-1 < playwith.indexOf('random'));
