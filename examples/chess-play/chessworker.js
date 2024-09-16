@@ -2,13 +2,12 @@
 
 importScripts('./chess.js');
 
-var T = 1000/60,
+var T = 17,//1000/60,
     ai = {
-        algo: 'mcts',
-        mcts: {depth:6, montecarlo:{startAtDepth:1, iterations:1000}},
-        minimax: {depth:6, maxBreadth:function(depth, maxDepth){return depth > 10 ? 2 : (depth > 4 ? 4 : Infinity);}},
-        minimaxmcts: {depth:6, montecarlo:{startAtDepth:3, iterations:100}},
-        minimaxids: {depth:6, deepen:true}
+        mcts: {depth:4, montecarlo:{startAtDepth:1, iterations:1000}},
+        minimax: {depth:4, maxBreadth:function(depth, maxDepth) {return depth > 10 ? 2 : (depth > 4 ? 4 : Infinity);}},
+        minimaxmcts: {depth:4, montecarlo:{startAtDepth:2, iterations:100}},
+        minimaxids: {depth:4, ids:true}
     },
     _stopped = false
 ;

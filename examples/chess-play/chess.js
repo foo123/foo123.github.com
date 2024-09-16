@@ -1,7 +1,7 @@
 /**
 *  chess.js
 *  A simple class to play chess
-*  @VERSION: 0.9.8
+*  @VERSION: 0.9.9
 *
 **/
 !function(root, name, factory) {
@@ -156,9 +156,13 @@ function arrange_moves(moves, best_moves)
     for (var i=indices.length-1; i>=0; --i) moves.unshift(moves.splice(indices[i], 1)[0]);
     return moves;
 }
+function sort_moves(moves, scores)
+{
+    return scores.map(function(s, i) {return [s, i];}).sort(function(a, b) {return b[0]-a[0];}).map(function(si) {return moves[si[1]];});
+}
 function random_playout(opts, board, color, d, sgn, moves)
 {
-    // Random Playout Tree algorithm
+    // Random Playout (Monte Carlo) Tree algorithm
     if (opts.stopped()) return 0;
     if (d >= opts.depth) return 0;
     if (!moves) moves = board.all_moves_for(color);
@@ -220,6 +224,7 @@ function minimax_move(opts, board, color)
 {
     // Find next move by MiniMax Tree Search with Alpha-Beta Pruning (optional MonteCarlo playout evaluation and Iterative Deepening)
     var moves = shuffle(board.all_moves_for(color)),
+        scores = new Array(moves.length),
         i = 0, n = moves.length, best_move = [],
         alpha = -Infinity, beta = Infinity,
         ret = is_function(opts.cb) ?
@@ -235,7 +240,7 @@ function minimax_move(opts, board, color)
         };
     opts.depth = stdMath.max(opts.depth||0, 1);
     opts.depth0 = opts.depth;
-    if (opts.deepen) opts.depth = 2;
+    if (opts.ids) opts.depth = 2; // iterative deepening
     if (is_function(opts.cb))
     {
         // async
@@ -246,7 +251,7 @@ function minimax_move(opts, board, color)
             {
                 i = 0;
                 ++opts.depth;
-                if (opts.depth <= opts.depth0) {arrange_moves(moves, best_move); best_move = [];}
+                if (opts.depth <= opts.depth0) {moves = sort_moves(moves, scores); best_move = [];}
                 else return ret(best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
             }
             if (i < n)
@@ -266,6 +271,7 @@ function minimax_move(opts, board, color)
                 }
                 score += opts.evaluate ? 0 : evaluate_move(board, color, move, moves_next.length);
                 board.unmove(move);
+                scores[i] = score;
                 if (score === alpha) {best_move.push(mov);}
                 else if (score > alpha)   {alpha = score; best_move = [mov];}
             }
@@ -296,11 +302,12 @@ function minimax_move(opts, board, color)
             }
             score += opts.evaluate ? 0 : evaluate_move(board, color, move, moves_next.length);
             board.unmove(move);
+            scores[i] = score;
             if (score === alpha) {best_move.push(mov);}
             else if (score > alpha)   {alpha = score; best_move = [mov];}
         }
         ++opts.depth;
-        if (opts.depth <= opts.depth0) {arrange_moves(moves, best_move); best_move = [];}
+        if (opts.depth <= opts.depth0) {moves = sort_moves(moves, scores); best_move = [];}
         } while (opts.depth <= opts.depth0);
         return ret(!opts.stopped() && best_move.length ? best_move[stdMath.round((best_move.length-1)*stdMath.random())] : null);
     }
@@ -1353,7 +1360,7 @@ Chess[proto] = {
     isGameOver: null,
     winner: null
 };
-Chess.VERSION = "0.9.8";
+Chess.VERSION = "0.9.9";
 
 // export it
 return Chess;

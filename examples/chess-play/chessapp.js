@@ -12,7 +12,14 @@ function ChessApp(args)
         msg, active_piece, move_waiting = null, abort_move = null, sf_move = null, cw_move = null,
         play_with_computer = false, computer_plays = false,
         is_stockfish = false, is_random = false,
-        chessworker = new Worker('./worker.js'),
+        chess = {
+            Chess: args.Chess,
+            worker: new Worker('./chessworker.js'),
+            sendCMD: function(data) {
+                //console.log('send:',data);
+                if (chess.worker) chess.worker.postMessage(data);
+            }
+        },
         stockfish = {
             engine: args.stockfishjs ? new Worker(args.stockfishjs) : null,
             skill: '1',
@@ -24,10 +31,10 @@ function ChessApp(args)
         },
         ai = {
             algo: 'mcts',
-            mcts: {depth:6, montecarlo:{startAtDepth:1, iterations:1000}},
-            minimax: {depth:6},
-            minimaxmcts: {depth:6, montecarlo:{startAtDepth:3, iterations:100}},
-            minimaxids: {depth:6, deepen:true}
+            mcts: {depth:4, montecarlo:{startAtDepth:1, iterations:1000}},
+            minimax: {depth:4},
+            minimaxmcts: {depth:4, montecarlo:{startAtDepth:2, iterations:100}},
+            minimaxids: {depth:4, ids:true}
         };
 
     if (stockfish.engine)
@@ -49,9 +56,10 @@ function ChessApp(args)
             }
         };
     }
-    if (chessworker)
+    if (chess.worker)
     {
-        chessworker.onmessage = function(evt) {
+        chess.worker.onmessage = function(evt) {
+            //console.log('receive:',evt.data);
             if (cw_move && evt.data && evt.data.move)
             {
                 cw_move(evt.data.move);
@@ -101,7 +109,7 @@ function ChessApp(args)
         if (computer_plays)
         {
             if (is_stockfish) stockfish.sendCMD('stop');
-            else chessworker.postMessage({stop:true});
+            else chess.sendCMD({stop:true});
         }
         if (move_waiting)
         {
@@ -120,13 +128,13 @@ function ChessApp(args)
         stockfish.sendCMD('go ' + (stockfish.depth && stockfish.depth.length ? ('depth ' + stockfish.depth) : ''));
     }
 
-    function chessworker_move(then)
+    function chess_move(then)
     {
         cw_move = function(move) {
             cw_move = null;
             if (then) then(move);
         };
-        chessworker.postMessage({bestmove:true, fen:game.getFEN(), algo:ai.algo, opts:ai[ai.algo]});
+        chess.sendCMD({bestmove:true, fen:game.getFEN(), algo:ai.algo, opts:ai[ai.algo]});
     }
 
     function machine_move()
@@ -158,7 +166,7 @@ function ChessApp(args)
             else
             {
                 setTimeout(function() {
-                    chessworker_move(function(computer_move) {
+                    chess_move(function(computer_move) {
                         if (computer_plays && computer_move)
                         {
                             domove(computer_move.from, computer_move.to, computer_move.promotion);
@@ -390,7 +398,7 @@ function ChessApp(args)
         var playwith = (controls  ? (controls.querySelector('select[data-action="playwith"]')||{}).value : null) || 'human-human',
             skill = controls ? parseInt(controls.querySelector('input[data-action="skill"]').value) : 1,
             iter = controls ? parseInt(controls.querySelector('input[data-action="iterations"]').value) : 1000,
-            depth = controls ? parseInt(controls.querySelector('input[data-action="depth"]').value) : 6,
+            depth = controls ? parseInt(controls.querySelector('input[data-action="depth"]').value) : 4,
             opts = {ai:{promotion:'QUEEN'}};
         play_with_computer = playwith !== 'human-human';
         stockfish.skill = String(skill);
@@ -455,8 +463,6 @@ function ChessApp(args)
 
     function init()
     {
-        //var fen = (new args.Chess()).getFEN();
-        //console.log(fen, fen === (new args.Chess(fen)).getFEN());
         addEvent(container, 'click', function(evt) {
             evt.preventDefault && evt.preventDefault();
             if (computer_plays) return false;
