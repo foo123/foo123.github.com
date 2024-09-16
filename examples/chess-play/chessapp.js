@@ -9,24 +9,25 @@ function ChessApp(args)
     args = args || {};
     var container = args.container, controls = args.controls, options = args.options,
         game, screen = container.parentNode, squares, moves,
-        msg, active_piece, move_waiting = null, abort_move = null, sf_move = null,
+        msg, active_piece, move_waiting = null, abort_move = null, sf_move = null, cw_move = null,
         play_with_computer = false, computer_plays = false,
         is_stockfish = false, is_random = false,
+        chessworker = new Worker('./worker.js'),
         stockfish = {
             engine: args.stockfishjs ? new Worker(args.stockfishjs) : null,
-            skill: '0',
+            skill: '1',
             depth: '6',
             sendCMD: function(cmd) {
                 //console.log('send:"'+cmd+'"');
                 if (stockfish.engine) stockfish.engine.postMessage(cmd);
             }
         },
-        T = 1000/30,
         ai = {
             algo: 'mcts',
-            mcts: {depth:6, montecarlo:{startAtDepth:1, iterations:1000}, stopped:null, cb:null, interval:T},
-            minimax: {depth:6, maxBreadth:function(depth, maxDepth){return depth > 10 ? 2 : (depth > 4 ? 4 : Infinity);}, stopped:null, cb:null, interval:T},
-            minimaxmcts: {depth:6, montecarlo:{startAtDepth:3, iterations:100}, stopped:null, cb:null, interval:T},
+            mcts: {depth:6, montecarlo:{startAtDepth:1, iterations:1000}},
+            minimax: {depth:6},
+            minimaxmcts: {depth:6, montecarlo:{startAtDepth:3, iterations:100}},
+            minimaxids: {depth:6, deepen:true}
         };
 
     if (stockfish.engine)
@@ -45,6 +46,15 @@ function ChessApp(args)
                 {
                     sf_move({from:match[1], to:match[2], promotion:match[3]});
                 }
+            }
+        };
+    }
+    if (chessworker)
+    {
+        chessworker.onmessage = function(evt) {
+            if (cw_move && evt.data && evt.data.move)
+            {
+                cw_move(evt.data.move);
             }
         };
     }
@@ -87,8 +97,12 @@ function ChessApp(args)
             abort_move(true);
         }
         abort_move = null;
-        sf_move = null;
-        if (computer_plays && is_stockfish) stockfish.sendCMD('stop');
+        sf_move = cw_move = null;
+        if (computer_plays)
+        {
+            if (is_stockfish) stockfish.sendCMD('stop');
+            else chessworker.postMessage({stop:true});
+        }
         if (move_waiting)
         {
             clearTimeout(move_waiting);
@@ -104,6 +118,15 @@ function ChessApp(args)
         };
         stockfish.sendCMD('position startpos moves ' + game.getMoves().join(' '));
         stockfish.sendCMD('go ' + (stockfish.depth && stockfish.depth.length ? ('depth ' + stockfish.depth) : ''));
+    }
+
+    function chessworker_move(then)
+    {
+        cw_move = function(move) {
+            cw_move = null;
+            if (then) then(move);
+        };
+        chessworker.postMessage({bestmove:true, fen:game.getFEN(), algo:ai.algo, opts:ai[ai.algo]});
     }
 
     function machine_move()
@@ -135,14 +158,20 @@ function ChessApp(args)
             else
             {
                 setTimeout(function() {
-                    ai[ai.algo].cb = function(computer_move) {
+                    chessworker_move(function(computer_move) {
+                        if (computer_plays && computer_move)
+                        {
+                            domove(computer_move.from, computer_move.to, computer_move.promotion);
+                        }
+                    });
+                    /*ai[ai.algo].cb = function(computer_move) {
                         if (computer_plays && computer_move)
                         {
                             domove(computer_move.from, computer_move.to, computer_move.promotion);
                         }
                     };
                     ai[ai.algo].stopped = abort_move = do_abort();
-                    game.getAIMove(ai.algo, ai[ai.algo]);
+                    game.getAIMove(ai.algo, ai[ai.algo]);*/
                 }, 10);
             }
         }
@@ -366,7 +395,7 @@ function ChessApp(args)
         play_with_computer = playwith !== 'human-human';
         stockfish.skill = String(skill);
         stockfish.depth = String(depth);
-        ai.minimaxmcts.depth = ai.minimax.depth = ai.mcts.depth = depth;
+        ai.minimaxmcts.depth = ai.minimaxids.depth = ai.minimax.depth = ai.mcts.depth = depth;
         ai.minimaxmcts.montecarlo.startAtDepth = depth <= 6 ? Math.round(depth/2) : 4;
         ai.mcts.montecarlo.iterations = iter;
         computer_plays = play_with_computer && (-1 < playwith.indexOf('-human'));
