@@ -34,7 +34,8 @@ function ChessApp(args)
             mcts: {depth:4, montecarlo:{startAtDepth:1, iterations:1000}},
             minimax: {depth:4},
             minimaxmcts: {depth:4, montecarlo:{startAtDepth:2, iterations:100}},
-            minimaxids: {depth:4, ids:true}
+            minimaxids: {depth:4},
+            minimaxmctsids: {depth:4, montecarlo:{startAtDepth:2, iterations:100}},
         };
 
     if (stockfish.engine)
@@ -172,14 +173,13 @@ function ChessApp(args)
                             domove(computer_move.from, computer_move.to, computer_move.promotion);
                         }
                     });
-                    /*ai[ai.algo].cb = function(computer_move) {
+                    /*ai[ai.algo].stopped = abort_move = do_abort();
+                    game.getAIMove(ai[ai.algo], function(computer_move) {
                         if (computer_plays && computer_move)
                         {
                             domove(computer_move.from, computer_move.to, computer_move.promotion);
                         }
-                    };
-                    ai[ai.algo].stopped = abort_move = do_abort();
-                    game.getAIMove(ai.algo, ai[ai.algo]);*/
+                    }, 33/*1000/30* /);*/
                 }, 10);
             }
         }
@@ -399,19 +399,22 @@ function ChessApp(args)
             skill = controls ? parseInt(controls.querySelector('input[data-action="skill"]').value) : 1,
             iter = controls ? parseInt(controls.querySelector('input[data-action="iterations"]').value) : 1000,
             depth = controls ? parseInt(controls.querySelector('input[data-action="depth"]').value) : 4,
-            opts = {ai:{promotion:'QUEEN'}};
+            opts = {};
         play_with_computer = playwith !== 'human-human';
         stockfish.skill = String(skill);
         stockfish.depth = String(depth);
-        ai.minimaxmcts.depth = ai.minimaxids.depth = ai.minimax.depth = ai.mcts.depth = depth;
-        ai.minimaxmcts.montecarlo.startAtDepth = depth <= 6 ? Math.round(depth/2) : 4;
+        ai.minimaxmctsids.depth = ai.minimaxmcts.depth = ai.minimaxids.depth = ai.minimax.depth = ai.mcts.depth = depth;
+        ai.minimaxmctsids.montecarlo.startAtDepth = ai.minimaxmcts.montecarlo.startAtDepth = depth <= 6 ? Math.round(depth/2) : 4;
+        ai.minimaxmctsids.montecarlo.iterations = ai.minimaxmcts.montecarlo.iterations = depth-ai.minimaxmcts.montecarlo.startAtDepth < 3 ? (depth-ai.minimaxmcts.montecarlo.startAtDepth)*10 : 100;
         ai.mcts.montecarlo.iterations = iter;
         computer_plays = play_with_computer && (-1 < playwith.indexOf('-human'));
         is_random = play_with_computer && (-1 < playwith.indexOf('random'));
         is_stockfish = play_with_computer /*&& (null != stockfish.engine)*/ && (-1 < playwith.indexOf('stockfish'));
-        ai.algo = -1 < playwith.indexOf('minimaxmcts') ? 'minimaxmcts' : (-1 < playwith.indexOf('minimax') ? 'minimax' : 'mcts');
+        ai.algo = playwith.replace('human', '').replace('random', '').replace('-', '');
+        if ('' === ai.algo) ai.algo = 'mcts';
+        console.log(playwith, ai.algo);
         if (options) $('input', options).forEach(function(i) {
-            if (is_stockfish) i.checked = true;
+            if (play_with_computer) i.checked = true;
             opts[i.id] = !!i.checked;
         });
         make(container, args.moves, game = new args.Chess(opts), squares = $$('div'), moves = (args.moves ? $$('div') : null));
