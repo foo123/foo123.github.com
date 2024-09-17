@@ -900,6 +900,7 @@ Board[proto] = {
         }
         return moves;
     },
+    encode_move: encode_move,
     fen: function() {
         // DEFAULT FEN 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
         var board = this, fen = '', castling = '', e, y, x, p;
@@ -981,8 +982,8 @@ function Chess(options)
         var move = null;
         opts = opts || {};
         opts.promotion = opts.promotion || 'QUEEN';
-        move = (new Chess.SearchStrategy(this, opts)).bestMoveFor(board.turn, cb, interval);
-        return encode_move(move);
+        move = Chess.SearchStrategy.getPreferredStrategy(this, opts).bestMoveFor(board.turn, cb, interval);
+        return move;
     };
     self.doMove = function(pos1, pos2, promoted) {
         var coords1 = s2xy(pos1),
@@ -1229,23 +1230,24 @@ function alphabeta(opts, board, color, d, alpha, beta, sgn, moves)
     */
     var moves_next = null, i = 0, n = 0, j = 0, jj = 0, mov = null, move = null, score = 0, entry = null, best_move = null;
     if (opts.stopped()) return 0;
-    entry = opts.ids && opts.tt ? opts.tt[(BLACK === color ? 'b-' : 'w-')+board.key()] : null;
+    entry = opts.tt ? opts.tt[(BLACK === color ? 'b-' : 'w-')+board.key()] : null;
     if (entry && (entry.depth <= d))
     {
         // narrow alpha/beta
-        if (entry.score >= beta)  alpha = stdMath.max(alpha, entry.score);
+        /*if (entry.score >= beta)  alpha = stdMath.max(alpha, entry.score);
         if (entry.score <= alpha) beta = stdMath.min(beta, entry.score);
-        if (alpha >= beta) return entry.score;
-        /*if (0 < sgn)
+        if (alpha >= beta) return entry.score;*/
+        if (0 < sgn)
         {
-            //if (entry.score >= beta) return beta;
-            if (entry.score > alpha) alpha = entry.score;
+            if (entry.score >= beta)  return beta;
+            if (entry.score > alpha)  alpha = entry.score;
         }
         else
         {
-            //if (entry.score <= alpha) return alpha;
-            if (entry.score < beta)  beta = entry.score;
-        }*/
+            if (entry.score <= alpha) return alpha;
+            if (entry.score < beta)   beta = entry.score;
+        }
+        if (alpha >= beta) return entry.score;
     }
     if (d >= opts.depth) return opts.evaluate ? sgn*opts.evaluate(board, color) : 0;
     if (!moves) moves = board.all_moves_for(color);
@@ -1270,31 +1272,17 @@ function alphabeta(opts, board, color, d, alpha, beta, sgn, moves)
         board.unmove(move);
         if (0 < sgn)
         {
-            if (score >= beta)
-            {
-                return beta;   // fail hard beta-cutoff
-            }
-            if (score > alpha)
-            {
-                alpha = score; // alpha acts like max in MiniMax
-                //best_move = move;
-            }
+            if (score >= beta)  return beta;   // fail hard beta-cutoff
+            if (score > alpha)  alpha = score; // alpha acts like max in MiniMax
         }
         else
         {
-            if (score <= alpha)
-            {
-                return alpha; // fail hard alpha-cutoff
-            }
-            if (score < beta)
-            {
-                beta = score; // beta acts like min in MiniMax
-                //best_move = move;
-            }
+            if (score <= alpha) return alpha; // fail hard alpha-cutoff
+            if (score < beta)   beta = score; // beta acts like min in MiniMax
         }
     }
     // memoize in transposition table
-    if (opts.ids && opts.tt) opts.tt[(BLACK === color ? 'b-' : 'w-')+board.key()] = {depth:d, score:0 < sgn ? alpha : beta/*, move:best_move*/};
+    if (opts.tt) opts.tt[(BLACK === color ? 'b-' : 'w-')+board.key()] = {depth:d, score:0 < sgn ? alpha : beta};
     return 0 < sgn ? alpha : beta;
 }
 function SearchStrategy(game, opts)
@@ -1312,82 +1300,57 @@ SearchStrategy[proto] = {
     },
     game: null,
     opts: null,
-    bestMoveFor: function(color, cb, interval) {
-        // Find best move by MiniMax Tree Search Strategy with Alpha-Beta Pruning and optional MonteCarlo playout evaluation and Iterative Deepening w/ memoized Transposition Table
-        var self = this, board = self.game.getBoard().clone(), opts = {};
-        board.promotion = CODE[String(opts.promotion || 'QUEEN').toUpperCase()] || QUEEN;
-        var moves = shuffle(board.all_moves_for(color)),
-            scores = new Array(moves.length),
-            i = 0, n = moves.length, best_move = [],
-            alpha = -Infinity, beta = Infinity,
-            ret = is_function(cb) ?
-            function(move) {
-                board.dispose();
-                cb(move);
-            } :
-            function(move) {
-                board.dispose();
-                return move;
-            };
-        opts.stopped = self.opts.stopped || return_false;
-        opts.evaluate = self.opts.evaluate;
-        opts.ids = self.opts.ids;
-        opts.montecarlo = self.opts.montecarlo;
-        opts.maxBreadth = self.opts.maxBreadth;
-        opts.depth = stdMath.max(self.opts.depth||0, 1);
-        opts.depthM = opts.depth;
-        opts.tt = null;//{}; // memoized transposition table
-        opts.renew = opts.tt ? true : false;
-        if (opts.ids) opts.depth = stdMath.min(2, opts.depthM); // iterative deepening
-        if (is_function(cb))
-        {
-            // async
-            interval = interval || 60;
-            setTimeout(function next() {
-                if (opts.stopped()) return ret(null);
-                if (i >= n)
-                {
-                    i = 0;
-                    ++opts.depth;
-                    if (opts.depth <= opts.depthM) {moves = sort_moves(moves, scores); best_move = []; if (opts.renew) opts.tt = {};}
-                    else return ret(best_move.length ? encode_move(best_move[stdMath.round((best_move.length-1)*stdMath.random())]) : null);
-                }
-                if (opts.montecarlo && (opts.depth !== opts.depthM) && (opts.depth === opts.montecarlo.startAtDepth)) opts.depth = opts.depthM;
-                if (i < n)
-                {
-                    var mov = moves[i];
-                    var move = board.move(mov[0], mov[1], mov[2], mov[3], true);
-                    var moves_next = board.all_moves_for(OPPOSITE[color])
-                    var score = 0;
-                    if (opts.montecarlo && (1 === opts.montecarlo.startAtDepth))
-                    {
-                        for (var j=0,jj=opts.montecarlo.iterations||0; j<jj; ++j) score += random_playout(opts, board, OPPOSITE[color], 2, -1, moves_next);
-                        score /= jj;
-                    }
-                    else
-                    {
-                        score = alphabeta(opts, board, OPPOSITE[color], 2, alpha, beta, -1, moves_next);
-                    }
-                    score += opts.evaluate ? 0 : evaluate_move(board, color, move, moves_next.length);
-                    board.unmove(move);
-                    scores[i] = score;
-                    if (score === alpha) {best_move.push(mov);}
-                    else if (score > alpha) {alpha = score; best_move = [mov];}
-                    ++i;
-                }
-                setTimeout(next, interval);
-            }, interval);
-        }
-        else
-        {
-            // sync
-            do
+    // ovewrite
+    bestMoveFor: function(color, cb, interval) {}
+};
+SearchStrategy.MiniMax = function(game, opts) {
+    SearchStrategy.call(this, game, opts);
+};
+SearchStrategy.MiniMax[proto] = Object.create(SearchStrategy[proto]);
+SearchStrategy.MiniMax[proto].constructor = SearchStrategy.MiniMax;
+SearchStrategy.MiniMax[proto].bestMoveFor = function(color, cb, interval) {
+    // Find best move by MiniMax Tree Search Strategy with Alpha-Beta Pruning and optional MonteCarlo playout evaluation and Iterative Deepening w/ memoized Transposition Table
+    var self = this, board = self.game.getBoard().clone(), opts = {};
+    board.promotion = CODE[String(opts.promotion || 'QUEEN').toUpperCase()] || QUEEN;
+    var moves = shuffle(board.all_moves_for(color)),
+        scores = new Array(moves.length),
+        i = 0, n = moves.length, best_move = [],
+        alpha = -Infinity, beta = Infinity,
+        ret = is_function(cb) ?
+        function(move) {
+            board.dispose();
+            cb(move);
+        } :
+        function(move) {
+            board.dispose();
+            return move;
+        };
+    opts.stopped = self.opts.stopped || return_false;
+    opts.evaluate = self.opts.evaluate;
+    opts.ids = self.opts.ids;
+    opts.montecarlo = self.opts.montecarlo;
+    opts.maxBreadth = self.opts.maxBreadth;
+    opts.depth = stdMath.max(self.opts.depth||0, 1);
+    opts.depthM = opts.depth;
+    opts.tt = null;//{}; // memoized transposition table
+    opts.renew = opts.tt ? true : false;
+    if (opts.ids) opts.depth = stdMath.min(2, opts.depthM); // iterative deepening
+    if (is_function(cb))
+    {
+        // async
+        interval = interval || 60;
+        setTimeout(function next() {
+            if (opts.stopped()) return ret(null);
+            if (i >= n)
             {
-            best_move = [];
+                i = 0;
+                ++opts.depth;
+                if (opts.depth <= opts.depthM) {moves = sort_moves(moves, scores); best_move = []; if (opts.renew) opts.tt = {};}
+                else return ret(best_move.length ? board.encode_move(best_move[stdMath.round((best_move.length-1)*stdMath.random())]) : null);
+            }
             if (opts.montecarlo && (opts.depth !== opts.depthM) && (opts.depth === opts.montecarlo.startAtDepth)) opts.depth = opts.depthM;
-            for (i=0; i<n; ++i)
+            if (i < n)
             {
-                if (opts.stopped()) return ret(null);
                 var mov = moves[i];
                 var move = board.move(mov[0], mov[1], mov[2], mov[3], true);
                 var moves_next = board.all_moves_for(OPPOSITE[color])
@@ -1406,13 +1369,48 @@ SearchStrategy[proto] = {
                 scores[i] = score;
                 if (score === alpha) {best_move.push(mov);}
                 else if (score > alpha) {alpha = score; best_move = [mov];}
+                ++i;
             }
-            ++opts.depth;
-            if (opts.depth <= opts.depthM) {moves = sort_moves(moves, scores); best_move = []; if (opts.renew) opts.tt = {};}
-            } while (opts.depth <= opts.depthM);
-            return ret(!opts.stopped() && best_move.length ? encode_move(best_move[stdMath.round((best_move.length-1)*stdMath.random())]) : null);
-        }
+            setTimeout(next, interval);
+        }, interval);
     }
+    else
+    {
+        // sync
+        do
+        {
+        best_move = [];
+        if (opts.montecarlo && (opts.depth !== opts.depthM) && (opts.depth === opts.montecarlo.startAtDepth)) opts.depth = opts.depthM;
+        for (i=0; i<n; ++i)
+        {
+            if (opts.stopped()) return ret(null);
+            var mov = moves[i];
+            var move = board.move(mov[0], mov[1], mov[2], mov[3], true);
+            var moves_next = board.all_moves_for(OPPOSITE[color])
+            var score = 0;
+            if (opts.montecarlo && (1 === opts.montecarlo.startAtDepth))
+            {
+                for (var j=0,jj=opts.montecarlo.iterations||0; j<jj; ++j) score += random_playout(opts, board, OPPOSITE[color], 2, -1, moves_next);
+                score /= jj;
+            }
+            else
+            {
+                score = alphabeta(opts, board, OPPOSITE[color], 2, alpha, beta, -1, moves_next);
+            }
+            score += opts.evaluate ? 0 : evaluate_move(board, color, move, moves_next.length);
+            board.unmove(move);
+            scores[i] = score;
+            if (score === alpha) {best_move.push(mov);}
+            else if (score > alpha) {alpha = score; best_move = [mov];}
+        }
+        ++opts.depth;
+        if (opts.depth <= opts.depthM) {moves = sort_moves(moves, scores); best_move = []; if (opts.renew) opts.tt = {};}
+        } while (opts.depth <= opts.depthM);
+        return ret(!opts.stopped() && best_move.length ? board.encode_move(best_move[stdMath.round((best_move.length-1)*stdMath.random())]) : null);
+    }
+};
+SearchStrategy.getPreferredStrategy = function(game, opts) {
+    return new SearchStrategy.MiniMax(game, opts);
 };
 Chess.SearchStrategy = SearchStrategy;
 

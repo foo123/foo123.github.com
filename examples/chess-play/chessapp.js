@@ -56,6 +56,7 @@ function ChessApp(args)
                 }
             }
         };
+        console.log('stockfish.engine running');
     }
     if (chess.worker)
     {
@@ -66,6 +67,7 @@ function ChessApp(args)
                 cw_move(evt.data.move);
             }
         };
+        console.log('chess.worker running');
     }
 
     function update_gui()
@@ -161,6 +163,10 @@ function ChessApp(args)
                         {
                             domove(computer_move.from, computer_move.to, computer_move.promotion);
                         }
+                        else
+                        {
+                            console.log('ignored move', computer_move);
+                        }
                     });
                 }, 10);
             }
@@ -172,12 +178,20 @@ function ChessApp(args)
                         {
                             domove(computer_move.from, computer_move.to, computer_move.promotion);
                         }
+                        else
+                        {
+                            console.log('ignored move', computer_move);
+                        }
                     });
                     /*ai[ai.algo].stopped = abort_move = do_abort();
                     game.getAIMove(ai[ai.algo], function(computer_move) {
                         if (computer_plays && computer_move)
                         {
                             domove(computer_move.from, computer_move.to, computer_move.promotion);
+                        }
+                        else
+                        {
+                            console.log('ignored move', computer_move);
                         }
                     }, 33/*1000/30* /);*/
                 }, 10);
@@ -404,13 +418,13 @@ function ChessApp(args)
         stockfish.skill = String(skill);
         stockfish.depth = String(depth);
         ai.minimaxmctsids.depth = ai.minimaxmcts.depth = ai.minimaxids.depth = ai.minimax.depth = ai.mcts.depth = depth;
-        ai.minimaxmctsids.montecarlo.startAtDepth = ai.minimaxmcts.montecarlo.startAtDepth = depth <= 6 ? Math.round(depth/2) : 4;
-        ai.minimaxmctsids.montecarlo.iterations = ai.minimaxmcts.montecarlo.iterations = depth-ai.minimaxmcts.montecarlo.startAtDepth < 3 ? (depth-ai.minimaxmcts.montecarlo.startAtDepth)*10 : 100;
+        ai.minimaxmctsids.montecarlo.startAtDepth = ai.minimaxmcts.montecarlo.startAtDepth = depth < 6 ? Math.round(depth/2) : 3;
+        ai.minimaxmctsids.montecarlo.iterations = ai.minimaxmcts.montecarlo.iterations = (depth-ai.minimaxmcts.montecarlo.startAtDepth)*10;
         ai.mcts.montecarlo.iterations = iter;
         computer_plays = play_with_computer && (-1 < playwith.indexOf('-human'));
         is_random = play_with_computer && (-1 < playwith.indexOf('random'));
         is_stockfish = play_with_computer /*&& (null != stockfish.engine)*/ && (-1 < playwith.indexOf('stockfish'));
-        ai.algo = playwith.replace('human', '').replace('random', '').replace('-', '');
+        ai.algo = playwith.replaceAll('human', '').replaceAll('random', '').replaceAll('-', '');
         if ('' === ai.algo) ai.algo = 'mcts';
         console.log(playwith, ai.algo);
         if (options) $('input', options).forEach(function(i) {
