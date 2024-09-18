@@ -103,7 +103,7 @@ function clone_piece(piece)
 }
 function clone_move(move)
 {
-    return move && move.length ? [clone_piece(move[0]), move[1], move[2], move[3], move[4], clone_piece(move[5]), move[6], move[7], move[8], move[9], move[10], move[11]] : move;
+    return move && move.length ? [clone_piece(move[0]), move[1], move[2], move[3], move[4], clone_piece(move[5]), move[6], move[7], move[8], move[9], move[10], move[11], move[12]] : move;
 }
 function check_and_add(board, K, color, moves, y1, x1, y, x)
 {
@@ -315,7 +315,6 @@ Board[proto] = {
     turn: 0,
     halfMoves: 0,
     idleMoves: 0,
-    _idleMoves: 0,
     king: null,
     left: null,
     _pos: null,
@@ -449,7 +448,7 @@ Board[proto] = {
     },
     move: function(y1, x1, y2, x2, ret_move) {
         var board = this, promotion = board.promotion || QUEEN, p1 = board._[y1][x1], p2 = board._[y2][x2], ep, pp, R, y,
-            K = board.king[COLOR[p1.color]], kc = K._kc, qc = K._qc, moved = p1._m;
+            K = board.king[COLOR[p1.color]], kc = K._kc, qc = K._qc, moved = p1._m, idm = board.idleMoves;
         board._[y1][x1] = NONE;
         board.__[xy2i(y1, x1)] = ' ';
         if (PAWN === p1.type && ((WHITE === p1.color && 7 === y2) || (BLACK === p1.color && 0 === y2)))
@@ -516,12 +515,11 @@ Board[proto] = {
         }
         else
         {
-            board._idleMoves = board.idleMoves;
             board.idleMoves = 0;
         }
         if (PAWN === p1.type && p1._ep && 1 < stdMath.abs(y2-y1)) p1._mj2 = board.halfMoves;
         board._key = null;
-        return ret_move ? [p1, y1, x1, y2, x2, p2, kc, qc, moved, promotion, ep, pp] : null;
+        return ret_move ? [p1, y1, x1, y2, x2, p2, kc, qc, moved, promotion, ep, pp, idm] : null;
     },
     unmove: function(move) {
         var board = this, K = board.king[COLOR[move[0].color]], R, x1, x2, y;
@@ -574,8 +572,7 @@ Board[proto] = {
             move[0]._m = move[8];
         }
         --board.halfMoves;
-        if (NONE === move[5] && PAWN !== move[0].type) --board.idleMoves;
-        else board.idleMoves = board._idleMoves;
+        board.idleMoves = move[12];
         board._key = null;
     },
     threatened_at_by: function(y, x, col) {
@@ -954,7 +951,7 @@ function Chess(options)
     self.getBoard = function() {
         return board;
     };
-    self.getMoves = function() {
+    self.getMovesUpToNow = function() {
         return board.history.map(function(m) {
             //[p1, y1, x1, y2, x2, p2, kc, qc, moved, promotion, ep, pp]
             return xy2s(m[1], m[2]) + xy2s(m[3], m[4]) + (m[11] ? PIECE_SHORT[m[11]].toLowerCase() : '');
@@ -1133,7 +1130,7 @@ Chess[proto] = {
     promoteTo: null,
     whoseTurn: null,
     getBoard: null,
-    getMoves: null,
+    getMovesUpToNow: null,
     getFEN: null,
     getPieceAt: null,
     getPossibleMovesAt: null,
@@ -1172,14 +1169,14 @@ function evaluate_move(board, color, move, opponent_moves)
         capture_gain = !taken || (NONE === taken) ? 0 : VALUE[taken.type-1],
         material_gain = promotion_gain + capture_gain,
         opponent_mobility = null != opponent_moves ? 0.2*opponent_moves : 0,
-        closeness_to_king = 0, d1, d2;
+        close_to_opposite_king = 0, d1, d2;
     if (!material_gain)
     {
         d1 = stdMath.abs(move[2]-opK.x)+stdMath.abs(move[1]-opK.y);
         d2 = stdMath.abs(move[4]-opK.x)+stdMath.abs(move[3]-opK.y);
-        closeness_to_king = 0.1*(d2 > d1 ? (-d2) : (d2 < d1 ? (16-d2) : 0));
+        close_to_opposite_king = 0.1*(d2 > d1 ? (-d2) : (d2 < d1 ? (16-d2) : 0));
     }
-    return material_gain - opponent_mobility + closeness_to_king;
+    return material_gain - opponent_mobility + close_to_opposite_king;
 }
 function shuffle(a, a0, a1)
 {
@@ -1228,8 +1225,9 @@ function alphabeta(opts, board, color, d, alpha, beta, sgn, moves)
 
     If at any point during the tree search the maximising player finds a move that is valued greater than beta, the search from that parent is stopped. This is because the minimising player on the previous move already has a better option, so will not select that node as a child node during its search. Equally, if the minimising player ever finds a move worth less than alpha, it will stop its search.
     */
-    var moves_next = null, i = 0, n = 0, j = 0, jj = 0, mov = null, move = null, score = 0, entry = null, best_move = null;
+    var moves_next = null, i = 0, n = 0, j = 0, jj = 0, mov = null, move = null, score = 0, entry = null;
     if (opts.stopped()) return 0;
+    if (d >= opts.depth) return opts.evaluate ? sgn*opts.evaluate(board, color) : 0;
     entry = opts.tt ? opts.tt[(BLACK === color ? 'b-' : 'w-')+board.key()] : null;
     if (entry && (entry.depth <= d))
     {
@@ -1249,7 +1247,6 @@ function alphabeta(opts, board, color, d, alpha, beta, sgn, moves)
         }
         if (alpha >= beta) return entry.score;
     }
-    if (d >= opts.depth) return opts.evaluate ? sgn*opts.evaluate(board, color) : 0;
     if (!moves) moves = board.all_moves_for(color);
     if (!moves.length) return -sgn*(board.threatened_at_by(board.king[COLOR[color]].y, board.king[COLOR[color]].x, OPPOSITE[color]) ? (VALUE[KING-1]) : (VALUE[KING-1]/2));
     shuffle(moves);
@@ -1281,7 +1278,6 @@ function alphabeta(opts, board, color, d, alpha, beta, sgn, moves)
             if (score < beta)   beta = score; // beta acts like min in MiniMax
         }
     }
-    // memoize in transposition table
     if (opts.tt) opts.tt[(BLACK === color ? 'b-' : 'w-')+board.key()] = {depth:d, score:0 < sgn ? alpha : beta};
     return 0 < sgn ? alpha : beta;
 }
@@ -1300,7 +1296,7 @@ SearchStrategy[proto] = {
     },
     game: null,
     opts: null,
-    // ovewrite
+    // overwrite
     findBestMove: function(color, cb, interval) {}
 };
 SearchStrategy.MiniMax = function(game, opts) {

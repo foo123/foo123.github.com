@@ -127,7 +127,7 @@ function ChessApp(args)
             sf_move = null;
             if (then) then(move);
         };
-        stockfish.sendCMD('position startpos moves ' + game.getMoves().join(' '));
+        stockfish.sendCMD('position startpos moves ' + game.getMovesUpToNow().join(' '));
         stockfish.sendCMD('go ' + (stockfish.depth && stockfish.depth.length ? ('depth ' + stockfish.depth) : ''));
     }
 
@@ -541,6 +541,7 @@ function ChessApp(args)
                 else if ('new' === action) newgame();
                 else if ('undo' === action) undo();
                 else if ('redo' === action) redo();
+                else if ('fen' === action) {var fen = game.getFEN(); game.dispose(); make(container, args.moves, game = new args.Chess(fen), squares = $$('div'), moves = (args.moves ? $$('div') : null)); console.log('from fen', fen);}
                 return false;
             }, {capture:false,passive:false});
             addEvent(controls, 'change', function(evt) {

@@ -177,6 +177,7 @@ body {
     --img: url(./img/undo-bt.svg);
     --aspect-ratio: calc(1 / 1);
 }
+#controls button[data-action="fen"],
 #controls button[data-action="redo"] {
     --img: url(./img/redo-bt.svg);
     --aspect-ratio: calc(1 / 1);
@@ -310,6 +311,7 @@ body {
 <option value="knight">Knight</option>
 </optgroup>
 </select>
+<!--<button data-action="fen" title="Test FEN"></button>-->
 <p class="msg"><i id="hourglass" class="hourglass"></i><span>Play chess..</span></p>
 </div>
 <div id="chessgame"></div>
