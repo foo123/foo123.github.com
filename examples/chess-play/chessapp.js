@@ -463,8 +463,7 @@ function ChessApp(args)
             opts = {};
         play_with_computer = playwith !== 'human-human';
         stockfish.skill = String(skill);
-        stockfish.depth = String(depth);
-        sunfish.depth = String(Math.min(2, depth));
+        sunfish.depth = stockfish.depth = String(depth);
         ai.minimaxmctsids.depth = ai.minimaxmcts.depth = ai.minimaxids.depth = ai.minimax.depth = ai.mcts.depth = depth;
         ai.minimaxmctsids.montecarlo.startAtDepth = ai.minimaxmcts.montecarlo.startAtDepth = depth < 6 ? Math.round(depth/2) : 3;
         ai.minimaxmctsids.montecarlo.iterations = ai.minimaxmcts.montecarlo.iterations = Math.abs(depth-ai.minimaxmcts.montecarlo.startAtDepth)*10;
