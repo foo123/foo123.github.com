@@ -1312,15 +1312,7 @@ SearchStrategy.MiniMax[proto].findBestMove = function(color, cb, interval) {
         scores = new Array(moves.length),
         i = 0, n = moves.length, best_move = [],
         alpha = -Infinity, beta = Infinity,
-        ret = is_function(cb) ?
-        function(move) {
-            board.dispose();
-            cb(move);
-        } :
-        function(move) {
-            board.dispose();
-            return move;
-        };
+        do_next = null, ret = null;
     opts.stopped = self.opts.stopped || return_false;
     opts.evaluate = self.opts.evaluate;
     opts.ids = self.opts.ids;
@@ -1336,58 +1328,42 @@ SearchStrategy.MiniMax[proto].findBestMove = function(color, cb, interval) {
     {
         // async
         interval = interval || 60;
-        setTimeout(function next() {
-            if (opts.stopped()) return ret(null);
-            if (i >= n)
-            {
-                ++opts.depth;
-                if (opts.depth <= opts.depthM)
-                {
-                    i = 0;
-                    moves = sort_moves(moves, scores);
-                    best_move = [];
-                    alpha = -Infinity; beta = Infinity;
-                    if (opts.renew) opts.tt = {};
-                    if (opts.montecarlo && (opts.depth < opts.depthM) && (opts.depth === opts.montecarlo.startAtDepth)) opts.depth = opts.depthM;
-                }
-            }
-            if (i < n && opts.depth <= opts.depthM)
-            {
-                var mov = moves[i];
-                var move = board.move(mov[0], mov[1], mov[2], mov[3], true);
-                var moves_next = board.all_moves_for(OPPOSITE[color])
-                var score = 0;
-                if (opts.montecarlo && (1 === opts.montecarlo.startAtDepth))
-                {
-                    for (var j=0,jj=opts.montecarlo.iterations||0; j<jj; ++j) score += random_playout(opts, board, OPPOSITE[color], 2, -1, moves_next);
-                    score /= jj;
-                }
-                else
-                {
-                    score = alphabeta(opts, board, OPPOSITE[color], 2, alpha, beta, -1, moves_next);
-                }
-                score += opts.evaluate ? 0 : evaluate_move(board, color, move, moves_next.length);
-                board.unmove(move);
-                scores[i] = score;
-                if (score === alpha) {best_move.push(mov);}
-                else if (score > alpha) {alpha = score; best_move = [mov];}
-                ++i;
-                setTimeout(next, interval);
-            }
-            else
-            {
-                ret(best_move.length ? board.encode_move(best_move[stdMath.round((best_move.length-1)*stdMath.random())]) : null);
-            }
-        }, interval);
+        do_next = function(next) {
+            setTimeout(next, interval);
+        };
+        ret = function(move) {
+            board.dispose();
+            cb(move);
+        };
     }
     else
     {
         // sync
-        do
+        do_next = function(next) {
+            return next();
+        };
+        ret = function(move) {
+            board.dispose();
+            return move;
+        };
+    }
+    return do_next(function next() {
+        if (opts.stopped()) return ret(null);
+        if (i >= n)
         {
-        for (i=0; i<n; ++i)
+            ++opts.depth;
+            if (opts.depth <= opts.depthM)
+            {
+                i = 0;
+                moves = sort_moves(moves, scores);
+                best_move = [];
+                alpha = -Infinity; beta = Infinity;
+                if (opts.renew) opts.tt = {};
+                if (opts.montecarlo && (opts.depth < opts.depthM) && (opts.depth === opts.montecarlo.startAtDepth)) opts.depth = opts.depthM;
+            }
+        }
+        if (i < n && opts.depth <= opts.depthM)
         {
-            if (opts.stopped()) return ret(null);
             var mov = moves[i];
             var move = board.move(mov[0], mov[1], mov[2], mov[3], true);
             var moves_next = board.all_moves_for(OPPOSITE[color])
@@ -1406,19 +1382,14 @@ SearchStrategy.MiniMax[proto].findBestMove = function(color, cb, interval) {
             scores[i] = score;
             if (score === alpha) {best_move.push(mov);}
             else if (score > alpha) {alpha = score; best_move = [mov];}
+            ++i;
+            return do_next(next);
         }
-        ++opts.depth;
-        if (opts.depth <= opts.depthM)
+        else
         {
-            moves = sort_moves(moves, scores);
-            best_move = [];
-            alpha = -Infinity; beta = Infinity;
-            if (opts.renew) opts.tt = {};
-            if (opts.montecarlo && (opts.depth < opts.depthM) && (opts.depth === opts.montecarlo.startAtDepth)) opts.depth = opts.depthM;
+            return ret(best_move.length ? board.encode_move(best_move[stdMath.round((best_move.length-1)*stdMath.random())]) : null);
         }
-        } while (opts.depth <= opts.depthM);
-        return ret(!opts.stopped() && best_move.length ? board.encode_move(best_move[stdMath.round((best_move.length-1)*stdMath.random())]) : null);
-    }
+    });
 };
 SearchStrategy.getPreferredStrategy = function(game, opts) {
     return new SearchStrategy.MiniMax(game, opts);

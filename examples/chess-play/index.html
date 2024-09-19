@@ -5,7 +5,7 @@
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-<meta name="description" content="Play Chess Game Simple Demo">
+<meta name="description" content="Play chess games against another person or against various chess engines like Stockfish and Sunfish">
 <meta property="og:image" content="https://foo123.github.io/examples/chess-play/screenshot.png">
 <meta property="og:url" content="https://foo123.github.io/examples/chess-play/">
 <meta name="twitter:card" content="summary">
@@ -280,6 +280,8 @@ body {
 <option value="human-human" selected>Human-Human</option>
 <option value="human-stockfish">Human-Stockfish</option>
 <option value="stockfish-human">Stockfish-Human</option>
+<option value="human-sunfish">Human-Sunfish</option>
+<option value="sunfish-human">Sunfish-Human</option>
 <option value="human-mcts">Human-MonteCarlo</option>
 <option value="mcts-human">MonteCarlo-Human</option>
 <option value="human-minimax">Human-Minimax</option>
@@ -332,6 +334,7 @@ body {
 ChessApp({
     Chess: Chess
     ,stockfishjs: './stockfish/stockfish-16.1-lite-single.js'
+    ,sunfishjs: './sunfish/sunfish.js'
     ,container: document.getElementById('chessgame')
     ,controls: document.getElementById('controls')
     ,options: document.getElementById('options')

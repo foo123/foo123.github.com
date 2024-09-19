@@ -11,7 +11,7 @@ function ChessApp(args)
         game, screen = container.parentNode, squares, moves,
         msg, active_piece, move_waiting = null, abort_move = null, sf_move = null, cw_move = null,
         play_with_computer = false, computer_plays = false,
-        is_stockfish = false, is_random = false,
+        is_stockfish = false, is_sunfish = false, is_random = false,
         chess = {
             Chess: args.Chess,
             worker: new Worker('./chessworker.js'),
@@ -23,10 +23,18 @@ function ChessApp(args)
         stockfish = {
             engine: args.stockfishjs ? new Worker(args.stockfishjs) : null,
             skill: '1',
-            depth: '6',
+            depth: '4',
             sendCMD: function(cmd) {
-                //console.log('send:"'+cmd+'"');
+                //console.log('send stockfish:"'+cmd+'"');
                 if (stockfish.engine) stockfish.engine.postMessage(cmd);
+            }
+        },
+        sunfish = {
+            engine: args.sunfishjs ? new Worker(args.sunfishjs) : null,
+            depth: '4',
+            sendCMD: function(cmd) {
+                //console.log('send sunfish:"'+cmd+'"');
+                if (sunfish.engine) sunfish.engine.postMessage(cmd);
             }
         },
         ai = {
@@ -41,14 +49,14 @@ function ChessApp(args)
     if (stockfish.engine)
     {
         stockfish.engine.onmessage = function(evt) {
-            var line = event && ((typeof event) === "object") ? event.data : event;
+            var line = evt && evt.data ? evt.data : evt;
             if ((typeof line) !== "string")
             {
                 console.log("Got line ("+(typeof line)+"):", line);
             }
             else
             {
-                //console.log('receive:"'+line+'"');
+                //console.log('receive stockfish:"'+line+'"');
                 var match = null;
                 if (sf_move && (match = line.match(/^bestmove\s+([a-h][1-8])([a-h][1-8])([qrbn])?/)))
                 {
@@ -57,6 +65,26 @@ function ChessApp(args)
             }
         };
         console.log('stockfish.engine running');
+    }
+    if (sunfish.engine)
+    {
+        sunfish.engine.onmessage = function(evt) {
+            var line = evt && evt.data ? evt.data : evt;
+            if ((typeof line) !== "string")
+            {
+                console.log("Got line ("+(typeof line)+"):", line);
+            }
+            else
+            {
+                //console.log('receive sunfish:"'+line+'"');
+                var match = null;
+                if (sf_move && (match = line.match(/^bestmove\s+([a-h][1-8])([a-h][1-8])([qrbn])?/)))
+                {
+                    sf_move({from:match[1], to:match[2], promotion:match[3]});
+                }
+            }
+        };
+        console.log('sunfish.engine running');
     }
     if (chess.worker)
     {
@@ -112,6 +140,7 @@ function ChessApp(args)
         if (computer_plays)
         {
             if (is_stockfish) stockfish.sendCMD('stop');
+            else if (is_sunfish) sunfish.sendCMD('stop');
             else chess.sendCMD({stop:true});
         }
         if (move_waiting)
@@ -121,14 +150,22 @@ function ChessApp(args)
         }
     }
 
-    function stockfish_move(then)
+    function sfish_move(then)
     {
         sf_move = function(move) {
             sf_move = null;
             if (then) then(move);
         };
-        stockfish.sendCMD('position startpos moves ' + game.getMovesUpToNow().join(' '));
-        stockfish.sendCMD('go ' + (stockfish.depth && stockfish.depth.length ? ('depth ' + stockfish.depth) : ''));
+        if (is_sunfish)
+        {
+            sunfish.sendCMD('position startpos moves ' + game.getMovesUpToNow().join(' '));
+            sunfish.sendCMD('go ' + (sunfish.depth && sunfish.depth.length ? ('depth ' + sunfish.depth) : ''));
+        }
+        else
+        {
+            stockfish.sendCMD('position startpos moves ' + game.getMovesUpToNow().join(' '));
+            stockfish.sendCMD('go ' + (stockfish.depth && stockfish.depth.length ? ('depth ' + stockfish.depth) : ''));
+        }
     }
 
     function chess_move(then)
@@ -155,10 +192,10 @@ function ChessApp(args)
                     }
                 }, 10);
             }
-            else if (is_stockfish)
+            else if (is_stockfish || is_sunfish)
             {
                 setTimeout(function() {
-                    stockfish_move(function(computer_move) {
+                    sfish_move(function(computer_move) {
                         if (computer_plays && computer_move)
                         {
                             domove(computer_move.from, computer_move.to, computer_move.promotion);
@@ -271,6 +308,11 @@ function ChessApp(args)
                 stockfish.sendCMD('ucinewgame');
                 stockfish.sendCMD('isready');
             }
+            else if (is_sunfish)
+            {
+                sunfish.sendCMD('ucinewgame');
+                sunfish.sendCMD('isready');
+            }
             clear_active();
             active_piece = null;
             if (args.moves)
@@ -337,6 +379,11 @@ function ChessApp(args)
             {
                 stockfish.sendCMD('ucinewgame');
                 stockfish.sendCMD('isready');
+            }
+            else if (is_sunfish)
+            {
+                sunfish.sendCMD('ucinewgame');
+                sunfish.sendCMD('isready');
             }
             clear_active();
             active_piece = null;
@@ -417,15 +464,17 @@ function ChessApp(args)
         play_with_computer = playwith !== 'human-human';
         stockfish.skill = String(skill);
         stockfish.depth = String(depth);
+        sunfish.depth = String(Math.min(2, depth));
         ai.minimaxmctsids.depth = ai.minimaxmcts.depth = ai.minimaxids.depth = ai.minimax.depth = ai.mcts.depth = depth;
         ai.minimaxmctsids.montecarlo.startAtDepth = ai.minimaxmcts.montecarlo.startAtDepth = depth < 6 ? Math.round(depth/2) : 3;
         ai.minimaxmctsids.montecarlo.iterations = ai.minimaxmcts.montecarlo.iterations = Math.abs(depth-ai.minimaxmcts.montecarlo.startAtDepth)*10;
         ai.mcts.montecarlo.iterations = iter;
         computer_plays = play_with_computer && (-1 < playwith.indexOf('-human'));
         is_random = play_with_computer && (-1 < playwith.indexOf('random'));
-        is_stockfish = play_with_computer /*&& (null != stockfish.engine)*/ && (-1 < playwith.indexOf('stockfish'));
-        ai.algo = playwith.replaceAll('human', '').replaceAll('random', '').replaceAll('-', '');
-        if ('' === ai.algo) ai.algo = 'mcts';
+        is_stockfish = play_with_computer && (-1 < playwith.indexOf('stockfish'));
+        is_sunfish = play_with_computer && (-1 < playwith.indexOf('sunfish'));
+        if (!play_with_computer || is_random || is_stockfish || is_sunfish) ai.algo = 'mcts';
+        else ai.algo = playwith.replaceAll('human', '').replaceAll('random', '').replaceAll('-', '');
         console.log(playwith, ai.algo);
         if (options) $('input', options).forEach(function(i) {
             if (play_with_computer) i.checked = true;
@@ -445,6 +494,12 @@ function ChessApp(args)
                 stockfish.sendCMD('setoption name Skill Level value ' + stockfish.skill);
                 stockfish.sendCMD('ucinewgame');
                 stockfish.sendCMD('isready');
+            }
+            else if (is_sunfish)
+            {
+                sunfish.sendCMD('uci');
+                sunfish.sendCMD('ucinewgame');
+                sunfish.sendCMD('isready');
             }
             machine_move();
         }
@@ -467,6 +522,12 @@ function ChessApp(args)
         else if (-1 < playwith.indexOf('stockfish'))
         {
             addClass(removeClass(controls.querySelector('input[data-action="skill"]'), 'hide'), 'show');
+            addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'hide'), 'show');
+            addClass(removeClass(controls.querySelector('input[data-action="iterations"]'), 'show'), 'hide');
+        }
+        else if (-1 < playwith.indexOf('sunfish'))
+        {
+            addClass(removeClass(controls.querySelector('input[data-action="skill"]'), 'show'), 'hide');
             addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'hide'), 'show');
             addClass(removeClass(controls.querySelector('input[data-action="iterations"]'), 'show'), 'hide');
         }
