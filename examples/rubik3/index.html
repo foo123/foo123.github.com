@@ -18,9 +18,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 <meta name="keywords" content="Rubik Cube 3D three.js" />
-<meta name="description" content="Intuitive Rubik Cube with Three.js" />
+<meta name="description" content="Intuitive 3D Rubik Cube with Three.js" />
 <meta property="og:title" content="3D Rubik Cube">
-<meta property="og:description" content="Intuitive Rubik Cube with Three.js">
 <meta property="og:image" content="https://foo123.github.io/thumbs/rubik3.jpg">
 <meta property="og:url" content="https://foo123.github.io/examples/rubik3/">
 <meta name="twitter:card" content="summary">
@@ -40,7 +39,7 @@
 
 
 
-<link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+<link rel="stylesheet" type="text/css" href="./common/css/common.min.css" />
 
 <style type="text/css">
 body {
@@ -64,7 +63,7 @@ body {
     background-position: 50% 50%;
     background-size: 100% auto;
 }
-#flatimage { 
+#flatimage {
     position: absolute;
     z-index: 10;
     top: 50px;
@@ -176,41 +175,41 @@ body {
 <!--<link rel="stylesheet" href="../common/css/colorpicker.css" type="text/css" />
 <script type="text/javascript" src="../common/js/jquery.js"></script>
 <script type="text/javascript" src="../common/js/colorpicker.min.js"></script>-->
-<script type="text/javascript" src="../common/js/three_old.js"></script>
-<script type="text/javascript" src="../common/js/Tween.js"></script>
+<script type="text/javascript" src="./common/js/three_old.js"></script>
+<script type="text/javascript" src="./common/js/Tween.js"></script>
 <script type="text/javascript" src="./Rubik.js"></script>
 <script type="text/javascript" src="./RubikApplication.js"></script>
 </head>
 <body class="responsive-864-container" style="max-width:2000px; overflow-x:hidden; margin:0 auto;">
     <span id="forkongithub"><a href="https://github.com/foo123/Rubik3">Twist me on GitHub</a></span>
-    
+
 <!--    Rubik Cube Viewer (and future Solver) implementation in HTML 5 canvas, Javascript Three.js 3D Library
-        
+
         Based on previous implementation of Rubik Cube Viewer and Solver in Actionscript 3 with PaperVision3D 2
         https://github.com/foo123/Rubik3
-        
+
         @Author Nikos M. [https://foo123.github.io/]
-        
+
         Free to use, modify, distribute, make the world a better place
         A link back to author is appreciated
 -->
 <div id='controls' class="fluid col-1-1" style="margin-top:8px;">
     <select size="1" id="rubik-type">
-        <option value="2">2x2x2</option>    
+        <option value="2">2x2x2</option>
         <option value="3" selected="selected">3x3x3</option>
         <option value="4">4x4x4</option>
     </select>
-    
+
     <button class="button" id="newrubik">New Cube</button>
     <button class="button" id="scramble">Scramble</button>
     <button class="button" id="undo">Undo</button>
-    
+
     <p style="margin-top: 8px">Click or touch and drag on background to rotate cube. Drag row or column to rotate sides</p>
-    
+
     <div class="fluid col-1-1" style="margin-top: 0px;">
     <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a>
     </div>
-    
+
     <!--<div id='colors' style="position:relative;">
         <div class='color-class colorSelector'><div id='cstop1'></div></div>
         <div class='color-class colorSelector'><div id='csbottom1'></div></div>
@@ -220,9 +219,9 @@ body {
         <div class='color-class colorSelector'><div id='csfront1'></div></div>
         <div class='color-class colorSelector'><div id='csback1'></div></div>
         <div style="float:none;clear:both"></div>
-        
+
         <br /><br />
-        
+
         <div class='color-class colorSelector'><div id='csinside1'></div></div>
         <div style="float:none;clear:both"></div>
     </div>-->
@@ -233,5 +232,15 @@ body {
 <script type="text/javascript">//<![CDATA[
 RubikApplication.init();
 //]]></script>
+<script type="text/javascript">
+if ("serviceWorker" in navigator)
+{
+    window.addEventListener("load", function() {
+        navigator.serviceWorker && navigator.serviceWorker.register("./serviceworker.js?v=2", {
+            scope: "./",
+        });
+    });
+}
+</script>
 </body>
 </html>
