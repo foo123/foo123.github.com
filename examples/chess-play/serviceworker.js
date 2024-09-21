@@ -22,7 +22,6 @@ self.addEventListener("install", function(event) {
             "favicon-16x16.png",
             "favicon-32x32.png",
             "manifest.json",
-            "site.webmanifest",
             "mstile-150x150.png",
             "safari-pinned-tab.svg",
             "screenshot.png",
