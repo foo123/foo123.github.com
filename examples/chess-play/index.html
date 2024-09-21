@@ -328,16 +328,6 @@ body {
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" style="position:fixed;display:inline-block;color:#f90b13;z-index:10;bottom:10px;right:10px;font-size:14px;">donate</a>
 
 <link rel="stylesheet" type="text/css" href="./chessapp.css" />
-<script type="text/javascript">
-if ("serviceWorker" in navigator)
-{
-    window.addEventListener("load", function() {
-        navigator.serviceWorker && navigator.serviceWorker.register("./serviceworker.js?v=0.9.9", {
-            scope: "./",
-        });
-    });
-}
-</script>
 <script type="text/javascript" src="./chess.js"></script>
 <script type="text/javascript" src="./chessapp.js"></script>
 <script type="text/javascript">
@@ -350,6 +340,16 @@ ChessApp({
     ,options: document.getElementById('options')
     //,moves: document.getElementById('moves')
 });
+</script>
+<script type="text/javascript">
+if ("serviceWorker" in navigator)
+{
+    window.addEventListener("load", function() {
+        navigator.serviceWorker && navigator.serviceWorker.register("./serviceworker.js", {
+            scope: "./",
+        });
+    });
+}
 </script>
 </body>
 </html>
