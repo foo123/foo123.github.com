@@ -1,14 +1,11 @@
 "use strict";
 
-var appName = "rubik3-";
-var cacheKey = appName; // Change value to force update
+var appName = "rubik3";
+var cacheKey = appName + "-v2"; // Change value to force update
 
 self.addEventListener("install", function(event) {
     // Kick out the old service worker
     self.skipWaiting();
-
-    // Add current version in cache key, passed as url parameter
-    if (cacheKey === appName) cacheKey = appName + "v" + ((new URL(location)).searchParams.get("v") || '');
 
     event.waitUntil(
         caches.open(cacheKey).then(function(cache) {
@@ -29,7 +26,6 @@ self.addEventListener("install", function(event) {
             "manifest.json",
             "mstile-150x150.png",
             "safari-pinned-tab.svg",
-            "screenshot.png",
             "index.html",
             "serviceworker.js",
             "common/css/common.min.css",
@@ -48,9 +44,6 @@ self.addEventListener("install", function(event) {
 });
 
 self.addEventListener("activate", function(event) {
-    // Add current version in cache key, passed as url parameter
-    if (cacheKey === appName) cacheKey = appName + "v" + ((new URL(location)).searchParams.get("v") || '');
-
     // Delete any non-current cache of same app
     event.waitUntil(
         caches.keys().then(function(keys) {
@@ -71,9 +64,6 @@ self.addEventListener("activate", function(event) {
 // If there's a cached version available, use it, but fetch an update for next time.
 // Gets data on screen as quickly as possible, then updates once the network has returned the latest data.
 self.addEventListener("fetch", function(event) {
-    // Add current version in cache key, passed as url parameter
-    if (cacheKey === appName) cacheKey = appName + "v" + ((new URL(location)).searchParams.get("v") || '');
-
     event.respondWith(
         caches.open(cacheKey).then(function(cache) {
             return cache.match(event.request).then(function(response) {

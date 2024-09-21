@@ -236,7 +236,7 @@ RubikApplication.init();
 if ("serviceWorker" in navigator)
 {
     window.addEventListener("load", function() {
-        navigator.serviceWorker && navigator.serviceWorker.register("./serviceworker.js?v=2", {
+        navigator.serviceWorker && navigator.serviceWorker.register("./serviceworker.js", {
             scope: "./",
         });
     });
