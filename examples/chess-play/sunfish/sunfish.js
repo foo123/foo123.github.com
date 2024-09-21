@@ -184,11 +184,11 @@ const MATE_LOWER = piece["K"] - 10 * piece["Q"], MATE_UPPER = piece["K"] + 10 * 
 //# Constants for tuning search
 const QS = 40, QS_A = 140, EVAL_ROUGHNESS = 15;
 
-const opt_ranges = {
+/*const opt_ranges = {
     'QS': [0, 300],
     'QS_A': [0, 300],
     'EVAL_ROUGHNESS': [0, 50]
-};
+};*/
 
 
 //###############################################################################
@@ -271,8 +271,14 @@ Position.prototype = {
                     //# Pawn move, double move and capture
                     if (p === "P")
                     {
-                        if (-1 < [N, N + N].indexOf(d) && q !== ".") break;
-                        if (d === N + N && (i < A1 + N || self.board.charAt(i + N) !== ".")) break;
+                        if (-1 < [N, N + N].indexOf(d) && q !== ".")
+                        {
+                            break;
+                        }
+                        if (d === N + N && (i < A1 + N || self.board.charAt(i + N) !== "."))
+                        {
+                            break;
+                        }
                         if (
                             -1 < [N + W, N + E].indexOf(d)
                             && q === "."
@@ -457,7 +463,9 @@ Searcher.prototype = {
         //# the remaining code has to be comfortable with being mated, stalemated
         //# or able to capture the opponent king.
         if (pos.score <= -MATE_LOWER)
+        {
             return -MATE_UPPER;
+        }
 
         //# Look in the table if we have already searched this position before.
         //# We also need to be sure, that the stored search was over the same
@@ -605,10 +613,10 @@ Searcher.prototype = {
 
         return best;
     },
-
     search: function*(history, maxDepth=999/*!ADDED!*/) {
         const self = this;
         //"""Iterative deepening MTD-bi search"""
+        maxDepth = Math.max(1, maxDepth); /*!ADDED!*/
         self.nodes = 0;
         self.history = new Set(history);
         self.tp_score = {};
@@ -617,7 +625,7 @@ Searcher.prototype = {
         //# In finished games, we could potentially go far enough to cause a recursion
         //# limit exception. Hence we bound the ply. We also can't start at 0, since
         //# that's quiscent search, and we don't always play legal moves there.
-        for (let depth of range(1, Math.max(1, maxDepth)+1/*!ADDED!*/))
+        for (let depth of range(1, maxDepth+1/*!ADDED!*/))
         {
             //# The inner loop is a binary search on the score of the position.
             //# Inv: lower <= score <= upper
@@ -639,7 +647,7 @@ Searcher.prototype = {
                 gamma = (lower + upper + 1) >>> 1;
             }
         }
-        yield [Math.max(1, maxDepth)+1, 0, 0, null];/*!ADDED!*/ // signal that maxdepth exceeded
+        yield [maxDepth+1, 0, 0, null];/*!ADDED!*/ // signal that maxdepth exceeded
     }
 };
 
