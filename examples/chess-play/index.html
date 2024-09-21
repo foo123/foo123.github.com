@@ -9,12 +9,12 @@
 <meta property="og:image" content="https://foo123.github.io/examples/chess-play/screenshot.png">
 <meta property="og:url" content="https://foo123.github.io/examples/chess-play/">
 <meta name="twitter:card" content="summary">
-<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=0.9.0">
-<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=0.9.0">
-<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png?v=0.9.0">
-<link rel="manifest" href="./site.webmanifest?v=0.9.0">
-<link rel="mask-icon" href="./safari-pinned-tab.svg?v=0.9.0" color="#454545">
-<link rel="shortcut icon" href="./favicon.ico?v=0.9.0">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=0.9.9">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=0.9.9">
+<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png?v=0.9.9">
+<link rel="manifest" href="./site.webmanifest?v=0.9.9">
+<link rel="mask-icon" href="./safari-pinned-tab.svg?v=0.9.9" color="#454545">
+<link rel="shortcut icon" href="./favicon.ico?v=0.9.9">
 <meta name="apple-mobile-web-app-title" content="Chess">
 <meta name="application-name" content="Chess">
 <meta name="msapplication-TileColor" content="#454545">
@@ -328,6 +328,16 @@ body {
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" style="position:fixed;display:inline-block;color:#f90b13;z-index:10;bottom:10px;right:10px;font-size:14px;">donate</a>
 
 <link rel="stylesheet" type="text/css" href="./chessapp.css" />
+<script type="text/javascript">
+if ("serviceWorker" in navigator)
+{
+    window.addEventListener("load", function() {
+        navigator.serviceWorker && navigator.serviceWorker.register("./serviceworker.js?v=0.9.9", {
+            scope: "./",
+        });
+    });
+}
+</script>
 <script type="text/javascript" src="./chess.js"></script>
 <script type="text/javascript" src="./chessapp.js"></script>
 <script type="text/javascript">
