@@ -2,6 +2,7 @@
 
 var appName = "chess-play";
 var cacheKey = appName + '-v0.9.9'; // Change value to force update
+var nocache = 'sw_nocache';
 
 self.addEventListener("install", function(event) {
     // Kick out the old service worker
@@ -76,14 +77,20 @@ self.addEventListener("activate", function(event) {
 // If there's a cached version available, use it, but fetch an update for next time.
 // Gets data on screen as quickly as possible, then updates once the network has returned the latest data.
 self.addEventListener("fetch", function(event) {
-    event.respondWith(
-        caches.open(cacheKey).then(function(cache) {
-            return cache.match(event.request).then(function(response) {
-                return response || fetch(event.request).then(function(networkResponse) {
-                    cache.put(event.request, networkResponse.clone());
-                    return networkResponse;
-                });
+    if (
+        (-1 < ['GET'/*,'HEAD'*/].indexOf(event.request.method.toUpperCase())) &&
+        (!nocache || !(new URL(event.request.url)).searchParams.get(nocache))
+    )
+    {
+        event.respondWith(
+            caches.open(cacheKey).then(function(cache) {
+                return cache.match(event.request, {ignoreSearch:true}).then(function(response) {
+                    return response || fetch(event.request).then(function(networkResponse) {
+                        if (networkResponse.status < 400) cache.put(event.request, networkResponse.clone());
+                        return networkResponse;
+                    });
+                })
             })
-        })
-    );
+        );
+    }
 });
