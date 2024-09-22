@@ -72,10 +72,6 @@ self.addEventListener("activate", function(event) {
     );
 });
 
-// Offline-first, cache-first strategy
-// Kick off two asynchronous requests, one to the cache and one to the network
-// If there's a cached version available, use it, but fetch an update for next time.
-// Gets data on screen as quickly as possible, then updates once the network has returned the latest data.
 self.addEventListener("fetch", function(event) {
     if (
         (-1 < ['GET','HEAD'].indexOf(event.request.method)) &&
@@ -84,7 +80,13 @@ self.addEventListener("fetch", function(event) {
     {
         event.respondWith(
             fetch(event.request).then(function(response) {
-                if ('GET' === event.request.method && response.status < 400) cache.put(event.request, response.clone());
+                if ('GET' === event.request.method && response.status < 400)
+                {
+                    var responseCopy = response.clone();
+                    caches.open(cacheKey).then(function(cache) {
+                        cache.put(event.request, responseCopy);
+                    });
+                }
                 return response;
             }).catch(function() {
                 return caches.open(cacheKey).then(function(cache) {
