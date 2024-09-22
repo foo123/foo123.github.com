@@ -78,18 +78,18 @@ self.addEventListener("activate", function(event) {
 // Gets data on screen as quickly as possible, then updates once the network has returned the latest data.
 self.addEventListener("fetch", function(event) {
     if (
-        (-1 < ['GET'/*,'HEAD'*/].indexOf(event.request.method.toUpperCase())) &&
+        (-1 < ['GET','HEAD'].indexOf(event.request.method)) &&
         (!nocache || !(new URL(event.request.url)).searchParams.get(nocache))
     )
     {
         event.respondWith(
-            caches.open(cacheKey).then(function(cache) {
-                return cache.match(event.request, {ignoreSearch:true}).then(function(response) {
-                    return response || fetch(event.request).then(function(networkResponse) {
-                        if (networkResponse.status < 400) cache.put(event.request, networkResponse.clone());
-                        return networkResponse;
-                    });
-                })
+            fetch(event.request).then(function(response) {
+                if ('GET' === event.request.method && response.status < 400) cache.put(event.request, response.clone());
+                return response;
+            }).catch(function() {
+                return caches.open(cacheKey).then(function(cache) {
+                    return cache.match(event.request, {ignoreSearch:true,ignoreMethod:true});
+                });
             })
         );
     }

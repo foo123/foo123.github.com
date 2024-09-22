@@ -2,6 +2,7 @@
 
 var appName = "sudoku";
 var cacheKey = appName + "-v2"; // Change value to force update
+var nocache = 'sw_nocache';
 
 self.addEventListener("install", function(event) {
     // Kick out the old service worker
@@ -60,14 +61,20 @@ self.addEventListener("activate", function(event) {
 // If there's a cached version available, use it, but fetch an update for next time.
 // Gets data on screen as quickly as possible, then updates once the network has returned the latest data.
 self.addEventListener("fetch", function(event) {
-    event.respondWith(
-        caches.open(cacheKey).then(function(cache) {
-            return cache.match(event.request).then(function(response) {
-                return response || fetch(event.request).then(function(networkResponse) {
-                    cache.put(event.request, networkResponse.clone());
-                    return networkResponse;
+    if (
+        (-1 < ['GET','HEAD'].indexOf(event.request.method)) &&
+        (!nocache || !(new URL(event.request.url)).searchParams.get(nocache))
+    )
+    {
+        event.respondWith(
+            fetch(event.request).then(function(response) {
+                if ('GET' === event.request.method && response.status < 400) cache.put(event.request, response.clone());
+                return response;
+            }).catch(function() {
+                return caches.open(cacheKey).then(function(cache) {
+                    return cache.match(event.request, {ignoreSearch:true,ignoreMethod:true});
                 });
             })
-        })
-    );
+        );
+    }
 });
