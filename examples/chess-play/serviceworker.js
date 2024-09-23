@@ -1,7 +1,8 @@
 "use strict";
 
 var appName = "chess-play";
-var cacheKey = appName + '-v0.9.9'; // Change value to force update
+var version = "v0.9.9"; // Change value to force update
+var cacheKey = appName + "-" + version;
 var nocache = 'sw_nocache';
 var assets = [
 "./",
@@ -47,6 +48,15 @@ var assets = [
 ];
 // large or rarely changed assets
 var cached_first_assets = [
+"./android-chrome-192x192.png",
+"./android-chrome-512x512.png",
+"./apple-touch-icon.png",
+"./favicon.ico",
+"./favicon-16x16.png",
+"./favicon-32x32.png",
+"./mstile-150x150.png",
+"./safari-pinned-tab.svg",
+"./screenshot.png",
 "./img/hourglass.svg",
 "./img/next-bt.svg",
 "./img/play-bt.svg",
