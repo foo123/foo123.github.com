@@ -799,7 +799,7 @@ var Rubik = Extends(THREE.Object3D, {
             h = 5,
             dd = 3,
             ddd = 5,
-            xx, yy
+            xx, yy, obj
         ;
 
         //a=fw+fd;
