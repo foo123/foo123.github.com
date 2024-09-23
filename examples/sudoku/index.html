@@ -28,13 +28,13 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png?v=2">
 <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png?v=2">
 <link rel="manifest" href="./manifest.json?v=2">
-<link rel="mask-icon" href="./safari-pinned-tab.svg?v=2" color="#121212">
+<link rel="mask-icon" href="./safari-pinned-tab.svg?v=2" color="#454545">
 <link rel="shortcut icon" href="./favicon.ico?v=2">
 <meta name="apple-mobile-web-app-title" content="Sudoku">
 <meta name="application-name" content="Sudoku">
-<meta name="msapplication-TileColor" content="#121212">
+<meta name="msapplication-TileColor" content="#454545">
 <meta name="msapplication-config" content="./browserconfig.xml?v=2">
-<meta name="theme-color" content="#121212">
+<meta name="theme-color" content="#454545">
 
 
 
@@ -42,8 +42,8 @@
 <style type="text/css">
 body
 {
-    background-color:#121212;
-    color:#aaa;
+    background-color:#454545;
+    color:#ccc;
     position:relative;
 }
 .showcase
@@ -326,9 +326,9 @@ h1 {
     display: block;
     position: absolute;
     border: none;
-    top: 10px; left: 15px;
+    top: 16px; left: 15px;
     width: 40px; height: 40px;
-    background: #fff;
+    background: #f0f0f0;
     border-radius: 50%;
 }
 .menulink span {
@@ -352,7 +352,7 @@ h1 {
     padding: 40px 10px 40px 10px;
     top: 0; left: 0;
     transform: translate3d(-100%, 0, 0);
-    background: #d9d9d9;
+    background: #f0f0f0;
     color: #121212;
     box-shadow:2px 2px 5px rgba(0,0,0,0.7);
     transition: transform 0.3s ease;
@@ -401,6 +401,9 @@ h1 {
 h1 {
     font-size: 16px;
 }
+.menulink {
+    top: 10px; left: 15px;
+}
 }
 </style>
 <link rel="stylesheet" type="text/css" href="./sudoku.min.css" />
@@ -409,7 +412,7 @@ h1 {
 <script type="text/javascript" src="../common/js/require-config.js"></script>-->
 <script type="text/javascript" src="./jquery.js"></script>
 <!--<script type="text/javascript" src="./jqueryui.js"></script>-->
-<script type="text/javascript" src="./common/js/modelview.bundle.js"></script>
+<script type="text/javascript" src="./common/js/modelview.simple.bundle.js"></script>
 <script type="text/javascript" src="./sudoku.bundle.js"></script>
 
 </head>
@@ -473,7 +476,7 @@ h1 {
 <span id="forkongithub"><a href="https://github.com/foo123/sudoku.js">Play with me on GitHub</a></span>
 
 <header id="header" class="fluid col-1-1">
-    <button id="menu-open" class="menulink" title="Options"><span></span></button><h1>Sudoku Game, Builder and Solver <span id="ver"></span></h1>
+    <button id="menu-open" class="menulink" title="Options"><span></span></button><h1>Sudoku Game, Builder and Solver<!-- <span id="ver"></span>--></h1>
 </header>
 
 <section id="panel" class="fluid col-1-1" style="margin-top:40px;padding:10px;">
@@ -679,7 +682,7 @@ function display_sudoku( sudoku, $grid, $controls )
     return renderer;
 }
 
-$('#ver').html('v.'+Sudoku.VERSION);
+//$('#ver').html('v.'+Sudoku.VERSION);
 
 // on DOM ready
 $(function(){
