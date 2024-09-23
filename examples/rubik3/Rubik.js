@@ -5,6 +5,7 @@
 *   https://github.com/foo123/Rubik3
 **/
 (function(window, undef){
+"use strict";
 
 // utils
 var

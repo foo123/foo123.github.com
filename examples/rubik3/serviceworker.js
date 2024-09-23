@@ -1,7 +1,8 @@
 "use strict";
 
 var appName = "rubik3";
-var cacheKey = appName + "-v2"; // Change value to force update
+var version = "v2.1"; // Change value to force update
+var cacheKey = appName + "-" + version;
 var nocache = 'sw_nocache';
 var assets = [
 "./",
@@ -35,6 +36,19 @@ var assets = [
 ];
 // large or rarely changed assets
 var cached_first_assets = [
+"./android-chrome-192x192.png",
+"./android-chrome-384x384.png",
+"./android-chrome-512x512.png",
+"./apple-touch-icon.png",
+"./apple-touch-icon-60x60.png",
+"./apple-touch-icon-76x76.png",
+"./apple-touch-icon-120x120.png",
+"./apple-touch-icon-152x152.png",
+"./favicon.ico",
+"./favicon-16x16.png",
+"./favicon-32x32.png",
+"./mstile-150x150.png",
+"./safari-pinned-tab.svg",
 "./assets/back.png",
 "./assets/cross.png",
 "./assets/pad.jpg",
