@@ -205,9 +205,9 @@
 
     <script>//<![CDATA[
     "use strict";
-    var $F = FILTER;
+    //var $F = FILTER;
     require(['cascades/haarcascade_frontalface_alt', 'cascades/haarcascade_eye', 'cascades/haarcascade_mcs_mouth', 'jQuery', 'FILTER'],
-    function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $/*, $F*/) {
+    function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $, $F) {
 
         // utils
         var runInThread = /\?parallel\b/i.test(location.href),
