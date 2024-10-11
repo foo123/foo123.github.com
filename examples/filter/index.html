@@ -11,736 +11,740 @@
 <meta property="og:url" content="https://foo123.github.io/examples/filter/">
 <meta name="twitter:card" content="summary">
 
-    <title>Image Processing with Filter.js</title>
+<title>Image Processing with Filter.js</title>
 
-    <link rel="stylesheet" type="text/css" href="../common/css/grid.min.css" />
-    <style type="text/css">
-        body {
-            position: relative;
-            font-family: Monospace;
-            font-size: 14px;
-            background-color: #121212;
-            color: #ccc;
-            margin: 0 auto;
-            padding: 0;
-            box-sizing: border-box;
-            width: 100%;
-            max-width: 2600px;
-        }
-        .button {
-            -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
-            -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
-            box-shadow:inset 0px 1px 0px 0px #f5978e;
-            background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
-            background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
-            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
-            background-color:#f24537;
-            -webkit-border-top-left-radius:20px;
-            -moz-border-radius-topleft:20px;
-            border-top-left-radius:20px;
-            -webkit-border-top-right-radius:20px;
-            -moz-border-radius-topright:20px;
-            border-top-right-radius:20px;
-            -webkit-border-bottom-right-radius:20px;
-            -moz-border-radius-bottomright:20px;
-            border-bottom-right-radius:20px;
-            -webkit-border-bottom-left-radius:20px;
-            -moz-border-radius-bottomleft:20px;
-            border-bottom-left-radius:20px;
-            text-indent:0;
-            border:1px solid #d02718;
-            display:inline-block;
-            color:#ffffff;
-            font-family:Arial;
-            font-size:15px;
-            font-weight:bold;
-            font-style:normal;
-            height:50px;
-            line-height:50px;
-            width:2000px;
-            text-decoration:none;
-            text-align:center;
-            text-shadow:1px 1px 0px #810e05;
-        }
-        .button:hover {
-            background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
-            background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
-            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
-            background-color:#c62d1f;
-        }.button:active {
-            position:relative;
-            top:1px;
-        }
-        .button {
-            font-size:12px;
-            width:100px;
-            height:30px;
-            line-height:30px;
-            position:relative;
-            cursor:pointer;
-            margin-bottom: 10px;
-        }
-        #forkongithub  a {
-            background: #aa0000;
-            color: #fff;
-            text-decoration: none;
-            font-family: arial, sans-serif;
-            text-align: center;
-            font-weight: bold;
-            padding: 5px 40px;
-            font-size: 0.9rem;
-            line-height: 1.4rem;
-            position: relative;
-            transition: all 0.5s;
-        }
-        #forkongithub a:hover {
-            background: #aa0000;
-            color: #fff;
-        }
-        #forkongithub a::before, #forkongithub a::after {
-            content: "";
-            width: 100%;
-            display: block;
+<link rel="stylesheet" type="text/css" href="../common/css/grid.min.css" />
+<style type="text/css">
+    body {
+        position: relative;
+        font-family: Monospace;
+        font-size: 14px;
+        background-color: #121212;
+        color: #ccc;
+        margin: 0 auto;
+        padding: 0;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 2600px;
+    }
+    .button {
+        -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
+        -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
+        box-shadow:inset 0px 1px 0px 0px #f5978e;
+        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
+        background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
+        background-color:#f24537;
+        -webkit-border-top-left-radius:20px;
+        -moz-border-radius-topleft:20px;
+        border-top-left-radius:20px;
+        -webkit-border-top-right-radius:20px;
+        -moz-border-radius-topright:20px;
+        border-top-right-radius:20px;
+        -webkit-border-bottom-right-radius:20px;
+        -moz-border-radius-bottomright:20px;
+        border-bottom-right-radius:20px;
+        -webkit-border-bottom-left-radius:20px;
+        -moz-border-radius-bottomleft:20px;
+        border-bottom-left-radius:20px;
+        text-indent:0;
+        border:1px solid #d02718;
+        display:inline-block;
+        color:#ffffff;
+        font-family:Arial;
+        font-size:15px;
+        font-weight:bold;
+        font-style:normal;
+        height:50px;
+        line-height:50px;
+        width:2000px;
+        text-decoration:none;
+        text-align:center;
+        text-shadow:1px 1px 0px #810e05;
+    }
+    .button:hover {
+        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
+        background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
+        background-color:#c62d1f;
+    }.button:active {
+        position:relative;
+        top:1px;
+    }
+    .button {
+        font-size:12px;
+        width:100px;
+        height:30px;
+        line-height:30px;
+        position:relative;
+        cursor:pointer;
+        margin-bottom: 10px;
+    }
+    #forkongithub  a {
+        background: #aa0000;
+        color: #fff;
+        text-decoration: none;
+        font-family: arial, sans-serif;
+        text-align: center;
+        font-weight: bold;
+        padding: 5px 40px;
+        font-size: 0.9rem;
+        line-height: 1.4rem;
+        position: relative;
+        transition: all 0.5s;
+    }
+    #forkongithub a:hover {
+        background: #aa0000;
+        color: #fff;
+    }
+    #forkongithub a::before, #forkongithub a::after {
+        content: "";
+        width: 100%;
+        display: block;
+        position: absolute;
+        z-index: 100;
+        top: 1px;
+        left: 0;
+        height: 1px;
+        background: #fff;
+    }
+    #forkongithub a::after {
+        bottom: 1px;
+        top: auto;
+    }
+    @media screen and (min-width:800px) {
+        #forkongithub {
             position: absolute;
+            display: block;
             z-index: 100;
-            top: 1px;
-            left: 0;
-            height: 1px;
-            background: #fff;
+            top: 0;
+            right: 0;
+            width: 200px;
+            overflow: hidden;
+            height: 200px;
         }
-        #forkongithub a::after {
-            bottom: 1px;
-            top: auto;
+        #forkongithub a {
+            width: 200px;
+            position: absolute;
+            top: 60px;
+            right: -60px;
+            transform: rotate(45deg);
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
         }
-        @media screen and (min-width:800px) {
-            #forkongithub {
-                position: absolute;
-                display: block;
-                z-index: 100;
-                top: 0;
-                right: 0;
-                width: 200px;
-                overflow: hidden;
-                height: 200px;
-            }
-            #forkongithub a {
-                width: 200px;
-                position: absolute;
-                top: 60px;
-                right: -60px;
-                transform: rotate(45deg);
-                box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
-            }
-        }
-        header,footer,.controls {
-            position: relative:
-            display: block;
-            box-sizing: border-box;
-            width: 100%;
-            padding: 4px;
-        }
-        header {
-            margin-bottom: 20px;
-        }
-        footer {
-            margin-top: 20px;
-        }
-        .controls {
-            padding: 4px;
-        }
-        .image > canvas {
-            position: relative;
-            width: 100% !important;
-            height: auto !important;
-            display: block;
-        }
-        .image > .caption {
-            position: relative;
-            margin-top: 10px;
-            display: block;
-        }
-        #container.grid {
-            display: block;
-            margin: 10px auto;
-            padding: 0 4px;
-            --columns: 5;
-            --row-gap: 20px;
-            --column-gap: 20px;
-        }
-        /*fluid col-1-5 autocol-1-4-864 autocol-1-2-640 autocol-1-2-480 autoadjust image*/
-        @media (max-width:1024px) {
-        #container.grid {
-            --columns: 4;
-        }
-        }
-        @media (max-width:640px) {
-        #container.grid {
-            --columns: 2;
-            --column-gap: 6px;
-        }
-        }
-    </style>
-    <!--<script src="../../../FILTER.js/build/filter.js"></script>-->
-    <script src="../common/js/require.js"></script>
-    <script src="../common/js/require-config.js"></script>
-    <!--<script src="../common/cascades/haarcascade_frontalface_alt.js"></script>-->
+    }
+    header,footer,.controls {
+        position: relative:
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 4px;
+    }
+    header {
+        margin-bottom: 20px;
+    }
+    footer {
+        margin-top: 20px;
+    }
+    .controls {
+        padding: 4px;
+    }
+    .image > canvas {
+        position: relative;
+        width: 100% !important;
+        height: auto !important;
+        display: block;
+    }
+    .image > .caption {
+        position: relative;
+        margin-top: 10px;
+        display: block;
+    }
+    #container.grid {
+        display: block;
+        margin: 10px auto;
+        padding: 0 4px;
+        --columns: 5;
+        --row-gap: 20px;
+        --column-gap: 20px;
+    }
+    /*fluid col-1-5 autocol-1-4-864 autocol-1-2-640 autocol-1-2-480 autoadjust image*/
+    @media (max-width:1024px) {
+    #container.grid {
+        --columns: 4;
+    }
+    }
+    @media (max-width:640px) {
+    #container.grid {
+        --columns: 2;
+        --column-gap: 6px;
+    }
+    }
+</style>
+<!--<script src="../../../FILTER.js/build/filter.js"></script>-->
+<script src="../common/js/require.js"></script>
+<script src="../common/js/require-config.js"></script>
+<!--<script src="../common/cascades/haarcascade_frontalface_alt.js"></script>-->
 </head>
 <body>
-    <span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
+<span id="forkongithub"><a href="https://github.com/foo123/FILTER.js">Fork me on GitHub</a></span>
 
-    <header><h1>Image Processing with Filter.js v.<span id="lib-version">0</span> Mode:<b id="mode"></b></h1></header>
-    <div class="controls">
-    <button id="synchronous" class="button">Synchronous</button>
-    <button id="parallel" class="button">Parallel</button>
-    <button id="webgl" class="button">WebGL</button>
-    <button id="wasm" class="button">WASM</button>
-    <button id="applyBt" style="display:none" class="button">Apply</button>
-    <button id="restoreBt" style="display:none" class="button">Restore</button><br />
-    <i style="font-size:11px"><b>Note:</b> images may appear as blurred if scaled from original dimensions due to responsive design</i>
-    </div>
+<header><h1>Image Processing with Filter.js v.<span id="lib-version">0</span> Mode:<b id="mode"></b></h1></header>
+<div class="controls">
+<button id="synchronous" class="button">Synchronous</button>
+<button id="parallel" class="button">Parallel</button>
+<button id="webgl" class="button">WebGL</button>
+<button id="wasm" class="button">WASM</button>
+<button id="applyBt" style="display:none" class="button">Apply</button>
+<button id="restoreBt" style="display:none" class="button">Restore</button><br />
+<i style="font-size:11px"><b>Note:</b> images may appear as blurred if scaled from original dimensions due to responsive design</i>
+</div>
 
-    <ul id="container" class="grid"></ul>
+<ul id="container" class="grid"></ul>
 
-    <footer style="margin-top: 10px; padding-right: 20px; text-align: right"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate" style="color:#f24537;">donate</a></footer>
+<footer style="margin-top: 10px; padding-right: 20px; text-align: right"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate" style="color:#f24537;">donate</a></footer>
 
-    <script>//<![CDATA[
-    "use strict";
-    //var $F = FILTER;
-    require(['cascades/haarcascade_frontalface_alt', 'cascades/haarcascade_eye', 'cascades/haarcascade_mcs_mouth', 'jQuery', 'FILTER'],
-    function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $, $F) {
+<script>//<![CDATA[
+"use strict";
+//var $F = FILTER;
+require(['cascades/haarcascade_frontalface_alt', 'cascades/haarcascade_eye', 'cascades/haarcascade_mcs_mouth', 'jQuery', 'FILTER'],
+function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $, $F) {
 
-        // utils
-        var runInThread = /\?parallel\b/i.test(location.href),
-            runInWebGL = /\?webgl\b/i.test(location.href),
-            runInWasm = /\?wasm\b/i.test(location.href);
+    // utils
+    var runInThread = /\?parallel\b/i.test(location.href),
+        runInWebGL = /\?webgl\b/i.test(location.href),
+        runInWasm = /\?wasm\b/i.test(location.href);
 
-        if (runInThread && !$F.Browser.supportsWorker)
-        {
-            alert('Browser does not support workers');
-        }
-        runInThread = !!($F.Browser.supportsWorker && runInThread);
-        if (runInWebGL && !$F.supportsGLSL())
-        {
-            alert('Browser does not support WebGL');
-        }
-        runInWebGL = !!($F.supportsGLSL() && runInWebGL);
-        if (runInWasm && !$F.supportsWASM())
-        {
-            alert('Browser does not support Web Assembly');
-        }
-        runInWasm = !!($F.supportsWASM() && runInWasm);
-        document.getElementById('mode').textContent = runInThread ? 'Parallel' : (runInWasm ? 'Wasm' : (runInWebGL ? 'WebGL' : 'Synchronous'));
+    if (runInThread && !$F.Browser.supportsWorker)
+    {
+        alert('Browser does not support workers');
+    }
+    runInThread = !!($F.Browser.supportsWorker && runInThread);
+    if (runInWebGL && !$F.supportsGLSL())
+    {
+        alert('Browser does not support WebGL');
+    }
+    runInWebGL = !!($F.supportsGLSL() && runInWebGL);
+    if (runInWasm && !$F.supportsWASM())
+    {
+        alert('Browser does not support Web Assembly');
+    }
+    runInWasm = !!($F.supportsWASM() && runInWasm);
+    document.getElementById('mode').textContent = runInThread ? 'Parallel' : (runInWasm ? 'Wasm' : (runInWebGL ? 'WebGL' : 'Synchronous'));
 
-        document.getElementById('lib-version').innerHTML = $F.VERSION;
+    document.getElementById('lib-version').innerHTML = $F.VERSION;
 
-        var baseUrl = location.href.split(/#|\?/)[0]
-            ,che = '../common/assets/che.jpg'
-            ,marcos = '../common/assets/marcos.jpg'
-            ,mahatma = '../common/assets/mahatma2.png'
-            //,lenna = '../common/assets/lenna.png'
-            ,face_model = '../common/assets/model_face.jpg'
-            ,yinyang = '../common/assets/yin_yang_blank.png'
-            ,model = '../common/assets/model1.jpg'
-            ,aside = $('#aside')
-            ,applyBt = $('#applyBt')
-            ,restoreBt = $('#restoreBt')
-            ,container = $('#container'), filters = $('#filters')
+    var baseUrl = location.href.split(/#|\?/)[0]
+        ,che = '../common/assets/che.jpg'
+        ,marcos = '../common/assets/marcos.jpg'
+        ,mahatma = '../common/assets/mahatma2.png'
+        //,lenna = '../common/assets/lenna.png'
+        ,face_model = '../common/assets/model_face.jpg'
+        ,yinyang = '../common/assets/yin_yang_blank.png'
+        ,model = '../common/assets/model1.jpg'
+        ,aside = $('#aside')
+        ,applyBt = $('#applyBt')
+        ,restoreBt = $('#restoreBt')
+        ,container = $('#container'), filters = $('#filters')
 
-            ,closeThread = function() {/*this.thread(false);*/}
+        ,closeThread = function() {/*this.thread(false);*/}
 
-             // displacemap
-            ,displacemap = $F.Image()
-            ,perlinNoise = $F.PerlinNoiseFilter(80, 50, 4, true, false, [[0,0],[10,10], [20,10], [10,20]], Math.random(), true)
-        ;
+         // displacemap
+        ,displacemap = $F.Image()
+        ,perlinNoise = $F.PerlinNoiseFilter(80, 50, 4, true, false, [[0,0],[10,10], [20,10], [10,20]], Math.random(), true)
+    ;
 
-        // images
-        var im1 = $F.Image.load(che, function() {
-                // create a displace map image
-                displacemap.setDimensions(im1.width, im1.height);
-                var octx = displacemap.domElement.getContext('2d');
-                octx.fillStyle="rgb(128,128,128)";
-                octx.fillRect(0,0, displacemap.width, displacemap.height);
-                // create radial gradient
-                var grd = octx.createRadialGradient(displacemap.width/2, displacemap.height/2, 0, displacemap.width/2, displacemap.height/2, displacemap.width/2);
-                grd.addColorStop(1, "#808080"); // neutral
-                grd.addColorStop(0, "#ffffff"); // white
-                octx.fillStyle = grd;
-                octx.beginPath();
-                octx.arc(displacemap.width/2,displacemap.height/2,displacemap.width/2,0,Math.PI*2,true);
-                octx.fill();
-                displacemap.store();
+    // images
+    var im1 = $F.Image.load(che, function() {
+            // create a displace map image
+            displacemap.setDimensions(im1.width, im1.height);
+            var octx = displacemap.domElement.getContext('2d');
+            octx.fillStyle="rgb(128,128,128)";
+            octx.fillRect(0,0, displacemap.width, displacemap.height);
+            // create radial gradient
+            var grd = octx.createRadialGradient(displacemap.width/2, displacemap.height/2, 0, displacemap.width/2, displacemap.height/2, displacemap.width/2);
+            grd.addColorStop(1, "#808080"); // neutral
+            grd.addColorStop(0, "#ffffff"); // white
+            octx.fillStyle = grd;
+            octx.beginPath();
+            octx.arc(displacemap.width/2,displacemap.height/2,displacemap.width/2,0,Math.PI*2,true);
+            octx.fill();
+            displacemap.store();
 
-                im15.setDimensions(im1.width, im1.height).apply(perlinNoise);
+            im15.setDimensions(im1.width, im1.height).apply(perlinNoise);
 
-                init();
+            init();
+        })
+        ,im2 = $F.Image.load(che)
+        ,im3 = $F.Image.load(che)
+        ,im4 = $F.Image.load(che)
+        ,im5 = $F.Image.load(che)
+        ,im6 = $F.Image.load(che)
+        ,im7 = $F.Image.load(che)
+        ,im8 = $F.Image.load(che)
+        ,im9 = $F.Image.load(che)
+        ,im10 = $F.Image.load(che)
+        ,im11 = $F.Image.load(che)
+        ,im12 = $F.Image.load(che)
+        ,im13 = $F.Image.load(che)
+        ,im14 = $F.Image.load(che)
+        ,im15 = $F.Image()
+        ,im16 = $F.Image.load(yinyang)
+        ,im17 = $F.Image.load(che)
+        ,im18 = $F.Image.load(che/*lenna*/)
+        ,im182 = $F.Image.load(che)
+        ,im183 = $F.Image.load('../common/assets/che_-45deg.jpg')
+        /*,im184 = $F.Image.load(mahatma)*/
+        ,im19 = $F.Image.load(model/*face_model*/)
+        ,im20 = $F.Image.load(model)
+        ,im21 = $F.Image.load(model)
+        /*,im22 = $F.Image.load(che)
+        ,im23 = $F.Image.load(che)
+        ,im24 = $F.Image.load(che)*/
+
+         // filters
+        //,redChannel = $F.ColorMatrixFilter().worker(runInThread).makeGLSL(runInWebGL).redChannel()
+        ,redChannel = $F.InlineFilter({
+            filter: function(params, im, w, h) {
+                // get red channel using an inline filter that can run in parallel worker also
+                for (var i=0,l=im.length; i<l; i+=4)
+                {
+                    im[i+1] = 0; // remove green channel
+                    im[i+2] = 0; // remove blue channel
+                }
+                return im;
+            },
+            // provide webgl shader as well
+            shader: [
+            'varying vec2 pix;',
+            'uniform sampler2D img;',
+            'void main(void) {',
+            '   vec4 c = texture2D(img, pix);',
+            '   gl_FragColor = vec4(c.r, 0.0, 0.0, c.a);', // remove green,blue channel
+            '}'
+            ].join('\n')
+        }).worker(runInThread).makeGLSL(runInWebGL)
+        ,greenChannel = $F.ColorMatrixFilter().greenChannel().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+        //,blueChannel = $F.ColorMatrixFilter().blueChannel().worker(runInThread)
+        ,blueChannel = $F.ColorTableFilter().blueChannel().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+        ,clr = $F.ColorMatrixFilter().colorize(0xff0000).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+        //,gamma = $F.ColorTableFilter().gammaCorrection(1.7).worker(runInThread)
+        //,solarize = $F.ColorTableFilter().solarize(0.5).worker(runInThread)
+        ,posterize = $F.ColorTableFilter().posterize(4).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+        //,extract = $F.ColorTableFilter().extract($F.CHANNEL.RED, [0x75, 0x91]).worker(runInThread)
+        //,mask = $F.ColorTableFilter().mask(0xffff7732).worker(runInThread)
+        //,swapChannels = $F.ColorMatrixFilter().swapChannels($F.CHANNEL.BLUE, $F.CHANNEL.GREEN).worker(runInThread)
+        //,maskChannel = $F.ColorMatrixFilter().maskChannel($F.CHANNEL.GREEN).worker(runInThread)
+        //,invert = $F.ColorTableFilter().invert().worker(runInThread)
+        ,equalize = $F.HistogramEqualizeFilter($F.MODE.INTENSITY).worker(runInThread)
+        ,equalize_gray = $F.HistogramEqualizeFilter($F.MODE.GRAY)
+        //,rgbequalize = $F.HistogramEqualizeFilter($F.MODE.RGB).worker(runInThread)
+        //,noise = $F.NoiseFilter(-127, 127).worker(runInThread)
+        ,sepia = $F.ColorMatrixFilter().sepia2().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+        ,gray = $F.ColorMatrixFilter().grayscale()/*.worker(runInThread)*/
+        //,binary = $F.ColorTableFilter().threshold(0.6).worker(runInThread)
+        //,threshold = $F.ColorMatrixFilter().thresholdRGB(128).worker(runInThread)
+        //,grc = $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread).makeGLSL(runInWebGL)
+        //,median = $F.StatisticalFilter().median(9)
+        //,scale = $F.DimensionFilter('scale', 0, 0, 0.5, 0.5).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+        //,pad = $F.DimensionFilter('pad', 10, 10, 10, 10).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+        //,crop = $F.DimensionFilter('crop', 20, 20, 50, 50).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+        //,maximum = $F.StatisticalFilter().maximum(15).worker(runInThread)
+        ,halftoned = $F.CompositeFilter([
+            gray,
+            $F.HalftoneFilter(1).threshold(0.4).setMode($F.MODE.GRAY)
+        ]).worker(runInThread)
+        //,pixelate = $F.PixelateFilter(8, 'rectangular').worker(runInThread)
+        //,pixelate = $F.PixelateFilter(10, 'triangular').worker(runInThread)
+        //,pixelate = $F.PixelateFilter(25, 'hexagonal').worker(runInThread)
+        //,connected_components = $F.ConnectedComponentsFilter(4, 0.1, $F.MODE.HUE, 30).worker(runInThread)
+        //,hueExtractor = $F.ColorMapFilter().setMode($F.MODE.HUE).extract(10, 36).worker(runInThread) // extract hues corresponding to skin color
+        ,thresh = $F.ColorTableFilter().setMode($F.MODE.GRAY).threshold(0.5)
+        //,hsv = $F.ColorMapFilter().RGB2HSV().worker(runInThread)
+        // extract skin region
+        //,skinExtractor = $F.CompositeFilter([hsv, redChannel, invert, gray, thresh]).worker(runInThread)
+        //,laplace = $F.ConvolutionMatrixFilter().laplace(7).worker(runInThread)
+        ,twirl = $F.GeometricMapFilter().twirl(Math.PI/2, 120, 0.33, 0.27).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+        //,shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(-50, 0).worker(runInThread)
+        //,rotate = $F.AffineMatrixFilter().rotate(-Math.PI).worker(runInThread)
+        //,blur = $F.ConvolutionMatrixFilter().boxBlur(3).worker(runInThread)
+        ,gauss = $F.ConvolutionMatrixFilter().fastGauss(3, 5).setMode($F.MODE.GRAY)/*.worker(runInThread)*///gaussBlur(3)
+        //,vertical = $F.ConvolutionMatrixFilter().verticalBlur(21).worker(runInThread)
+        //,diagonal = $F.ConvolutionMatrixFilter().directionalBlur(45, 9).worker(runInThread)
+        //,glow = $F.ConvolutionMatrixFilter().glow().worker(runInThread)
+        ,emboss = $F.ConvolutionMatrixFilter().emboss().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+        ,grsb = $F.CompositeFilter([
+            gray,
+            $F.ConvolutionMatrixFilter().sobel(3).setMode($F.MODE.GRAY)
+            /*, binary*/
+        ]).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+        ,displace = $F.DisplacementMapFilter(displacemap).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+        ,floodFill = $F.CompositeFilter([
+            /*                 x0, y0,  color,   tolerance, exterior border */
+            $F.ColorFillFilter(25, 75,  0xff0000, 0.2,       0x0),
+            $F.ColorFillFilter(75, 112, 0xff0000, 0.2,       0x0),
+            $F.ColorFillFilter(125,75,  0x0000ff, 0.8           ),
+            $F.ColorFillFilter(75, 36,  0x0000ff, 0.8           )
+        ]).worker(runInThread)
+        ,seamless = $F.SeamlessTileFilter().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+        //,bokeh = $F.BokehFilter(80, 90, 60, 10).worker(runInThread)
+        /*$F.ConvolutionMatrixFilter([2,  4,  5,  4, 2,
+                                    4,  9, 12,  9, 4,
+                                    5, 12, 15, 12, 5,
+                                    4,  9, 12,  9, 4,
+                                    2,  4,  5,  4, 2], 1.0/159.0).setMode($F.MODE.GRAY)*/
+        ,canny = $F.CompositeFilter([
+            gray, equalize_gray, gauss,
+            $F.CannyEdgesFilter(40, 78, false/* use custom pre-bluring */)
+        ]).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+        ,faceDetector = $F.CompositeFilter([
+            gray,
+            $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt).params({
+                baseScale: 0.8,
+                scaleIncrement: 1.2,
+                stepIncrement: 0.15,
+                doCannyPruning: true,
+                cannyLow: 2,
+                cannyHigh: 100
+            }),
+            $F.InlineFilter(function(params, im, w, h, meta) {
+                var feats = meta.container.filters[1].metaData().objects;
+                if (feats && feats.length)
+                {
+                    // 105(y), 165(ey), 215(my), 265(160 h)
+                    var face = feats[0],
+                        fx = face.x,
+                        fy = face.y,
+                        fw = face.width,
+                        fh = face.height,
+                        cx = (fx + fw)/2, // center face vertical line
+                        ey = fy + 0.375*fh, // eye horizontal line from face symmetry
+                        my = fy + 0.6875*fh, // mouth horizontal line from face symmetry
+                        // amplify selection a bit
+                        sx = 1.4/2, sye = 0.6, sym = 1.2,
+                        eyesRegion, mouthRegion
+                    ;
+
+                    // restrict eyeDetector in eyes region of first detected face
+                    eyesRegion = [cx - sx*fw, ey - sye*fh, cx + sx*fw, ey + sye*fh];
+                    meta.container.filters[3].select(
+                    eyesRegion[0],
+                    eyesRegion[1],
+                    eyesRegion[2],
+                    eyesRegion[3],
+                    true);
+                    // restrict mouthDetector in mouth region of first detected face
+                    mouthRegion = [cx - sx*fw, my - sym*fh, cx + sx*fw, my + sym*fh];
+                    meta.container.filters[4].select(
+                    mouthRegion[0],
+                    mouthRegion[1],
+                    mouthRegion[2],
+                    mouthRegion[3],
+                    true);
+                }
+                else
+                {
+                    meta.container.filters[3].select(false);
+                    meta.container.filters[4].select(false);
+                }
+                return im;
+            }),
+            $F.HaarDetectorFilter(haarcascade_eye.haarcascade_eye).params({
+                baseScale: 1,
+                scaleIncrement: 1.25,
+                stepIncrement: 0.1,
+                doCannyPruning: true,
+                minNeighbors: 2,
+                cannyLow: 2,
+                cannyHigh: 100
+            }),
+            $F.HaarDetectorFilter(haarcascade_mcs_mouth.haarcascade_mcs_mouth).params({
+                baseScale: 1,
+                scaleIncrement: 1.25,
+                stepIncrement: 0.1,
+                doCannyPruning: true,
+                cannyLow: 2,
+                cannyHigh: 150
             })
-            ,im2 = $F.Image.load(che)
-            ,im3 = $F.Image.load(che)
-            ,im4 = $F.Image.load(che)
-            ,im5 = $F.Image.load(che)
-            ,im6 = $F.Image.load(che)
-            ,im7 = $F.Image.load(che)
-            ,im8 = $F.Image.load(che)
-            ,im9 = $F.Image.load(che)
-            ,im10 = $F.Image.load(che)
-            ,im11 = $F.Image.load(che)
-            ,im12 = $F.Image.load(che)
-            ,im13 = $F.Image.load(che)
-            ,im14 = $F.Image.load(che)
-            ,im15 = $F.Image()
-            ,im16 = $F.Image.load(yinyang)
-            ,im17 = $F.Image.load(che)
-            ,im18 = $F.Image.load(che/*lenna*/)
-            ,im182 = $F.Image.load(che)
-            ,im183 = $F.Image.load('../common/assets/che_-45deg.jpg')
-            /*,im184 = $F.Image.load(mahatma)*/
-            ,im19 = $F.Image.load(model/*face_model*/)
-            ,im20 = $F.Image.load(model)
-            ,im21 = $F.Image.load(model)
-            /*,im22 = $F.Image.load(che)
-            ,im23 = $F.Image.load(che)
-            ,im24 = $F.Image.load(che)*/
+        ]).update(false).worker(runInThread)
+        ,drawRect = function(ctx, rect) {
+            ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+        }
+        ,drawDetectedFeatures = function(detector, image) {
+            var ctx, i, l, rect,
+                faces = detector.filters[1].metaData().objects,
+                eyes = detector.filters[3].metaData().objects,
+                mouths = detector.filters[4].metaData().objects;
+            // draw any features found
+            if (faces)
+            {
+                //console.log(faces);
+                if (!ctx) ctx = image.domElement.getContext('2d');
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "rgba(75,221,17,1)";
+                for (i=0,l=faces.length; i<l; ++i) drawRect(ctx, faces[i]);
+            }
+            if (eyes)
+            {
+                //console.log(eyes);
+                if (!ctx) ctx = image.domElement.getContext('2d');
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "rgba(255,127,0,1)";
+                for (i=0,l=eyes.length; i<l; ++i) drawRect(ctx, eyes[i]);
+            }
+            if (mouths)
+            {
+                //console.log(mouths);
+                if (!ctx) ctx = image.domElement.getContext('2d');
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "rgba(200,2,2,1)";
+                for (i=0,l=mouths.length; i<l; ++i) drawRect(ctx, mouths[i]);
+            }
+        }
+        ,templateMatcher = $F.TemplateMatcherFilter($F.Image.load('../common/assets/che_tpl_sm_-90deg.png')).params({
+            rotations: [0, 90], // template rotation
+            scales: {min:1.5, max:3, inc:1.5},
+            scaleThreshold: function(scale, rotation) {return scale >= 1.8 && scale <= 2.5 ? 0.75 : 0.9;}
+        }).worker(runInThread)
+        ,templateMatcherTilted = $F.TemplateMatcherFilter($F.Image.load('../common/assets/che_tpl_sm_90deg.png')).params({
+            maxMatches: 500,
+            rotations: [0, -135], // template rotation
+            scales: {min:1.5, max:3, inc:1.5},
+            scaleThreshold: function(scale, rotation) {return scale >= 1.8 && scale <= 2.5 ? 0.75 : 0.9;}
+        }).worker(runInThread)
+        /*,colorDetector = $F.ColorDetectorFilter().setMode($F.MODE.COLOR).params({
+            color: 0xc07945,
+            tolerance: 0.062,
+            minArea: 5000,
+            maxArea: 50000
+        }).worker(runInThread)*/
+        ,drawMatch = function(ctx, rect) {
+            var x, y, xc = rect.x+rect.width/2, yc = rect.y+rect.height/2, ox = 0, oy = 0,
+                x1 = -rect.width/2, y1 = -rect.height/2, x3 = rect.width/2, y3 = rect.height/2,
+                sin = Math.sin(((rect.angle||0)/180)*Math.PI), cos = Math.cos(((rect.angle||0)/180)*Math.PI);
+            ctx.save();
+            ctx.beginPath();
+            x = x1 - ox; y = y1 - oy;
+            ctx.moveTo(xc + cos*x - sin*y + ox, yc + sin*x + cos*y + oy);
+            x = x3 - ox; /*y = y1 - oy;*/
+            ctx.lineTo(xc + cos*x - sin*y + ox, yc + sin*x + cos*y + oy);
+            /*x = x3 - ox;*/ y = y3 - oy;
+            ctx.lineTo(xc + cos*x - sin*y + ox, yc + sin*x + cos*y + oy);
+            x = x1 - ox; /*y = y3 - oy;*/
+            ctx.lineTo(xc + cos*x - sin*y + ox, yc + sin*x + cos*y + oy);
+            ctx.closePath();
+            ctx.stroke();
+            ctx.restore();
+        }
+        ,drawMatches = function(matcher, image) {
+            var ctx, i, l, matches = matcher.metaData().matches;
+            // draw any matches found
+            if (matches && matches.length)
+            {
+                //console.log(matches);
+                ctx = image.domElement.getContext('2d');
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "rgba(75,221,17,1)";
+                for (i=0,l=matches.length; i<l; ++i) drawMatch(ctx, matches[i]);
+            }
+        }
+        ,cartoonify = $F.CompositeFilter([
+            $F.MorphologicalFilter().erode(5, null, 2)
+            ,$F.ColorTableFilter().quantize(4)
+        ]).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+        ,sketchify = $F.CompositeFilter([
+            gray
+            ,$F.MorphologicalFilter().setMode($F.MODE.GRAY).erode(3, null, 2)
+            ,$F.MorphologicalFilter().setMode($F.MODE.GRAY).gradient(5)
+            ,$F.ColorTableFilter().setMode($F.MODE.GRAY).invert().quantize(9)
+        ]).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+    ;
 
-             // filters
-            //,redChannel = $F.ColorMatrixFilter().worker(runInThread).makeGLSL(runInWebGL).redChannel()
-            ,redChannel = $F.InlineFilter({
-                filter: function(params, im, w, h) {
-                    // get red channel using an inline filter that can run in parallel worker also
-                    for (var i=0,l=im.length; i<l; i+=4)
-                    {
-                        im[i+1] = 0; // remove green channel
-                        im[i+2] = 0; // remove blue channel
-                    }
-                    return im;
-                },
-                // provide webgl shader as well
-                shader: [
-                'varying vec2 pix;',
-                'uniform sampler2D img;',
-                'void main(void) {',
-                '   vec4 c = texture2D(img, pix);',
-                '   gl_FragColor = vec4(c.r, 0.0, 0.0, c.a);', // remove green,blue channel
-                '}'
-                ].join('\n')
-            }).worker(runInThread).makeGLSL(runInWebGL)
-            ,greenChannel = $F.ColorMatrixFilter().greenChannel().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
-            //,blueChannel = $F.ColorMatrixFilter().blueChannel().worker(runInThread)
-            ,blueChannel = $F.ColorTableFilter().blueChannel().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
-            ,clr = $F.ColorMatrixFilter().colorize(0xff0000).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
-            //,gamma = $F.ColorTableFilter().gammaCorrection(1.7).worker(runInThread)
-            //,solarize = $F.ColorTableFilter().solarize(0.5).worker(runInThread)
-            ,posterize = $F.ColorTableFilter().posterize(4).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
-            //,extract = $F.ColorTableFilter().extract($F.CHANNEL.RED, [0x75, 0x91]).worker(runInThread)
-            //,mask = $F.ColorTableFilter().mask(0xffff7732).worker(runInThread)
-            //,swapChannels = $F.ColorMatrixFilter().swapChannels($F.CHANNEL.BLUE, $F.CHANNEL.GREEN).worker(runInThread)
-            //,maskChannel = $F.ColorMatrixFilter().maskChannel($F.CHANNEL.GREEN).worker(runInThread)
-            //,invert = $F.ColorTableFilter().invert().worker(runInThread)
-            ,equalize = $F.HistogramEqualizeFilter($F.MODE.INTENSITY).worker(runInThread)
-            ,equalize_gray = $F.HistogramEqualizeFilter($F.MODE.GRAY)
-            //,rgbequalize = $F.HistogramEqualizeFilter($F.MODE.RGB).worker(runInThread)
-            //,noise = $F.NoiseFilter(-127, 127).worker(runInThread)
-            ,sepia = $F.ColorMatrixFilter().sepia2().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
-            ,gray = $F.ColorMatrixFilter().grayscale()/*.worker(runInThread)*/
-            //,binary = $F.ColorTableFilter().threshold(0.6).worker(runInThread)
-            //,threshold = $F.ColorMatrixFilter().thresholdRGB(128).worker(runInThread)
-            //,grc = $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread).makeGLSL(runInWebGL)
-            //,median = $F.StatisticalFilter().median(9)
-            //,scale = $F.DimensionFilter('scale', 0, 0, 0.5, 0.5).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
-            //,pad = $F.DimensionFilter('pad', 10, 10, 10, 10).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
-            //,crop = $F.DimensionFilter('crop', 20, 20, 50, 50).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
-            //,maximum = $F.StatisticalFilter().maximum(15).worker(runInThread)
-            ,halftoned = $F.CompositeFilter([
-                gray,
-                $F.HalftoneFilter(1).threshold(0.4).setMode($F.MODE.GRAY)
-            ]).worker(runInThread)
-            //,pixelate = $F.PixelateFilter(8, 'rectangular').worker(runInThread)
-            //,pixelate = $F.PixelateFilter(10, 'triangular').worker(runInThread)
-            //,pixelate = $F.PixelateFilter(25, 'hexagonal').worker(runInThread)
-            //,connected_components = $F.ConnectedComponentsFilter(4, 0.1, $F.MODE.HUE, 30).worker(runInThread)
-            //,hueExtractor = $F.ColorMapFilter().setMode($F.MODE.HUE).extract(10, 36).worker(runInThread) // extract hues corresponding to skin color
-            ,thresh = $F.ColorTableFilter().setMode($F.MODE.GRAY).threshold(0.5)
-            //,hsv = $F.ColorMapFilter().RGB2HSV().worker(runInThread)
-            // extract skin region
-            //,skinExtractor = $F.CompositeFilter([hsv, redChannel, invert, gray, thresh]).worker(runInThread)
-            //,laplace = $F.ConvolutionMatrixFilter().laplace(7).worker(runInThread)
-            ,twirl = $F.GeometricMapFilter().twirl(Math.PI/2, 120, 0.33, 0.27).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
-            //,shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(-50, 0).worker(runInThread)
-            //,rotate = $F.AffineMatrixFilter().rotate(-Math.PI).worker(runInThread)
-            //,blur = $F.ConvolutionMatrixFilter().boxBlur(3).worker(runInThread)
-            ,gauss = $F.ConvolutionMatrixFilter().fastGauss(3, 5).setMode($F.MODE.GRAY)/*.worker(runInThread)*///gaussBlur(3)
-            //,vertical = $F.ConvolutionMatrixFilter().verticalBlur(21).worker(runInThread)
-            //,diagonal = $F.ConvolutionMatrixFilter().directionalBlur(45, 9).worker(runInThread)
-            //,glow = $F.ConvolutionMatrixFilter().glow().worker(runInThread)
-            ,emboss = $F.ConvolutionMatrixFilter().emboss().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
-            ,grsb = $F.CompositeFilter([
-                gray,
-                $F.ConvolutionMatrixFilter().sobel(3).setMode($F.MODE.GRAY)
-                /*, binary*/
-            ]).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
-            ,displace = $F.DisplacementMapFilter(displacemap).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
-            ,floodFill = $F.CompositeFilter([
-                /*                 x0, y0,  color,   tolerance, exterior border */
-                $F.ColorFillFilter(25, 75,  0xff0000, 0.2,       0x0),
-                $F.ColorFillFilter(75, 112, 0xff0000, 0.2,       0x0),
-                $F.ColorFillFilter(125,75,  0x0000ff, 0.8           ),
-                $F.ColorFillFilter(75, 36,  0x0000ff, 0.8           )
-            ]).worker(runInThread)
-            ,seamless = $F.SeamlessTileFilter().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
-            //,bokeh = $F.BokehFilter(80, 90, 60, 10).worker(runInThread)
-            /*$F.ConvolutionMatrixFilter([2,  4,  5,  4, 2,
-                                        4,  9, 12,  9, 4,
-                                        5, 12, 15, 12, 5,
-                                        4,  9, 12,  9, 4,
-                                        2,  4,  5,  4, 2], 1.0/159.0).setMode($F.MODE.GRAY)*/
-            ,canny = $F.CompositeFilter([
-                gray, equalize_gray, gauss,
-                $F.CannyEdgesFilter(40, 78, false/* use custom pre-bluring */)
-            ]).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
-            ,faceDetector = $F.CompositeFilter([
-                gray,
-                $F.HaarDetectorFilter(haarcascade_frontalface_alt.haarcascade_frontalface_alt).params({
-                    baseScale: 0.8,
-                    scaleIncrement: 1.2,
-                    stepIncrement: 0.15,
-                    doCannyPruning: true,
-                    cannyLow: 2,
-                    cannyHigh: 100
-                }),
-                $F.InlineFilter(function(params, im, w, h, meta) {
-                    var feats = meta.container.filters[1].metaData().objects;
-                    if (feats && feats.length)
-                    {
-                        // 105(y), 165(ey), 215(my), 265(160 h)
-                        var face = feats[0],
-                            fx = face.x,
-                            fy = face.y,
-                            fw = face.width,
-                            fh = face.height,
-                            cx = (fx + fw)/2, // center face vertical line
-                            ey = fy + 0.375*fh, // eye horizontal line from face symmetry
-                            my = fy + 0.6875*fh, // mouth horizontal line from face symmetry
-                            // amplify selection a bit
-                            sx = 1.4/2, sye = 0.6, sym = 1.2,
-                            eyesRegion, mouthRegion
-                        ;
+    function Img(img, text)
+    {
+        if (img)
+        {
+            var wrapper = $('<li class="image"></li>');
+            wrapper.append(img.domElement).append($('<span class="caption">'+String(text)+'</span>'));
+        }
+        else
+        {
+            var wrapper = $('<li class="image placeholder"></li>');
+        }
+        return wrapper;
+    }
 
-                        // restrict eyeDetector in eyes region of first detected face
-                        eyesRegion = [cx - sx*fw, ey - sye*fh, cx + sx*fw, ey + sye*fh];
-                        meta.container.filters[3].select(
-                        eyesRegion[0],
-                        eyesRegion[1],
-                        eyesRegion[2],
-                        eyesRegion[3],
-                        true);
-                        // restrict mouthDetector in mouth region of first detected face
-                        mouthRegion = [cx - sx*fw, my - sym*fh, cx + sx*fw, my + sym*fh];
-                        meta.container.filters[4].select(
-                        mouthRegion[0],
-                        mouthRegion[1],
-                        mouthRegion[2],
-                        mouthRegion[3],
-                        true);
-                    }
-                    else
-                    {
-                        meta.container.filters[3].select(false);
-                        meta.container.filters[4].select(false);
-                    }
-                    return im;
-                }),
-                $F.HaarDetectorFilter(haarcascade_eye.haarcascade_eye).params({
-                    baseScale: 1,
-                    scaleIncrement: 1.25,
-                    stepIncrement: 0.1,
-                    doCannyPruning: true,
-                    minNeighbors: 2,
-                    cannyLow: 2,
-                    cannyHigh: 100
-                }),
-                $F.HaarDetectorFilter(haarcascade_mcs_mouth.haarcascade_mcs_mouth).params({
-                    baseScale: 1,
-                    scaleIncrement: 1.25,
-                    stepIncrement: 0.1,
-                    doCannyPruning: true,
-                    cannyLow: 2,
-                    cannyHigh: 150
-                })
-            ]).update(false).worker(runInThread)
-            ,drawRect = function(ctx, rect) {
-                ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
-            }
-            ,drawDetectedFeatures = function(detector, image) {
-                var ctx, i, l, rect,
-                    faces = detector.filters[1].metaData().objects,
-                    eyes = detector.filters[3].metaData().objects,
-                    mouths = detector.filters[4].metaData().objects;
-                // draw any features found
-                if (faces)
-                {
-                    if (!ctx) ctx = image.domElement.getContext('2d');
-                    ctx.lineWidth = 2;
-                    ctx.strokeStyle = "rgba(75,221,17,1)";
-                    for (i=0,l=faces.length; i<l; ++i) drawRect(ctx, faces[i]);
-                }
-                if (eyes)
-                {
-                    if (!ctx) ctx = image.domElement.getContext('2d');
-                    ctx.lineWidth = 2;
-                    ctx.strokeStyle = "rgba(255,127,0,1)";
-                    for (i=0,l=eyes.length; i<l; ++i) drawRect(ctx, eyes[i]);
-                }
-                if (mouths)
-                {
-                    if (!ctx) ctx = image.domElement.getContext('2d');
-                    ctx.lineWidth = 2;
-                    ctx.strokeStyle = "rgba(200,2,2,1)";
-                    for (i=0,l=mouths.length; i<l; ++i) drawRect(ctx, mouths[i]);
-                }
-            }
-            ,templateMatcher = $F.TemplateMatcherFilter($F.Image.load('../common/assets/che_tpl_sm_-90deg.png')).params({
-                rotations: [0, 90], // template rotation
-                scales: {min:1.5, max:3, inc:1.5},
-                scaleThreshold: function(scale, rotation) {return scale >= 1.8 && scale <= 2.5 ? 0.7 : 0.9;}
-            }).worker(runInThread)
-            ,templateMatcherTilted = $F.TemplateMatcherFilter($F.Image.load('../common/assets/che_tpl_sm_90deg.png')).params({
-                maxMatches: 500,
-                rotations: [0, -135], // template rotation
-                scales: {min:1.5, max:3, inc:1.5},
-                scaleThreshold: function(scale, rotation) {return scale >= 1.8 && scale <= 2.5 ? 0.7 : 0.9;}
-            }).worker(runInThread)
-            /*,colorDetector = $F.ColorDetectorFilter().setMode($F.MODE.COLOR).params({
-                color: 0xc07945,
-                tolerance: 0.062,
-                minArea: 5000,
-                maxArea: 50000
-            }).worker(runInThread)*/
-            ,drawMatch = function(ctx, rect) {
-                var x, y, xc = rect.x+rect.width/2, yc = rect.y+rect.height/2, ox = 0, oy = 0,
-                    x1 = -rect.width/2, y1 = -rect.height/2, x3 = rect.width/2, y3 = rect.height/2,
-                    sin = Math.sin(((rect.angle||0)/180)*Math.PI), cos = Math.cos(((rect.angle||0)/180)*Math.PI);
-                ctx.save();
-                ctx.beginPath();
-                x = x1 - ox; y = y1 - oy;
-                ctx.moveTo(xc + cos*x - sin*y + ox, yc + sin*x + cos*y + oy);
-                x = x3 - ox; /*y = y1 - oy;*/
-                ctx.lineTo(xc + cos*x - sin*y + ox, yc + sin*x + cos*y + oy);
-                /*x = x3 - ox;*/ y = y3 - oy;
-                ctx.lineTo(xc + cos*x - sin*y + ox, yc + sin*x + cos*y + oy);
-                x = x1 - ox; /*y = y3 - oy;*/
-                ctx.lineTo(xc + cos*x - sin*y + ox, yc + sin*x + cos*y + oy);
-                ctx.closePath();
-                ctx.stroke();
-                ctx.restore();
-            }
-            ,drawMatches = function(matcher, image) {
-                var ctx, i, l, matches = matcher.metaData().matches;
-                // draw any matches found
-                if (matches && matches.length)
-                {
-                    ctx = image.domElement.getContext('2d');
-                    ctx.lineWidth = 2;
-                    ctx.strokeStyle = "rgba(75,221,17,1)";
-                    for (i=0,l=matches.length; i<l; ++i) drawMatch(ctx, matches[i]);
-                }
-            }
-            ,cartoonify = $F.CompositeFilter([
-                $F.MorphologicalFilter().erode(5, null, 2)
-                ,$F.ColorTableFilter().quantize(4)
-            ]).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
-            ,sketchify = $F.CompositeFilter([
-                gray
-                ,$F.MorphologicalFilter().setMode($F.MODE.GRAY).erode(3, null, 2)
-                ,$F.MorphologicalFilter().setMode($F.MODE.GRAY).gradient(5)
-                ,$F.ColorTableFilter().setMode($F.MODE.GRAY).invert().quantize(9)
-            ]).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
+    function init()
+    {
+        $('#wasm').on( 'click', function() {
+            location.href = baseUrl + '?wasm=1';
+        });
+        $('#webgl').on( 'click', function() {
+            location.href = baseUrl + '?webgl=1';
+        });
+        $('#parallel').on( 'click', function() {
+            location.href = baseUrl + '?parallel=1';
+        });
+        $('#synchronous').on( 'click', function() {
+            location.href = baseUrl + '?synchronous=1';
+        });
+        //console.log($F.devicePixelRatio);
+
+        $F.onReady(function() {
+        container
+        .append(Img(im1, 'Original Image'))
+        .append(Img(im2, 'Red Channel'))
+        .append(Img(im3, 'Green Channel'))
+        .append(Img(im4, 'Blue Channel'))
+        .append(Img(im5, 'Red Colorized applied to Selection'))
+        .append(Img(im6, 'Grayscale and Contrast'))
+        .append(Img(im7, 'Quick Sepia'))
+        .append(Img(im8, 'Posterize'))
+        .append(Img(im9, 'HalfTone (Plugin)'))
+        .append(Img(im10, 'Emboss'))
+        .append(Img(im11, 'Geometric Twirl Map'))
+        .append(Img(im12, 'Displace Map'))
+        .append(Img(im13, 'Grayscale, Sobel Gradient Magnitude (Composite)'))
+        .append(Img(im14, 'Histogram Equalization (Plugin)'))
+        .append(Img(im17, 'Seamless Tile (Plugin)'))
+        .append(Img(im18, 'Canny Edges (Plugin)'))
+        .append(Img(im182, 'Rotation &amp; Scale Invariant Template Matcher'))
+        .append(Img(im183, 'Rotation &amp; Scale Invariant Template Matcher'))
+        /*.append(Img(im184, 'Color Detector'))*/
+        .append(Img(im19, 'Face, Eyes &amp; Mouth Detector'))
+        .append(Img(im20, 'Cartoonify'))
+        .append(Img(im21, 'Sketchify'))
+        .append(Img(im16, 'Color Flood Fill (Plugin)'))
+        .append(Img(im15, 'Perlin Noise (Plugin)'))
+        .append(Img(displacemap, 'Displacement Map'))
+        /*.append(Img(22, im22, 'Scale'))
+        .append(Img(23, im23, 'Pad'))
+        .append(Img(24, im24, 'Crop'))*/
         ;
 
-        function Img(img, text)
+        applyBt.show().on('click', apply);
+        restoreBt.show().on('click', restore);
+        });
+    }
+
+    function apply(evt)
+    {
+        //displace.setInput("map", displacemap);
+        displace.scaleX = 100;
+        displace.scaleY = 100;
+
+        // apply them
+        // NOTE these also work:
+        // * redChannel.apply( im2, closeThread );
+        // * redChannel.apply( im1, im2, closeThread );
+        // * redChannel.apply( im2, im2, closeThread );
+        // * im1.apply2( redChannel, im2, closeThread );
+        // * im2.apply2( redChannel, im2, closeThread );
+        // * im2.apply( redChannel, closeThread );
+        // etc..
+
+        im2.apply(redChannel, closeThread);
+        im3.apply(greenChannel, closeThread);
+        im4.apply(blueChannel, closeThread);
+        // apply to right half of image
+        im5.select(0.5, 0, 1, 1).apply(clr, function() {
+            closeThread.call(this);
+            im5.deselect();
+        });
+        //im6.apply(grc, closeThread);
+        // break img in parts and process each part in parallel with mapReduce
+        im6.mapReduce([
         {
-            if (img)
-            {
-                var wrapper = $('<li class="image"></li>');
-                wrapper.append(img.domElement).append($('<span class="caption">'+String(text)+'</span>'));
-            }
-            else
-            {
-                var wrapper = $('<li class="image placeholder"></li>');
-            }
-            return wrapper;
-        }
-
-        function init()
+        from: {x:0, y:0}, to: {x:0.5, y:0.5},
+        filter: $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread)
+        },
         {
-            $('#wasm').on( 'click', function() {
-                location.href = baseUrl + '?wasm=1';
-            });
-            $('#webgl').on( 'click', function() {
-                location.href = baseUrl + '?webgl=1';
-            });
-            $('#parallel').on( 'click', function() {
-                location.href = baseUrl + '?parallel=1';
-            });
-            $('#synchronous').on( 'click', function() {
-                location.href = baseUrl + '?synchronous=1';
-            });
-            //console.log($F.devicePixelRatio);
-
-            $F.onReady(function() {
-            container
-            .append(Img(im1, 'Original Image'))
-            .append(Img(im2, 'Red Channel'))
-            .append(Img(im3, 'Green Channel'))
-            .append(Img(im4, 'Blue Channel'))
-            .append(Img(im5, 'Red Colorized applied to Selection'))
-            .append(Img(im6, 'Grayscale and Contrast'))
-            .append(Img(im7, 'Quick Sepia'))
-            .append(Img(im8, 'Posterize'))
-            .append(Img(im9, 'HalfTone (Plugin)'))
-            .append(Img(im10, 'Emboss'))
-            .append(Img(im11, 'Geometric Twirl Map'))
-            .append(Img(im12, 'Displace Map'))
-            .append(Img(im13, 'Grayscale, Sobel Gradient Magnitude (Composite)'))
-            .append(Img(im14, 'Histogram Equalization (Plugin)'))
-            .append(Img(im17, 'Seamless Tile (Plugin)'))
-            .append(Img(im18, 'Canny Edges (Plugin)'))
-            .append(Img(im182, 'Rotation &amp; Scale Invariant Template Matcher'))
-            .append(Img(im183, 'Rotation &amp; Scale Invariant Template Matcher'))
-            /*.append(Img(im184, 'Color Detector'))*/
-            .append(Img(im19, 'Face, Eyes &amp; Mouth Detector'))
-            .append(Img(im20, 'Cartoonify'))
-            .append(Img(im21, 'Sketchify'))
-            .append(Img(im16, 'Color Flood Fill (Plugin)'))
-            .append(Img(im15, 'Perlin Noise (Plugin)'))
-            .append(Img(displacemap, 'Displacement Map'))
-            /*.append(Img(22, im22, 'Scale'))
-            .append(Img(23, im23, 'Pad'))
-            .append(Img(24, im24, 'Crop'))*/
-            ;
-
-            applyBt.show().on('click', apply);
-            restoreBt.show().on('click', restore);
-            });
-        }
-
-        function apply(evt)
+        from: {x:0.5, y:0}, to: {x:1, y:0.5},
+        filter: $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread)
+        },
         {
-            //displace.setInput("map", displacemap);
-            displace.scaleX = 100;
-            displace.scaleY = 100;
-
-            // apply them
-            // NOTE these also work:
-            // * redChannel.apply( im2, closeThread );
-            // * redChannel.apply( im1, im2, closeThread );
-            // * redChannel.apply( im2, im2, closeThread );
-            // * im1.apply2( redChannel, im2, closeThread );
-            // * im2.apply2( redChannel, im2, closeThread );
-            // * im2.apply( redChannel, closeThread );
-            // etc..
-
-            im2.apply(redChannel, closeThread);
-            im3.apply(greenChannel, closeThread);
-            im4.apply(blueChannel, closeThread);
-            // apply to right half of image
-            im5.select(0.5, 0, 1, 1).apply(clr, function() {
-                closeThread.call(this);
-                im5.deselect();
-            });
-            //im6.apply(grc, closeThread);
-            // break img in parts and process each part in parallel with mapReduce
-            im6.mapReduce([
-            {
-            from: {x:0, y:0}, to: {x:0.5, y:0.5},
-            filter: $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread)
-            },
-            {
-            from: {x:0.5, y:0}, to: {x:1, y:0.5},
-            filter: $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread)
-            },
-            {
-            from: {x:0.5, y:0.5}, to: {x:1, y:1},
-            filter: $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread)
-            },
-            {
-            from: {x:0, y:0.5}, to: {x:0.5, y:1},
-            filter: $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread)
-            }
-            ], function(img, data, from, to, absolute, filter) {
-                filter.worker(false);
-                img.setDataToSelection(data, from.x, from.y, to.x, to.y, absolute);
-            });
-            im7.apply(sepia, closeThread);
-            im8.apply(posterize, closeThread);
-            //im9.apply(gauss, closeThread);
-            im9.apply(halftoned, closeThread);
-            //im10.apply(skinExtractor, closeThread);
-            im10.apply(emboss, closeThread);
-            im11.apply(twirl, closeThread);
-            im12.apply(displace, closeThread);
-            im13.apply(grsb, closeThread);
-            //im13.apply(glow, closeThread);
-            im14.apply(equalize, closeThread);
-            //im15.apply(simplexNoise, closeThread);
-            im16.apply(floodFill, closeThread);
-            im17.apply(seamless, closeThread);
-            im18.apply(canny, closeThread);
-            im182.apply(templateMatcher, function() {
-                closeThread.call(this);
-                drawMatches(this, im182);
-            });
-            im183.apply(templateMatcherTilted, function() {
-                closeThread.call(this);
-                drawMatches(this, im183);
-            });
-            /*im184.apply(colorDetector, function() {
-                closeThread.call(this);
-                drawMatches(this, im184);
-            });*/
-            im19.apply(faceDetector, function() {
-                closeThread.call(this);
-                drawDetectedFeatures(this, im19);
-            });
-            //im19.apply(halfTone, closeThread);
-            im20.apply(cartoonify, closeThread);
-            im21.apply(sketchify, closeThread);
-            /*im22.apply(scale, closeThread);
-            im23.apply(pad, closeThread);
-            im24.apply(crop, closeThread);*/
-
-            return false;
-        }
-
-        function restore(evt)
+        from: {x:0.5, y:0.5}, to: {x:1, y:1},
+        filter: $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread)
+        },
         {
-            im2.restore();
-            im3.restore();
-            im4.restore();
-            im5.deselect().restore();
-            im6.restore();
-            im7.restore();
-            im8.restore();
-            im9.restore();
-            im10.restore();
-            im11.restore();
-            im12.restore();
-            im13.restore();
-            im14.restore();
-            im15.restore();
-            im16.restore();
-            im17.restore();
-            im18.restore();
-            im182.restore();
-            im183.restore();
-            /*im184.restore();*/
-            im19.restore();
-            im20.restore();
-            im21.restore();
-            /*im22.restore();
-            im23.restore();
-            im24.restore();*/
-            return false;
+        from: {x:0, y:0.5}, to: {x:0.5, y:1},
+        filter: $F.ColorMatrixFilter().grayscale().contrast(1).worker(runInThread)
         }
-    });
-    //]]></script>
+        ], function(img, data, from, to, absolute, filter) {
+            filter.worker(false);
+            img.setDataToSelection(data, from.x, from.y, to.x, to.y, absolute);
+        });
+        im7.apply(sepia, closeThread);
+        im8.apply(posterize, closeThread);
+        //im9.apply(gauss, closeThread);
+        im9.apply(halftoned, closeThread);
+        //im10.apply(skinExtractor, closeThread);
+        im10.apply(emboss, closeThread);
+        im11.apply(twirl, closeThread);
+        im12.apply(displace, closeThread);
+        im13.apply(grsb, closeThread);
+        //im13.apply(glow, closeThread);
+        im14.apply(equalize, closeThread);
+        //im15.apply(simplexNoise, closeThread);
+        im16.apply(floodFill, closeThread);
+        im17.apply(seamless, closeThread);
+        im18.apply(canny, closeThread);
+        im182.apply(templateMatcher, function() {
+            closeThread.call(this);
+            drawMatches(this, im182);
+        });
+        im183.apply(templateMatcherTilted, function() {
+            closeThread.call(this);
+            drawMatches(this, im183);
+        });
+        /*im184.apply(colorDetector, function() {
+            closeThread.call(this);
+            drawMatches(this, im184);
+        });*/
+        im19.apply(faceDetector, function() {
+            closeThread.call(this);
+            drawDetectedFeatures(this, im19);
+        });
+        //im19.apply(halfTone, closeThread);
+        im20.apply(cartoonify, closeThread);
+        im21.apply(sketchify, closeThread);
+        /*im22.apply(scale, closeThread);
+        im23.apply(pad, closeThread);
+        im24.apply(crop, closeThread);*/
+
+        return false;
+    }
+
+    function restore(evt)
+    {
+        im2.restore();
+        im3.restore();
+        im4.restore();
+        im5.deselect().restore();
+        im6.restore();
+        im7.restore();
+        im8.restore();
+        im9.restore();
+        im10.restore();
+        im11.restore();
+        im12.restore();
+        im13.restore();
+        im14.restore();
+        im15.restore();
+        im16.restore();
+        im17.restore();
+        im18.restore();
+        im182.restore();
+        im183.restore();
+        /*im184.restore();*/
+        im19.restore();
+        im20.restore();
+        im21.restore();
+        /*im22.restore();
+        im23.restore();
+        im24.restore();*/
+        return false;
+    }
+});
+//]]></script>
 </body>
 </html>
