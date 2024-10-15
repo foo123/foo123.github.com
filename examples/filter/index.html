@@ -240,13 +240,14 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         //,lenna = '../common/assets/lenna.png'
         ,face_model = '../common/assets/model_face.jpg'
         ,yinyang = '../common/assets/yin_yang_blank.png'
+        ,source_colors = '../common/assets/fractal_colors6.jpg'
         ,model = '../common/assets/model1.jpg'
         ,aside = $('#aside')
         ,applyBt = $('#applyBt')
         ,restoreBt = $('#restoreBt')
         ,container = $('#container'), filters = $('#filters')
 
-        ,closeThread = function() {/*this.thread(false);*/}
+        ,closeThread = function() {this.worker(false);}
 
          // displacemap
         ,displacemap = $F.Image()
@@ -287,7 +288,7 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         ,im12 = $F.Image.load(che)
         ,im13 = $F.Image.load(che)
         ,im14 = $F.Image.load(che)
-        //,im142 = $F.Image.load(che)
+        ,im142 = $F.Image.load(che)
         ,im15 = $F.Image()
         ,im16 = $F.Image.load(yinyang)
         ,im17 = $F.Image.load(che)
@@ -340,6 +341,7 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         ,equalize_gray = $F.HistogramEqualizeFilter($F.MODE.GRAY)
         //,rgbequalize = $F.HistogramEqualizeFilter($F.MODE.RGB).worker(runInThread)
         //,match_equalize = $F.HistogramMatchFilter($F.MODE.INTENSITY, [(new Array(256).fill(0)).map(function(_, i) {return i/255;})]).worker(runInThread)
+        ,histogram_match = $F.HistogramMatchFilter($F.MODE.RGB)
         //,noise = $F.NoiseFilter(-127, 127).worker(runInThread)
         ,sepia = $F.ColorMatrixFilter().sepia2().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
         ,gray = $F.ColorMatrixFilter().grayscale()/*.worker(runInThread)*/
@@ -592,40 +594,49 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         //console.log($F.devicePixelRatio);
 
         $F.onReady(function() {
-        container
-        .append(Img(im1, 'Original Image'))
-        .append(Img(im2, 'Red Channel'))
-        .append(Img(im3, 'Green Channel'))
-        .append(Img(im4, 'Blue Channel'))
-        .append(Img(im5, 'Red Colorized applied to Selection'))
-        .append(Img(im6, 'Grayscale and Contrast'))
-        .append(Img(im7, 'Quick Sepia'))
-        .append(Img(im8, 'Posterize'))
-        .append(Img(im9, 'HalfTone (Plugin)'))
-        .append(Img(im10, 'Emboss'))
-        .append(Img(im11, 'Geometric Twirl Map'))
-        .append(Img(im12, 'Displace Map'))
-        .append(Img(im13, 'Grayscale, Sobel Gradient Magnitude (Composite)'))
-        .append(Img(im14, 'Histogram Equalization (Plugin)'))
-        /*.append(Img(im142, 'Histogram Equalization via Histogram Matching (Plugin)'))*/
-        .append(Img(im17, 'Seamless Tile (Plugin)'))
-        .append(Img(im18, 'Canny Edges (Plugin)'))
-        .append(Img(im182, 'Rotation &amp; Scale Invariant Template Matcher'))
-        .append(Img(im183, 'Rotation &amp; Scale Invariant Template Matcher'))
-        /*.append(Img(im184, 'Color Detector'))*/
-        .append(Img(im19, 'Face, Eyes &amp; Mouth Detector'))
-        .append(Img(im20, 'Cartoonify'))
-        .append(Img(im21, 'Sketchify'))
-        .append(Img(im16, 'Color Flood Fill (Plugin)'))
-        .append(Img(im15, 'Perlin Noise (Plugin)'))
-        .append(Img(displacemap, 'Displacement Map'))
-        /*.append(Img(22, im22, 'Scale'))
-        .append(Img(23, im23, 'Pad'))
-        .append(Img(24, im24, 'Crop'))*/
-        ;
+            $F.Image.load(source_colors, function(colors) {
+                var color_im = colors.getData();
+                histogram_match.cdf = [
+                $F.Util.Filter.histogram(color_im, $F.CHANNEL.R, true, true).bin,
+                $F.Util.Filter.histogram(color_im, $F.CHANNEL.G, true, true).bin,
+                $F.Util.Filter.histogram(color_im, $F.CHANNEL.B, true, true).bin
+                ];
+                histogram_match.worker(runInThread);
+                container
+                .append(Img(im1, 'Original Image'))
+                .append(Img(im2, 'Red Channel'))
+                .append(Img(im3, 'Green Channel'))
+                .append(Img(im4, 'Blue Channel'))
+                .append(Img(im5, 'Red Colorized applied to Selection'))
+                .append(Img(im6, 'Grayscale and Contrast'))
+                .append(Img(im7, 'Quick Sepia'))
+                .append(Img(im8, 'Posterize'))
+                .append(Img(im9, 'HalfTone (Plugin)'))
+                .append(Img(im10, 'Emboss'))
+                .append(Img(im11, 'Geometric Twirl Map'))
+                .append(Img(im12, 'Displace Map'))
+                .append(Img(im13, 'Grayscale, Sobel Gradient Magnitude (Composite)'))
+                .append(Img(im14, 'Histogram Equalization (Plugin)'))
+                .append(Img(im142, 'Histogram Matching (Plugin)'/*'Histogram Equalization via Histogram Matching (Plugin)'*/))
+                .append(Img(im17, 'Seamless Tile (Plugin)'))
+                .append(Img(im18, 'Canny Edges (Plugin)'))
+                .append(Img(im182, 'Rotation &amp; Scale Invariant Template Matcher'))
+                .append(Img(im183, 'Rotation &amp; Scale Invariant Template Matcher'))
+                /*.append(Img(im184, 'Color Detector'))*/
+                .append(Img(im19, 'Face, Eyes &amp; Mouth Detector'))
+                .append(Img(im20, 'Cartoonify'))
+                .append(Img(im21, 'Sketchify'))
+                .append(Img(im16, 'Color Flood Fill (Plugin)'))
+                .append(Img(im15, 'Perlin Noise (Plugin)'))
+                .append(Img(displacemap, 'Displacement Map'))
+                /*.append(Img(22, im22, 'Scale'))
+                .append(Img(23, im23, 'Pad'))
+                .append(Img(24, im24, 'Crop'))*/
+                ;
 
-        applyBt.show().on('click', apply);
-        restoreBt.show().on('click', restore);
+                applyBt.show().on('click', apply);
+                restoreBt.show().on('click', restore);
+            });
         });
     }
 
@@ -687,7 +698,7 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         im13.apply(grsb, closeThread);
         //im13.apply(glow, closeThread);
         im14.apply(equalize, closeThread);
-        //im142.apply(match_equalize, closeThread);
+        im142.apply(histogram_match/*match_equalize*/, closeThread);
         //im15.apply(simplexNoise, closeThread);
         im16.apply(floodFill, closeThread);
         im17.apply(seamless, closeThread);
@@ -733,7 +744,7 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         im12.restore();
         im13.restore();
         im14.restore();
-        /*im142.restore();*/
+        im142.restore();
         im15.restore();
         im16.restore();
         im17.restore();
