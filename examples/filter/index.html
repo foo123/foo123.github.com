@@ -287,6 +287,7 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         ,im12 = $F.Image.load(che)
         ,im13 = $F.Image.load(che)
         ,im14 = $F.Image.load(che)
+        //,im142 = $F.Image.load(che)
         ,im15 = $F.Image()
         ,im16 = $F.Image.load(yinyang)
         ,im17 = $F.Image.load(che)
@@ -338,6 +339,7 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         ,equalize = $F.HistogramEqualizeFilter($F.MODE.INTENSITY).worker(runInThread)
         ,equalize_gray = $F.HistogramEqualizeFilter($F.MODE.GRAY)
         //,rgbequalize = $F.HistogramEqualizeFilter($F.MODE.RGB).worker(runInThread)
+        //,match_equalize = $F.HistogramMatchFilter($F.MODE.INTENSITY, [(new Array(256).fill(0)).map(function(_, i) {return i/255;})]).worker(runInThread)
         //,noise = $F.NoiseFilter(-127, 127).worker(runInThread)
         ,sepia = $F.ColorMatrixFilter().sepia2().worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
         ,gray = $F.ColorMatrixFilter().grayscale()/*.worker(runInThread)*/
@@ -367,7 +369,7 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         //,shift = $F.AffineMatrixFilter().setMode($F.MODE.WRAP).shift(-50, 0).worker(runInThread)
         //,rotate = $F.AffineMatrixFilter().rotate(-Math.PI).worker(runInThread)
         //,blur = $F.ConvolutionMatrixFilter().boxBlur(3).worker(runInThread)
-        ,gauss = $F.ConvolutionMatrixFilter().fastGauss(3, 5).setMode($F.MODE.GRAY)/*.worker(runInThread)*///gaussBlur(3)
+        ,gauss = $F.ConvolutionMatrixFilter().fastGauss(4, 3).setMode($F.MODE.GRAY)/*.worker(runInThread)*///gaussBlur(3)
         //,vertical = $F.ConvolutionMatrixFilter().verticalBlur(21).worker(runInThread)
         //,diagonal = $F.ConvolutionMatrixFilter().directionalBlur(45, 9).worker(runInThread)
         //,glow = $F.ConvolutionMatrixFilter().glow().worker(runInThread)
@@ -393,8 +395,8 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
                                     4,  9, 12,  9, 4,
                                     2,  4,  5,  4, 2], 1.0/159.0).setMode($F.MODE.GRAY)*/
         ,canny = $F.CompositeFilter([
-            gray, equalize_gray, gauss,
-            $F.CannyEdgesFilter(40, 78, false/* use custom pre-bluring */)
+            gray, /*equalize_gray,*/ gauss,
+            $F.CannyEdgesFilter(/*40, 78,*/10, 78, false/* use custom pre-bluring */)
         ]).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
         ,faceDetector = $F.CompositeFilter([
             gray,
@@ -575,16 +577,16 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
 
     function init()
     {
-        $('#wasm').on( 'click', function() {
+        $('#wasm').on('click', function() {
             location.href = baseUrl + '?wasm=1';
         });
-        $('#webgl').on( 'click', function() {
+        $('#webgl').on('click', function() {
             location.href = baseUrl + '?webgl=1';
         });
-        $('#parallel').on( 'click', function() {
+        $('#parallel').on('click', function() {
             location.href = baseUrl + '?parallel=1';
         });
-        $('#synchronous').on( 'click', function() {
+        $('#synchronous').on('click', function() {
             location.href = baseUrl + '?synchronous=1';
         });
         //console.log($F.devicePixelRatio);
@@ -605,6 +607,7 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         .append(Img(im12, 'Displace Map'))
         .append(Img(im13, 'Grayscale, Sobel Gradient Magnitude (Composite)'))
         .append(Img(im14, 'Histogram Equalization (Plugin)'))
+        /*.append(Img(im142, 'Histogram Equalization via Histogram Matching (Plugin)'))*/
         .append(Img(im17, 'Seamless Tile (Plugin)'))
         .append(Img(im18, 'Canny Edges (Plugin)'))
         .append(Img(im182, 'Rotation &amp; Scale Invariant Template Matcher'))
@@ -684,6 +687,7 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         im13.apply(grsb, closeThread);
         //im13.apply(glow, closeThread);
         im14.apply(equalize, closeThread);
+        //im142.apply(match_equalize, closeThread);
         //im15.apply(simplexNoise, closeThread);
         im16.apply(floodFill, closeThread);
         im17.apply(seamless, closeThread);
@@ -729,6 +733,7 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         im12.restore();
         im13.restore();
         im14.restore();
+        /*im142.restore();*/
         im15.restore();
         im16.restore();
         im17.restore();
