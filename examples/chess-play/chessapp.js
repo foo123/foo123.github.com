@@ -22,7 +22,7 @@ function ChessApp(args)
         },
         stockfish = {
             engine: args.stockfishjs ? new Worker(args.stockfishjs) : null,
-            skill: '1',
+            elo: '1300',
             depth: '4',
             sendCMD: function(cmd) {
                 //console.log('send stockfish:"'+cmd+'"');
@@ -41,15 +41,15 @@ function ChessApp(args)
             algo: 'mcts',
             mcts: {depth:4, montecarlo:{startAtDepth:1, iterations:1000}},
             minimax: {depth:4},
-            minimaxmcts: {depth:4, montecarlo:{startAtDepth:2, iterations:100}},
+            minimaxmcts: {depth:4, montecarlo:{startAtDepth:4, iterations:100}},
             minimaxids: {depth:4},
-            minimaxmctsids: {depth:4, montecarlo:{startAtDepth:2, iterations:100}},
+            minimaxmctsids: {depth:4, montecarlo:{startAtDepth:4, iterations:100}},
         };
 
     if (stockfish.engine)
     {
         stockfish.engine.onmessage = function(evt) {
-            var line = evt && evt.data ? evt.data : evt;
+            var line = evt.data;
             if ((typeof line) !== "string")
             {
                 console.log("Got line ("+(typeof line)+"):", line);
@@ -69,7 +69,7 @@ function ChessApp(args)
     if (sunfish.engine)
     {
         sunfish.engine.onmessage = function(evt) {
-            var line = evt && evt.data ? evt.data : evt;
+            var line = evt.data;
             if ((typeof line) !== "string")
             {
                 console.log("Got line ("+(typeof line)+"):", line);
@@ -457,17 +457,20 @@ function ChessApp(args)
         removeClass(container, 'human-computer');
         removeClass(container, 'computer-human');
         var playwith = (controls  ? (controls.querySelector('select[data-action="playwith"]')||{}).value : null) || 'human-human',
-            skill = controls ? parseInt(controls.querySelector('input[data-action="skill"]').value) : 1,
+            elo = controls ? parseInt(controls.querySelector('input[data-action="elo"]').value) : 1300,
             iter = controls ? parseInt(controls.querySelector('input[data-action="iterations"]').value) : 1000,
             depth = controls ? parseInt(controls.querySelector('input[data-action="depth"]').value) : 4,
             opts = {};
         play_with_computer = playwith !== 'human-human';
-        stockfish.skill = String(skill);
+        stockfish.elo = String(elo);
         sunfish.depth = stockfish.depth = String(depth);
         ai.minimaxmctsids.depth = ai.minimaxmcts.depth = ai.minimaxids.depth = ai.minimax.depth = ai.mcts.depth = depth;
-        ai.minimaxmctsids.montecarlo.startAtDepth = ai.minimaxmcts.montecarlo.startAtDepth = depth < 6 ? Math.round(depth/2) : 3;
-        ai.minimaxmctsids.montecarlo.iterations = ai.minimaxmcts.montecarlo.iterations = Math.abs(depth-ai.minimaxmcts.montecarlo.startAtDepth)*10;
+        //ai.minimaxmctsids.montecarlo.startAtDepth = ai.minimaxmcts.montecarlo.startAtDepth = depth < 6 ? Math.round(depth/2) : 3;
+        //ai.minimaxmctsids.montecarlo.iterations = ai.minimaxmcts.montecarlo.iterations = Math.min(Math.abs(depth-ai.minimaxmcts.montecarlo.startAtDepth)*10, 500);
         ai.mcts.montecarlo.iterations = iter;
+        ai.minimaxmctsids.montecarlo.startAtDepth = ai.minimaxmcts.montecarlo.startAtDepth = depth+1;
+        ai.minimaxmctsids.depth = ai.minimaxmcts.depth = depth+5;
+        ai.minimaxmctsids.montecarlo.iterations = ai.minimaxmcts.montecarlo.iterations = 600;
         computer_plays = play_with_computer && (-1 < playwith.indexOf('-human'));
         is_random = play_with_computer && (-1 < playwith.indexOf('random'));
         is_stockfish = play_with_computer && (-1 < playwith.indexOf('stockfish'));
@@ -490,7 +493,9 @@ function ChessApp(args)
             if (is_stockfish)
             {
                 stockfish.sendCMD('uci');
-                stockfish.sendCMD('setoption name Skill Level value ' + stockfish.skill);
+                //stockfish.sendCMD('setoption name Skill Level value ' + stockfish.skill);
+                stockfish.sendCMD('setoption name UCI_LimitStrength value true');
+                stockfish.sendCMD('setoption name UCI_Elo value ' + stockfish.elo);
                 stockfish.sendCMD('ucinewgame');
                 stockfish.sendCMD('isready');
             }
@@ -514,25 +519,25 @@ function ChessApp(args)
     {
         if ('human-human' === playwith || -1 < playwith.indexOf('random'))
         {
-            addClass(removeClass(controls.querySelector('input[data-action="skill"]'), 'show'), 'hide');
+            addClass(removeClass(controls.querySelector('input[data-action="elo"]'), 'show'), 'hide');
             addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'show'), 'hide');
             addClass(removeClass(controls.querySelector('input[data-action="iterations"]'), 'show'), 'hide');
         }
         else if (-1 < playwith.indexOf('stockfish'))
         {
-            addClass(removeClass(controls.querySelector('input[data-action="skill"]'), 'hide'), 'show');
+            addClass(removeClass(controls.querySelector('input[data-action="elo"]'), 'hide'), 'show');
             addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'hide'), 'show');
             addClass(removeClass(controls.querySelector('input[data-action="iterations"]'), 'show'), 'hide');
         }
         else if (-1 < playwith.indexOf('sunfish'))
         {
-            addClass(removeClass(controls.querySelector('input[data-action="skill"]'), 'show'), 'hide');
+            addClass(removeClass(controls.querySelector('input[data-action="elo"]'), 'show'), 'hide');
             addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'hide'), 'show');
             addClass(removeClass(controls.querySelector('input[data-action="iterations"]'), 'show'), 'hide');
         }
         else
         {
-            addClass(removeClass(controls.querySelector('input[data-action="skill"]'), 'show'), 'hide');
+            addClass(removeClass(controls.querySelector('input[data-action="elo"]'), 'show'), 'hide');
             addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'hide'), 'show');
             addClass(removeClass(controls.querySelector('input[data-action="iterations"]'), -1 < playwith.indexOf('minimax') ? 'show' : 'hide'), -1 < playwith.indexOf('minimax') ? 'hide' : 'show');
         }
@@ -601,7 +606,7 @@ function ChessApp(args)
                 else if ('new' === action) newgame();
                 else if ('undo' === action) undo();
                 else if ('redo' === action) redo();
-                else if ('fen' === action) {var fen = game.getFEN(); game.dispose(); make(container, args.moves, game = new args.Chess(fen), squares = $$('div'), moves = (args.moves ? $$('div') : null)); console.log('from fen', fen);}
+                /*else if ('fen' === action) {var fen = game.getFEN(); game.dispose(); make(container, args.moves, game = new args.Chess(fen), squares = $$('div'), moves = (args.moves ? $$('div') : null)); console.log('from fen', fen);}*/
                 return false;
             }, {capture:false,passive:false});
             addEvent(controls, 'change', function(evt) {

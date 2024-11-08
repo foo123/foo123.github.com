@@ -4,11 +4,11 @@ importScripts('./chess.js');
 
 var T = 5,//1000/60,
     ai = {
-        mcts: {depth:4, montecarlo:{startAtDepth:1, iterations:1000}},
-        minimax: {depth:4, maxBreadth:function(depth, maxDepth) {return depth > 10 ? 2 : (depth > 4 ? 4 : Infinity);}},
-        minimaxmcts: {depth:4, montecarlo:{startAtDepth:2, iterations:100}},
-        minimaxids: {depth:4, ids:true},
-        minimaxmctsids: {depth:4, ids:true, montecarlo:{startAtDepth:2, iterations:100}},
+    mcts: {depth:4, montecarlo:{startAtDepth:1, iterations:1000}},
+    minimax: {depth:4, maxBreadth:function(depth, maxDepth) {return depth > 10 ? 2 : (depth > 4 ? 4 : Infinity);}},
+    minimaxmcts: {depth:4, montecarlo:{startAtDepth:2, iterations:100}},
+    minimaxids: {depth:4, iterativedeepening:true},
+    minimaxmctsids: {depth:4, iterativedeepening:true, montecarlo:{startAtDepth:2, iterations:100}},
     },
     _stopped = false
 ;
@@ -21,8 +21,10 @@ onmessage = function(e) {
         if (e.data.opts.montecarlo) opts.montecarlo = e.data.opts.montecarlo;
         opts.promotion = 'QUEEN';
         opts.stopped = function() {return _stopped;};
+        opts.cb = function(move) {game.dispose(); postMessage({move:move});};
+        opts.interval = T;
         _stopped = false;
-        game.getAIMove(opts, function(move) {game.dispose(); postMessage({move:move});}, T);
+        game.getAIMove(opts);
     }
     else if (e.data.stop)
     {

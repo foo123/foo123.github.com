@@ -1,7 +1,7 @@
 "use strict";
 
 var appName = "chess-play";
-var version = "v0.9.9"; // Change value to force update
+var version = "v0.9.10"; // Change value to force update
 var cacheKey = appName + "-" + version;
 var nocache = 'sw_nocache';
 var assets = [
