@@ -22,8 +22,8 @@ function ChessApp(args)
         },
         stockfish = {
             engine: args.stockfishjs ? new Worker(args.stockfishjs) : null,
-            elo: '1300',
-            depth: '4',
+            elo: 1300,
+            depth: 245, time: 10000,
             sendCMD: function(cmd) {
                 //console.log('send stockfish:"'+cmd+'"');
                 if (stockfish.engine) stockfish.engine.postMessage(cmd);
@@ -31,7 +31,7 @@ function ChessApp(args)
         },
         sunfish = {
             engine: args.sunfishjs ? new Worker(args.sunfishjs) : null,
-            depth: '4',
+            depth: 245, time: 10000,
             sendCMD: function(cmd) {
                 //console.log('send sunfish:"'+cmd+'"');
                 if (sunfish.engine) sunfish.engine.postMessage(cmd);
@@ -159,12 +159,12 @@ function ChessApp(args)
         if (is_sunfish)
         {
             sunfish.sendCMD('position startpos moves ' + game.getMovesUpToNow().join(' '));
-            sunfish.sendCMD('go ' + (sunfish.depth && sunfish.depth.length ? ('depth ' + sunfish.depth) : ''));
+            sunfish.sendCMD('go ' + (sunfish.depth ? ('depth ' + String(sunfish.depth)) : '') + (sunfish.time ? ('wtime ' + String(sunfish.time) + ' btime ' + String(sunfish.time)) : ''));
         }
         else
         {
             stockfish.sendCMD('position startpos moves ' + game.getMovesUpToNow().join(' '));
-            stockfish.sendCMD('go ' + (stockfish.depth && stockfish.depth.length ? ('depth ' + stockfish.depth) : ''));
+            stockfish.sendCMD('go ' + (stockfish.depth ? ('depth ' + String(stockfish.depth)) : '') + (stockfish.time ? ('wtime ' + String(stockfish.time) + ' btime ' + String(stockfish.time)) : ''));
         }
     }
 
@@ -462,8 +462,8 @@ function ChessApp(args)
             depth = controls ? parseInt(controls.querySelector('input[data-action="depth"]').value) : 4,
             opts = {};
         play_with_computer = playwith !== 'human-human';
-        stockfish.elo = String(elo);
-        sunfish.depth = stockfish.depth = String(depth);
+        stockfish.elo = elo;
+        //sunfish.depth = stockfish.depth = depth;
         ai.minimaxmctsids.depth = ai.minimaxmcts.depth = ai.minimaxids.depth = ai.minimax.depth = ai.mcts.depth = depth;
         //ai.minimaxmctsids.montecarlo.startAtDepth = ai.minimaxmcts.montecarlo.startAtDepth = depth < 6 ? Math.round(depth/2) : 3;
         //ai.minimaxmctsids.montecarlo.iterations = ai.minimaxmcts.montecarlo.iterations = Math.min(Math.abs(depth-ai.minimaxmcts.montecarlo.startAtDepth)*10, 500);
@@ -495,7 +495,7 @@ function ChessApp(args)
                 stockfish.sendCMD('uci');
                 //stockfish.sendCMD('setoption name Skill Level value ' + stockfish.skill);
                 stockfish.sendCMD('setoption name UCI_LimitStrength value true');
-                stockfish.sendCMD('setoption name UCI_Elo value ' + stockfish.elo);
+                stockfish.sendCMD('setoption name UCI_Elo value ' + String(stockfish.elo));
                 stockfish.sendCMD('ucinewgame');
                 stockfish.sendCMD('isready');
             }
@@ -526,13 +526,13 @@ function ChessApp(args)
         else if (-1 < playwith.indexOf('stockfish'))
         {
             addClass(removeClass(controls.querySelector('input[data-action="elo"]'), 'hide'), 'show');
-            addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'hide'), 'show');
+            addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'show'), 'hide');
             addClass(removeClass(controls.querySelector('input[data-action="iterations"]'), 'show'), 'hide');
         }
         else if (-1 < playwith.indexOf('sunfish'))
         {
             addClass(removeClass(controls.querySelector('input[data-action="elo"]'), 'show'), 'hide');
-            addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'hide'), 'show');
+            addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'show'), 'hide');
             addClass(removeClass(controls.querySelector('input[data-action="iterations"]'), 'show'), 'hide');
         }
         else
