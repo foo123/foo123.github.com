@@ -1,7 +1,7 @@
 /**
 *  chess.js
 *  A simple class to play chess
-*  @VERSION: 0.9.10
+*  @VERSION: 0.9.11
 *
 **/
 !function(root, name, factory) {
@@ -1087,15 +1087,13 @@ function Chess(options)
     self.getAIMove = function(opts) {
         if (!is_function(options.ai.move))
         {
-            options.ai.move = function(game, opts, player) {
-                return (new SearchStrategy.TreeSearch(game, opts)).findBestMove(player);
+            options.ai.move = function(game, opts, color) {
+                return (new SearchStrategy.TreeSearch(game, opts)).findBestMove(color);
             };
         }
-        var move = null;
         opts = opts || {};
         opts.promotion = opts.promotion || options.ai.promotion || 'QUEEN';
-        move = options.ai.move(this, opts, board.turn);
-        return move;
+        return options.ai.move(this, opts, board.turn);
     };
     self.doMove = function(pos1, pos2, promoted) {
         var coords1 = s2xy(pos1),
@@ -1271,7 +1269,6 @@ Chess[proto] = {
     isGameOver: null,
     winner: null
 };
-Chess.VERSION = "0.9.10";
 function SearchStrategy(game, opts)
 {
     var self = this;
@@ -1292,7 +1289,7 @@ SearchStrategy[proto] = {
 };
 Chess.SearchStrategy = SearchStrategy;
 
-var MATE = 20000, VALUE = [MATE, 1000, 100, 50, 200, 1];
+var MATE = 1000, VALUE = [MATE, 50, 10, 5, 20, 1];
 function evaluate_board(board, color)
 {
     /*
@@ -1303,29 +1300,17 @@ function evaluate_board(board, color)
 function evaluate_move(board, color, move, opponent_moves)
 {
     // O(1)
-    var opK = board.king[COLOR[OPPOSITE[color]]],
-        moved = move[0], placed = board._[move[3]][move[4]], taken = move[5],
+    var opK = board.king[COLOR[OPPOSITE[color]]];
+    if (0 === opponent_moves) return board.threatened_at_by(opK.y, opK.x, color) ? (MATE) : (MATE/2);
+    var moved = move[0], placed = board._[move[3]][move[4]], taken = move[5],
         promotion_gain = VALUE[placed.type-1]-VALUE[moved.type-1],
         capture_gain = !taken || (NONE === taken) ? 0 : VALUE[taken.type-1],
         material_gain = promotion_gain + capture_gain,
-        opponent_mobility = 0, close_to_opposite_king = 0, d1, d2;
-    if (null != opponent_moves)
-    {
-        if (0 === opponent_moves)
-        {
-            return board.threatened_at_by(opK.y, opK.x, color) ? (MATE) : (MATE/2);
-        }
-        else
-        {
-            opponent_mobility = 0.2*opponent_moves;
-        }
-    }
-    //if (!material_gain)
-    {
-        d1 = stdMath.abs(move[2]-opK.x)+stdMath.abs(move[1]-opK.y);
-        d2 = stdMath.abs(move[4]-opK.x)+stdMath.abs(move[3]-opK.y);
-        close_to_opposite_king = 0.1*(d2 > d1 ? (-d2) : (d2 < d1 ? (16-d2) : 0));
-    }
+        opponent_mobility = 0.2*(opponent_moves||0),
+        close_to_opposite_king = 0, d1, d2;
+    d1 = stdMath.abs(move[2]-opK.x)+stdMath.abs(move[1]-opK.y);
+    d2 = stdMath.abs(move[4]-opK.x)+stdMath.abs(move[3]-opK.y);
+    close_to_opposite_king = 0.1*(d2 > d1 ? (-d2) : (d2 < d1 ? (16-d2) : 0));
     return material_gain - opponent_mobility + close_to_opposite_king;
 }
 function shuffle(a, a0, a1)
@@ -1340,12 +1325,6 @@ function shuffle(a, a0, a1)
         a[a0+N] = a[a0+perm]; a[a0+perm] = swap;
     }
     return a;
-}
-function arrange_moves(moves, best_moves)
-{
-    var indices = best_moves.map(function(m) {return moves.indexOf(m);}).sort(function(a, b) {return a-b;});
-    for (var i=indices.length-1; i>=0; --i) moves.unshift(moves.splice(indices[i], 1)[0]);
-    return moves;
 }
 function sort_moves(moves, scores)
 {
@@ -1368,13 +1347,17 @@ function UCB1(si)
     ++si.Ni;
     return si.ni ? (si.qi/si.ni + stdMath.sqrt(2*stdMath.log(si.Ni)/si.ni)) : Infinity;
 }
+function clamp(x, xm, xM)
+{
+    return stdMath.min(stdMath.max(x, xm), xM);
+}
 function random_playout(opts, board, color, d, sgn, moves, statistics)
 {
     // Random Playout Monte Carlo Tree algorithm
     if (opts.stopped()) return 0;
     if (d >= opts.depthM) return opts.evaluate ? sgn*opts.evaluate(board, color) : 0;
     if (!moves) moves = board.all_moves_for(color);
-    if (!moves.length) return opts.evaluate ? (-sgn*(board.threatened_at_by(board.king[COLOR[color]].y, board.king[COLOR[color]].x, OPPOSITE[color]) ? (MATE) : (MATE/2))) : 0;
+    if (!moves.length) return opts.evaluate ? sgn*opts.evaluate(board, color) : 0;
     var mov, move, score, i, n, j, m, moves_next;
     if (statistics)
     {
@@ -1392,11 +1375,12 @@ function random_playout(opts, board, color, d, sgn, moves, statistics)
     moves_next = board.all_moves_for(OPPOSITE[color]);
     score = (opts.evaluate ? 0 : (sgn*evaluate_move(board, color, move, moves_next.length))) + random_playout(opts, board, OPPOSITE[color], d+1, -sgn, moves_next);
     board.unmove(move);
+    score = clamp(score, -MATE, MATE);
     if (statistics)
     {
         // update UCT/UCB1 stats on root for this action
         statistics[i].ni += 1;
-        statistics[i].qi += sgn*score/MATE/*(sgn*score/MATE - statistics[i].qi)/statistics[i].ni*/;
+        statistics[i].qi += (sgn*score+MATE)/(2*MATE)/*((sgn*score+MATE)/(2*MATE) - statistics[i].qi)/statistics[i].ni*/;
     }
     return score;
 }
@@ -1432,7 +1416,7 @@ function alphabeta(opts, board, color, d, alpha, beta, sgn, moves)
         if (alpha >= beta) return entry.score;
     }
     if (!moves) moves = board.all_moves_for(color);
-    if (!moves.length) return opts.evaluate ? (-sgn*(board.threatened_at_by(board.king[COLOR[color]].y, board.king[COLOR[color]].x, OPPOSITE[color]) ? (MATE) : (MATE/2))) : 0;
+    if (!moves.length) return opts.evaluate ? sgn*opts.evaluate(board, color) : 0;
     shuffle(moves);
     n = opts.maxBreadth ? stdMath.min(opts.maxBreadth(d, opts.depth), moves.length) : moves.length;
     for (i=0; i<n; ++i)
@@ -1453,6 +1437,7 @@ function alphabeta(opts, board, color, d, alpha, beta, sgn, moves)
         }
         score += opts.evaluate ? 0 : (sgn*evaluate_move(board, color, move, moves_next.length));
         board.unmove(move);
+        score = clamp(score, -MATE, MATE);
         if (0 < sgn)
         {
             if (score >= beta)  return beta;   // fail hard beta-cutoff
@@ -1551,6 +1536,7 @@ SearchStrategy.TreeSearch[proto].findBestMove = function(forPlayer) {
             }
             score += opts.evaluate ? 0 : evaluate_move(board, color, move, moves_next.length);
             board.unmove(move);
+            score = clamp(score, -MATE, MATE);
             scores[i] = score;
             if (score === alpha) {best_move.push(mov);}
             else if (score > alpha) {alpha = score; best_move = [mov];}
@@ -1565,5 +1551,6 @@ SearchStrategy.TreeSearch[proto].findBestMove = function(forPlayer) {
 };
 
 // export it
+Chess.VERSION = "0.9.11";
 return Chess;
 });
