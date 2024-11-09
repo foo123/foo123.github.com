@@ -127,6 +127,12 @@ body {
 #options li + li {
     margin-top: 6px;
 }
+#controls .input {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0;
+}
 #controls select,
 #controls input,
 #controls button {
@@ -143,11 +149,20 @@ body {
     font-size: var(--w);
     line-height: var(--w);
 }
+#controls label {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    --w: 16px;
+    font-size: var(--w);
+    line-height: var(--w);
+    margin-right: 4px;
+}
 #controls input {
     background: #eee;
 }
-#controls input + input,
-#controls select + input,
+#controls .input + .input,
+#controls select + .input,
 #controls button + select,
 #controls button + button {
     margin-left: 3px;
@@ -256,6 +271,9 @@ body {
     padding: 4px 6px;
     --w: 14px;
 }
+#controls label {
+    --w: 14px;
+}
 #controls .msg {
     font-size: 10px;
 }
@@ -297,9 +315,8 @@ body {
 </optgroup>
 </select>
 <span class="break"></span>
-<input style="--displ:inline-block" data-action="elo" title="ELO Strength" type="number" min="1300" max="2500" step="100" value="1300" />
-<input style="--displ:inline-block" data-action="depth" title="Depth of Search" type="number" min="1" max="50" step="1" value="4" />
-<input style="--displ:inline-block" data-action="iterations" title="Monte Carlo Iterations" type="number" min="0" max="100000" step="100" value="1000" />
+<div style="--displ:inline-block" class="input" id="elo-ctrl"><label for="elo">ELO:</label><input id="elo" data-action="elo" title="ELO Strength" type="number" min="1300" max="2500" step="100" value="1300" /></div>
+<div style="--displ:inline-block" class="input" id="depth-ctrl"><label for="depth">Depth:</label><input id="depth" data-action="depth" title="Depth of Search" type="number" min="1" max="50" step="1" value="4" /></div>
 <span class="break"></span>
 <button data-action="flip" title="Flip Sides"></button>
 <button data-action="new" title="New Game"></button>

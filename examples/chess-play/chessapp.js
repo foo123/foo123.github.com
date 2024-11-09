@@ -458,7 +458,6 @@ function ChessApp(args)
         removeClass(container, 'computer-human');
         var playwith = (controls  ? (controls.querySelector('select[data-action="playwith"]')||{}).value : null) || 'human-human',
             elo = controls ? parseInt(controls.querySelector('input[data-action="elo"]').value) : 1300,
-            iter = controls ? parseInt(controls.querySelector('input[data-action="iterations"]').value) : 1000,
             depth = controls ? parseInt(controls.querySelector('input[data-action="depth"]').value) : 4,
             opts = {};
         play_with_computer = playwith !== 'human-human';
@@ -467,7 +466,7 @@ function ChessApp(args)
         ai.minimaxmctsids.depth = ai.minimaxmcts.depth = ai.minimaxids.depth = ai.minimax.depth = ai.mcts.depth = depth;
         //ai.minimaxmctsids.montecarlo.startAtDepth = ai.minimaxmcts.montecarlo.startAtDepth = depth < 6 ? Math.round(depth/2) : 3;
         //ai.minimaxmctsids.montecarlo.iterations = ai.minimaxmcts.montecarlo.iterations = Math.min(Math.abs(depth-ai.minimaxmcts.montecarlo.startAtDepth)*10, 500);
-        ai.mcts.montecarlo.iterations = iter;
+        ai.mcts.montecarlo.iterations = 1000;
         ai.minimaxmctsids.montecarlo.startAtDepth = ai.minimaxmcts.montecarlo.startAtDepth = depth+1;
         ai.minimaxmctsids.depth = ai.minimaxmcts.depth = depth+5;
         ai.minimaxmctsids.montecarlo.iterations = ai.minimaxmcts.montecarlo.iterations = 600;
@@ -519,27 +518,23 @@ function ChessApp(args)
     {
         if ('human-human' === playwith || -1 < playwith.indexOf('random'))
         {
-            addClass(removeClass(controls.querySelector('input[data-action="elo"]'), 'show'), 'hide');
-            addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'show'), 'hide');
-            addClass(removeClass(controls.querySelector('input[data-action="iterations"]'), 'show'), 'hide');
+            addClass(removeClass(controls.querySelector('#elo-ctrl'), 'show'), 'hide');
+            addClass(removeClass(controls.querySelector('#depth-ctrl'), 'show'), 'hide');
         }
         else if (-1 < playwith.indexOf('stockfish'))
         {
-            addClass(removeClass(controls.querySelector('input[data-action="elo"]'), 'hide'), 'show');
-            addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'show'), 'hide');
-            addClass(removeClass(controls.querySelector('input[data-action="iterations"]'), 'show'), 'hide');
+            addClass(removeClass(controls.querySelector('#elo-ctrl'), 'hide'), 'show');
+            addClass(removeClass(controls.querySelector('#depth-ctrl'), 'show'), 'hide');
         }
         else if (-1 < playwith.indexOf('sunfish'))
         {
-            addClass(removeClass(controls.querySelector('input[data-action="elo"]'), 'show'), 'hide');
-            addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'show'), 'hide');
-            addClass(removeClass(controls.querySelector('input[data-action="iterations"]'), 'show'), 'hide');
+            addClass(removeClass(controls.querySelector('#elo-ctrl'), 'show'), 'hide');
+            addClass(removeClass(controls.querySelector('#depth-ctrl'), 'show'), 'hide');
         }
         else
         {
-            addClass(removeClass(controls.querySelector('input[data-action="elo"]'), 'show'), 'hide');
-            addClass(removeClass(controls.querySelector('input[data-action="depth"]'), 'hide'), 'show');
-            addClass(removeClass(controls.querySelector('input[data-action="iterations"]'), -1 < playwith.indexOf('minimax') ? 'show' : 'hide'), -1 < playwith.indexOf('minimax') ? 'hide' : 'show');
+            addClass(removeClass(controls.querySelector('#elo-ctrl'), 'show'), 'hide');
+            addClass(removeClass(controls.querySelector('#depth-ctrl'), 'hide'), 'show');
         }
     }
 
