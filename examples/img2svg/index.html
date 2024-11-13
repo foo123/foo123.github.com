@@ -256,7 +256,7 @@ body {
 </head>
 <body>
 <span id="forkongithub"><a href="https://github.com/foo123/img2svg">See me on GitHub</a></span>
-<header><h1>Convert Image to SVG with img2svg v.1.0.0</h1></header>
+<header><h1>Convert Image to SVG with img2svg v.2.0.0</h1></header>
 <div id="container">
 <div id="controls">
 <input type="text" id="image_url" placeholder="url.." />
@@ -282,18 +282,16 @@ const options = new DAT.GUI({height: 11*32.12, width:340, domElement: document.g
 const grayscale = options.add({gray: false}, 'gray').name('Grayscale');
 const contrast = options.add({contrast: 0}, 'contrast', 0, 1, 0.1).name('Contrast');
 const blur = options.add({radius: 0}, 'radius', 0, 20, 1).name('Blur Radius');
-const depth = options.add({depth: 5}, 'depth', 1, 256, 1).name('Color Depth');
-const connectedcomponents = options.add({cc: false}, 'cc').name('ConnectedComponents');
-const minpathsegments = options.add({mps: 2}, 'mps', 2, 100, 1).name('MinPathSegments');
-const turnpolicy = options.add({tp: "minority"}, 'tp').options({
-"left":"left", "right":"right", "black":"black", "white":"white", "majority":"majority", "minority":"minority"
-}).name('TurnPolicy');
+const depth = options.add({depth: 16}, 'depth', 1, 256, 1).name('Color Depth');
+const transparency = options.add({alpha: 50}, 'alpha', 0, 100, 1).name('Transparency');
+const layeredconnectedcomponents = options.add({lcc: false}, 'lcc').name('Layered');
+const minpathsegments = options.add({mps: 0}, 'mps', 0, 100, 1).name('MinPathSegments');
 const turdsize = options.add({ts: 0}, 'ts', 0, 100, 1).name('TurdSize');
-const alphamax = options.add({a: 1}, 'a', 0, 2, 0.1).name('AlphaMax');
-const optcurve = options.add({opt: true}, 'opt').name('OptCurve');
+const linetolerance = options.add({lt: 0.5}, 'lt', 0, 2, 0.1).name('LineTolerance');
+const alphamax = options.add({a: 1.0}, 'a', 0, 2, 0.1).name('AlphaMax');
 const opttolerance = options.add({ot: 0.2}, 'ot', 0, 1, 0.1).name('OptTolerance');
 
-const worker = new Worker("worker.js?refresh=1");
+const worker = new Worker("worker.js?v=2.0.0");
 
 let currentImage = null, imgType = 'jpg', img = null, imgData = null, imgChanged = false;
 
@@ -398,14 +396,13 @@ function convertToSVG(image)
                     blur: {radius:blur.getValue()}
                 },
                 params: {
-                    mode: grayscale.getValue() ? "gray" : "color",
                     depth: depth.getValue(),
-                    connectedcomponents: connectedcomponents.getValue(),
+                    transparency: transparency.getValue(),
+                    layered: layeredconnectedcomponents.getValue(),
                     minpathsegments: minpathsegments.getValue(),
-                    turnpolicy: turnpolicy.getValue(),
                     turdsize: turdsize.getValue(),
+                    linetolerance: linetolerance.getValue(),
                     alphamax: alphamax.getValue(),
-                    optcurve: optcurve.getValue(),
                     opttolerance: opttolerance.getValue()
                 }
             });
