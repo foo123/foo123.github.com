@@ -237,6 +237,7 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         ,che = '../common/assets/che.jpg'
         ,marcos = '../common/assets/marcos.jpg'
         ,mahatma = '../common/assets/mahatma2.png'
+        ,mandela = '../common/assets/mandela2.jpg'
         //,lenna = '../common/assets/lenna.png'
         ,face_model = '../common/assets/model_face.jpg'
         ,yinyang = '../common/assets/yin_yang_blank.png'
@@ -279,8 +280,8 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         ,im3 = $F.Image.load(che)
         ,im4 = $F.Image.load(che)
         ,im5 = $F.Image.load(che)
-        ,im6 = $F.Image.load(che)
-        ,im7 = $F.Image.load(che)
+        ,im6 = $F.Image.load(mandela)
+        ,im7 = $F.Image.load(mahatma)
         ,im8 = $F.Image.load(che)
         ,im9 = $F.Image.load(che)
         ,im10 = $F.Image.load(che)
@@ -292,10 +293,9 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         ,im15 = $F.Image()
         ,im16 = $F.Image.load(yinyang)
         ,im17 = $F.Image.load(che)
-        ,im18 = $F.Image.load(che/*lenna*/)
+        ,im18 = $F.Image.load(che)
         ,im182 = $F.Image.load(che)
         ,im183 = $F.Image.load('../common/assets/che_-45deg.jpg')
-        /*,im184 = $F.Image.load(mahatma)*/
         ,im19 = $F.Image.load(model/*face_model*/)
         ,im20 = $F.Image.load(model)
         ,im21 = $F.Image.load(model)
@@ -608,10 +608,10 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
                 .append(Img(im3, 'Green Channel'))
                 .append(Img(im4, 'Blue Channel'))
                 .append(Img(im5, 'Red Colorized applied to Selection'))
-                .append(Img(im6, 'Grayscale and Contrast'))
                 .append(Img(im7, 'Quick Sepia'))
-                .append(Img(im8, 'Posterize'))
+                .append(Img(im6, 'Grayscale and Contrast'))
                 .append(Img(im9, 'HalfTone (Plugin)'))
+                .append(Img(im8, 'Posterize'))
                 .append(Img(im10, 'Emboss'))
                 .append(Img(im11, 'Geometric Twirl Map'))
                 .append(Img(im12, 'Displace Map'))
