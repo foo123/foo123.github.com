@@ -236,8 +236,8 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
     var baseUrl = location.href.split(/#|\?/)[0]
         ,che = '../common/assets/che.jpg'
         ,marcos = '../common/assets/marcos.jpg'
-        ,mahatma = '../common/assets/mahatma2.png'
-        ,mandela = '../common/assets/mandela2.jpg'
+        ,mahatma = '../common/assets/mahatma3.jpg'
+        ,mandela = '../common/assets/mandela.jpg'
         //,lenna = '../common/assets/lenna.png'
         ,face_model = '../common/assets/model_face.jpg'
         ,yinyang = '../common/assets/yin_yang_blank.png'
@@ -280,11 +280,11 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         ,im3 = $F.Image.load(che)
         ,im4 = $F.Image.load(che)
         ,im5 = $F.Image.load(che)
-        ,im6 = $F.Image.load(mandela)
-        ,im7 = $F.Image.load(mahatma)
+        ,im6 = $F.Image.load(che)
+        ,im7 = $F.Image.load(che)
         ,im8 = $F.Image.load(che)
-        ,im9 = $F.Image.load(che)
-        ,im10 = $F.Image.load(che)
+        ,im9 = $F.Image.load(mahatma)
+        ,im10 = $F.Image.load(mandela)
         ,im11 = $F.Image.load(che)
         ,im12 = $F.Image.load(che)
         ,im13 = $F.Image.load(che)
@@ -354,8 +354,8 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         //,crop = $F.DimensionFilter('crop', 20, 20, 50, 50).worker(runInThread).makeGLSL(runInWebGL).makeWASM(runInWasm)
         //,maximum = $F.StatisticalFilter().maximum(15).worker(runInThread)
         ,halftoned = $F.CompositeFilter([
-            gray,
-            $F.HalftoneFilter(1).threshold(0.4).setMode($F.MODE.GRAY)
+            //gray,
+            $F.HalftoneFilter(1).threshold(0.4).setMode($F.MODE.RGB)
         ]).worker(runInThread)
         //,pixelate = $F.PixelateFilter(8, 'rectangular').worker(runInThread)
         //,pixelate = $F.PixelateFilter(10, 'triangular').worker(runInThread)
@@ -610,8 +610,8 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
                 .append(Img(im5, 'Red Colorized applied to Selection'))
                 .append(Img(im7, 'Quick Sepia'))
                 .append(Img(im6, 'Grayscale and Contrast'))
-                .append(Img(im9, 'HalfTone (Plugin)'))
                 .append(Img(im8, 'Posterize'))
+                .append(Img(im9, 'HalfTone (Plugin)'))
                 .append(Img(im10, 'Emboss'))
                 .append(Img(im11, 'Geometric Twirl Map'))
                 .append(Img(im12, 'Displace Map'))
