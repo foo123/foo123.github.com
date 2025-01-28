@@ -1,6 +1,6 @@
 "use strict";
 
-importScripts('img2svg.min.js?v=2.0.0');
+importScripts('img2svg.min.js?v=2.0.1');
 
 function uint8(x)
 {

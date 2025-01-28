@@ -256,7 +256,7 @@ body {
 </head>
 <body>
 <span id="forkongithub"><a href="https://github.com/foo123/img2svg">See me on GitHub</a></span>
-<header><h1>Convert Image to SVG with img2svg v.2.0.0</h1></header>
+<header><h1>Convert Image to SVG with img2svg v.2.0.1</h1></header>
 <div id="container">
 <div id="controls">
 <input type="text" id="image_url" placeholder="url.." />
@@ -291,7 +291,7 @@ const linetolerance = options.add({lt: 0.5}, 'lt', 0, 2, 0.1).name('LineToleranc
 const alphamax = options.add({a: 1.0}, 'a', 0, 2, 0.1).name('AlphaMax');
 const opttolerance = options.add({ot: 0.2}, 'ot', 0, 1, 0.1).name('OptTolerance');
 
-const worker = new Worker("worker.js?v=2.0.0");
+const worker = new Worker("worker.js?v=2.0.1");
 
 let currentImage = null, imgType = 'jpg', img = null, imgData = null, imgChanged = false;
 
