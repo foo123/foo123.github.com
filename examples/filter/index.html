@@ -193,7 +193,7 @@
 <button id="synchronous" class="button">Synchronous</button>
 <button id="parallel" class="button">Parallel</button>
 <button id="webgl" class="button">WebGL</button>
-<button id="wasm" class="button">WASM</button>
+<!--<button id="wasm" class="button">WASM</button>-->
 <button id="applyBt" style="display:none" class="button">Apply</button>
 <button id="restoreBt" style="display:none" class="button">Restore</button><br />
 <i style="font-size:11px"><b>Note:</b> images may appear as blurred if scaled from original dimensions due to responsive design</i>
@@ -229,6 +229,7 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         alert('Browser does not support Web Assembly');
     }
     runInWasm = !!($F.supportsWASM() && runInWasm);
+    runInWasm = false;
     document.getElementById('mode').textContent = runInThread ? 'Parallel' : (runInWasm ? 'Wasm' : (runInWebGL ? 'WebGL' : 'Synchronous'));
 
     document.getElementById('lib-version').innerHTML = $F.VERSION;
@@ -616,10 +617,10 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
                 .append(Img(im17, 'Seamless Tile (Plugin)'))
                 .append(Img(im11, 'Geometric Twirl Map'))
                 .append(Img(im12, 'Displace Map'))
-                .append(Img(im13, 'Grayscale, Sobel Gradient Magnitude (Composite)'))
+                .append(Img(im6, 'Grayscale and Contrast'))
                 .append(Img(im14, 'Histogram Equalization (Plugin)'))
                 .append(Img(im142, 'Histogram Matching (Plugin)'/*'Histogram Equalization via Histogram Matching (Plugin)'*/))
-                .append(Img(im6, 'Grayscale and Contrast'))
+                .append(Img(im13, 'Grayscale, Sobel Gradient Magnitude (Composite)'))
                 .append(Img(im18, 'Canny Edges (Plugin)'))
                 .append(Img(im182, 'Rotation &amp; Scale Invariant Template Matcher'))
                 .append(Img(im183, 'Rotation &amp; Scale Invariant Template Matcher'))
