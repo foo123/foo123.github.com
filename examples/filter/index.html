@@ -212,7 +212,7 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
     // utils
     var runInThread = /\?parallel\b/i.test(location.href),
         runInWebGL = /\?webgl\b/i.test(location.href),
-        runInWasm = /\?wasm\b/i.test(location.href);
+        runInWasm = false/*/\?wasm\b/i.test(location.href)*/;
 
     if (runInThread && !$F.Browser.supportsWorker)
     {
@@ -229,7 +229,6 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
         alert('Browser does not support Web Assembly');
     }
     runInWasm = !!($F.supportsWASM() && runInWasm);
-    runInWasm = false;
     document.getElementById('mode').textContent = runInThread ? 'Parallel' : (runInWasm ? 'Wasm' : (runInWebGL ? 'WebGL' : 'Synchronous'));
 
     document.getElementById('lib-version').innerHTML = $F.VERSION;
@@ -581,9 +580,9 @@ function(haarcascade_frontalface_alt, haarcascade_eye, haarcascade_mcs_mouth, $,
 
     function init()
     {
-        $('#wasm').on('click', function() {
+        /*$('#wasm').on('click', function() {
             location.href = baseUrl + '?wasm=1';
-        });
+        });*/
         $('#webgl').on('click', function() {
             location.href = baseUrl + '?webgl=1';
         });
