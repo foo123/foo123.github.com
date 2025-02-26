@@ -137,7 +137,7 @@
     <div class="fluid col-1-1" style="padding:0;margin-top:-50px;position:relative;z-index:1000;">
         <button id="synchronous" class="button">Synchronous</button>
         <button id="webgl" class="button">WebGL</button>
-        <button id="wasm" class="button">WASM</button>
+        <!--<button id="wasm" class="button">WASM</button>-->
     </div>
 
     <div id="statsContainer" style="margin-top:40px;"></div>
@@ -332,7 +332,7 @@
         function($F, AreaSelect, Stats) {
         document.getElementById('lib-version').innerHTML = $F.VERSION;
         var runInWebGL = /\?webgl\b/i.test(location.href),
-            runInWasm = /\?wasm\b/i.test(location.href);
+            runInWasm = false/*/\?wasm\b/i.test(location.href)*/;
 
         if (runInWebGL && !$F.supportsGLSL())
         {
