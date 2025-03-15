@@ -140,7 +140,7 @@ body {
 <br />
 
 <button id="webgl" class="button">WebGL</button>
-<button id="wasm" class="button">WASM</button>
+<!--<button id="wasm" class="button">WASM</button>-->
 <button id="synchronous" class="button">JavaScript</button>
 <br />
 <div class="fluid col-1-1" style="margin:60px auto 0 auto;max-width:1280px;display:block;">
@@ -275,7 +275,7 @@ require(['DatGUI', 'FILTER'], function(DAT, FILTER) {
         alert('Browser does not support WebGL');
     }
     runInWebGL = !!(F.supportsGLSL() && runInWebGL);
-    runInWasm = /\?wasm\b/i.test(location.href);
+    runInWasm = false;///\?wasm\b/i.test(location.href);
     if (runInWasm && !F.supportsWASM())
     {
         alert('Browser does not support Web Assembly');
@@ -293,9 +293,9 @@ require(['DatGUI', 'FILTER'], function(DAT, FILTER) {
     document.getElementById('webgl').addEventListener('click', function() {
         location.href = baseUrl + '?webgl=1';
     }, false);
-    document.getElementById('wasm').addEventListener('click', function() {
+    /*document.getElementById('wasm').addEventListener('click', function() {
         location.href = baseUrl + '?wasm=1';
-    }, false);
+    }, false);*/
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
         F.onReady(init);
     else
