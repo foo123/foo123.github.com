@@ -7,7 +7,7 @@
 <title>Open Source Examples and Projects | foo123 | Code Artist · Architect · Musician</title>
 <meta name="description" content="" />
 <meta property="og:image" content="https://foo123.github.io/image.jpg">
-<meta property="og:url" content="https://foo123.github.io/">
+<meta property="og:url" content="https://foo123.github.io/examples/">
 <meta name="twitter:card" content="summary">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3.1">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=3.1">
@@ -51,6 +51,37 @@ body {
 a {
     text-decoration: none;
     color: inherit;
+}
+.icon {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0 2px;
+    background: none;
+    vertical-align: middle;
+    width: 42px;
+}
+.icon::before {
+    content: "";
+    position: relative;
+    display: block;
+    padding: 0;
+    margin: 0;
+    height: auto;
+    width: 100%;
+    padding-top: 100%;
+    background-image: none;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover !important;
+}
+.icon.gh::before {
+    background-image: url('data:image/svg+xml;utf8,<svg width="800px" height="800px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-140.000000, -7559.000000)" fill="%23fff"><g transform="translate(56.000000, 160.000000)"><path d="M94,7399 C99.523,7399 104,7403.59 104,7409.253 C104,7413.782 101.138,7417.624 97.167,7418.981 C96.66,7419.082 96.48,7418.762 96.48,7418.489 C96.48,7418.151 96.492,7417.047 96.492,7415.675 C96.492,7414.719 96.172,7414.095 95.813,7413.777 C98.04,7413.523 100.38,7412.656 100.38,7408.718 C100.38,7407.598 99.992,7406.684 99.35,7405.966 C99.454,7405.707 99.797,7404.664 99.252,7403.252 C99.252,7403.252 98.414,7402.977 96.505,7404.303 C95.706,7404.076 94.85,7403.962 94,7403.958 C93.15,7403.962 92.295,7404.076 91.497,7404.303 C89.586,7402.977 88.746,7403.252 88.746,7403.252 C88.203,7404.664 88.546,7405.707 88.649,7405.966 C88.01,7406.684 87.619,7407.598 87.619,7408.718 C87.619,7412.646 89.954,7413.526 92.175,7413.785 C91.889,7414.041 91.63,7414.493 91.54,7415.156 C90.97,7415.418 89.522,7415.871 88.63,7414.304 C88.63,7414.304 88.101,7413.319 87.097,7413.247 C87.097,7413.247 86.122,7413.234 87.029,7413.87 C87.029,7413.87 87.684,7414.185 88.139,7415.37 C88.139,7415.37 88.726,7417.2 91.508,7416.58 C91.513,7417.437 91.522,7418.245 91.522,7418.489 C91.522,7418.76 91.338,7419.077 90.839,7418.982 C86.865,7417.627 84,7413.783 84,7409.253 C84,7403.59 88.478,7399 94,7399"></path></g></g></g></svg>');
+}
+.icon.so::before {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23fff" width="800px" height="800px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M8.696 23.002v2.662h13.321v-2.662h-13.321zM3.366 20.336v10.659h23.981v-10.659h-2.666v7.994h-18.652v-7.993h-2.663zM9.483 16.928l-0.55 2.616 13.087 2.75 0.55-2.614-13.087-2.753zM11.795 10.855l-1.131 2.424 12.124 5.645 1.13-2.424zM15.731 5.276l-1.711 2.054 10.278 8.56 1.711-2.054zM20.655 1.004l-2.149 1.596 7.985 10.732 2.144-1.596z"></path></svg>');
 }
 .controller {
     position: fixed !important;
@@ -177,19 +208,31 @@ a {
 }
 .page.demo-page,
 #page_main {
-    padding: 30px;
-    padding-top: 60px;
+    padding: 60px 30px;
     background: rgb(235, 104, 61);
     background: linear-gradient(90deg, rgb(235, 104, 61) 0%, rgb(50, 50, 50) 100%);
     color: #fff;
-    font-size: 14px;
+    font-size: 16px;
 }
 .page h2 {
     font-size: 24px;
     font-weight: bold;
     text-align: center;
     display: block;
-    margin: 2px auto 46px auto;
+    margin: 2px auto 40px auto;
+}
+.page > p {
+    display: block;
+    margin: 20px 10px;
+    margin-bottom: 50px;
+    text-align: center;
+}
+.page > p > a {
+    display: inline-block;
+    margin: 0
+}
+.page > p > a:first-child {
+    margin-right: 30px;
 }
 .page .footer {
     position: relative;
@@ -242,8 +285,8 @@ ul.grid li {
     position: relative;
     display: block;
     margin-top: 10px;
-    font-size: 12px;
-    line-height: 20px;
+    font-size: 14px;
+    line-height: 22px;
     text-align: left;
 }
 @media (max-width: 1540px) {
@@ -275,6 +318,7 @@ ul.grid {
 #page_main {
     padding: 14px;
     padding-top: 60px;
+    padding-bottom: 60px;
 }
 }
 @media (max-width: 420px) {
@@ -288,6 +332,7 @@ ul.grid {
 #page_main {
     padding: 10px;
     padding-top: 60px;
+    padding-bottom: 60px;
 }
 }
 </style>
@@ -295,7 +340,7 @@ ul.grid {
 /*https://github.com/foo123/grid.css*/
 .grid{position:relative;display:block;box-sizing:border-box;list-style-type:none!important;font-size:0!important;margin:0;border:0;padding:0;text-align:left;width:100%;height:auto;--columns:4;--column-gap:0;--row-gap:0;--g-cols:calc(max(1,var(--columns,1)))}.grid>*{position:relative;display:inline-block;box-sizing:border-box;font-size:1rem;margin:0;height:auto}.grid.grid-layout{display:grid;grid-template-columns:repeat(var(--g-cols),1fr);grid-template-rows:auto;column-gap:var(--column-gap,0);row-gap:var(--row-gap,0);justify-content:stretch}.grid.grid-layout>*{}.grid.flex-layout{display:flex;flex-direction:row;flex-wrap:wrap;justify-content:flex-start;align-items:flex-start;align-content:flex-start;column-gap:var(--column-gap,0);row-gap:var(--row-gap,0)}.grid.flex-layout>*{flex:0 1 calc((100% - (var(--g-cols) - 1) * var(--column-gap,0)) / var(--g-cols))}.grid:not(.flex-layout):not(.grid-layout)>*{--g-is1n:0;--g-is2n:0;--g-is3n:0;--g-is4n:0;--g-is5n:0;--g-is6n:0;--g-is7n:0;--g-is8n:0;--g-is9n:0;--g-is10n:0;--g-is11n:0;--g-is12n:0;--g-is13n:0;--g-is14n:0;--g-is15n:0;--g-is16n:0;--g-is17n:0;--g-is18n:0;--g-is19n:0;--g-is20n:0;--g-is1:0;--g-is2:0;--g-is3:0;--g-is4:0;--g-is5:0;--g-is6:0;--g-is7:0;--g-is8:0;--g-is9:0;--g-is10:0;--g-is11:0;--g-is12:0;--g-is13:0;--g-is14:0;--g-is15:0;--g-is16:0;--g-is17:0;--g-is18:0;--g-is19:0;--g-is20:0;display:inline-block;vertical-align:top;width:calc((100% - (var(--g-cols) - 1) * var(--column-gap,0)) / var(--g-cols))}.grid:not(.flex-layout):not(.grid-layout)>*{--g-is1n:calc(1 - max(clamp(-1,var(--g-cols) - 1,1),0 - clamp(-1,var(--g-cols) - 1,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(2n){--g-is2n:calc(1 - max(clamp(-1,var(--g-cols) - 2,1),0 - clamp(-1,var(--g-cols) - 2,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(3n){--g-is3n:calc(1 - max(clamp(-1,var(--g-cols) - 3,1),0 - clamp(-1,var(--g-cols) - 3,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(4n){--g-is4n:calc(1 - max(clamp(-1,var(--g-cols) - 4,1),0 - clamp(-1,var(--g-cols) - 4,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(5n){--g-is5n:calc(1 - max(clamp(-1,var(--g-cols) - 5,1),0 - clamp(-1,var(--g-cols) - 5,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(6n){--g-is6n:calc(1 - max(clamp(-1,var(--g-cols) - 6,1),0 - clamp(-1,var(--g-cols) - 6,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(7n){--g-is7n:calc(1 - max(clamp(-1,var(--g-cols) - 7,1),0 - clamp(-1,var(--g-cols) - 7,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(8n){--g-is8n:calc(1 - max(clamp(-1,var(--g-cols) - 8,1),0 - clamp(-1,var(--g-cols) - 8,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(9n){--g-is9n:calc(1 - max(clamp(-1,var(--g-cols) - 9,1),0 - clamp(-1,var(--g-cols) - 9,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(10n){--g-is10n:calc(1 - max(clamp(-1,var(--g-cols) - 10,1),0 - clamp(-1,var(--g-cols) - 10,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(11n){--g-is11n:calc(1 - max(clamp(-1,var(--g-cols) - 11,1),0 - clamp(-1,var(--g-cols) - 11,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(12n){--g-is12n:calc(1 - max(clamp(-1,var(--g-cols) - 12,1),0 - clamp(-1,var(--g-cols) - 12,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(13n){--g-is13n:calc(1 - max(clamp(-1,var(--g-cols) - 13,1),0 - clamp(-1,var(--g-cols) - 13,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(14n){--g-is14n:calc(1 - max(clamp(-1,var(--g-cols) - 14,1),0 - clamp(-1,var(--g-cols) - 14,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(15n){--g-is15n:calc(1 - max(clamp(-1,var(--g-cols) - 15,1),0 - clamp(-1,var(--g-cols) - 15,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(16n){--g-is16n:calc(1 - max(clamp(-1,var(--g-cols) - 16,1),0 - clamp(-1,var(--g-cols) - 16,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(17n){--g-is17n:calc(1 - max(clamp(-1,var(--g-cols) - 17,1),0 - clamp(-1,var(--g-cols) - 17,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(18n){--g-is18n:calc(1 - max(clamp(-1,var(--g-cols) - 18,1),0 - clamp(-1,var(--g-cols) - 18,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(19n){--g-is19n:calc(1 - max(clamp(-1,var(--g-cols) - 19,1),0 - clamp(-1,var(--g-cols) - 19,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(20n){--g-is20n:calc(1 - max(clamp(-1,var(--g-cols) - 20,1),0 - clamp(-1,var(--g-cols) - 20,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(1){--g-is1:1}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(2){--g-is2:calc(clamp(0,var(--g-cols) - 2 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(3){--g-is3:calc(clamp(0,var(--g-cols) - 3 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(4){--g-is4:calc(clamp(0,var(--g-cols) - 4 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(5){--g-is5:calc(clamp(0,var(--g-cols) - 5 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(6){--g-is6:calc(clamp(0,var(--g-cols) - 6 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(7){--g-is7:calc(clamp(0,var(--g-cols) - 7 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(8){--g-is8:calc(clamp(0,var(--g-cols) - 8 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(9){--g-is9:calc(clamp(0,var(--g-cols) - 9 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(10){--g-is10:calc(clamp(0,var(--g-cols) - 10 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(11){--g-is11:calc(clamp(0,var(--g-cols) - 11 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(12){--g-is12:calc(clamp(0,var(--g-cols) - 12 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(13){--g-is13:calc(clamp(0,var(--g-cols) - 13 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(14){--g-is14:calc(clamp(0,var(--g-cols) - 14 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(15){--g-is15:calc(clamp(0,var(--g-cols) - 15 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(16){--g-is16:calc(clamp(0,var(--g-cols) - 16 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(17){--g-is17:calc(clamp(0,var(--g-cols) - 17 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(18){--g-is18:calc(clamp(0,var(--g-cols) - 18 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(19){--g-is19:calc(clamp(0,var(--g-cols) - 19 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(20){--g-is20:calc(clamp(0,var(--g-cols) - 20 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*{margin-top:calc(var(--row-gap,0) * (1 - min(1,(var(--g-is1) + var(--g-is2) + var(--g-is3) + var(--g-is4) + var(--g-is5) + var(--g-is6) + var(--g-is7) + var(--g-is8) + var(--g-is9) + var(--g-is10) + var(--g-is11) + var(--g-is12) + var(--g-is13) + var(--g-is14) + var(--g-is15) + var(--g-is16) + var(--g-is17) + var(--g-is18) + var(--g-is19) + var(--g-is20)))));margin-right:calc(var(--column-gap,0) * (1 - min(1,(var(--g-is1n) + var(--g-is2n) + var(--g-is3n) + var(--g-is4n) + var(--g-is5n) + var(--g-is6n) + var(--g-is7n) + var(--g-is8n) + var(--g-is9n) + var(--g-is10n) + var(--g-is11n) + var(--g-is12n) + var(--g-is13n) + var(--g-is14n) + var(--g-is15n) + var(--g-is16n) + var(--g-is17n) + var(--g-is18n) + var(--g-is19n) + var(--g-is20n)))))}
 </style>
-<script type="text/javascript">
+<script type="text/javascript">//<![CDATA[
 var main = false;
 function navigate()
 {
@@ -328,7 +373,7 @@ function goback()
     }
     return true;
 }
-</script>
+//]]></script>
 </head>
 <body>
 <!-- page controllers -->
@@ -363,6 +408,10 @@ function goback()
     <!-- main page -->
     <section id="page_main" class="page">
     <h2>Open Source Examples and Projects</h2>
+    <p>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" title="GitHub"></i></a>
+    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" title="StackOverflow"></i></a>
+    </p>
     <ul class="grid">
         <li>
             <a class="demo" href="#controller_page_frameworks" onclick="return navigate()">
@@ -449,297 +498,301 @@ function goback()
     
     <section id="page_frameworks" class="page demo-page">
     <h2>Frameworks / Libraries</h2>
+    <p>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" title="GitHub"></i></a>
+    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" title="StackOverflow"></i></a>
+    </p>
     <ul class="grid">
         <li>
             <a class="demo" href="https://github.com/foo123/tico">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/tico.jpg" style="--src:url('../thumbs/tico.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/tico.jpg" style="--src:url('../thumbs/tico.jpg')" alt="" />
                 <p>tico: tiny, super-simple but versatile quasi-MVC web framework for PHP</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/modelview/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/modelview.jpg" style="--src:url('../thumbs/modelview.jpg')" alt="" />
+            <a class="demo" href="./modelview/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/modelview.jpg" style="--src:url('../thumbs/modelview.jpg')" alt="" />
                 <p>ModelView.js: a simple, fast, light-weight, isomorphic MVVM framework for JavaScript</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/contemplate/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/contemplate-2.jpg" style="--src:url('../thumbs/contemplate-2.jpg')" alt="" />
+            <a class="demo" href="./contemplate/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/contemplate-2.jpg" style="--src:url('../thumbs/contemplate-2.jpg')" alt="" />
                 <p>Contemplate: light-weight, fast and flexible object-ooriented template engine for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/InTpl">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/intpl.jpg" style="--src:url('../thumbs/intpl.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/intpl.jpg" style="--src:url('../thumbs/intpl.jpg')" alt="" />
                 <p>InTpl: super-simple PHP templates with inheritance</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/htmlwidget/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/htmlwidget.jpg" style="--src:url('../thumbs/htmlwidget.jpg')" alt="" />
+            <a class="demo" href="./htmlwidget/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/htmlwidget.jpg" style="--src:url('../thumbs/htmlwidget.jpg')" alt="" />
                 <p>HtmlWidget: standalone &amp; pluggable optimized html widgets for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/Importer">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/importer.jpg" style="--src:url('../thumbs/importer.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/importer.jpg" style="--src:url('../thumbs/importer.jpg')" alt="" />
                 <p>Importer: a simple and versatile class and asset dependency manager and loader for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/PublishSubscribe">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/publishsubscribe2.jpg" style="--src:url('../thumbs/publishsubscribe2.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/publishsubscribe2.jpg" style="--src:url('../thumbs/publishsubscribe2.jpg')" alt="" />
                 <p>PublishSubscribe: Publish-Subscribe implementation for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/Formal">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/formal.jpg" style="--src:url('../thumbs/formal.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/formal.jpg" style="--src:url('../thumbs/formal.jpg')" alt="" />
                 <p>Formal: simple and versatile form data validation framework for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/EazyHttp">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/eazyhttp.jpg" style="--src:url('../thumbs/eazyhttp.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/eazyhttp.jpg" style="--src:url('../thumbs/eazyhttp.jpg')" alt="" />
                 <p>EazyHttp: easy, simple and fast HTTP requests for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/LoginManager">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/loginmanager.jpg" style="--src:url('../thumbs/loginmanager.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/loginmanager.jpg" style="--src:url('../thumbs/loginmanager.jpg')" alt="" />
                 <p>LoginManager: simple, barebones login manager for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/Localizer">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/l10n.png" style="--src:url('../thumbs/l10n.png')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/l10n.png" style="--src:url('../thumbs/l10n.png')" alt="" />
                 <p>Localizer: simple and versatile class for localization (l10n/i18n) for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/simple-captcha">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/simple-captcha.jpg" style="--src:url('../thumbs/simple-captcha.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/simple-captcha.jpg" style="--src:url('../thumbs/simple-captcha.jpg')" alt="" />
                 <p>SimpleCaptcha: simple, image-based, mathematical captcha for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/Unicache">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/unicache.jpg" style="--src:url('../thumbs/unicache.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/unicache.jpg" style="--src:url('../thumbs/unicache.jpg')" alt="" />
                 <p>Unicache: universal, agnostic, flexible Caching framework for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/Dromeo">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/dromeo2.jpg" style="--src:url('../thumbs/dromeo2.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/dromeo2.jpg" style="--src:url('../thumbs/dromeo2.jpg')" alt="" />
                 <p>Dromeo: simple, versatile, barebones pattern router for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/Dialect">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/dialect.jpg" style="--src:url('../thumbs/dialect.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/dialect.jpg" style="--src:url('../thumbs/dialect.jpg')" alt="" />
                 <p>Dialect: flexible cross-platfrom and cross-vendor SQL Builder for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/DialectORM">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/dialectorm.jpg" style="--src:url('../thumbs/dialectorm.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/dialectorm.jpg" style="--src:url('../thumbs/dialectorm.jpg')" alt="" />
                 <p>DialectORM: tiny, fast, super-simple and versatile Object-Relational-Mapper (ORM) supporting Relationships and Object-Document-Mapper (ODM) for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/regex-analyzer/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/yo-regex.jpg" style="--src:url('../thumbs/yo-regex.jpg')" alt="" />
+            <a class="demo" href="./regex-analyzer/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/yo-regex.jpg" style="--src:url('../thumbs/yo-regex.jpg')" alt="" />
                 <p>Regular Expression Analyser for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/regex-composer/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/yo-regex-composer.jpg" style="--src:url('../thumbs/yo-regex-composer.jpg')" alt="" />
+            <a class="demo" href="./regex-composer/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/yo-regex-composer.jpg" style="--src:url('../thumbs/yo-regex-composer.jpg')" alt="" />
                 <p>Intuitive Regular Expression Composer for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/xpresion/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/xpresion.jpg" style="--src:url('../thumbs/xpresion.jpg')" alt="" />
+            <a class="demo" href="./xpresion/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/xpresion.jpg" style="--src:url('../thumbs/xpresion.jpg')" alt="" />
                 <p>Xpresion: simple, fast and flexible eXpression parser engine / rewrite system with variables and custom functions support for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/grammar-template/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/grammtpl.jpg" style="--src:url('../thumbs/grammtpl.jpg')" alt="" />
+            <a class="demo" href="./grammar-template/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/grammtpl.jpg" style="--src:url('../thumbs/grammtpl.jpg')" alt="" />
                 <p>GrammarTemplate: versatile and intuitive grammar-based templating for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/GrammarTree">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/grammartree.jpg" style="--src:url('../thumbs/grammartree.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/grammartree.jpg" style="--src:url('../thumbs/grammartree.jpg')" alt="" />
                 <p>GrammarTree: Grammar to Abstract Syntax Tree generic parser for PHP, JavaScript, Python (IN PROGRESS)</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/classy.js">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/classy2.jpg" style="--src:url('../thumbs/classy2.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/classy2.jpg" style="--src:url('../thumbs/classy2.jpg')" alt="" />
                 <p>classy.js: an Object-Oriented mini-framework for JavaScript</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/asynchronous.js">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/asynchronous2.jpg" style="--src:url('../thumbs/asynchronous2.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/asynchronous2.jpg" style="--src:url('../thumbs/asynchronous2.jpg')" alt="" />
                 <p>Asynchronous: simple manager for asynchronous, sequenced, interleaved, linearised and parallelised tasks for JavaScript</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/RT">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/rt.jpg" style="--src:url('../thumbs/rt.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/rt.jpg" style="--src:url('../thumbs/rt.jpg')" alt="" />
                 <p>RT: uniform real-time client communication for JavaScript supporting Poll, BOSH and Web-Sockets</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/AjaxListener.js">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/ajaxlistener.jpg" style="--src:url('../thumbs/ajaxlistener.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/ajaxlistener.jpg" style="--src:url('../thumbs/ajaxlistener.jpg')" alt="" />
                 <p>AjaxListener: listen to any AJAX event on page, even by other scripts</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/area-select/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/area-select.jpg" style="--src:url('../thumbs/area-select.jpg')" alt="" />
+            <a class="demo" href="./area-select/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/area-select.jpg" style="--src:url('../thumbs/area-select.jpg')" alt="" />
                 <p>AreaSelect.js: select rectangular regions easily in DOM elements</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/area-sortable/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/area-sortable.jpg" style="--src:url('../thumbs/area-sortable.jpg')" alt="" />
+            <a class="demo" href="./area-sortable/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/area-sortable.jpg" style="--src:url('../thumbs/area-sortable.jpg')" alt="" />
                 <p>AreaSortable.js: sort items of an area using drag-and-drop for Desktop and Mobile browsers</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/infopopup/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/infopopup.jpg" style="--src:url('../thumbs/infopopup.jpg')" alt="" />
+            <a class="demo" href="./infopopup/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/infopopup.jpg" style="--src:url('../thumbs/infopopup.jpg')" alt="" />
                 <p>InfoPopup.js: show info popups simply and easily for Desktop and Mobile browsers</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/imagik/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/imagik.jpg" style="--src:url('../thumbs/imagik.jpg')" alt="" />
+            <a class="demo" href="./imagik/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/imagik.jpg" style="--src:url('../thumbs/imagik.jpg')" alt="" />
                 <p>Imagik: Fully-Featured, Fully-Customisable and Extendable Responsive CSS3 Slideshow</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/touchtouch/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/touchtouch.jpg" style="--src:url('../thumbs/touchtouch.jpg')" alt="" />
+            <a class="demo" href="./touchtouch/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/touchtouch.jpg" style="--src:url('../thumbs/touchtouch.jpg')" alt="" />
                 <p>touchTouch: Optimized Desktop and Mobile Photo Gallery</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/minislider/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/minislider.jpg" style="--src:url('../thumbs/minislider.jpg')" alt="" />
+            <a class="demo" href="./minislider/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/minislider.jpg" style="--src:url('../thumbs/minislider.jpg')" alt="" />
                 <p>minislider: Optimized responsive Desktop and Mobile Mini Slider</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/minicarousel/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/minicarousel.png" style="--src:url('../thumbs/minicarousel.png')" alt="" />
+            <a class="demo" href="./minicarousel/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/minicarousel.png" style="--src:url('../thumbs/minicarousel.png')" alt="" />
                 <p>minicarousel: Optimized responsive Carousel for Desktop and Mobile</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/filter/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/filter.jpg" style="--src:url('../thumbs/filter.jpg')" alt="" />
+            <a class="demo" href="./filter/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/filter.jpg" style="--src:url('../thumbs/filter.jpg')" alt="" />
                 <p>Filter.js: pure JavaScript Library for real-time Video and Image Processing, Filtering and Computer Vision (browser and nodejs)</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/abacus/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/abacus.jpg" style="--src:url('../thumbs/abacus.jpg')" alt="" />
+            <a class="demo" href="./abacus/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/abacus.jpg" style="--src:url('../thumbs/abacus.jpg')" alt="" />
                 <p>Abacus: Combinatorics and Number Theory symbolic computation library for JavaScript and Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/geometrize/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/geometrize.png" style="--src:url('../thumbs/geometrize.png')" alt="" />
+            <a class="demo" href="./geometrize/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/geometrize.png" style="--src:url('../thumbs/geometrize.png')" alt="" />
                 <p>Geometrize: Computational Geometry and Rendering Library for JavaScript</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/plot/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/plot.jpg" style="--src:url('../thumbs/plot.jpg')" alt="" />
+            <a class="demo" href="./plot/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/plot.jpg" style="--src:url('../thumbs/plot.jpg')" alt="" />
                 <p>Plot.js: simple plotting library for Canvas, SVG and plain HTML</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/CanvasLite">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/canvaslite.png" style="--src:url('../thumbs/canvaslite.png')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/canvaslite.png" style="--src:url('../thumbs/canvaslite.png')" alt="" />
                 <p>CanvasLite: Lite Canvas alternative for Nodejs in pure JavaScript</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/flipbook3/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/mod3.jpg" style="--src:url('../thumbs/mod3.jpg')" alt="" />
+            <a class="demo" href="./flipbook3/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/mod3.jpg" style="--src:url('../thumbs/mod3.jpg')" alt="" />
                 <p>MOD3: 3D Modifier Library for Three.js, J3D, CubicVR.js, OSG.js, Copperlicht, Pre3D</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/sorting-algorithms/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/sort.jpg" style="--src:url('../thumbs/sort.jpg')" alt="" />
+            <a class="demo" href="./sorting-algorithms/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/sort.jpg" style="--src:url('../thumbs/sort.jpg')" alt="" />
                 <p>Sort.js: library of sorting algorithms implementations and utilities</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/pattern-matching-algorithms/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/pattern-matching-algorithms.jpg" style="--src:url('../thumbs/pattern-matching-algorithms.jpg')" alt="" />
+            <a class="demo" href="./pattern-matching-algorithms/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/pattern-matching-algorithms.jpg" style="--src:url('../thumbs/pattern-matching-algorithms.jpg')" alt="" />
                 <p>Pattern.js: library of pattern-matching algorithms implementations and utilities (IN PROGRESS)</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/Beeld">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/beeld.jpg" style="--src:url('../thumbs/beeld.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/beeld.jpg" style="--src:url('../thumbs/beeld.jpg')" alt="" />
                 <p>Beeld: scriptable and configurable builder tool in PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/as3-transitions-lib/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/as3-transitions.jpg" style="--src:url('../thumbs/as3-transitions.jpg')" alt="" />
+            <a class="demo" href="./as3-transitions-lib/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/as3-transitions.jpg" style="--src:url('../thumbs/as3-transitions.jpg')" alt="" />
                 <p>ActionScript 3 Transitions Library (demo)</p>
             </a>
         </li>
@@ -752,73 +805,77 @@ function goback()
     
     <section id="page_dsp" class="page demo-page">
     <h2>DSP / Machine Learning</h2>
+    <p>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" title="GitHub"></i></a>
+    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" title="StackOverflow"></i></a>
+    </p>
     <ul class="grid">
         <li>
-            <a class="demo" href="../examples/filter/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/filter.jpg" style="--src:url('../thumbs/filter.jpg')" alt="" />
+            <a class="demo" href="./filter/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/filter.jpg" style="--src:url('../thumbs/filter.jpg')" alt="" />
                 <p>Filter.js: pure JavaScript Library for real-time Video and Image Processing, Filtering and Computer Vision (browser and nodejs)</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/filter-three/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/filter-three.jpg" style="--src:url('../thumbs/filter-three.jpg')" alt="" />
+            <a class="demo" href="./filter-three/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/filter-three.jpg" style="--src:url('../thumbs/filter-three.jpg')" alt="" />
                 <p>Filter.js with Three.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/filter-video/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/filter-video.jpg" style="--src:url('../thumbs/filter-video.jpg')" alt="" />
+            <a class="demo" href="./filter-video/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/filter-video.jpg" style="--src:url('../thumbs/filter-video.jpg')" alt="" />
                 <p>Real-time Video Processing with Filter.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/filter-sound/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/filter-sound.jpg" style="--src:url('../thumbs/filter-sound.jpg')" alt="" />
+            <a class="demo" href="./filter-sound/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/filter-sound.jpg" style="--src:url('../thumbs/filter-sound.jpg')" alt="" />
                 <p>Sound Visualization with Filter.js and Dancer.js (Trioptic)</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/cartoonify-yourself/?webgl=1">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/cartoonify.png" style="--src:url('../thumbs/cartoonify.png')" alt="" />
+            <a class="demo" href="./cartoonify-yourself/?webgl=1">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/cartoonify.png" style="--src:url('../thumbs/cartoonify.png')" alt="" />
                 <p>Cartoonify Yourself with Filter.js</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/FILTER.js/tree/master/examples/node">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/filter-node.jpg" style="--src:url('../thumbs/filter-node.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/filter-node.jpg" style="--src:url('../thumbs/filter-node.jpg')" alt="" />
                 <p>Video and Image Processing in Node.js with Filter.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/face-detection/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/haar-face.jpg" style="--src:url('../thumbs/haar-face.jpg')" alt="" />
+            <a class="demo" href="./face-detection/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/haar-face.jpg" style="--src:url('../thumbs/haar-face.jpg')" alt="" />
                 <p>Interactive Face Detection with HAAR.js and openCV cascades</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/faces-detection/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/haar-faces.jpg" style="--src:url('../thumbs/haar-faces.jpg')" alt="" />
+            <a class="demo" href="./faces-detection/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/haar-faces.jpg" style="--src:url('../thumbs/haar-faces.jpg')" alt="" />
                 <p>Many Faces Detection with HAAR.js and openCV cascades</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/mouth-detection/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/haar-mouth.jpg" style="--src:url('../thumbs/haar-mouth.jpg')" alt="" />
+            <a class="demo" href="./mouth-detection/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/haar-mouth.jpg" style="--src:url('../thumbs/haar-mouth.jpg')" alt="" />
                 <p>Interactive Mouth Detection with HAAR.js and openCV cascades</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/HAARPHP">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/haar-php.jpg" style="--src:url('../thumbs/haar-php.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/haar-php.jpg" style="--src:url('../thumbs/haar-php.jpg')" alt="" />
                 <p>Face Detection with HAARPHP and openCV cascades</p>
             </a>
         </li>
@@ -831,101 +888,105 @@ function goback()
     
     <section id="page_processors" class="page demo-page">
     <h2>Engines / Processors / Pattern Processing</h2>
+    <p>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" title="GitHub"></i></a>
+    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" title="StackOverflow"></i></a>
+    </p>
     <ul class="grid">
         <li>
-            <a class="demo" href="../examples/regex-analyzer/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/yo-regex.jpg" style="--src:url('../thumbs/yo-regex.jpg')" alt="" />
+            <a class="demo" href="./regex-analyzer/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/yo-regex.jpg" style="--src:url('../thumbs/yo-regex.jpg')" alt="" />
                 <p>Regular Expression Analyser for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/regex-composer/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/yo-regex-composer.jpg" style="--src:url('../thumbs/yo-regex-composer.jpg')" alt="" />
+            <a class="demo" href="./regex-composer/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/yo-regex-composer.jpg" style="--src:url('../thumbs/yo-regex-composer.jpg')" alt="" />
                 <p>Intuitive Regular Expression Composer for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/codemirror-grammar/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/codemirror-grammar.jpg" style="--src:url('../thumbs/codemirror-grammar.jpg')" alt="" />
+            <a class="demo" href="./codemirror-grammar/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/codemirror-grammar.jpg" style="--src:url('../thumbs/codemirror-grammar.jpg')" alt="" />
                 <p>Transform a grammar in JSON format to a Codemirror syntax-highlight mode with Codemirror Grammar</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/ace-grammar/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/ace-grammar.jpg" style="--src:url('../thumbs/ace-grammar.jpg')" alt="" />
+            <a class="demo" href="./ace-grammar/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/ace-grammar.jpg" style="--src:url('../thumbs/ace-grammar.jpg')" alt="" />
                 <p>Transform a grammar in JSON format to an ACE syntax-highlight mode with ACE Grammar</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/prism-grammar/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/prism-grammar.jpg" style="--src:url('../thumbs/prism-grammar.jpg')" alt="" />
+            <a class="demo" href="./prism-grammar/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/prism-grammar.jpg" style="--src:url('../thumbs/prism-grammar.jpg')" alt="" />
                 <p>Transform a grammar in JSON format to a syntax-highlighter for Prism with Prism Grammar</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/syntaxhighlighter-grammar/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/syntaxhighlighter-grammar.jpg" style="--src:url('../thumbs/syntaxhighlighter-grammar.jpg')" alt="" />
+            <a class="demo" href="./syntaxhighlighter-grammar/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/syntaxhighlighter-grammar.jpg" style="--src:url('../thumbs/syntaxhighlighter-grammar.jpg')" alt="" />
                 <p>Transform a grammar in JSON format to a syntax-highlighter brush for SyntaxHighlighter with SyntaxHighlighter Grammar</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/highlightjs-grammar/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/highlightjs-grammar.jpg" style="--src:url('../thumbs/highlightjs-grammar.jpg')" alt="" />
+            <a class="demo" href="./highlightjs-grammar/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/highlightjs-grammar.jpg" style="--src:url('../thumbs/highlightjs-grammar.jpg')" alt="" />
                 <p>Transform a grammar in JSON format to a syntax-highlighter mode for Highlight.js with HighlightJS Grammar</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/svg2json">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/svg2json.jpg" style="--src:url('../thumbs/svg2json.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/svg2json.jpg" style="--src:url('../thumbs/svg2json.jpg')" alt="" />
                 <p>svg2json: SVG to JSON parser</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/img2svg/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/img2svg.webp" style="--src:url('../thumbs/img2svg.webp')" alt="" />
+            <a class="demo" href="./img2svg/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/img2svg.webp" style="--src:url('../thumbs/img2svg.webp')" alt="" />
                 <p>img2svg: Image to SVG transformer</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/css-minifier/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/cssmin.jpg" style="--src:url('../thumbs/cssmin.jpg')" alt="" />
+            <a class="demo" href="./css-minifier/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/cssmin.jpg" style="--src:url('../thumbs/cssmin.jpg')" alt="" />
                 <p>Online CSS Processor and Minifier tool</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/contemplate/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/contemplate-1.jpg" style="--src:url('../thumbs/contemplate-1.jpg')" alt="" />
+            <a class="demo" href="./contemplate/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/contemplate-1.jpg" style="--src:url('../thumbs/contemplate-1.jpg')" alt="" />
                 <p>Contemplate: light-weight, uniform, fast and flexible object-ooriented template engine for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/xpresion/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/xpresion.jpg" style="--src:url('../thumbs/xpresion.jpg')" alt="" />
+            <a class="demo" href="./xpresion/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/xpresion.jpg" style="--src:url('../thumbs/xpresion.jpg')" alt="" />
                 <p>Xpresion: simple, fast and flexible eXpression parser engine / rewrite system with variables and custom functions support for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/grammar-template/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/grammtpl.jpg" style="--src:url('../thumbs/grammtpl.jpg')" alt="" />
+            <a class="demo" href="./grammar-template/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/grammtpl.jpg" style="--src:url('../thumbs/grammtpl.jpg')" alt="" />
                 <p>GrammarTemplate: versatile and intuitive grammar-based templating for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/GrammarTree">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/grammartree.jpg" style="--src:url('../thumbs/grammartree.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/grammartree.jpg" style="--src:url('../thumbs/grammartree.jpg')" alt="" />
                 <p>GrammarTree: Grammar to Abstract Syntax Tree generic parser for PHP, JavaScript, Python (IN PROGRESS)</p>
             </a>
         </li>
@@ -938,129 +999,133 @@ function goback()
     
     <section id="page_math" class="page demo-page">
     <h2>Mathematics / Combinatorics / Logic / Optimization</h2>
+    <p>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" title="GitHub"></i></a>
+    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" title="StackOverflow"></i></a>
+    </p>
     <ul class="grid">
         <li>
-            <a class="demo" href="../examples/abacus/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/abacus.jpg" style="--src:url('../thumbs/abacus.jpg')" alt="" />
+            <a class="demo" href="./abacus/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/abacus.jpg" style="--src:url('../thumbs/abacus.jpg')" alt="" />
                 <p>Abacus: Combinatorics and Number Theory symbolic computation library for JavaScript and Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/TensorView">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/tensorview.jpg" style="--src:url('../thumbs/tensorview.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/tensorview.jpg" style="--src:url('../thumbs/tensorview.jpg')" alt="" />
                 <p>TensorView: View arbitrary array data as multidimensional tensors of various shapes and slices efficiently</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/geometrize/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/geometrize.png" style="--src:url('../thumbs/geometrize.png')" alt="" />
+            <a class="demo" href="./geometrize/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/geometrize.png" style="--src:url('../thumbs/geometrize.png')" alt="" />
                 <p>Geometrize: Computational Geometry and Rendering Library for JavaScript</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/flipbook3/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/mod3.jpg" style="--src:url('../thumbs/mod3.jpg')" alt="" />
+            <a class="demo" href="./flipbook3/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/mod3.jpg" style="--src:url('../thumbs/mod3.jpg')" alt="" />
                 <p>MOD3: 3D Modifier Library for Three.js, J3D, CubicVR.js, OSG.js, Copperlicht, Pre3D</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/sorting-algorithms/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/sort.jpg" style="--src:url('../thumbs/sort.jpg')" alt="" />
+            <a class="demo" href="./sorting-algorithms/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/sort.jpg" style="--src:url('../thumbs/sort.jpg')" alt="" />
                 <p>Sort.js: library of sorting algorithms implementations and utilities</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/pattern-matching-algorithms/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/pattern-matching-algorithms.jpg" style="--src:url('../thumbs/pattern-matching-algorithms.jpg')" alt="" />
+            <a class="demo" href="./pattern-matching-algorithms/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/pattern-matching-algorithms.jpg" style="--src:url('../thumbs/pattern-matching-algorithms.jpg')" alt="" />
                 <p>Pattern.js: library of pattern-matching algorithms implementations and utilities (IN PROGRESS)</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/regex-analyzer/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/yo-regex.jpg" style="--src:url('../thumbs/yo-regex.jpg')" alt="" />
+            <a class="demo" href="./regex-analyzer/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/yo-regex.jpg" style="--src:url('../thumbs/yo-regex.jpg')" alt="" />
                 <p>Regular Expression Analyser for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/regex-composer/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/yo-regex-composer.jpg" style="--src:url('../thumbs/yo-regex-composer.jpg')" alt="" />
+            <a class="demo" href="./regex-composer/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/yo-regex-composer.jpg" style="--src:url('../thumbs/yo-regex-composer.jpg')" alt="" />
                 <p>Intuitive Regular Expression Composer for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/filter/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/filter.jpg" style="--src:url('../thumbs/filter.jpg')" alt="" />
+            <a class="demo" href="./filter/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/filter.jpg" style="--src:url('../thumbs/filter.jpg')" alt="" />
                 <p>Filter.js: pure JavaScript Library for real-time Video and Image Processing, Filtering and Computer Vision (browser and nodejs)</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/filter-video/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/filter-video.jpg" style="--src:url('../thumbs/filter-video.jpg')" alt="" />
+            <a class="demo" href="./filter-video/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/filter-video.jpg" style="--src:url('../thumbs/filter-video.jpg')" alt="" />
                 <p>Real-time Video Processing with Filter.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/rubik3/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/rubik3.jpg" style="--src:url('../thumbs/rubik3.jpg')" alt="" />
+            <a class="demo" href="./rubik3/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/rubik3.jpg" style="--src:url('../thumbs/rubik3.jpg')" alt="" />
                 <p>Intuitive 3D Rubik Cube with Three.js</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/3DRubikCube">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/rubik-as3.jpg" style="--src:url('../thumbs/rubik-as3.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/rubik-as3.jpg" style="--src:url('../thumbs/rubik-as3.jpg')" alt="" />
                 <p>Intuitive 3D Rubik Cube in ActionScript3 with PaperVision3D</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/sudoku/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/sudoku.jpg" style="--src:url('../thumbs/sudoku.jpg')" alt="" />
+            <a class="demo" href="./sudoku/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/sudoku.jpg" style="--src:url('../thumbs/sudoku.jpg')" alt="" />
                 <p>sudoku.js: Sudoku game, builder and solver in pure JavaScript. Scaled-down version of CrossWord.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/chess-play/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/chess-play.jpg" style="--src:url('../thumbs/chess-play.jpg')" alt="" />
+            <a class="demo" href="./chess-play/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/chess-play.jpg" style="--src:url('../thumbs/chess-play.jpg')" alt="" />
                 <p>chess.js: Play a game of chess</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/xpresion/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/xpresion.jpg" style="--src:url('../thumbs/xpresion.jpg')" alt="" />
+            <a class="demo" href="./xpresion/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/xpresion.jpg" style="--src:url('../thumbs/xpresion.jpg')" alt="" />
                 <p>Xpresion: simple, fast and flexible eXpression parser engine / rewrite system with variables and custom functions support for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/grammar-template/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/grammtpl.jpg" style="--src:url('../thumbs/grammtpl.jpg')" alt="" />
+            <a class="demo" href="./grammar-template/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/grammtpl.jpg" style="--src:url('../thumbs/grammtpl.jpg')" alt="" />
                 <p>GrammarTemplate: versatile and intuitive grammar-based templating for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/GrammarTree">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/grammartree.jpg" style="--src:url('../thumbs/grammartree.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/grammartree.jpg" style="--src:url('../thumbs/grammartree.jpg')" alt="" />
                 <p>GrammarTree: Grammar to Abstract Syntax Tree generic parser for PHP, JavaScript, Python (IN PROGRESS)</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/code-optimization-methods">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/optimization-methods.jpg" style="--src:url('../thumbs/optimization-methods.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/optimization-methods.jpg" style="--src:url('../thumbs/optimization-methods.jpg')" alt="" />
                 <p>A summary of Code Optimization Methods</p>
             </a>
         </li>
@@ -1073,164 +1138,168 @@ function goback()
     
     <section id="page_graphics" class="page demo-page">
     <h2>Graphics / 3D / Animation</h2>
+    <p>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" title="GitHub"></i></a>
+    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" title="StackOverflow"></i></a>
+    </p>
     <ul class="grid">
         <li>
-            <a class="demo" href="../examples/imagik/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/imagik.jpg" style="--src:url('../thumbs/imagik.jpg')" alt="" />
+            <a class="demo" href="./imagik/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/imagik.jpg" style="--src:url('../thumbs/imagik.jpg')" alt="" />
                 <p>Imagik: Fully-Featured, Fully-Customisable and Extendable Responsive CSS3 Slideshow</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/touchtouch/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/touchtouch.jpg" style="--src:url('../thumbs/touchtouch.jpg')" alt="" />
+            <a class="demo" href="./touchtouch/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/touchtouch.jpg" style="--src:url('../thumbs/touchtouch.jpg')" alt="" />
                 <p>touchTouch: Optimized Desktop and Mobile Photo Gallery</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/minislider/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/minislider.jpg" style="--src:url('../thumbs/minislider.jpg')" alt="" />
+            <a class="demo" href="./minislider/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/minislider.jpg" style="--src:url('../thumbs/minislider.jpg')" alt="" />
                 <p>minislider: Optimized responsive Desktop and Mobile Mini Slider</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/minicarousel/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/minicarousel.png" style="--src:url('../thumbs/minicarousel.png')" alt="" />
+            <a class="demo" href="./minicarousel/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/minicarousel.png" style="--src:url('../thumbs/minicarousel.png')" alt="" />
                 <p>minicarousel: Optimized responsive Carousel for Desktop and Mobile</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/diagonal-slideshow/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/diagonal-slideshow.jpg" style="--src:url('../thumbs/diagonal-slideshow.jpg')" alt="" />
+            <a class="demo" href="./diagonal-slideshow/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/diagonal-slideshow.jpg" style="--src:url('../thumbs/diagonal-slideshow.jpg')" alt="" />
                 <p>Diagonal Slideshow, jQuery plugin</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/noflash/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/noflash.jpg" style="--src:url('../thumbs/noflash.jpg')" alt="" />
+            <a class="demo" href="./noflash/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/noflash.jpg" style="--src:url('../thumbs/noflash.jpg')" alt="" />
                 <p>NoFlash Responsive Slideshow, multiple customised transition effects, jQuery plugin</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/as3-transitions-lib/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/as3-transitions.jpg" style="--src:url('../thumbs/as3-transitions.jpg')" alt="" />
+            <a class="demo" href="./as3-transitions-lib/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/as3-transitions.jpg" style="--src:url('../thumbs/as3-transitions.jpg')" alt="" />
                 <p>ActionScript 3 Transitions Library (demo)</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/flasher-xml-slideshow/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/flasher.jpg" style="--src:url('../thumbs/flasher.jpg')" alt="" />
+            <a class="demo" href="./flasher-xml-slideshow/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/flasher.jpg" style="--src:url('../thumbs/flasher.jpg')" alt="" />
                 <p>Flasher XML Slideshow based on ActionScript3 Transitions Library</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/geometrize/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/geometrize.png" style="--src:url('../thumbs/geometrize.png')" alt="" />
+            <a class="demo" href="./geometrize/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/geometrize.png" style="--src:url('../thumbs/geometrize.png')" alt="" />
                 <p>Geometrize: Computational Geometry and Rendering Library for JavaScript</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/plot/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/plot.jpg" style="--src:url('../thumbs/plot.jpg')" alt="" />
+            <a class="demo" href="./plot/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/plot.jpg" style="--src:url('../thumbs/plot.jpg')" alt="" />
                 <p>Plot.js: simple plotting library for Canvas, SVG and plain HTML</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/CanvasLite">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/canvaslite.png" style="--src:url('../thumbs/canvaslite.png')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/canvaslite.png" style="--src:url('../thumbs/canvaslite.png')" alt="" />
                 <p>CanvasLite: Lite Canvas alternative for Nodejs in pure JavaScript</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/flipbook3/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/flipbook3.jpg" style="--src:url('../thumbs/flipbook3.jpg')" alt="" />
+            <a class="demo" href="./flipbook3/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/flipbook3.jpg" style="--src:url('../thumbs/flipbook3.jpg')" alt="" />
                 <p>Real 3D Flipbook with MOD3.js and Three.js</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/3DFlipBookEngine">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/flipbook-as3.jpg" style="--src:url('../thumbs/flipbook-as3.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/flipbook-as3.jpg" style="--src:url('../thumbs/flipbook-as3.jpg')" alt="" />
                 <p>Real 3D Flipbook in ActionScript3 with PaperVision3D and AS3DMod</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/carousel3/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/carousel3.jpg" style="--src:url('../thumbs/carousel3.jpg')" alt="" />
+            <a class="demo" href="./carousel3/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/carousel3.jpg" style="--src:url('../thumbs/carousel3.jpg')" alt="" />
                 <p>3D Carousel with Three.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/dancing-box/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/dancing-box.jpg" style="--src:url('../thumbs/dancing-box.jpg')" alt="" />
+            <a class="demo" href="./dancing-box/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/dancing-box.jpg" style="--src:url('../thumbs/dancing-box.jpg')" alt="" />
                 <p>Dancing Box with MOD3.js, Three.js and Dancer.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/rubik3/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/rubik3.jpg" style="--src:url('../thumbs/rubik3.jpg')" alt="" />
+            <a class="demo" href="./rubik3/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/rubik3.jpg" style="--src:url('../thumbs/rubik3.jpg')" alt="" />
                 <p>Intuitive 3D Rubik Cube with Three.js</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/3DRubikCube">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/rubik-as3.jpg" style="--src:url('../thumbs/rubik-as3.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/rubik-as3.jpg" style="--src:url('../thumbs/rubik-as3.jpg')" alt="" />
                 <p>Intuitive 3D Rubik Cube in ActionScript3 with PaperVision3D</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/filter-three/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/filter-three.jpg" style="--src:url('../thumbs/filter-three.jpg')" alt="" />
+            <a class="demo" href="./filter-three/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/filter-three.jpg" style="--src:url('../thumbs/filter-three.jpg')" alt="" />
                 <p>Filter.js with Three.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/filter-sound/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/filter-sound.jpg" style="--src:url('../thumbs/filter-sound.jpg')" alt="" />
+            <a class="demo" href="./filter-sound/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/filter-sound.jpg" style="--src:url('../thumbs/filter-sound.jpg')" alt="" />
                 <p>Sound Visualization with Filter.js and Dancer.js (Trioptic)</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/cartoonify-yourself/?webgl=1">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/cartoonify.png" style="--src:url('../thumbs/cartoonify.png')" alt="" />
+            <a class="demo" href="./cartoonify-yourself/?webgl=1">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/cartoonify.png" style="--src:url('../thumbs/cartoonify.png')" alt="" />
                 <p>Cartoonify Yourself with Filter.js</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/FILTER.js/tree/master/examples/node">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/filter-node.jpg" style="--src:url('../thumbs/filter-node.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/filter-node.jpg" style="--src:url('../thumbs/filter-node.jpg')" alt="" />
                 <p>Video &amp; Image Processing in Node.js with Filter.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/img2svg/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/img2svg.webp" style="--src:url('../thumbs/img2svg.webp')" alt="" />
+            <a class="demo" href="./img2svg/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/img2svg.webp" style="--src:url('../thumbs/img2svg.webp')" alt="" />
                 <p>img2svg: Image to SVG transformer</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/billiard.js/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/billiard.jpg" style="--src:url('../thumbs/billiard.jpg')" alt="" />
+            <a class="demo" href="./billiard.js/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/billiard.jpg" style="--src:url('../thumbs/billiard.jpg')" alt="" />
                 <p>Sample Billiard game in pure JavaScript with Neraliu's NEngine.js</p>
             </a>
         </li>
@@ -1243,87 +1312,91 @@ function goback()
     
     <section id="page_plugins" class="page demo-page">
     <h2>Plugins / Add-Ons</h2>
+    <p>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" title="GitHub"></i></a>
+    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" title="StackOverflow"></i></a>
+    </p>
     <ul class="grid">
         <li>
-            <a class="demo" href="../examples/codemirror-grammar/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/codemirror-grammar.jpg" style="--src:url('../thumbs/codemirror-grammar.jpg')" alt="" />
+            <a class="demo" href="./codemirror-grammar/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/codemirror-grammar.jpg" style="--src:url('../thumbs/codemirror-grammar.jpg')" alt="" />
                 <p>Transform a grammar in JSON format to a Codemirror syntax-highlight mode with Codemirror Grammar</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/ace-grammar/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/ace-grammar.jpg" style="--src:url('../thumbs/ace-grammar.jpg')" alt="" />
+            <a class="demo" href="./ace-grammar/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/ace-grammar.jpg" style="--src:url('../thumbs/ace-grammar.jpg')" alt="" />
                 <p>Transform a grammar in JSON format to an ACE syntax-highlight mode with ACE Grammar</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/prism-grammar/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/prism-grammar.jpg" style="--src:url('../thumbs/prism-grammar.jpg')" alt="" />
+            <a class="demo" href="./prism-grammar/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/prism-grammar.jpg" style="--src:url('../thumbs/prism-grammar.jpg')" alt="" />
                 <p>Transform a grammar in JSON format to a syntax-highlighter for Prism with Prism Grammar</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/syntaxhighlighter-grammar/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/syntaxhighlighter-grammar.jpg" style="--src:url('../thumbs/syntaxhighlighter-grammar.jpg')" alt="" />
+            <a class="demo" href="./syntaxhighlighter-grammar/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/syntaxhighlighter-grammar.jpg" style="--src:url('../thumbs/syntaxhighlighter-grammar.jpg')" alt="" />
                 <p>Transform a grammar in JSON format to a syntax-highlighter brush for SyntaxHighlighter with SyntaxHighlighter Grammar</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/highlightjs-grammar/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/highlightjs-grammar.jpg" style="--src:url('../thumbs/highlightjs-grammar.jpg')" alt="" />
+            <a class="demo" href="./highlightjs-grammar/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/highlightjs-grammar.jpg" style="--src:url('../thumbs/highlightjs-grammar.jpg')" alt="" />
                 <p>Transform a grammar in JSON format to a syntax-highlighter mode for Highlight.js with HighlightJS Grammar</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/flipbook3/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/mod3.jpg" style="--src:url('../thumbs/mod3.jpg')" alt="" />
+            <a class="demo" href="./flipbook3/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/mod3.jpg" style="--src:url('../thumbs/mod3.jpg')" alt="" />
                 <p>MOD3: 3D Modifier Library for Three.js, J3D, CubicVR.js, OSG.js, Copperlicht, Pre3D</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/DateX">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/datex.jpg" style="--src:url('../thumbs/datex.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/datex.jpg" style="--src:url('../thumbs/datex.jpg')" alt="" />
                 <p>DateX: eXtended and localised Date parsing, diffing, formatting and validation for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/Pikadaytime">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/pikadaytime.png" style="--src:url('../thumbs/pikadaytime.png')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/pikadaytime.png" style="--src:url('../thumbs/pikadaytime.png')" alt="" />
                 <p>Pikadaytime: simple and versatile Date/Time widget for JavaScript</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/ColorPicker">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/colorpicker.png" style="--src:url('../thumbs/colorpicker.png')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/colorpicker.png" style="--src:url('../thumbs/colorpicker.png')" alt="" />
                 <p>ColorPicker: simple and versatile Color Picker widget for JavaScript</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/diagonal-slideshow/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/diagonal-slideshow.jpg" style="--src:url('../thumbs/diagonal-slideshow.jpg')" alt="" />
+            <a class="demo" href="./diagonal-slideshow/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/diagonal-slideshow.jpg" style="--src:url('../thumbs/diagonal-slideshow.jpg')" alt="" />
                 <p>Diagonal Slideshow, jQuery plugin</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/noflash/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/noflash.jpg" style="--src:url('../thumbs/noflash.jpg')" alt="" />
+            <a class="demo" href="./noflash/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/noflash.jpg" style="--src:url('../thumbs/noflash.jpg')" alt="" />
                 <p>NoFlash Responsive Slideshow, multiple customised transition effects, jQuery plugin</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/jquery-google-maps/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/googlemaps-v3.jpg" style="--src:url('../thumbs/googlemaps-v3.jpg')" alt="" />
+            <a class="demo" href="./jquery-google-maps/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/googlemaps-v3.jpg" style="--src:url('../thumbs/googlemaps-v3.jpg')" alt="" />
                 <p>Google Maps jQuery plugin (v2 and v3)</p>
             </a>
         </li>
@@ -1336,192 +1409,196 @@ function goback()
     
     <section id="page_apps" class="page demo-page">
     <h2>Demo Applications</h2>
+    <p>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" title="GitHub"></i></a>
+    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" title="StackOverflow"></i></a>
+    </p>
     <ul class="grid">
         <li>
-            <a class="demo" href="../examples/abacus/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/abacus-live.jpg" style="--src:url('../thumbs/abacus-live.jpg')" alt="" />
+            <a class="demo" href="./abacus/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/abacus-live.jpg" style="--src:url('../thumbs/abacus-live.jpg')" alt="" />
                 <p>Abacus: Combinatorics and Number Theory symbolic computation library for JavaScript and Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/todomvc/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/modelview-todomvc.jpg" style="--src:url('../thumbs/modelview-todomvc.jpg')" alt="" />
+            <a class="demo" href="./todomvc/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/modelview-todomvc.jpg" style="--src:url('../thumbs/modelview-todomvc.jpg')" alt="" />
                 <p>TodoMVC with ModelView.js, a simple, light-weight, versatile and fast MVVM front-end framework</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/modelview/temperature-converter.html">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/modelview.jpg" style="--src:url('../thumbs/modelview.jpg')" alt="" />
+            <a class="demo" href="./modelview/temperature-converter.html">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/modelview.jpg" style="--src:url('../thumbs/modelview.jpg')" alt="" />
                 <p>Two-way data binding with ModelView.js a simple, light-weight, versatile and fast MVVM front-end framework</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/htmlwidget/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/htmlwidget-demo.png" style="--src:url('../thumbs/htmlwidget-demo.png')" alt="" />
+            <a class="demo" href="./htmlwidget/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/htmlwidget-demo.png" style="--src:url('../thumbs/htmlwidget-demo.png')" alt="" />
                 <p>Some HtmlWidgets with ModelView</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/weather-modelview/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/weather-modelview.png" style="--src:url('../thumbs/weather-modelview.png')" alt="" />
+            <a class="demo" href="./weather-modelview/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/weather-modelview.png" style="--src:url('../thumbs/weather-modelview.png')" alt="" />
                 <p>Weather at a Glance with ModelView.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/weather-react/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/weather-react.png" style="--src:url('../thumbs/weather-react.png')" alt="" />
+            <a class="demo" href="./weather-react/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/weather-react.png" style="--src:url('../thumbs/weather-react.png')" alt="" />
                 <p>Weather at a Glance with React.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/weather-vue/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/weather-vue.png" style="--src:url('../thumbs/weather-vue.png')" alt="" />
+            <a class="demo" href="./weather-vue/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/weather-vue.png" style="--src:url('../thumbs/weather-vue.png')" alt="" />
                 <p>Weather at a Glance with Vue.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/sorting-algorithms/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/sorting-algorithms.jpg" style="--src:url('../thumbs/sorting-algorithms.jpg')" alt="" />
+            <a class="demo" href="./sorting-algorithms/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/sorting-algorithms.jpg" style="--src:url('../thumbs/sorting-algorithms.jpg')" alt="" />
                 <p>Study and analysis of various Sorting Algorithms in JavaScript</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/pattern-matching-algorithms/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/pattern-matching-algorithms.jpg" style="--src:url('../thumbs/pattern-matching-algorithms.jpg')" alt="" />
+            <a class="demo" href="./pattern-matching-algorithms/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/pattern-matching-algorithms.jpg" style="--src:url('../thumbs/pattern-matching-algorithms.jpg')" alt="" />
                 <p>Study and analysis of various Pattern Matching Algorithms in JavaScript</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/regex-analyzer/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/regexanalyser.jpg" style="--src:url('../thumbs/regexanalyser.jpg')" alt="" />
+            <a class="demo" href="./regex-analyzer/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/regexanalyser.jpg" style="--src:url('../thumbs/regexanalyser.jpg')" alt="" />
                 <p>Regular Expression Analyser for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/regex-composer/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/yo-regex-composer.jpg" style="--src:url('../thumbs/yo-regex-composer.jpg')" alt="" />
+            <a class="demo" href="./regex-composer/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/yo-regex-composer.jpg" style="--src:url('../thumbs/yo-regex-composer.jpg')" alt="" />
                 <p>Intuitive Regular Expression Composer for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/codemirror-grammar/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/codemirror-grammar.jpg" style="--src:url('../thumbs/codemirror-grammar.jpg')" alt="" />
+            <a class="demo" href="./codemirror-grammar/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/codemirror-grammar.jpg" style="--src:url('../thumbs/codemirror-grammar.jpg')" alt="" />
                 <p>Transform a grammar in JSON format to a Codemirror syntax-highlight mode with Codemirror Grammar</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/ace-grammar/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/ace-grammar.jpg" style="--src:url('../thumbs/ace-grammar.jpg')" alt="" />
+            <a class="demo" href="./ace-grammar/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/ace-grammar.jpg" style="--src:url('../thumbs/ace-grammar.jpg')" alt="" />
                 <p>Transform a grammar in JSON format to an ACE syntax-highlight mode with ACE Grammar</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/prism-grammar/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/prism-grammar.jpg" style="--src:url('../thumbs/prism-grammar.jpg')" alt="" />
+            <a class="demo" href="./prism-grammar/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/prism-grammar.jpg" style="--src:url('../thumbs/prism-grammar.jpg')" alt="" />
                 <p>Transform a grammar in JSON format to a syntax-highlighter for Prism with Prism Grammar</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/syntaxhighlighter-grammar/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/syntaxhighlighter-grammar.jpg" style="--src:url('../thumbs/syntaxhighlighter-grammar.jpg')" alt="" />
+            <a class="demo" href="./syntaxhighlighter-grammar/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/syntaxhighlighter-grammar.jpg" style="--src:url('../thumbs/syntaxhighlighter-grammar.jpg')" alt="" />
                 <p>Transform a grammar in JSON format to a syntax-highlighter brush for SyntaxHighlighter with SyntaxHighlighter Grammar</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/highlightjs-grammar/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/highlightjs-grammar.jpg" style="--src:url('../thumbs/highlightjs-grammar.jpg')" alt="" />
+            <a class="demo" href="./highlightjs-grammar/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/highlightjs-grammar.jpg" style="--src:url('../thumbs/highlightjs-grammar.jpg')" alt="" />
                 <p>Transform a grammar in JSON format to a syntax-highlighter mode for Highlight.js with HighlightJS Grammar</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/img2svg/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/img2svg.webp" style="--src:url('../thumbs/img2svg.webp')" alt="" />
+            <a class="demo" href="./img2svg/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/img2svg.webp" style="--src:url('../thumbs/img2svg.webp')" alt="" />
                 <p>img2svg: Image to SVG transformer</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/css-minifier/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/cssmin.jpg" style="--src:url('../thumbs/cssmin.jpg')" alt="" />
+            <a class="demo" href="./css-minifier/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/cssmin.jpg" style="--src:url('../thumbs/cssmin.jpg')" alt="" />
                 <p>Online CSS Processor and Minifier tool</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/filter-video/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/filter-video.jpg" style="--src:url('../thumbs/filter-video.jpg')" alt="" />
+            <a class="demo" href="./filter-video/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/filter-video.jpg" style="--src:url('../thumbs/filter-video.jpg')" alt="" />
                 <p>Real-time Video Processing with Filter.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/cartoonify-yourself/?webgl=1">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/cartoonify.png" style="--src:url('../thumbs/cartoonify.png')" alt="" />
+            <a class="demo" href="./cartoonify-yourself/?webgl=1">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/cartoonify.png" style="--src:url('../thumbs/cartoonify.png')" alt="" />
                 <p>Cartoonify Yourself with Filter.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/face-detection/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/haar-face.jpg" style="--src:url('../thumbs/haar-face.jpg')" alt="" />
+            <a class="demo" href="./face-detection/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/haar-face.jpg" style="--src:url('../thumbs/haar-face.jpg')" alt="" />
                 <p>Interactive Face Detection with HAAR.js and openCV cascades</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/mouth-detection/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/haar-mouth.jpg" style="--src:url('../thumbs/haar-mouth.jpg')" alt="" />
+            <a class="demo" href="./mouth-detection/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/haar-mouth.jpg" style="--src:url('../thumbs/haar-mouth.jpg')" alt="" />
                 <p>Interactive Mouth Detection with HAAR.js and openCV cascades</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/3DRubikCube">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/rubik-as3.jpg" style="--src:url('../thumbs/rubik-as3.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/rubik-as3.jpg" style="--src:url('../thumbs/rubik-as3.jpg')" alt="" />
                 <p>Intuitive 3D Rubik Cube in ActionScript3 with PaperVision3D</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/rubik3/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/rubik3.jpg" style="--src:url('../thumbs/rubik3.jpg')" alt="" />
+            <a class="demo" href="./rubik3/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/rubik3.jpg" style="--src:url('../thumbs/rubik3.jpg')" alt="" />
                 <p>Intuitive 3D Rubik Cube with Three.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/sudoku/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/sudoku_app.jpg" style="--src:url('../thumbs/sudoku_app.jpg')" alt="" />
+            <a class="demo" href="./sudoku/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/sudoku_app.jpg" style="--src:url('../thumbs/sudoku_app.jpg')" alt="" />
                 <p>sudoku.js: Sudoku game, builder and solver in pure JavaScript. Scaled-down version of CrossWord.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/chess-play/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/chess-play.jpg" style="--src:url('../thumbs/chess-play.jpg')" alt="" />
+            <a class="demo" href="./chess-play/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/chess-play.jpg" style="--src:url('../thumbs/chess-play.jpg')" alt="" />
                 <p>chess.js: Play a game of chess</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/billiard.js/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/billiard.jpg" style="--src:url('../thumbs/billiard.jpg')" alt="" />
+            <a class="demo" href="./billiard.js/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/billiard.jpg" style="--src:url('../thumbs/billiard.jpg')" alt="" />
                 <p>Sample Billiard game in pure JavaScript with Neraliu's NEngine.js</p>
             </a>
         </li>
@@ -1534,45 +1611,49 @@ function goback()
     
     <section id="page_games" class="page demo-page">
     <h2>Simple Games</h2>
+    <p>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" title="GitHub"></i></a>
+    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" title="StackOverflow"></i></a>
+    </p>
     <ul class="grid">
         <li>
-            <a class="demo" href="../examples/billiard.js/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/billiard.jpg" style="--src:url('../thumbs/billiard.jpg')" alt="" />
+            <a class="demo" href="./billiard.js/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/billiard.jpg" style="--src:url('../thumbs/billiard.jpg')" alt="" />
                 <p>Sample Billiard game in pure JavaScript with Neraliu's NEngine.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/sudoku/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/sudoku.jpg" style="--src:url('../thumbs/sudoku.jpg')" alt="" />
+            <a class="demo" href="./sudoku/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/sudoku.jpg" style="--src:url('../thumbs/sudoku.jpg')" alt="" />
                 <p>sudoku.js: Sudoku game, builder and solver in pure JavaScript. Scaled-down version of CrossWord.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/rubik3/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/rubik3.jpg" style="--src:url('../thumbs/rubik3.jpg')" alt="" />
+            <a class="demo" href="./rubik3/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/rubik3.jpg" style="--src:url('../thumbs/rubik3.jpg')" alt="" />
                 <p>Intuitive 3D Rubik Cube with Three.js</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/3DRubikCube">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/rubik-as3.jpg" style="--src:url('../thumbs/rubik-as3.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/rubik-as3.jpg" style="--src:url('../thumbs/rubik-as3.jpg')" alt="" />
                 <p>Intuitive 3D Rubik Cube in ActionScript3 with PaperVision3D</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/chess-play/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/chess-play.jpg" style="--src:url('../thumbs/chess-play.jpg')" alt="" />
+            <a class="demo" href="./chess-play/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/chess-play.jpg" style="--src:url('../thumbs/chess-play.jpg')" alt="" />
                 <p>chess.js: Play a game of chess</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/sunfish.js">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/chess-play.jpg" style="--src:url('../thumbs/chess-play.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/chess-play.jpg" style="--src:url('../thumbs/chess-play.jpg')" alt="" />
                 <p>sunfish.js: JavaScript port of Sunfish Python Chess Engine</p>
             </a>
         </li>
@@ -1585,94 +1666,98 @@ function goback()
     
     <section id="page_tools" class="page demo-page">
     <h2>Tools / Scripts</h2>
+    <p>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" title="GitHub"></i></a>
+    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" title="StackOverflow"></i></a>
+    </p>
     <ul class="grid">
         <li>
             <a class="demo" href="https://github.com/foo123/Beeld">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/beeld.jpg" style="--src:url('../thumbs/beeld.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/beeld.jpg" style="--src:url('../thumbs/beeld.jpg')" alt="" />
                 <p>Beeld: scriptable and configurable builder tool in PHP, Python and Node</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/abacus/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/abacus-live.jpg" style="--src:url('../thumbs/abacus-live.jpg')" alt="" />
+            <a class="demo" href="./abacus/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/abacus-live.jpg" style="--src:url('../thumbs/abacus-live.jpg')" alt="" />
                 <p>Abacus: Combinatorics and Number Theory symbolic computation library for JavaScript and Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/css-minifier/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/cssmin.jpg" style="--src:url('../thumbs/cssmin.jpg')" alt="" />
+            <a class="demo" href="./css-minifier/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/cssmin.jpg" style="--src:url('../thumbs/cssmin.jpg')" alt="" />
                 <p>Online CSS Processor and Minifier tool</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/regex-analyzer/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/regexanalyser.jpg" style="--src:url('../thumbs/regexanalyser.jpg')" alt="" />
+            <a class="demo" href="./regex-analyzer/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/regexanalyser.jpg" style="--src:url('../thumbs/regexanalyser.jpg')" alt="" />
                 <p>Regular Expression Analyser for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/regex-composer/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/yo-regex-composer.jpg" style="--src:url('../thumbs/yo-regex-composer.jpg')" alt="" />
+            <a class="demo" href="./regex-composer/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/yo-regex-composer.jpg" style="--src:url('../thumbs/yo-regex-composer.jpg')" alt="" />
                 <p>Intuitive Regular Expression Composer for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/sorting-algorithms/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/sorting-algorithms.jpg" style="--src:url('../thumbs/sorting-algorithms.jpg')" alt="" />
+            <a class="demo" href="./sorting-algorithms/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/sorting-algorithms.jpg" style="--src:url('../thumbs/sorting-algorithms.jpg')" alt="" />
                 <p>Study and analysis of various Sorting Algorithms in JavaScript</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/pattern-matching-algorithms/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/pattern-matching-algorithms.jpg" style="--src:url('../thumbs/pattern-matching-algorithms.jpg')" alt="" />
+            <a class="demo" href="./pattern-matching-algorithms/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/pattern-matching-algorithms.jpg" style="--src:url('../thumbs/pattern-matching-algorithms.jpg')" alt="" />
                 <p>Study and analysis of various Pattern Matching Algorithms in JavaScript</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/img2svg/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/img2svg.webp" style="--src:url('../thumbs/img2svg.webp')" alt="" />
+            <a class="demo" href="./img2svg/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/img2svg.webp" style="--src:url('../thumbs/img2svg.webp')" alt="" />
                 <p>img2svg: Image to SVG transformer</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/scripts">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/tools.jpg" style="--src:url('../thumbs/tools.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/tools.jpg" style="--src:url('../thumbs/tools.jpg')" alt="" />
                 <p>Scripts and Tools for Automation Tasks</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/contemplate/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/contemplate-1.jpg" style="--src:url('../thumbs/contemplate-1.jpg')" alt="" />
+            <a class="demo" href="./contemplate/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/contemplate-1.jpg" style="--src:url('../thumbs/contemplate-1.jpg')" alt="" />
                 <p>Contemplate: light-weight, uniform, fast and flexible object-ooriented template engine for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/xpresion/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/xpresion.jpg" style="--src:url('../thumbs/xpresion.jpg')" alt="" />
+            <a class="demo" href="./xpresion/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/xpresion.jpg" style="--src:url('../thumbs/xpresion.jpg')" alt="" />
                 <p>Xpresion: simple, fast and flexible eXpression parser engine / rewrite system with variables and custom functions support for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/grammar-template/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/grammtpl.jpg" style="--src:url('../thumbs/grammtpl.jpg')" alt="" />
+            <a class="demo" href="./grammar-template/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/grammtpl.jpg" style="--src:url('../thumbs/grammtpl.jpg')" alt="" />
                 <p>GrammarTemplate: versatile and intuitive grammar-based templating for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="https://github.com/foo123/GrammarTree">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/grammartree.jpg" style="--src:url('../thumbs/grammartree.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/grammartree.jpg" style="--src:url('../thumbs/grammartree.jpg')" alt="" />
                 <p>GrammarTree: Grammar to Abstract Syntax Tree generic parser for PHP, JavaScript, Python (IN PROGRESS)</p>
             </a>
         </li>
@@ -1685,59 +1770,63 @@ function goback()
     
     <section id="page_various" class="page demo-page">
     <h2>Various experiments</h2>
+    <p>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" title="GitHub"></i></a>
+    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" title="StackOverflow"></i></a>
+    </p>
     <ul class="grid">
         <li>
             <a class="demo" href="https://github.com/foo123/code-optimization-methods">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/optimization-methods.jpg" style="--src:url('../thumbs/optimization-methods.jpg')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/optimization-methods.jpg" style="--src:url('../thumbs/optimization-methods.jpg')" alt="" />
                 <p>A summary of Code Optimization Methods</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/abacus/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/abacus-live.jpg" style="--src:url('../thumbs/abacus-live.jpg')" alt="" />
+            <a class="demo" href="./abacus/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/abacus-live.jpg" style="--src:url('../thumbs/abacus-live.jpg')" alt="" />
                 <p>Abacus: Combinatorics and Number Theory symbolic computation library for JavaScript and Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/sorting-algorithms/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/sorting-algorithms.jpg" style="--src:url('../thumbs/sorting-algorithms.jpg')" alt="" />
+            <a class="demo" href="./sorting-algorithms/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/sorting-algorithms.jpg" style="--src:url('../thumbs/sorting-algorithms.jpg')" alt="" />
                 <p>Study and analysis of various Sorting Algorithms in JavaScript</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/pattern-matching-algorithms/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/pattern-matching-algorithms.jpg" style="--src:url('../thumbs/pattern-matching-algorithms.jpg')" alt="" />
+            <a class="demo" href="./pattern-matching-algorithms/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/pattern-matching-algorithms.jpg" style="--src:url('../thumbs/pattern-matching-algorithms.jpg')" alt="" />
                 <p>Study and analysis of various Pattern Matching Algorithms in JavaScript</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/regex-analyzer/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/regexanalyser.jpg" style="--src:url('../thumbs/regexanalyser.jpg')" alt="" />
+            <a class="demo" href="./regex-analyzer/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/regexanalyser.jpg" style="--src:url('../thumbs/regexanalyser.jpg')" alt="" />
                 <p>Regular Expression Analyser for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/regex-composer/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/yo-regex-composer.jpg" style="--src:url('../thumbs/yo-regex-composer.jpg')" alt="" />
+            <a class="demo" href="./regex-composer/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/yo-regex-composer.jpg" style="--src:url('../thumbs/yo-regex-composer.jpg')" alt="" />
                 <p>Intuitive Regular Expression Composer for PHP, JavaScript, Python</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/dancing-box/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/dancing-box.jpg" style="--src:url('../thumbs/dancing-box.jpg')" alt="" />
+            <a class="demo" href="./dancing-box/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/dancing-box.jpg" style="--src:url('../thumbs/dancing-box.jpg')" alt="" />
                 <p>Dancing Box with MOD3.js, Three.js and Dancer.js</p>
             </a>
         </li>
     
         <li>
-            <a class="demo" href="../examples/jquery-google-maps/">
-                <img class="lozad" src="css/5.gif" data-src="../thumbs/googlemaps-v3.jpg" style="--src:url('../thumbs/googlemaps-v3.jpg')" alt="" />
+            <a class="demo" href="./jquery-google-maps/">
+                <img class="lozad" src="../css/5.gif" data-src="../thumbs/googlemaps-v3.jpg" style="--src:url('../thumbs/googlemaps-v3.jpg')" alt="" />
                 <p>Google Maps jQuery plugin (v2 and v3)</p>
             </a>
         </li>
@@ -1750,31 +1839,35 @@ function goback()
     
     <section id="page_projects" class="page demo-page">
     <h2>Projects / Applications</h2>
+    <p>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" title="GitHub"></i></a>
+    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" title="StackOverflow"></i></a>
+    </p>
     <ul class="grid">
         <li>
             <a class="demo" href="javascript:void(0)">
-                <img class="lozad" src="css/5.gif" data-src="../samples/truetrips.png" style="--src:url('../samples/truetrips.png')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../samples/truetrips.png" style="--src:url('../samples/truetrips.png')" alt="" />
                 <p><b>truetrips.com</b>:<br>Build your True Trip</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="javascript:void(0)">
-                <img class="lozad" src="css/5.gif" data-src="../samples/goldengreece.png" style="--src:url('../samples/goldengreece.png')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../samples/goldengreece.png" style="--src:url('../samples/goldengreece.png')" alt="" />
                 <p><b>golden-greece.gr</b>:<br>Discover Golden Greece</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="javascript:void(0)">
-                <img class="lozad" src="css/5.gif" data-src="../samples/istavrolexo.png" style="--src:url('../samples/istavrolexo.png')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../samples/istavrolexo.png" style="--src:url('../samples/istavrolexo.png')" alt="" />
                 <p><b>istavrolexo.gr</b>:<br>Crosswords, Word Puzzles, Sudokus</p>
             </a>
         </li>
     
         <li>
             <a class="demo" href="javascript:void(0)">
-                <img class="lozad" src="css/5.gif" data-src="../samples/mousa.png" style="--src:url('../samples/mousa.png')" alt="" />
+                <img class="lozad" src="../css/5.gif" data-src="../samples/mousa.png" style="--src:url('../samples/mousa.png')" alt="" />
                 <p><b>mousa.gr</b>:<br>Know the maxims of ancient Greek philosophers</p>
             </a>
         </li>
@@ -1849,7 +1942,7 @@ if (window.lozad)
             el.onerror = function() {
                 el.onload = null;
                 el.onerror = null;
-                el.src = 'css/5.gif';
+                el.src = '../css/5.gif';
             };
         }
     });
