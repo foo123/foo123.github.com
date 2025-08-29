@@ -1,7 +1,7 @@
-foo123.github.com
+foo123.github.io
 =================
 
-[Demos and Projects](https://foo123.github.io/) • [Projects List](https://github.com/foo123/foo123)
+[Examples and Projects](https://foo123.github.io/examples/) • [Projects List](https://github.com/foo123/foo123)
 
 * `foo` : *An term used for unimportant variables in programming when the programmer is too lazy to think of an actual name.*  [Urban Dictionary](http://www.urbandictionary.com/define.php?term=foo)
 
