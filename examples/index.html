@@ -2,7 +2,6 @@
 <html lang="en" class="no-js">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
 <title>Open Source Examples and Projects | foo123 | Code Artist · Architect · Musician</title>
 <meta name="description" content="" />
@@ -211,6 +210,8 @@ a {
     padding: 60px 30px;
     background: rgb(235, 104, 61);
     background: linear-gradient(90deg, rgb(235, 104, 61) 0%, rgb(50, 50, 50) 100%);
+    background-position: 0 0;
+    background-repeat: no-repeat;
     color: #fff;
     font-size: 16px;
 }
@@ -229,9 +230,8 @@ a {
 }
 .page > p > a {
     display: inline-block;
-    margin: 0
 }
-.page > p > a:first-child {
+.page > p > a:not(:last-child) {
     margin-right: 30px;
 }
 .page .footer {
@@ -337,8 +337,261 @@ ul.grid {
 }
 </style>
 <style type="text/css">
-/*https://github.com/foo123/grid.css*/
-.grid{position:relative;display:block;box-sizing:border-box;list-style-type:none!important;font-size:0!important;margin:0;border:0;padding:0;text-align:left;width:100%;height:auto;--columns:4;--column-gap:0;--row-gap:0;--g-cols:calc(max(1,var(--columns,1)))}.grid>*{position:relative;display:inline-block;box-sizing:border-box;font-size:1rem;margin:0;height:auto}.grid.grid-layout{display:grid;grid-template-columns:repeat(var(--g-cols),1fr);grid-template-rows:auto;column-gap:var(--column-gap,0);row-gap:var(--row-gap,0);justify-content:stretch}.grid.grid-layout>*{}.grid.flex-layout{display:flex;flex-direction:row;flex-wrap:wrap;justify-content:flex-start;align-items:flex-start;align-content:flex-start;column-gap:var(--column-gap,0);row-gap:var(--row-gap,0)}.grid.flex-layout>*{flex:0 1 calc((100% - (var(--g-cols) - 1) * var(--column-gap,0)) / var(--g-cols))}.grid:not(.flex-layout):not(.grid-layout)>*{--g-is1n:0;--g-is2n:0;--g-is3n:0;--g-is4n:0;--g-is5n:0;--g-is6n:0;--g-is7n:0;--g-is8n:0;--g-is9n:0;--g-is10n:0;--g-is11n:0;--g-is12n:0;--g-is13n:0;--g-is14n:0;--g-is15n:0;--g-is16n:0;--g-is17n:0;--g-is18n:0;--g-is19n:0;--g-is20n:0;--g-is1:0;--g-is2:0;--g-is3:0;--g-is4:0;--g-is5:0;--g-is6:0;--g-is7:0;--g-is8:0;--g-is9:0;--g-is10:0;--g-is11:0;--g-is12:0;--g-is13:0;--g-is14:0;--g-is15:0;--g-is16:0;--g-is17:0;--g-is18:0;--g-is19:0;--g-is20:0;display:inline-block;vertical-align:top;width:calc((100% - (var(--g-cols) - 1) * var(--column-gap,0)) / var(--g-cols))}.grid:not(.flex-layout):not(.grid-layout)>*{--g-is1n:calc(1 - max(clamp(-1,var(--g-cols) - 1,1),0 - clamp(-1,var(--g-cols) - 1,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(2n){--g-is2n:calc(1 - max(clamp(-1,var(--g-cols) - 2,1),0 - clamp(-1,var(--g-cols) - 2,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(3n){--g-is3n:calc(1 - max(clamp(-1,var(--g-cols) - 3,1),0 - clamp(-1,var(--g-cols) - 3,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(4n){--g-is4n:calc(1 - max(clamp(-1,var(--g-cols) - 4,1),0 - clamp(-1,var(--g-cols) - 4,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(5n){--g-is5n:calc(1 - max(clamp(-1,var(--g-cols) - 5,1),0 - clamp(-1,var(--g-cols) - 5,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(6n){--g-is6n:calc(1 - max(clamp(-1,var(--g-cols) - 6,1),0 - clamp(-1,var(--g-cols) - 6,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(7n){--g-is7n:calc(1 - max(clamp(-1,var(--g-cols) - 7,1),0 - clamp(-1,var(--g-cols) - 7,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(8n){--g-is8n:calc(1 - max(clamp(-1,var(--g-cols) - 8,1),0 - clamp(-1,var(--g-cols) - 8,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(9n){--g-is9n:calc(1 - max(clamp(-1,var(--g-cols) - 9,1),0 - clamp(-1,var(--g-cols) - 9,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(10n){--g-is10n:calc(1 - max(clamp(-1,var(--g-cols) - 10,1),0 - clamp(-1,var(--g-cols) - 10,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(11n){--g-is11n:calc(1 - max(clamp(-1,var(--g-cols) - 11,1),0 - clamp(-1,var(--g-cols) - 11,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(12n){--g-is12n:calc(1 - max(clamp(-1,var(--g-cols) - 12,1),0 - clamp(-1,var(--g-cols) - 12,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(13n){--g-is13n:calc(1 - max(clamp(-1,var(--g-cols) - 13,1),0 - clamp(-1,var(--g-cols) - 13,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(14n){--g-is14n:calc(1 - max(clamp(-1,var(--g-cols) - 14,1),0 - clamp(-1,var(--g-cols) - 14,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(15n){--g-is15n:calc(1 - max(clamp(-1,var(--g-cols) - 15,1),0 - clamp(-1,var(--g-cols) - 15,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(16n){--g-is16n:calc(1 - max(clamp(-1,var(--g-cols) - 16,1),0 - clamp(-1,var(--g-cols) - 16,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(17n){--g-is17n:calc(1 - max(clamp(-1,var(--g-cols) - 17,1),0 - clamp(-1,var(--g-cols) - 17,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(18n){--g-is18n:calc(1 - max(clamp(-1,var(--g-cols) - 18,1),0 - clamp(-1,var(--g-cols) - 18,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(19n){--g-is19n:calc(1 - max(clamp(-1,var(--g-cols) - 19,1),0 - clamp(-1,var(--g-cols) - 19,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(20n){--g-is20n:calc(1 - max(clamp(-1,var(--g-cols) - 20,1),0 - clamp(-1,var(--g-cols) - 20,1)))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(1){--g-is1:1}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(2){--g-is2:calc(clamp(0,var(--g-cols) - 2 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(3){--g-is3:calc(clamp(0,var(--g-cols) - 3 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(4){--g-is4:calc(clamp(0,var(--g-cols) - 4 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(5){--g-is5:calc(clamp(0,var(--g-cols) - 5 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(6){--g-is6:calc(clamp(0,var(--g-cols) - 6 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(7){--g-is7:calc(clamp(0,var(--g-cols) - 7 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(8){--g-is8:calc(clamp(0,var(--g-cols) - 8 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(9){--g-is9:calc(clamp(0,var(--g-cols) - 9 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(10){--g-is10:calc(clamp(0,var(--g-cols) - 10 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(11){--g-is11:calc(clamp(0,var(--g-cols) - 11 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(12){--g-is12:calc(clamp(0,var(--g-cols) - 12 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(13){--g-is13:calc(clamp(0,var(--g-cols) - 13 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(14){--g-is14:calc(clamp(0,var(--g-cols) - 14 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(15){--g-is15:calc(clamp(0,var(--g-cols) - 15 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(16){--g-is16:calc(clamp(0,var(--g-cols) - 16 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(17){--g-is17:calc(clamp(0,var(--g-cols) - 17 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(18){--g-is18:calc(clamp(0,var(--g-cols) - 18 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(19){--g-is19:calc(clamp(0,var(--g-cols) - 19 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*:nth-child(20){--g-is20:calc(clamp(0,var(--g-cols) - 20 + 1,1))}.grid:not(.flex-layout):not(.grid-layout)>*{margin-top:calc(var(--row-gap,0) * (1 - min(1,(var(--g-is1) + var(--g-is2) + var(--g-is3) + var(--g-is4) + var(--g-is5) + var(--g-is6) + var(--g-is7) + var(--g-is8) + var(--g-is9) + var(--g-is10) + var(--g-is11) + var(--g-is12) + var(--g-is13) + var(--g-is14) + var(--g-is15) + var(--g-is16) + var(--g-is17) + var(--g-is18) + var(--g-is19) + var(--g-is20)))));margin-right:calc(var(--column-gap,0) * (1 - min(1,(var(--g-is1n) + var(--g-is2n) + var(--g-is3n) + var(--g-is4n) + var(--g-is5n) + var(--g-is6n) + var(--g-is7n) + var(--g-is8n) + var(--g-is9n) + var(--g-is10n) + var(--g-is11n) + var(--g-is12n) + var(--g-is13n) + var(--g-is14n) + var(--g-is15n) + var(--g-is16n) + var(--g-is17n) + var(--g-is18n) + var(--g-is19n) + var(--g-is20n)))))}
+/* https://github.com/foo123/grid.css */
+.grid {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    list-style-type: none !important;
+    font-size: 0 !important;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    text-align: left;
+    width: 100%;
+    height: auto;
+    --columns: 4;
+    --column-gap: 0;
+    --row-gap: 0;
+    --g-cols: calc(max(1, var(--columns, 1)));
+}
+.grid > * {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    font-size: 1rem;
+    margin: 0;
+    height: auto;
+}
+
+/* using grid layout */
+.grid.grid-layout {
+    display: grid;
+    grid-template-columns: repeat(var(--g-cols), 1fr);
+    grid-template-rows: auto;
+    column-gap: var(--column-gap, 0);
+    row-gap: var(--row-gap, 0);
+    justify-content: stretch;
+}
+.grid.grid-layout > * {
+}
+
+/* using flex layout */
+.grid.flex-layout {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+    column-gap: var(--column-gap, 0);
+    row-gap: var(--row-gap, 0);
+}
+.grid.flex-layout > * {
+    flex: 0 1 calc((100% - (var(--g-cols) - 1) * var(--column-gap, 0)) / var(--g-cols));
+}
+
+/* using inline-block */
+.grid:not(.flex-layout):not(.grid-layout) > * {
+    --g-is1n: 0;
+    --g-is2n: 0;
+    --g-is3n: 0;
+    --g-is4n: 0;
+    --g-is5n: 0;
+    --g-is6n: 0;
+    --g-is7n: 0;
+    --g-is8n: 0;
+    --g-is9n: 0;
+    --g-is10n: 0;
+    --g-is11n: 0;
+    --g-is12n: 0;
+    --g-is13n: 0;
+    --g-is14n: 0;
+    --g-is15n: 0;
+    --g-is16n: 0;
+    --g-is17n: 0;
+    --g-is18n: 0;
+    --g-is19n: 0;
+    --g-is20n: 0;
+    --g-is1: 0;
+    --g-is2: 0;
+    --g-is3: 0;
+    --g-is4: 0;
+    --g-is5: 0;
+    --g-is6: 0;
+    --g-is7: 0;
+    --g-is8: 0;
+    --g-is9: 0;
+    --g-is10: 0;
+    --g-is11: 0;
+    --g-is12: 0;
+    --g-is13: 0;
+    --g-is14: 0;
+    --g-is15: 0;
+    --g-is16: 0;
+    --g-is17: 0;
+    --g-is18: 0;
+    --g-is19: 0;
+    --g-is20: 0;
+    display: inline-block;
+    vertical-align: top;
+    width: calc((100% - (var(--g-cols) - 1) * var(--column-gap, 0)) / (var(--g-cols) /*+ 0.01*/));
+}
+/* handle automatically up to 20 items per row */
+/* abs(x) not supported, use max(x, 0 - x) instead */
+.grid:not(.flex-layout):not(.grid-layout) > * {
+    --g-is1n: calc(1 - max(clamp(-1, var(--g-cols) - 1, 1), 0 - clamp(-1, var(--g-cols) - 1, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(2n) {
+    --g-is2n: calc(1 - max(clamp(-1, var(--g-cols) - 2, 1), 0 - clamp(-1, var(--g-cols) - 2, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(3n) {
+    --g-is3n: calc(1 - max(clamp(-1, var(--g-cols) - 3, 1), 0 - clamp(-1, var(--g-cols) - 3, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(4n) {
+    --g-is4n: calc(1 - max(clamp(-1, var(--g-cols) - 4, 1), 0 - clamp(-1, var(--g-cols) - 4, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(5n) {
+    --g-is5n: calc(1 - max(clamp(-1, var(--g-cols) - 5, 1), 0 - clamp(-1, var(--g-cols) - 5, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(6n) {
+    --g-is6n: calc(1 - max(clamp(-1, var(--g-cols) - 6, 1), 0 - clamp(-1, var(--g-cols) - 6, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(7n) {
+    --g-is7n: calc(1 - max(clamp(-1, var(--g-cols) - 7, 1), 0 - clamp(-1, var(--g-cols) - 7, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(8n) {
+    --g-is8n: calc(1 - max(clamp(-1, var(--g-cols) - 8, 1), 0 - clamp(-1, var(--g-cols) - 8, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(9n) {
+    --g-is9n: calc(1 - max(clamp(-1, var(--g-cols) - 9, 1), 0 - clamp(-1, var(--g-cols) - 9, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(10n) {
+    --g-is10n: calc(1 - max(clamp(-1, var(--g-cols) - 10, 1), 0 - clamp(-1, var(--g-cols) - 10, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(11n) {
+    --g-is11n: calc(1 - max(clamp(-1, var(--g-cols) - 11, 1), 0 - clamp(-1, var(--g-cols) - 11, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(12n) {
+    --g-is12n: calc(1 - max(clamp(-1, var(--g-cols) - 12, 1), 0 - clamp(-1, var(--g-cols) - 12, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(13n) {
+    --g-is13n: calc(1 - max(clamp(-1, var(--g-cols) - 13, 1), 0 - clamp(-1, var(--g-cols) - 13, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(14n) {
+    --g-is14n: calc(1 - max(clamp(-1, var(--g-cols) - 14, 1), 0 - clamp(-1, var(--g-cols) - 14, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(15n) {
+    --g-is15n: calc(1 - max(clamp(-1, var(--g-cols) - 15, 1), 0 - clamp(-1, var(--g-cols) - 15, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(16n) {
+    --g-is16n: calc(1 - max(clamp(-1, var(--g-cols) - 16, 1), 0 - clamp(-1, var(--g-cols) - 16, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(17n) {
+    --g-is17n: calc(1 - max(clamp(-1, var(--g-cols) - 17, 1), 0 - clamp(-1, var(--g-cols) - 17, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(18n) {
+    --g-is18n: calc(1 - max(clamp(-1, var(--g-cols) - 18, 1), 0 - clamp(-1, var(--g-cols) - 18, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(19n) {
+    --g-is19n: calc(1 - max(clamp(-1, var(--g-cols) - 19, 1), 0 - clamp(-1, var(--g-cols) - 19, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(20n) {
+    --g-is20n: calc(1 - max(clamp(-1, var(--g-cols) - 20, 1), 0 - clamp(-1, var(--g-cols) - 20, 1)));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(1) {
+    --g-is1: 1;
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(2) {
+    --g-is2: calc(clamp(0, var(--g-cols) - 2 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(3) {
+    --g-is3: calc(clamp(0, var(--g-cols) - 3 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(4) {
+    --g-is4: calc(clamp(0, var(--g-cols) - 4 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(5) {
+    --g-is5: calc(clamp(0, var(--g-cols) - 5 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(6) {
+    --g-is6: calc(clamp(0, var(--g-cols) - 6 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(7) {
+    --g-is7: calc(clamp(0, var(--g-cols) - 7 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(8) {
+    --g-is8: calc(clamp(0, var(--g-cols) - 8 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(9) {
+    --g-is9: calc(clamp(0, var(--g-cols) - 9 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(10) {
+    --g-is10: calc(clamp(0, var(--g-cols) - 10 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(11) {
+    --g-is11: calc(clamp(0, var(--g-cols) - 11 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(12) {
+    --g-is12: calc(clamp(0, var(--g-cols) - 12 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(13) {
+    --g-is13: calc(clamp(0, var(--g-cols) - 13 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(14) {
+    --g-is14: calc(clamp(0, var(--g-cols) - 14 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(15) {
+    --g-is15: calc(clamp(0, var(--g-cols) - 15 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(16) {
+    --g-is16: calc(clamp(0, var(--g-cols) - 16 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(17) {
+    --g-is17: calc(clamp(0, var(--g-cols) - 17 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(18) {
+    --g-is18: calc(clamp(0, var(--g-cols) - 18 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(19) {
+    --g-is19: calc(clamp(0, var(--g-cols) - 19 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > *:nth-child(20) {
+    --g-is20: calc(clamp(0, var(--g-cols) - 20 + 1, 1));
+}
+.grid:not(.flex-layout):not(.grid-layout) > * {
+    margin-top: calc(var(--row-gap, 0) * (1 - min(1, (var(--g-is1) + var(--g-is2) + var(--g-is3) + var(--g-is4) + var(--g-is5) + var(--g-is6) + var(--g-is7) + var(--g-is8) + var(--g-is9) + var(--g-is10) + var(--g-is11) + var(--g-is12) + var(--g-is13) + var(--g-is14) + var(--g-is15) + var(--g-is16) + var(--g-is17) + var(--g-is18) + var(--g-is19) + var(--g-is20)))));
+    margin-right: calc(var(--column-gap, 0) * (1 - min(1, (var(--g-is1n) + var(--g-is2n) + var(--g-is3n) + var(--g-is4n) + var(--g-is5n) + var(--g-is6n) + var(--g-is7n) + var(--g-is8n) + var(--g-is9n) + var(--g-is10n) + var(--g-is11n) + var(--g-is12n) + var(--g-is13n) + var(--g-is14n) + var(--g-is15n) + var(--g-is16n) + var(--g-is17n) + var(--g-is18n) + var(--g-is19n) + var(--g-is20n)))));
+}
+.gridlist {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    list-style-type: none !important;
+    font-size: 0 !important;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    text-align: left;
+    height: auto;
+    white-space: var(--wrap);
+    --wrap: nowrap;
+    --column-gap: 0;
+}
+.gridlist > * {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    vertical-align: top;
+    font-size: 1rem;
+    white-space: normal;
+    padding: 0;
+    margin: 0;
+    margin-right: var(--column-gap);
+}
+.gridlist > *:last-child {
+    margin-right: 0;
+}
 </style>
 <script type="text/javascript">//<![CDATA[
 var main = false;
@@ -407,10 +660,9 @@ function goback()
 
     <!-- main page -->
     <section id="page_main" class="page">
-    <h2>Open Source Examples and Projects</h2>
+    <h2>Open Source <br> Examples and Projects</h2>
     <p>
-    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a>
-    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a><a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
     </p>
     <ul class="grid">
         <li>
@@ -495,13 +747,12 @@ function goback()
 
     
     <!-- frameworks page -->
-    
     <section id="page_frameworks" class="page demo-page">
     <h2>Frameworks / Libraries</h2>
     <p>
-    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a>
-    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a><a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
     </p>
+    
     <ul class="grid">
         <li>
             <a class="demo" href="https://github.com/foo123/tico">
@@ -797,18 +1048,17 @@ function goback()
             </a>
         </li>
     </ul>
-    </section>
     
     <!-- /frameworks page -->
+    </section>
     
     <!-- dsp page -->
-    
     <section id="page_dsp" class="page demo-page">
     <h2>DSP / Machine Learning</h2>
     <p>
-    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a>
-    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a><a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
     </p>
+    
     <ul class="grid">
         <li>
             <a class="demo" href="./filter/">
@@ -880,18 +1130,17 @@ function goback()
             </a>
         </li>
     </ul>
-    </section>
     
     <!-- /dsp page -->
+    </section>
     
     <!-- processors page -->
-    
     <section id="page_processors" class="page demo-page">
     <h2>Engines / Processors / Pattern Processing</h2>
     <p>
-    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a>
-    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a><a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
     </p>
+    
     <ul class="grid">
         <li>
             <a class="demo" href="./regex-analyzer/">
@@ -991,18 +1240,17 @@ function goback()
             </a>
         </li>
     </ul>
-    </section>
     
     <!-- /processors page -->
+    </section>
     
     <!-- math page -->
-    
     <section id="page_math" class="page demo-page">
     <h2>Mathematics / Combinatorics / Logic / Optimization</h2>
     <p>
-    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a>
-    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a><a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
     </p>
+    
     <ul class="grid">
         <li>
             <a class="demo" href="./abacus/">
@@ -1130,18 +1378,17 @@ function goback()
             </a>
         </li>
     </ul>
-    </section>
     
     <!-- /math page -->
+    </section>
     
     <!-- graphics page -->
-    
     <section id="page_graphics" class="page demo-page">
     <h2>Graphics / 3D / Animation</h2>
     <p>
-    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a>
-    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a><a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
     </p>
+    
     <ul class="grid">
         <li>
             <a class="demo" href="./imagik/">
@@ -1304,18 +1551,17 @@ function goback()
             </a>
         </li>
     </ul>
-    </section>
     
     <!-- /graphics page -->
+    </section>
     
     <!-- plugins page -->
-    
     <section id="page_plugins" class="page demo-page">
     <h2>Plugins / Add-Ons</h2>
     <p>
-    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a>
-    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a><a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
     </p>
+    
     <ul class="grid">
         <li>
             <a class="demo" href="./codemirror-grammar/">
@@ -1401,18 +1647,17 @@ function goback()
             </a>
         </li>
     </ul>
-    </section>
     
     <!-- /plugins page -->
+    </section>
     
     <!-- apps page -->
-    
     <section id="page_apps" class="page demo-page">
     <h2>Demo Applications</h2>
     <p>
-    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a>
-    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a><a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
     </p>
+    
     <ul class="grid">
         <li>
             <a class="demo" href="./abacus/">
@@ -1603,18 +1848,17 @@ function goback()
             </a>
         </li>
     </ul>
-    </section>
     
     <!-- /apps page -->
+    </section>
     
     <!-- games page -->
-    
     <section id="page_games" class="page demo-page">
     <h2>Simple Games</h2>
     <p>
-    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a>
-    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a><a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
     </p>
+    
     <ul class="grid">
         <li>
             <a class="demo" href="./billiard.js/">
@@ -1658,18 +1902,17 @@ function goback()
             </a>
         </li>
     </ul>
-    </section>
     
     <!-- /games page -->
+    </section>
     
     <!-- tools page -->
-    
     <section id="page_tools" class="page demo-page">
     <h2>Tools / Scripts</h2>
     <p>
-    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a>
-    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a><a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
     </p>
+    
     <ul class="grid">
         <li>
             <a class="demo" href="https://github.com/foo123/Beeld">
@@ -1762,18 +2005,17 @@ function goback()
             </a>
         </li>
     </ul>
-    </section>
     
     <!-- /tools page -->
+    </section>
     
     <!-- various page -->
-    
     <section id="page_various" class="page demo-page">
     <h2>Various experiments</h2>
     <p>
-    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a>
-    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a><a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
     </p>
+    
     <ul class="grid">
         <li>
             <a class="demo" href="https://github.com/foo123/code-optimization-methods">
@@ -1831,18 +2073,17 @@ function goback()
             </a>
         </li>
     </ul>
-    </section>
     
     <!-- /various page -->
+    </section>
     
     <!-- projects page -->
-    
     <section id="page_projects" class="page demo-page">
     <h2>Projects / Applications</h2>
     <p>
-    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a>
-    <a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a><a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
     </p>
+    
     <ul class="grid">
         <li>
             <a class="demo" href="javascript:void(0)">
@@ -1872,9 +2113,9 @@ function goback()
             </a>
         </li>
     </ul>
-    </section>
     
     <!-- /projects page -->
+    </section>
     
 </div>
 <style type="text/css">
