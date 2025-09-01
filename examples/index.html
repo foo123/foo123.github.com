@@ -38,7 +38,6 @@ html {
 body {
     font-family: 'Merriweather Sans', 'Open Sans', sans-serif;
     font-size: 16px;
-    backround: none;
     width: 100%;
     height: 100%;
     background: #323232;
@@ -59,7 +58,10 @@ a {
     margin: 0 2px;
     background: none;
     vertical-align: middle;
-    width: 42px;
+    /*width: 42px;*/
+    --height: 52px;
+    --icon: none;
+    --aspect-ratio: calc(1 / 1);
 }
 .icon::before {
     content: "";
@@ -67,20 +69,26 @@ a {
     display: block;
     padding: 0;
     margin: 0;
-    height: auto;
+    /*
     width: 100%;
-    padding-top: 100%;
-    background-image: none;
+    height: auto;
+    padding-top: calc(100% / var(--aspect-ratio));
+    */
+    width: calc(var(--height) * var(--aspect-ratio));
+    height: var(--height);
+    background-image: var(--icon);
     background-color: transparent;
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover !important;
 }
-.icon.gh::before {
-    background-image: url('data:image/svg+xml;utf8,<svg width="800px" height="800px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-140.000000, -7559.000000)" fill="%23fff"><g transform="translate(56.000000, 160.000000)"><path d="M94,7399 C99.523,7399 104,7403.59 104,7409.253 C104,7413.782 101.138,7417.624 97.167,7418.981 C96.66,7419.082 96.48,7418.762 96.48,7418.489 C96.48,7418.151 96.492,7417.047 96.492,7415.675 C96.492,7414.719 96.172,7414.095 95.813,7413.777 C98.04,7413.523 100.38,7412.656 100.38,7408.718 C100.38,7407.598 99.992,7406.684 99.35,7405.966 C99.454,7405.707 99.797,7404.664 99.252,7403.252 C99.252,7403.252 98.414,7402.977 96.505,7404.303 C95.706,7404.076 94.85,7403.962 94,7403.958 C93.15,7403.962 92.295,7404.076 91.497,7404.303 C89.586,7402.977 88.746,7403.252 88.746,7403.252 C88.203,7404.664 88.546,7405.707 88.649,7405.966 C88.01,7406.684 87.619,7407.598 87.619,7408.718 C87.619,7412.646 89.954,7413.526 92.175,7413.785 C91.889,7414.041 91.63,7414.493 91.54,7415.156 C90.97,7415.418 89.522,7415.871 88.63,7414.304 C88.63,7414.304 88.101,7413.319 87.097,7413.247 C87.097,7413.247 86.122,7413.234 87.029,7413.87 C87.029,7413.87 87.684,7414.185 88.139,7415.37 C88.139,7415.37 88.726,7417.2 91.508,7416.58 C91.513,7417.437 91.522,7418.245 91.522,7418.489 C91.522,7418.76 91.338,7419.077 90.839,7418.982 C86.865,7417.627 84,7413.783 84,7409.253 C84,7403.59 88.478,7399 94,7399"></path></g></g></g></svg>');
+.icon.gh {
+    --aspect-ratio: calc(1 / 1);
+    --icon: url('data:image/svg+xml;utf8,<svg width="21px" height="21px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-140.000000, -7559.000000)" fill="%23fff"><g transform="translate(56.000000, 160.000000)"><path d="M94,7399 C99.523,7399 104,7403.59 104,7409.253 C104,7413.782 101.138,7417.624 97.167,7418.981 C96.66,7419.082 96.48,7418.762 96.48,7418.489 C96.48,7418.151 96.492,7417.047 96.492,7415.675 C96.492,7414.719 96.172,7414.095 95.813,7413.777 C98.04,7413.523 100.38,7412.656 100.38,7408.718 C100.38,7407.598 99.992,7406.684 99.35,7405.966 C99.454,7405.707 99.797,7404.664 99.252,7403.252 C99.252,7403.252 98.414,7402.977 96.505,7404.303 C95.706,7404.076 94.85,7403.962 94,7403.958 C93.15,7403.962 92.295,7404.076 91.497,7404.303 C89.586,7402.977 88.746,7403.252 88.746,7403.252 C88.203,7404.664 88.546,7405.707 88.649,7405.966 C88.01,7406.684 87.619,7407.598 87.619,7408.718 C87.619,7412.646 89.954,7413.526 92.175,7413.785 C91.889,7414.041 91.63,7414.493 91.54,7415.156 C90.97,7415.418 89.522,7415.871 88.63,7414.304 C88.63,7414.304 88.101,7413.319 87.097,7413.247 C87.097,7413.247 86.122,7413.234 87.029,7413.87 C87.029,7413.87 87.684,7414.185 88.139,7415.37 C88.139,7415.37 88.726,7417.2 91.508,7416.58 C91.513,7417.437 91.522,7418.245 91.522,7418.489 C91.522,7418.76 91.338,7419.077 90.839,7418.982 C86.865,7417.627 84,7413.783 84,7409.253 C84,7403.59 88.478,7399 94,7399"></path></g></g></g></svg>');
 }
-.icon.so::before {
-    background-image: url('data:image/svg+xml;utf8,<svg fill="%23fff" width="800px" height="800px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M8.696 23.002v2.662h13.321v-2.662h-13.321zM3.366 20.336v10.659h23.981v-10.659h-2.666v7.994h-18.652v-7.993h-2.663zM9.483 16.928l-0.55 2.616 13.087 2.75 0.55-2.614-13.087-2.753zM11.795 10.855l-1.131 2.424 12.124 5.645 1.13-2.424zM15.731 5.276l-1.711 2.054 10.278 8.56 1.711-2.054zM20.655 1.004l-2.149 1.596 7.985 10.732 2.144-1.596z"></path></svg>');
+.icon.so {
+    --aspect-ratio: calc(1 / 1);
+    --icon: url('data:image/svg+xml;utf8,<svg fill="%23fff" width="33px" height="33px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M8.696 23.002v2.662h13.321v-2.662h-13.321zM3.366 20.336v10.659h23.981v-10.659h-2.666v7.994h-18.652v-7.993h-2.663zM9.483 16.928l-0.55 2.616 13.087 2.75 0.55-2.614-13.087-2.753zM11.795 10.855l-1.131 2.424 12.124 5.645 1.13-2.424zM15.731 5.276l-1.711 2.054 10.278 8.56 1.711-2.054zM20.655 1.004l-2.149 1.596 7.985 10.732 2.144-1.596z"></path></svg>');
 }
 .controller {
     position: fixed !important;
@@ -209,12 +217,13 @@ a {
 #page_main {
     padding: 60px 30px;
     background: rgb(235, 104, 61);
-    background: linear-gradient(90deg, rgb(235, 104, 61) 0%, rgb(50, 50, 50) 100%);
+    background-image: linear-gradient(90deg, rgb(235, 104, 61) 0%, rgb(50, 50, 50) 100%);
     background-position: 0 0;
     background-repeat: no-repeat;
     color: #fff;
     font-size: 16px;
 }
+#page_main h1,
 .page h2 {
     font-size: 24px;
     font-weight: bold;
@@ -254,10 +263,12 @@ ul.grid {
     --columns: 5 !important;
 }
 #page_projects ul.grid {
+    --column-gap: 40px !important;
+    --row-gap: 40px !important;
     --columns: 2 !important;
 }
 ul.grid li {
-    font-size: 14px !important;
+    font-size: 16px !important;
 }
 .demo {
     position: relative;
@@ -285,7 +296,7 @@ ul.grid li {
     position: relative;
     display: block;
     margin-top: 10px;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 22px;
     text-align: left;
 }
@@ -663,7 +674,7 @@ function goback()
 
     <!-- main page -->
     <section id="page_main" class="page">
-    <h2>Open Source <br> Examples and Projects</h2>
+    <h1>Open Source <br> Examples and Projects</h1>
     <p>
     <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a><a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
     </p>
@@ -740,7 +751,7 @@ function goback()
     
         <li>
             <a class="demo" href="#controller_page_projects" onclick="return navigate()">
-                <img src="../samples/istavrolexo.png" class="ready" alt="logo image for category Projects / Applications" />
+                <img src="../samples/istavrolexo.png" class="ready" alt="logo image for category Sample Projects and Applications" />
                 <p>Examples of Projects and Applications ..</p>
             </a>
         </li>
@@ -2082,7 +2093,7 @@ function goback()
     
     <!-- projects page -->
     <section id="page_projects" class="page demo-page">
-    <h2>Projects / Applications</h2>
+    <h2>Sample Projects and Applications</h2>
     <p>
     <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a><a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
     </p>
@@ -2155,29 +2166,29 @@ function colorize()
 {
     return rainbow ? rainbow_gradient : (colors.splice((colors.length-1) * Math.random(), 1)[0]);
 }
-document.getElementById('page_main').style.background = colorize();
+document.getElementById('page_main').style.backgroundImage = colorize();
 
-document.getElementById('page_frameworks').style.background = colorize();
+document.getElementById('page_frameworks').style.backgroundImage = colorize();
 
-document.getElementById('page_dsp').style.background = colorize();
+document.getElementById('page_dsp').style.backgroundImage = colorize();
 
-document.getElementById('page_processors').style.background = colorize();
+document.getElementById('page_processors').style.backgroundImage = colorize();
 
-document.getElementById('page_math').style.background = colorize();
+document.getElementById('page_math').style.backgroundImage = colorize();
 
-document.getElementById('page_graphics').style.background = colorize();
+document.getElementById('page_graphics').style.backgroundImage = colorize();
 
-document.getElementById('page_plugins').style.background = colorize();
+document.getElementById('page_plugins').style.backgroundImage = colorize();
 
-document.getElementById('page_apps').style.background = colorize();
+document.getElementById('page_apps').style.backgroundImage = colorize();
 
-document.getElementById('page_games').style.background = colorize();
+document.getElementById('page_games').style.backgroundImage = colorize();
 
-document.getElementById('page_tools').style.background = colorize();
+document.getElementById('page_tools').style.backgroundImage = colorize();
 
-document.getElementById('page_various').style.background = colorize();
+document.getElementById('page_various').style.backgroundImage = colorize();
 
-document.getElementById('page_projects').style.background = colorize();
+document.getElementById('page_projects').style.backgroundImage = colorize();
 
 if (window.lozad)
 {
