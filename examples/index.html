@@ -174,6 +174,12 @@ a {
     transition: transform .3s ease;
 }
 
+#controller_page_networking:target ~ #panel #page_networking {
+    position: relative;
+    transform: translateX(0px);
+    transition: transform .3s ease;
+}
+
 #controller_page_plugins:target ~ #panel #page_plugins {
     position: relative;
     transform: translateX(0px);
@@ -409,6 +415,8 @@ function goback()
 
 <span id="controller_page_graphics" class="controller"></span>
 
+<span id="controller_page_networking" class="controller"></span>
+
 <span id="controller_page_plugins" class="controller"></span>
 
 <span id="controller_page_apps" class="controller"></span>
@@ -464,6 +472,13 @@ function goback()
             <a class="demo" href="#controller_page_graphics" onclick="return navigate()">
                 <img src="../thumbs/carousel3.jpg" class="ready" alt="logo image for category Graphics / 3D / Animation" />
                 <p>Graphics, Animation, 3D, Transition Libraries, Slideshows, ..</p>
+            </a>
+        </li>
+    
+        <li>
+            <a class="demo" href="#controller_page_networking" onclick="return navigate()">
+                <img src="../thumbs/rt.jpg" class="ready" alt="logo image for category Networking / Real-Time Communication / HTTP / AJAX" />
+                <p>Networking, Real-Time Communication, HTTP and AJAX Frameworks, ..</p>
             </a>
         </li>
     
@@ -1329,6 +1344,67 @@ function goback()
     </section>
     <!-- /graphics page -->
     
+    <!-- networking page -->
+    <section id="page_networking" class="page demo-page">
+    <h2>Networking / Real-Time Communication / HTTP / AJAX</h2>
+    <p>
+    <a href="https://github.com/foo123" title="GitHub"><i class="icon gh" aria-label="GitHub icon"></i></a><a href="https://stackoverflow.com/users/3591273/nikos-m" title="StackOverflow"><i class="icon so" aria-label="StackOverflow icon"></i></a>
+    </p>
+    
+    <ul class="grid">
+        <li>
+            <a class="demo" href="https://github.com/foo123/RT">
+                <img class="lozad" src="../css/cubes.gif" data-src="../thumbs/rt.jpg" style="--src:url('../thumbs/rt.jpg')" alt="logo image for this project/demo" />
+                <p><b>RT</b>: a versatile <b>real-time communication client</b> for JavaScript supporting <b>Poll, BOSH and Web Sockets</b></p>
+            </a>
+        </li>
+    
+        <li>
+            <a class="demo" href="https://github.com/foo123/AjaxListener.js">
+                <img class="lozad" src="../css/cubes.gif" data-src="../thumbs/ajaxlistener.jpg" style="--src:url('../thumbs/ajaxlistener.jpg')" alt="logo image for this project/demo" />
+                <p><b>AjaxListener</b>: listen to any <b>AJAX event</b> on page, even by other scripts</p>
+            </a>
+        </li>
+    
+        <li>
+            <a class="demo" href="https://github.com/foo123/EazyHttp">
+                <img class="lozad" src="../css/cubes.gif" data-src="../thumbs/eazyhttp.jpg" style="--src:url('../thumbs/eazyhttp.jpg')" alt="logo image for this project/demo" />
+                <p><b>EazyHttp</b>: easy, simple and fast <b>HTTP requests</b> for PHP, JavaScript, Python</p>
+            </a>
+        </li>
+    
+        <li>
+            <a class="demo" href="https://github.com/foo123/Dromeo">
+                <img class="lozad" src="../css/cubes.gif" data-src="../thumbs/dromeo2.jpg" style="--src:url('../thumbs/dromeo2.jpg')" alt="logo image for this project/demo" />
+                <p><b>Dromeo</b>: a simple, versatile, barebones <b>pattern router</b> for PHP, JavaScript, Python</p>
+            </a>
+        </li>
+    
+        <li>
+            <a class="demo" href="./weather-modelview/">
+                <img class="lozad" src="../css/cubes.gif" data-src="../thumbs/weather-modelview.png" style="--src:url('../thumbs/weather-modelview.png')" alt="logo image for this project/demo" />
+                <p>Weather at a Glance with <b>ModelView.js</b></p>
+            </a>
+        </li>
+    
+        <li>
+            <a class="demo" href="./weather-react/">
+                <img class="lozad" src="../css/cubes.gif" data-src="../thumbs/weather-react.png" style="--src:url('../thumbs/weather-react.png')" alt="logo image for this project/demo" />
+                <p>Weather at a Glance with <b>React.js</b></p>
+            </a>
+        </li>
+    
+        <li>
+            <a class="demo" href="./weather-vue/">
+                <img class="lozad" src="../css/cubes.gif" data-src="../thumbs/weather-vue.png" style="--src:url('../thumbs/weather-vue.png')" alt="logo image for this project/demo" />
+                <p>Weather at a Glance with <b>Vue.js</b></p>
+            </a>
+        </li>
+    </ul>
+    
+    </section>
+    <!-- /networking page -->
+    
     <!-- plugins page -->
     <section id="page_plugins" class="page demo-page">
     <h2>Plugins / Add-Ons</h2>
@@ -1937,6 +2013,8 @@ document.getElementById('page_processors').style.backgroundImage = colorize();
 document.getElementById('page_math').style.backgroundImage = colorize();
 
 document.getElementById('page_graphics').style.backgroundImage = colorize();
+
+document.getElementById('page_networking').style.backgroundImage = colorize();
 
 document.getElementById('page_plugins').style.backgroundImage = colorize();
 
