@@ -1,6 +1,6 @@
 !function(require) {
 require.config({
-baseUrl: /^https?:\/\/foo123\./.test(location.href) ? "/examples/common/js" : "/foo123.github.com/examples/common/js"
+baseUrl: /^https?:\/\/foo123\./i.test(location.href) ? "/examples/common/js" : "/foo123.github.com/examples/common/js"
 
 ,paths: {
      Storage: "Storage"
@@ -9,16 +9,10 @@ baseUrl: /^https?:\/\/foo123\./.test(location.href) ? "/examples/common/js" : "/
     ,AreaSelect: "areaselect.min"
     ,AreaSortable: "areasortable.min"
     ,utils: "utils.min"
-    ,BigInteger: "BigInteger"
-    ,jQuery: "jquery"
-    ,jQueryUI: "jquery-ui-1.10.4.custom.min"
-    ,lodash: "lodash.min"
-    ,platform: "platform.min"
-    ,Benchmark: "benchmark.min"
     ,Classy: "classy.min"
     ,Asynchronous: "asynchronous.min"
+    ,BigInteger: "BigInteger"
     ,Abacus: "Abacus.min"
-    ,RT: "RT.min"
     ,XRegExp: "xregexp"
     ,Regex: "Regex.min"
     ,DateX: "DateX.min"
@@ -33,9 +27,9 @@ baseUrl: /^https?:\/\/foo123\./.test(location.href) ? "/examples/common/js" : "/
     ,Dromeo: "Dromeo.min"
     ,Dialect: "Dialect.min"
     ,GrammarTemplate: "GrammarTemplate.min"
-    ,GrammarPattern: "GrammarPattern.min"
     ,Xpresion: "Xpresion.min"
     ,Unicache: "Unicache.min"
+    ,Parallel: "parallel/parallel.min"
     ,HAAR: "haar-detector.min"
     ,cascades: "../cascades"
     //,FILTER: "../../../../FILTER.js/build/filter"
@@ -43,6 +37,11 @@ baseUrl: /^https?:\/\/foo123\./.test(location.href) ? "/examples/common/js" : "/
     ,MOD3: "mod3.min"
     ,Sort: "sort.min"
     ,Pattern: "pattern.min"
+    
+    ,platform: "platform.min"
+    ,Benchmark: "benchmark.min"
+    ,Stats: "stats.min"
+    ,DatGUI: "datgui.min"
     ,NEngine: "NEngine.min"
     ,CodeMirror: "codemirror/codemirror.min"
     ,CodeMirrorGrammar: "codemirror_grammar.min"
@@ -54,46 +53,45 @@ baseUrl: /^https?:\/\/foo123\./.test(location.href) ? "/examples/common/js" : "/
     ,SyntaxHighlighterGrammar: "syntaxhighlighter_grammar.min"
     ,HighlightJS: "highlightjs/highlight"
     ,HighlightJSGrammar: "highlightjs_grammar.min"
-    ,Stats: "stats.min"
-    ,DatGUI: "datgui.min"
-    ,Parallel: "parallel/parallel.min"
     ,Dancer: "dancer.min"
     ,dsp: "dsp.min"
+    ,lodash: "lodash.min"
+    ,jQuery: "jquery/jquery-3.7.1.slim.min"
+    ,jQueryUI: "jquery/jquery-ui-1.10.4.custom.min"
+    ,Tween: "Tween"
     ,Three: "three.min"
     ,ThreeX: "THREEx.WindowResize"
     ,ThreeOld: "three_old"
-    ,Tween: "Tween"
 }
 ,bundles: {
     //FilterBundle: ["Classy", "Asynchronous", "FILTER", "FILTER_IO", "FILTER_CODECS", "FILTER_FILTERS", "FILTER_PLUGINS"],
     ModelViewBundle: ["ModelView", "ModelViewValidation", "ModelViewjQuery"]
-}        
+}
 ,shim: {
-    Storage: { exports: 'Storage' }
-    ,touchTouch: { exports: 'touchTouch' }
-    ,utils: { exports: 'U' }
-    ,jQuery: { exports: 'jQuery' }
-    ,lodash: { exports: '_' }
-    ,platform: { exports: 'platform' }
+     Storage: {exports: 'Storage'}
+    ,touchTouch: {exports: 'touchTouch'}
+    ,utils: {exports: 'U'}
+    ,platform: {exports: 'platform'}
     ,Benchmark: {
         deps: ['lodash', 'platform'],
         exports: 'Benchmark'
     }
-    ,Stats: { exports: 'Stats' }
-    ,DatGUI: { exports: 'DAT' }
-    ,BigInteger: { exports: 'bigInt' }
-    ,Parallel: { exports: 'Parallel' }
-    ,CodeMirror: { exports: 'CodeMirror' }
-    ,Prism: { exports: 'Prism' }
-    ,Dancer: { exports: 'Dancer' }
-    ,Stats: { exports: 'Stats' }
-    ,Tween: { exports: 'Tween' }
+    ,Stats: {exports: 'Stats'}
+    ,DatGUI: {exports: 'DAT'}
+    ,BigInteger: {exports: 'bigInt'}
+    ,Parallel: {exports: 'Parallel'}
+    ,CodeMirror: {exports: 'CodeMirror'}
+    ,Prism: {exports: 'Prism'}
+    ,Dancer: {exports: 'Dancer'}
+    ,jQuery: {exports: 'jQuery'}
+    ,lodash: {exports: '_'}
     ,Three: {
         //deps: ['underscore', 'jquery'],
         exports: 'Three'
     }
-    ,ThreeOld: { exports: 'THREE' }
-    ,NEngine: { exports: 'NEngine' }
+    ,ThreeOld: {exports: 'THREE'}
+    ,Tween: {exports: 'Tween'}
+    ,NEngine: {exports: 'NEngine'}
 }
 ,waitSeconds: 15
 });
