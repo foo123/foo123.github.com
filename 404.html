@@ -1,39 +1,77 @@
 <!doctype html>
 <html>
-  <head>
-    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Oops!!!</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/respond.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="stylesheets/ie.css">
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <script type="text/javascript"> function delayer() {window.location = "http://foo123.github.com/"} </script>
-  </head>
-
-  <body onLoad="setTimeout('delayer()', 5000)">
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/foo123">View On GitHub</a></li>
-        </nav>
-      </div><!-- end header -->
-
-    <div class="wrapper">
-
-      <section>
-        <div id="title">
-        <h1>Ooops !! Wait, go there.. </h1>
-          <hr>
-        </div>
-    </section>
-    </div>
-  </body>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=5.0">
+<title>404 Not Found | foo123.github.io</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;900&display=swap" rel="stylesheet">
+<style type="text/css">
+* {
+    position: relative;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+html {
+    width: 100%;
+    height: 100%;
+}
+body {
+    --font-size: 16px;
+    font-family: Helvetica, sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    font-size: var(--font-size);
+    line-height: 1.2;
+    width: 100%;
+    height: 100%;
+    background: #323232;
+    background-image: linear-gradient(90deg, rgba(235, 87, 61, 1) 0%, rgba(222, 175, 33, 1) 22%, rgba(194, 176, 14, 1) 37%, rgba(87, 191, 27, 1) 51%, rgba(23, 189, 155, 1) 66%, rgba(20, 110, 219, 1) 80%, rgba(140, 17, 171, 1) 100%);
+    color: #fff;
+    max-width: 2600px;
+    overflow-x: hidden;
+    margin: 0 auto;
+}
+a {
+    color: #fff;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+#msg {
+    position: absolute;
+    display: block;
+    width: 100%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: calc(1.3 * var(--font-size));
+    font-weight: 700;
+}
+#msg span {
+    display: inline-block;
+    font-family: "M PLUS Rounded 1c", sans-serif;
+    font-weight: 900;
+    font-style: normal;
+    font-size: calc(12 * var(--font-size));
+}
+@media (max-width: 360px) {
+#msg {
+    font-size: calc(1.2 * var(--font-size));
+}
+#msg span {
+    font-size: calc(9.5 * var(--font-size));
+}
+}
+</style>
+</head>
+<body>
+<div id="msg">
+<span>404</span><br>
+<a href="https://foo123.github.io/examples/">foo123.github.io</a>
+</div>
+</body>
 </html>
