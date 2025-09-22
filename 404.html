@@ -36,7 +36,7 @@ body {
 }
 a {
     color: #fff;
-    text-decoration: none;
+    text-decoration: underline;
 }
 a:hover {
     text-decoration: underline;
@@ -48,7 +48,7 @@ a:hover {
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    font-size: calc(1.3 * var(--font-size));
+    font-size: calc(1.4 * var(--font-size));
     font-weight: 700;
     padding: 20px 10px;
 }
@@ -59,41 +59,85 @@ a:hover {
     font-style: normal;
     font-size: calc(10 * var(--font-size));
 }
-.sprite {
+#user {
     position: relative;
     display: inline-block;
     vertical-align: middle;
+    font-size: 0;
     outline: 0;
+    width: 85px;
     background: none;
-    background-position-x: 0%;
-    background-position-y: 0%;
-    background-image: none;
-    background-size: auto;
-    font-weight: normal;
-    font-style: normal;
-    padding: 0;
-    margin: 0;
-    max-width: 100%;
-    box-sizing: border-box;
+    overflow: visible;
 }
-#sprite_1758539824_253_200.sprite.spriteanimation-class {
-    width: 100px;
-    height: 170px;
+#user::before {
+    content: "";
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 173.66666666667%;
+    background: none;
     background-image: url('/css/spriteanimation.png');
     background-repeat: none;
     background-position: 0% 0%;
-    background-size: auto auto;
+    background-size: 800% 200%;
     animation-name: spriteanimation-grid-x, spriteanimation-grid-y;
     animation-duration: 0.66666666666667s, 1.3333333333333s;
     animation-delay: 0s, 0s;
     animation-timing-function: steps(8), steps(2);
     animation-iteration-count: infinite, infinite;
 }
-#sprite_1758539824_253_200.sprite.responsive.spriteanimation-class {
-    width: 100% !important;
-    height: auto !important;
-    padding-bottom: 173.66666666667% !important;
-    background-size: 800% 200% !important;
+#user::after {
+    content: "";
+    position: absolute;
+    display: block;
+    z-index: 2;
+    box-sizing: border-box;
+    --width: 58px;
+    width: var(--width);
+    height: calc(var(--width) * 135 / 132);
+    top: 20px; right: 30px;
+    transform: translate(100%, -100%);
+    background: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 132 136"><path fill="white" stroke="black" stroke-width="4" stroke-linejoin="bevel" d="M66.1 1.5C30.4 1.5 1.5 22.9 1.5 46c0 18.1 17.9 33.5 42.8 39.3 1.5 14.8-1.3 39-8.5 48.1 10.8-12.5 22.4-33.6 26.6-45.7 1.2 0 2.5.1 3.7.1 35.7 0 64.6-18.7 64.6-41.8S101.8 1.5 66.1 1.5zM35.8 133.4c-.3.4-.7.8-1 1.1.4-.3.7-.7 1-1.1z"/><text x="20" y="30" stroke="black" transform="scale(1.8)">Oops !</text></svg>');
+    background-repeat: none;
+    background-position: 0 0;
+    background-size: cover;
+}
+#sign {
+    position: relative;
+    display: inline-block;
+    font-size: 0;
+    outline: 0;
+    background: none;
+    vertical-align: middle;
+    --width: 120px;
+    margin-left: 40px;
+}
+#sign::before {
+    content: "";
+    position: relative;
+    display: block;
+    z-index: 0;
+    box-sizing: border-box;
+    width: var(--width);
+    height: var(--width);
+    background: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 1025 1024"><path stroke="black" fill="white" d="m1009.31 355l-206 142q-4 4-13 7q-7 8-22 8h-192v448q0 26-19 45t-45.5 19t-45-19t-18.5-45V512h-384q-27 0-45.5-18.5T.31 448V192q0-26 18.5-45t45.5-19h384V64q0-26 18.5-45t45-19t45.5 19t19 45v64h141q19-1 37 0h14q14 0 21 7q10 3 14 7l206 142q15 15 15 35.5t-15 35.5z"></path><text x="5" y="40" stroke="black" transform="scale(10)">go over here</text></svg>');
+    background-repeat: none;
+    background-position: 0 0;
+    background-size: cover;
+}
+#scene {
+    position: relative;
+    display: block;
+    max-width: 100%;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 10px;
 }
 @keyframes spriteanimation-grid-x {
     0% {background-position-x: 0%;}
@@ -103,25 +147,31 @@ a:hover {
     0% {background-position-y: 0%;}
     100% {background-position-y: -200%;}
 }
-#sprite-container {
-    margin: 0 auto;
-    width: 100px;
-}
 @media (max-width: 360px) {
 #msg {
     font-size: calc(1.2 * var(--font-size));
 }
 #msg span {
-    font-size: calc(9 * var(--font-size));
+    font-size: calc(8 * var(--font-size));
+}
+}
+@media (max-height: 360px) {
+#msg {
+    font-size: calc(1.2 * var(--font-size));
+}
+#msg span {
+    font-size: calc(8 * var(--font-size));
 }
 }
 </style>
 </head>
 <body>
 <div id="msg">
-<span>404</span><br>
-<div id="sprite-container"><div id="sprite_1758539824_253_200" class="sprite responsive spriteanimation-class"></div></div>
-<a href="https://foo123.github.io/examples/">Goto: foo123.github.io</a>
+<span>404</span>
+<div id="scene">
+<!-- user finding way out composition -->
+<div id="user"></div><a id="sign" href="https://foo123.github.io/examples/" title="go over here"></a>
+</div>
 </div>
 </body>
 </html>
