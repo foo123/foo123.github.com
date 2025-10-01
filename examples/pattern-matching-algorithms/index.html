@@ -49,8 +49,8 @@ input,select,textarea {
     text-decoration:none;
     border-bottom:1px dotted #f90b13;
 }
-.showcase a:hover, 
-.showcase a:active, 
+.showcase a:hover,
+.showcase a:active,
 .showcase a:visited{
     text-decoration:none;
 }
@@ -110,8 +110,8 @@ input,select,textarea {
 }
 #console {
     border: 1px solid #aaa;
-    background:#efefef; 
-    color:#121212; 
+    background:#efefef;
+    color:#121212;
     min-height:300px;
     padding:20px;
 }
@@ -152,41 +152,35 @@ input,select,textarea {
 </head>
 <body class="responsive-864-container">
     <span id="forkongithub"><a href="https://github.com/foo123/PatternMatchingAlgorithms">Check me out on GitHub</a></span>
-    
-    
+
+
 <header id="header" class="fluid col-1-1">
     <h1>Pattern Matching Algorithms Tests</h1>
 </header>
 
 <br />
 
-    
-    
+
+
 <section id="panel" class="fluid col-1-1" style="padding: 20px;">
 <div id="controls" class="fluid col-1-4">
     <strong>Select Match Algorithm: </strong><br />
     <div class="cont"><select name="model[algorithm][selected]">
-        <optgroup label="Single Pattern:">
-            <option value="BuiltinMatcher" selected="selected">Builtin Matcher</option>
-            <option value="NaiveMatcher">Naive Matcher</option>
-            <option value="RabinKarpMatcher">Rabin-Karp Matcher</option>
-            <option value="FSAMatcher">FSA Matcher</option>
-            <option value="KnuthMorrisPrattMatcher">Knuth-Morris-Pratt Matcher</option>
-            <option value="BoyerMooreMatcher">Boyer-Moore Matcher</option>
-        </optgroup>
-        <optgroup label="Multiple Patterns:"></optgroup>
-    </select></div> 
-    
+        <option value="NaiveMatcher">Naive Matcher</option>
+        <option value="FSAMatcher">FSA Matcher</option>
+        <option value="RabinKarpMatcher">Rabin-Karp Matcher</option>
+        <option value="KnuthMorrisPrattMatcher">Knuth-Morris-Pratt Matcher</option>
+        <option value="BoyerMooreMatcher">Boyer-Moore Matcher</option>
+        <option value="TwoWayMatcher">Two-Way Matcher</option>
+    </select></div>
+
     <strong>Select Match Pattern: </strong><br />
-    <div class="cont"><input name="model[algorithm][pattern]" type="text" size="12" value=""/></div> 
-    
+    <div class="cont"><input name="model[algorithm][pattern]" type="text" size="12" value=""/></div>
+
     <strong>Select Text: </strong><br />
-    <div class="cont"><textarea name="model[algorithm][text]" rows="4" cols="13"></textarea></div> 
-    
-    <strong>Alphabet: </strong><br />
-    <div class="cont">&quot;&nbsp;0123456789ABCDEFQHIJKLMNOPQRSTUVWXYZabcdefqhijklmnopqrstuvwxyz&quot;</div> 
-    
-    <input id="test" type="button" class="button" 
+    <div class="cont"><textarea name="model[algorithm][text]" rows="4" cols="13"></textarea></div>
+
+    <input id="test" type="button" class="button"
         value="Run Test" mv-evt mv-on-click="test" />
     <br /><br />
 </div>
@@ -221,11 +215,11 @@ input,select,textarea {
 </section>
 <br />
 
-    
-    
+
+
     <footer id="footer">
     <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
-    
+
 <div class="showcase">DOM abstraction by <a href="http://jquery.com/" target="_blank">jQuery</a></div>
 
     <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
@@ -235,77 +229,80 @@ input,select,textarea {
     <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
     </footer>
     <br /><br />
-    
-    
+
+
 <script type="text/javascript">//<![CDATA[
-require(['jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'Pattern'],
-    function( $, $T, $R, $MV, _, __, $P ) {
+require(['jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'Matchy', 'Pattern'],
+    function($, $T, $R, $MV, _, __, $M, $P) {
     "use strict";
-    
-    var undef=undefined, $window = $(window), $panel = $('#panel'), $console = $('#console'),
+
+    var $window = $(window),
+        $panel = $('#panel'),
+        $console = $('#console'),
         appRouter, appView, appModel
     ;
-        
-    $MV.jquery( $ );
-    
-    function doTest( model )
+
+    $MV.jquery($);
+    $P.Matchy($M);
+
+    function doTest(model)
     {
         //
         // get selected match algorithm
         //
-        var selectedAlgorithm, matcher,  reflink, desc,
+        var selectedAlgorithm,
+            matcher, reflink, desc,
             pattern, text, result
         ;
-        
+
         pattern = model.get('algorithm.pattern');
         text = model.get('algorithm.text');
         selectedAlgorithm = model.get('algorithm.selected');
-        
-        matcher = new $P[ selectedAlgorithm ]( pattern );
-        
+
+        matcher = $P[selectedAlgorithm].pattern(pattern);
+
         $console.addClass('processing');
-        model.set('algorithm.name', selectedAlgorithm, 1);
-        model.set('algorithm.reflink', matcher.reference || '#', 1);
-        model.set('algorithm.desc', matcher.description || '', 1);
-        
-        setTimeout(function( ) {
-            result = matcher.match( text );
-            matcher.dispose( );
-            matcher = null;
-            setTimeout(function( ){ 
+
+        setTimeout(function() {
+            result = matcher.match(text);
+            setTimeout(function() {
                 //
                 // show results
                 //
-                model.set('result', {matched: ( -1 < result ), pos: result}, 1);
+                model.set('algorithm.name', selectedAlgorithm, 1);
+                model.set('algorithm.reflink', matcher.reference, 1);
+                model.set('algorithm.desc', matcher.description || '', 1);
+                model.set('result', {matched: (-1 < result), pos: result}, 1);
+                matcher = null;
                 $console.removeClass('processing');
             }, 100);
         }, 100);
     }
-    
+
     $panel.modelview({
-        
+
         id: 'PatternMatchingAlgorithmsPanel',
-        
+
         livebind: 'text',
         autobind: true,
         events: ['change', 'click'],
         autoSync: true,
-        
+
         model: {
             id: 'model',
-            
+
             data: {
                 algorithm: {
-                    selected: 'BuiltinMatcher',
+                    selected: 'NaiveMatcher',
                     pattern: 'rain',
                     text: 'The rain in Spain stays mainly in the plain',
-                    name: '',
-                    reflink: '#',
-                    desc: ''
+                    name: 'NaiveMatcher',
+                    reflink: $P['NaiveMatcher'].reference,
+                    desc: $P['NaiveMatcher'].description
                 },
-                result: {matched: false, pos: -1}
+                result: {matched: true, pos: 4}
             },
-            
+
             types: {
                 algorithm: {
                     selected: $MV.Type.Cast.STR,
@@ -316,12 +313,12 @@ require(['jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'ModelViewValidation', 
                     text: $MV.Type.Cast.STR
                 }
             }/*,
-            
-            validators: {  }*/
+
+            validators: {}*/
         },
-        
+
         actions: {
-            test: function( evt, $el, data ) {
+            test: function(evt, $el, data) {
                 var model = this.$model, algoInfo = model.get('algorithm');
                 location.hash = '#' + appRouter.glue({
                     action: 'test',
@@ -329,34 +326,34 @@ require(['jQuery', 'Contemplate', 'Dromeo', 'ModelView', 'ModelViewValidation', 
                     pattern: algoInfo.pattern,
                     text: algoInfo.text
                 });
-                doTest( model );
+                doTest(model);
             }
         }
     });
-    
+
     appView = $panel.modelview('view');
     appModel = appView.$model;
-    appRouter = new $R( );
+    appRouter = new $R();
     //$panel.modelview('sync');
-    
-    appRouter.one({route:'#{%ALL%:hash}', handler:function( params ) {
+
+    appRouter.one({route:'#{%ALL%:hash}', handler:function(params) {
         params = params.data;
-        params = params && params.hash ? appRouter.unglue( params.hash ) : null;
-        if ( params && params.action && 'test' === params.action )
+        params = params && params.hash ? appRouter.unglue(params.hash) : null;
+        if (params && params.action && ('test' === params.action))
         {
-            if ( undef !== params.match_algorithm )
-                appModel.set( 'algorithm.selected', params.match_algorithm, 1 );
-            if ( undef !== params.pattern )
-                appModel.set( 'algorithm.pattern', params.pattern, 1 );
-            if ( undef !== params.text )
-                appModel.set( 'algorithm.text', params.text, 1 );
-            doTest( appModel );
+            if (null != params.match_algorithm)
+                appModel.set('algorithm.selected', params.match_algorithm, 1);
+            if (null != params.pattern)
+                appModel.set('algorithm.pattern', params.pattern, 1);
+            if (null !== params.text)
+                appModel.set('algorithm.text', params.text.split('+').join(' '), 1);
+            doTest(appModel);
         }
     }});
-    $window.one('hashchange', function( evt ) {
-        appRouter.route( location.hash );
-    }).trigger( 'hashchange' );
-    
+    $window.one('hashchange', function(evt) {
+        appRouter.route(location.hash);
+    }).trigger('hashchange');
+
 });
 //]]></script>
 
