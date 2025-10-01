@@ -2,9 +2,7 @@
 <html lang="en" class="no-ie">
 <head>
 <title>Pattern Matching Algorithms Tests</title>
-
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 <meta name="description" content="Pattern Matching Algorithms Tests" />
 <meta property="og:title" content="Pattern Matching Algorithms Tests">
@@ -12,16 +10,14 @@
 <meta property="og:image" content="https://foo123.github.io/thumbs/pattern-matching-algorithms.jpg">
 <meta property="og:url" content="https://foo123.github.io/examples/pattern-matching-algorithms/">
 <meta name="twitter:card" content="summary">
-
 <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-
 <style type="text/css">
 body {
+    position: relative;
     font-family: Helvetica, sans-serif;
     font-size: 16px;
     background-color: #121212;
     color: #aaa;
-    position: relative;
 }
 input,select,textarea {
     position: relative;
@@ -33,6 +29,32 @@ input,select,textarea {
     padding: 14px 20px;
     width: 100%;
     margin: 4px auto 20px auto;
+}
+.button {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    color: #fff;
+    background: #f90b13;
+    box-shadow: inset 0px 1px 0px 0px #ffffff;
+    border-radius: 20px;
+    border: 2px solid transparent;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    text-decoration: none;
+    text-indent: 0;
+    text-align: center;
+    text-shadow: 1px 1px 0px #ffffff;
+    padding: 10px 28px;
+    cursor: pointer;
+}
+.button:hover {
+    border-color: #fff;
+}
+.button:active {
+    top: 1px;
+    left: 1px;
 }
 .showcase {
     margin: 5px 2px;
@@ -55,31 +77,6 @@ input,select,textarea {
 #footer {
     margin-top: 20px;
 }
-.button {
-    position: relative;
-    display: inline-block;
-    color: #fff;
-    background: #f90b13;
-    box-shadow: inset 0px 1px 0px 0px #ffffff;
-    border-radius: 20px;
-    border: 1px solid #ddd;
-    font-size: 14px;
-    font-weight: bold;
-    font-style: normal;
-    text-decoration: none;
-    text-indent: 0;
-    text-align: center;
-    text-shadow: 1px 1px 0px #ffffff;
-    padding: 10px 28px;
-}
-.button:hover {
-    border: 1px solid #fff;
-}.button:active {
-    top: 1px;
-}
-.button {
-    cursor: pointer;
-}
 #controls,#cons {
     padding: 0 20px;
 }
@@ -87,7 +84,7 @@ input,select,textarea {
     border: 1px solid #aaa;
     background: #efefef;
     color: #121212;
-    min-height: 300px;
+    min-height: 360px;
     padding: 20px;
     font-size: 18px;
 }
@@ -107,12 +104,12 @@ input,select,textarea {
     margin: 0;
     font-size: 16px;
 }
-#console.processing > #loader { display: inline-block; }
-#console.processing > #result { display: none; }
-#console:not(.processing) > #loader { display: none; }
-#console:not(.processing) > #result { display: block; }
+#console.processing > #loader {display: inline-block;}
+#console.processing > #result {display: none;}
+#console:not(.processing) > #loader {display: none;}
+#console:not(.processing) > #result {display: block;}
 
-#forkongithub a{background:#aa0000;color:#fff;text-decoration:none;font-family:arial, sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:0.9rem;line-height:1.4rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#aa0000;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;z-index:100;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:absolute;display:block;z-index:100;top:0;right:0;width:200px;overflow:hidden;height:200px;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}
+#forkongithub a{background:#f90b13;color:#fff;text-decoration:none;font-family:Helvetica, sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:0.9rem;line-height:1.4rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#f90b13;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;z-index:100;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:absolute;display:block;z-index:100;top:0;right:0;width:200px;overflow:hidden;height:200px;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}
 
 @media (max-width: 420px) {
 #console {
@@ -123,84 +120,73 @@ input,select,textarea {
 }
 }
 </style>
-
-
-
-
 <script type="text/javascript" src="../common/js/require.js"></script>
 <script type="text/javascript" src="../common/js/require-config.js"></script>
-
-
 </head>
-<body class="responsive-864-container">
-    <span id="forkongithub"><a href="https://github.com/foo123/PatternMatchingAlgorithms">Check me out on GitHub</a></span>
+<body class="responsive-864-container" style="max-width:2000px; margin:0 auto; overflow-x:hidden;">
 
+<span id="forkongithub"><a href="https://github.com/foo123/PatternMatchingAlgorithms">Check me out on GitHub</a></span>
 
-<header id="header" class="fluid col-1-1">
-    <h1>Pattern Matching Algorithms Tests</h1>
+<header id="header" class="fluid col-1-1" style="padding:0 14px;">
+<h1>Pattern Matching Algorithms Tests</h1>
 </header>
 
-<br />
+<br>
 
-
-
-<section id="panel" class="fluid col-1-1" style="padding: 20px;">
+<section id="panel" class="fluid col-1-1" style="padding: 14px; min-height: 68vh">
 <div id="controls" class="fluid col-1-4">
-    <strong>Algorithm: </strong>
-    <div class="cont"><select name="model[algorithm][selected]">
-        <option value="NaiveMatcher">Naive Matcher</option>
-        <option value="FSAMatcher">FSA Matcher</option>
-        <option value="RabinKarpMatcher">Rabin-Karp Matcher</option>
-        <option value="KnuthMorrisPrattMatcher">Knuth-Morris-Pratt Matcher</option>
-        <option value="BoyerMooreMatcher">Boyer-Moore Matcher</option>
-        <option value="TwoWayMatcher">Two-Way Matcher</option>
-    </select></div>
+<strong>Algorithm: </strong>
+<div class="cont"><select name="model[algorithm][selected]">
+    <option value="NaiveMatcher">Naive Matcher</option>
+    <option value="FSAMatcher">FSA Matcher</option>
+    <option value="RabinKarpMatcher">Rabin-Karp Matcher</option>
+    <option value="KnuthMorrisPrattMatcher">Knuth-Morris-Pratt Matcher</option>
+    <option value="BoyerMooreMatcher">Boyer-Moore Matcher</option>
+    <option value="TwoWayMatcher">Two-Way Matcher</option>
+</select></div>
 
-    <strong>Text: </strong>
-    <textarea name="model[algorithm][text]" rows="4"></textarea>
+<strong>Text: </strong>
+<textarea name="model[algorithm][text]" rows="4"></textarea>
 
-    <strong>Pattern: </strong>
-    <input name="model[algorithm][pattern]" type="text" value=""/>
+<strong>Pattern: </strong>
+<input name="model[algorithm][pattern]" type="text" value=""/>
 
-    <button id="test" type="button" class="button" mv-evt mv-on-click="test">Run Test</button>
-    <br><br>
+<button id="test" type="button" class="button" mv-evt mv-on-click="test">Run Test</button>
+<br><br>
 </div>
 
 <div id="cons" class="fluid col-2-3">
-    <strong>Console: </strong> <br />
-    <div id="console" class="fluid col-1-1">
-        <div class="algo_info">
-            <b>Selected Algorithm: {algorithm.name}</b>
-            <br><br>
-            <b>Reference Link:</b> <a class="algo_info_ref" href="{algorithm.reflink}" target="_blank">{algorithm.reflink}</a>
-            <br><br>
-            <b>Summary:</b> <p class="algo_info_desc" mv-model="algorithm.desc" mv-model-evt mv-on-model-change="html"></p>
-            <br><br>
-        </div>
-        <div id="loader" class="loader"></div>
-        <div id="result">
-            <b>Pattern&nbsp;:</b>&nbsp;&nbsp;<i style="white-space:pre-wrap">{algorithm.pattern}</i><br>
-            <b>Text&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b>&nbsp;&nbsp;<span style="white-space:pre-wrap;font-style:italic">{algorithm.text}</span><br><br>
-            <span mv-model="result.matched" mv-model-evt mv-on-model-change="show">
-                <span style="color:green;font-weight:bold;font-size:20px;">&#10003;&nbsp;&nbsp;</span>
-                <b>Pattern matched at position {result.pos}</b>
-            </span>
-            <span mv-model="result.matched" mv-model-evt mv-on-model-change="hide">
-                <span style="color:red;font-weight:bold;font-size:20px;">&#10060;&nbsp;&nbsp;</span>
-                <b>Pattern NOT matched</b>
-            </span>
-            <br><br>
-        </div>
+<strong>Console: </strong> <br>
+<div id="console" class="fluid col-1-1">
+    <div class="algo_info">
+        <b>Selected Algorithm: {algorithm.name}</b>
+        <br><br>
+        <b>Reference Link:</b> <a class="algo_info_ref" href="{algorithm.reflink}" target="_blank">{algorithm.reflink}</a>
+        <br><br>
+        <b>Summary:</b> <p class="algo_info_desc" mv-model="algorithm.desc" mv-model-evt mv-on-model-change="html"></p>
+        <br><br>
+    </div>
+    <div id="loader" class="loader"></div>
+    <div id="result">
+        <b style="display:inline-block;width:70px">Pattern</b>:&nbsp;&nbsp;<i style="white-space:pre-wrap">{algorithm.pattern}</i><br>
+        <b style="display:inline-block;width:70px">Text</b>:&nbsp;&nbsp;<span style="white-space:pre-wrap;font-style:italic" mv-model="algorithm.matchedtext" mv-model-evt mv-on-model-change="html"></span><br><br>
+        <span mv-model="result.matched" mv-model-evt mv-on-model-change="show">
+            <span style="color:green;font-weight:bold;font-size:20px;">&#10003;&nbsp;&nbsp;</span>
+            <b>Matched at position {result.pos}</b>
+        </span>
+        <span mv-model="result.matched" mv-model-evt mv-on-model-change="hide">
+            <span style="color:red;font-weight:bold;font-size:20px;">&#10060;&nbsp;&nbsp;</span>
+            <b>NOT Matched</b>
+        </span>
+        <br><br>
     </div>
 </div>
+</div>
 </section>
-<br>
-
 <footer id="footer">
 <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
 
 <div class="showcase">DOM abstraction by <a href="http://jquery.com/" target="_blank">jQuery</a></div>
-
 <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
 <div class="showcase">Routing by <a href="https://github.com/foo123/Dromeo" target="_blank">Dromeo</a></div>
 <div class="showcase">Templating by <a href="https://github.com/foo123/Contemplate" target="_blank">Contemplate</a></div>
@@ -210,128 +196,130 @@ input,select,textarea {
 
 <script type="text/javascript">//<![CDATA[
 require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'Matchy', 'Pattern'],
-    function($, $R, $MV, _, __, $M, $P) {
-    "use strict";
+function($, $R, $MV, _, __, $M, $P) {
+"use strict";
 
-    var $window = $(window),
-        $panel = $('#panel'),
-        $console = $('#console'),
-        appRouter, appView, appModel
+var $window = $(window),
+    $panel = $('#panel'),
+    $console = $('#console'),
+    appRouter, appView, appModel
+;
+
+$MV.jquery($);
+$P.Matchy($M);
+
+function doTest(model)
+{
+    //
+    // get selected match algorithm
+    //
+    var selectedAlgorithm,
+        matcher, reflink, desc,
+        pattern, text, result
     ;
 
-    $MV.jquery($);
-    $P.Matchy($M);
+    pattern = model.get('algorithm.pattern');
+    text = model.get('algorithm.text');
+    selectedAlgorithm = model.get('algorithm.selected');
 
-    function doTest(model)
-    {
-        //
-        // get selected match algorithm
-        //
-        var selectedAlgorithm,
-            matcher, reflink, desc,
-            pattern, text, result
-        ;
+    matcher = $P[selectedAlgorithm].pattern(pattern);
 
-        pattern = model.get('algorithm.pattern');
-        text = model.get('algorithm.text');
-        selectedAlgorithm = model.get('algorithm.selected');
+    model.set('algorithm.name', selectedAlgorithm);
+    model.set('algorithm.reflink', matcher.reference);
+    model.set('algorithm.desc', matcher.description || '');
+    model.notify('algorithm');
+    $console.addClass('processing');
 
-        matcher = $P[selectedAlgorithm].pattern(pattern);
-
-        model.set('algorithm.name', selectedAlgorithm);
-        model.set('algorithm.reflink', matcher.reference);
-        model.set('algorithm.desc', matcher.description || '');
-        model.notify('algorithm');
-        $console.addClass('processing');
-
+    setTimeout(function() {
+        result = matcher.match(text);
+        model.set('algorithm.matchedtext', -1 !== result ? (text.slice(0, result)+'<span style="color:red">'+text.slice(result, result+pattern.length)+'</span>'+text.slice(result+pattern.length)) : text);
+        matcher = null;
         setTimeout(function() {
-            result = matcher.match(text);
-            matcher = null;
-            setTimeout(function() {
-                //
-                // show results
-                //
-                model.set('result', {matched: (-1 < result), pos: result}, 1);
-                $console.removeClass('processing');
-            }, 100);
+            //
+            // show results
+            //
+            model.set('result', {matched: (-1 < result), pos: result}, 1);
+            $console.removeClass('processing');
         }, 100);
-    }
+    }, 100);
+}
 
-    $panel.modelview({
+$panel.modelview({
 
-        id: 'PatternMatchingAlgorithmsPanel',
+    id: 'PatternMatchingAlgorithmsPanel',
 
-        livebind: 'text',
-        autobind: true,
-        events: ['change', 'click'],
-        autoSync: true,
+    livebind: 'text',
+    autobind: true,
+    events: ['change', 'click'],
+    autoSync: true,
 
-        model: {
-            id: 'model',
+    model: {
+        id: 'model',
 
-            data: {
-                algorithm: {
-                    selected: 'NaiveMatcher',
-                    pattern: 'rain',
-                    text: 'The rain in Spain stays mainly in the plain',
-                    name: 'NaiveMatcher',
-                    reflink: $P['NaiveMatcher'].reference,
-                    desc: $P['NaiveMatcher'].description
-                },
-                result: {matched: true, pos: 4}
+        data: {
+            algorithm: {
+                selected: 'NaiveMatcher',
+                pattern: 'rain',
+                text: 'The rain in Spain stays mainly in the plain',
+                matchedtext: 'The <span style="color:red">rain</span> in Spain stays mainly in the plain',
+                name: 'NaiveMatcher',
+                reflink: $P['NaiveMatcher'].reference,
+                desc: $P['NaiveMatcher'].description
             },
-
-            types: {
-                algorithm: {
-                    selected: $MV.Type.Cast.STR,
-                    name: $MV.Type.Cast.STR,
-                    reflink: $MV.Type.Cast.STR,
-                    desc: $MV.Type.Cast.STR,
-                    pattern: $MV.Type.Cast.STR,
-                    text: $MV.Type.Cast.STR
-                }
-            }/*,
-
-            validators: {}*/
+            result: {matched: true, pos: 4}
         },
 
-        actions: {
-            test: function(evt, $el, data) {
-                var model = this.$model, algoInfo = model.get('algorithm');
-                location.hash = '#' + appRouter.glue({
-                    action: 'test',
-                    match_algorithm: algoInfo.selected,
-                    pattern: algoInfo.pattern,
-                    text: algoInfo.text
-                });
-                doTest(model);
+        types: {
+            algorithm: {
+                selected: $MV.Type.Cast.STR,
+                name: $MV.Type.Cast.STR,
+                reflink: $MV.Type.Cast.STR,
+                desc: $MV.Type.Cast.STR,
+                pattern: $MV.Type.Cast.STR,
+                text: $MV.Type.Cast.STR
             }
+        }/*,
+
+        validators: {}*/
+    },
+
+    actions: {
+        test: function(evt, $el, data) {
+            var model = this.$model, algoInfo = model.get('algorithm');
+            location.hash = '#' + appRouter.glue({
+                action: 'test',
+                match_algorithm: algoInfo.selected,
+                pattern: algoInfo.pattern,
+                text: algoInfo.text
+            });
+            doTest(model);
         }
-    });
+    }
+});
 
-    appView = $panel.modelview('view');
-    appModel = appView.$model;
-    appRouter = new $R();
-    //$panel.modelview('sync');
+appView = $panel.modelview('view');
+appModel = appView.$model;
+appRouter = new $R();
+//$panel.modelview('sync');
 
-    appRouter.one({route:'#{%ALL%:hash}', handler:function(params) {
-        params = params.data;
-        params = params && params.hash ? appRouter.unglue(params.hash) : null;
-        if (params && params.action && ('test' === params.action))
-        {
-            if (null != params.match_algorithm)
-                appModel.set('algorithm.selected', params.match_algorithm);
-            if (null != params.pattern)
-                appModel.set('algorithm.pattern', params.pattern);
-            if (null !== params.text)
-                appModel.set('algorithm.text', params.text.split('+').join(' '));
-            setTimeout(function() {doTest(appModel);}, 10);
-        }
-    }});
-    $window.one('hashchange', function(evt) {
-        appRouter.route(location.hash);
-    }).trigger('hashchange');
+appRouter.one({route:'#{%ALL%:hash}', handler:function(params) {
+    params = params.data;
+    params = params && params.hash ? appRouter.unglue(params.hash.split('+').join('%20')) : null;
+    if (params && params.action && ('test' === params.action))
+    {
+        if (null != params.match_algorithm)
+            appModel.set('algorithm.selected', params.match_algorithm);
+        if (null != params.pattern)
+            appModel.set('algorithm.pattern', params.pattern);
+        if (null !== params.text)
+            appModel.set('algorithm.text', params.text);
+        setTimeout(function() {doTest(appModel);}, 10);
+    }
+}});
 
+$window.one('hashchange', function(evt) {
+    appRouter.route(location.hash);
+}).trigger('hashchange');
 });
 //]]></script>
 
