@@ -1,21 +1,8 @@
 <!doctype html>
-<!--[if lt IE 7]>
-<html lang="en" class="ie lt-ie9 lt-ie8 lt-ie7">
-<![endif]-->
-<!--[if IE 7]>
-<html lang="en" class="ie lt-ie9 lt-ie8">
-<![endif]-->
-<!--[if IE 8]>
-<html lang="en" class="ie lt-ie9">
-<![endif]-->
-<!--[if gt IE 8]><!-->
 <html lang="en" class="no-ie">
-<!--<![endif]-->
 <head>
 <title>Regex Analyzer</title>
-
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 <meta name="description" content="Regex Analyzer" />
 <meta property="og:title" content="Regex Analyzer">
@@ -23,10 +10,7 @@
 <meta property="og:image" content="https://foo123.github.io/thumbs/yo-regex.jpg">
 <meta property="og:url" content="https://foo123.github.io/examples/regex-analyzer/">
 <meta name="twitter:card" content="summary">
-
-
 <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-
 <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
 <link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
 <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
@@ -95,10 +79,6 @@
     position:relative;
 }
 </style>
-
-
-
-
 <script src="../common/js/codemirror/codemirror.min.js"></script>
 <script src="../common/js/codemirror/addon/lint/lint.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
@@ -109,17 +89,13 @@
 <script src="../common/js/codemirror/grammar/define_grammar_mode.js"></script>
 <script src="../common/js/codemirror/grammar/json.js"></script>
 <script src="../common/js/codemirror/grammar/regexp.js"></script>
-
 <script type="text/javascript" src="../common/js/require.js"></script>
 <script type="text/javascript" src="../common/js/require-config.js"></script>
-
-
-
 </head>
 <body class="responsive-864-container">
     <span id="forkongithub"><a href="https://github.com/foo123/RegexAnalyzer">Match me on GitHub</a></span>
-    
-    
+
+
 <header id="header">
     <h1>Regex Analyzer</h1>
     <i>A generic &amp; simple Regular Expression Analyzer &amp; Composer for PHP, Python, JavaScript</i>
@@ -127,8 +103,8 @@
 
 <br /><br />
 
-    
-    
+
+
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
         <strong>Regular Expression ({regex_version}):</strong>
@@ -138,18 +114,18 @@
         <br />
         <textarea id="regex">/[abc]+/i</textarea>
     </div>
-    
+
     <div class="fluid col-1-1" style="margin-top:10px">
         <strong>Output:</strong><br /><br />
         <textarea id="output"></textarea>
     </div>
 </div>
 
-    
-    
+
+
     <footer id="footer">
     <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
-    
+
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 <div class="showcase">JSON &amp; Regular Expression syntax highlight modes by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
 
@@ -160,22 +136,22 @@
     <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
     </footer>
     <br /><br />
-    
-    
+
+
 <script type="text/javascript">//<![CDATA[
 require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'Regex'],
-    function( $, $R, $MV, _, __, Regex ) {
+    function($, $R, $MV, _, __, Regex) {
     "use strict";
-    
+
     var undef=undefined, $window = $(window), $screen = $('#screen'),
         input = document.getElementById('regex'),
         output = document.getElementById('output'),
         appTask, appModel, appView, appRouter, analyzer = new Regex.Analyzer(), regex, code,
         width = output.clientWidth, height, toJSON = JSON.stringify
     ;
-    
+
     $MV.jquery( $ );
-    
+
     height = input.clientHeight;
     regex = CodeMirror.fromTextArea(input, {
         mode: "regexp",
@@ -191,7 +167,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
         gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     regex.setSize( width, height );
-    
+
     height = output.clientHeight;
     code = CodeMirror.fromTextArea(output, {
         mode: "application/json",
@@ -207,19 +183,19 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
         gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     code.setSize( width, height );
-    
+
     appTask = {
         analyze: function( input ) {
             if ( ('/' !== input.charAt(0)) && ('/' !== input.charAt(input.length-1)) ) input = '/'+input+'/';
             analyzer.input( input ).analyze( );
-            
+
             var ast = analyzer.tree(true), fl = Object.keys( analyzer.fl );
             appModel.set('regex_ast', appRouter.glue({
                 action: 'compose',
                 ast: toJSON(ast),
                 fl: fl.join('')
             }), true);
-            
+
             code.setValue([
             "/*******************************************"
             ,"Regular Expression Analysis"
@@ -246,20 +222,20 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
             ,toJSON( analyzer.groups(), null, 4 )
             ].join( "\n" ));
         },
-        
+
         statistics: function( input ) {
             var re, peek, samples, groups, min, max;
-            
+
             if ( ('/' !== input.charAt(0)) && ('/' !== input.charAt(input.length-1)) ) input = '/'+input+'/';
             analyzer.input( input ).analyze( );
-            
+
             var ast = analyzer.tree(true), fl = Object.keys( analyzer.fl );
             appModel.set('regex_ast', appRouter.glue({
                 action: 'compose',
                 ast: toJSON(ast),
                 fl: fl.join('')
             }), true);
-            
+
             peek = analyzer.peek( );
             min = analyzer.minimum( );
             max = analyzer.maximum( );
@@ -276,7 +252,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
                         if ( Object.prototype.hasOwnProperty.call(groups,g) ) samples[i].groups[g] = m[groups[g]];
                 }
             }
-            
+
             code.setValue([
             "/********************************************"
             ,"Regular Expression Statistics (Exprerimental)"
@@ -330,40 +306,40 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
             ,toJSON(samples, null, 4)
             ].join( "\n" ));
         },
-        
+
         peek: function( input ) {
             appTask.statistics( input );
         },
-        
+
         generate: function( input ) {
             appTask.statistics( input );
         }
     };
-    
-    appRouter = new $R( );
-    appRouter.one({route:'#{%ALL%:hash}', handler:function( params ){
+
+    appRouter = new $R();
+    appRouter.one({route:'#{%ALL%:hash}', handler:function(params) {
         params = params.data;
-        params = params && params.hash ? appRouter.unglue( params.hash ) : null;
-        if ( params && params.action && appTask.hasOwnProperty(params.action) )
+        params = params && params.hash ? appRouter.unglue(params.hash.split('+').join('%20')) : null;
+        if (params && params.action && appTask.hasOwnProperty(params.action))
         {
-            var appModel = $screen.modelview( 'model' );
-            if ( params.regex ) appModel.set('regex', params.regex, 1);
-            appTask[ params.action ]( appModel.get('regex') );
+            var appModel = $screen.modelview('model');
+            if (params.regex) appModel.set('regex', params.regex, 1);
+            setTimeout(function() {appTask[params.action](appModel.get('regex'));}, 10);
         }
     }});
-    
+
     $screen.modelview({
         autobind: false
         ,livebind: 'text'
-        
+
         ,model: {
             id: 'model'
-            ,data: { 
+            ,data: {
                 regex_version: 'v.'+Regex.VERSION,
                 regex_ast: ''
                 //regex: "/[abc]+/gi"
             }
-            ,types: { 
+            ,types: {
                 //regex: $MV.Type.Cast.STR
             }
             ,getters: {
@@ -377,7 +353,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
                 }
             }
         }
-        ,actions: { 
+        ,actions: {
             analyze: function(evt, $el, data) {
                 var regex = this.$model.get( 'regex' );
                 location.hash = '#' + appRouter.glue({
@@ -386,7 +362,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
                 });
                 appTask.analyze( regex );
             },
-            
+
             statistics: function(evt, $el, data) {
                 var regex = this.$model.get( 'regex' );
                 location.hash = '#' + appRouter.glue({
@@ -395,20 +371,20 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
                 });
                 appTask.statistics( regex );
             },
-            
+
             peek: function(evt, $el, data) {
                 this.do_statistics(evt, $el, data);
             },
-            
+
             generate: function(evt, $el, data) {
                 this.do_statistics(evt, $el, data);
             }
         }
     });
     appModel = $screen.modelview('model');
-        
+
     $window
-        .on('resize', function( evt ) {
+        .on('resize', function(evt) {
             var v = output.style.visibility,
                 d = output.style.display,
                 vi = input.style.visibility,
@@ -416,24 +392,24 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
             ;
             input.style.visibility = 'hidden';
             input.style.display = 'block';
-            width = input.clientWidth; 
+            width = input.clientWidth;
             height = input.clientHeight;
             input.style.display = di;
             input.style.visibility = vi;
             regex.setSize( width, height );
-            
+
             output.style.visibility = 'hidden';
             output.style.display = 'block';
-            width = output.clientWidth; 
+            width = output.clientWidth;
             height = output.clientHeight;
             output.style.display = d;
             output.style.visibility = v;
             code.setSize( width, height );
         })
-        .one('hashchange', function( evt ) {
-            appRouter.route( location.hash );
+        .one('hashchange', function(evt) {
+            appRouter.route(location.hash);
         })
-        .trigger( 'hashchange' )
+        .trigger('hashchange')
     ;
 });
 //]]></script>

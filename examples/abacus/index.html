@@ -1,29 +1,15 @@
 <!doctype html>
-<!--[if lt IE 7]>
-<html lang="en" class="ie lt-ie9 lt-ie8 lt-ie7">
-<![endif]-->
-<!--[if IE 7]>
-<html lang="en" class="ie lt-ie9 lt-ie8">
-<![endif]-->
-<!--[if IE 8]>
-<html lang="en" class="ie lt-ie9">
-<![endif]-->
-<!--[if gt IE 8]><!-->
 <html lang="en" class="no-ie">
-<!--<![endif]-->
 <head>
-<title>Abacus: Advanced Combinatorics &amp; Algebraic Number Theory Symbolic Computation Library for JavaScript</title>
-
+<title>Abacus: Combinatorics &amp; Algebraic Number Theory Symbolic Computation Library for JavaScript</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 <meta name="description" content="Abacus: Combinatorics, Tensors, Permutations, Combinations, Variations, Subsets, Restricted Partitions, Restricted Compositions, Set Partitions, Algebraic Number Theory, Matrices, Polynomials, Greatest Common Divisor, Gröbner Basis, Prime Factorisation, Continued Fractions, Diophantine Systems Equations" />
-<meta property="og:title" content="Abacus: Advanced Combinatorics &amp; Algebraic Number Theory Symbolic Computation Library for JavaScript">
+<meta property="og:title" content="Abacus: Combinatorics &amp; Algebraic Number Theory Symbolic Computation Library for JavaScript">
 <meta property="og:description" content="Abacus: Combinatorics, Tensors, Permutations, Combinations, Variations, Subsets, Restricted Partitions, Restricted Compositions, Set Partitions, Algebraic Number Theory, Matrices, Polynomials, Greatest Common Divisor, Gröbner Basis, Prime Factorisation, Continued Fractions, Diophantine Systems Equations">
 <meta property="og:image" content="https://foo123.github.io/thumbs/abacus-live.jpg">
 <meta property="og:url" content="https://foo123.github.io/examples/abacus/">
 <meta name="twitter:card" content="summary">
-
 <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=2">
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=2">
 <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png?v=2">
@@ -36,11 +22,7 @@
 <meta name="msapplication-TileColor" content="#fefefe">
 <meta name="msapplication-config" content="./browserconfig.xml?v=2">
 <meta name="theme-color" content="#fefefe">
-
-
-
 <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-
 <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
 <link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
 <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
@@ -480,1237 +462,1236 @@ window.MathJax = {
 
 <script type="text/javascript">//<![CDATA[
 require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'BigInteger', 'Abacus'],
-    function( $, $R, $MV, _, __, bigInt, Abacus ) {
-    "use strict";
+function($, $R, $MV, _, __, bigInt, Abacus) {
+"use strict";
 
-    !function use_biginteger_arithmetic( Abacus, bigInt )
+!function use_biginteger_arithmetic(Abacus, bigInt)
+{
+    // plug-in bigInteger arithmetic routines
+    var Arithmetic = Abacus.Arithmetic;
+
+    Arithmetic.J = bigInt.minusOne;
+    Arithmetic.O = bigInt.zero;
+    Arithmetic.I = bigInt.one;
+    Arithmetic.II = bigInt(2);
+
+    Arithmetic.num = function(a) {return bigInt.isInstance(a) ? a : bigInt(a);};
+
+    Arithmetic.equ = function(a, b) {return a.eq(b);};
+    Arithmetic.gte = function(a, b) {return a.geq(b);};
+    Arithmetic.lte = function(a, b) {return a.leq(b);};
+    Arithmetic.gt  = function(a, b) {return a.gt(b);};
+    Arithmetic.lt  = function(a, b) {return a.lt(b);};
+
+    Arithmetic.inside = function(a, m, M, closed) {return closed ? (a.geq(m) && a.leq(M)) : (a.gt(m) && a.lt(M));};
+    Arithmetic.clamp  = function(a, m, M) {return a.lt(m) ? m : (a.gt(M) ? M : a);};
+    Arithmetic.wrap   = function(a, m, M) {return a.lt(m) ? M : (a.gt(M) ? m : a);};
+    Arithmetic.wrapR  = function(a, M) {return a.lt(bigInt.zero) ? a.plus(M) : a;};
+
+    Arithmetic.add = function(a, b) {return a.plus(b);};
+    Arithmetic.sub = function(a, b) {return a.minus(b);};
+    Arithmetic.mul = function(a, b) {return a.times(b);};
+    Arithmetic.div = function(a, b) {return a.over(b);};
+    Arithmetic.mod = function(a, b) {return a.mod(b);};
+    Arithmetic.pow = function(a, b) {return a.pow(b);};
+
+    Arithmetic.shl  = function(a, b) {return a.shiftLeft(b);};
+    Arithmetic.shr  = function(a, b) {return a.shiftRight(b);};
+    Arithmetic.bor  = function(a, b) {return a.or(b);};
+    Arithmetic.band = function(a, b) {return a.and(b);};
+    Arithmetic.xor  = function(a, b) {return a.xor(b);};
+
+    Arithmetic.rnd = bigInt.randBetween;
+    Arithmetic.abs = function(a) {return a.abs();};
+    Arithmetic.min = bigInt.min;
+    Arithmetic.max = bigInt.max;
+}(Abacus, bigInt);
+
+codemirror_define_grammar_mode("expr", {
+
+// prefix ID for regular expressions used in the grammar
+"RegExpID"                      : "RE::",
+
+// Style model
+"Style"                         : {
+
+     "TERM"                     : "keyword"
+    ,"NUMBER"                   : "atom"
+    ,"OP"                       : "builtin"
+
+},
+
+// Lexical model
+"Lex"                           : {
+     "<term>"                   : "RE::/[a-zA-Z](?:_\\{?\\d+\\}?)?/"
+    ,"<number>"                 : "RE::/\\d+(?:\\.\\d+)?(?:\\s*\\*?\\s*[ij])?|[ij]/"
+    ,"<op>"                     : "RE::/[\\+\\-\\*\\/\\^=]/"
+},
+
+"Syntax"                        : {
+    "<expr>"                    : "(<number>.NUMBER | <term>.TERM | <op>.OP)*"
+},
+
+// what to parse and in what order
+"Parser"                        : [ ["<expr>"] ]
+
+}, {
+
+"supportGrammarAnnotations" : false,
+"supportCodeFolding"        : false,
+"supportCodeMatching"       : false,
+"supportAutoCompletion"     : false
+
+});
+
+var undef = undefined, $window = $(window), $screen = $('#screen'), math = $('#math'),
+    output = document.getElementById('output'), expr = document.getElementById('expr'), out, exprout,
+    appModel, appView, appRouter, width = output.clientWidth, height, toJSON = JSON.stringify,
+    MAXITEMS = 10000, $conditions = $('#conditions>tbody'), $condition_tpl = $('#condition_tpl'),
+    html_esc_re = /[&<>]/g;
+
+var promise = Promise.resolve();  // Used to hold chain of typesetting calls
+function print_math(tex)
+{
+
+    if (window.MathJax && window.MathJax.typesetPromise)
     {
-        // plug-in bigInteger arithmetic routines
-        var Arithmetic = Abacus.Arithmetic;
-
-        Arithmetic.O = bigInt.zero;
-        Arithmetic.I = bigInt.one;
-        Arithmetic.J = bigInt.minusOne;
-        Arithmetic.II = bigInt(2);
-
-        Arithmetic.equ = function( a, b ){ return a.eq( b ); };
-        Arithmetic.gte = function( a, b ){ return a.geq( b ); };
-        Arithmetic.lte = function( a, b ){ return a.leq( b ); };
-        Arithmetic.gt = function( a, b ){ return a.gt( b ); };
-        Arithmetic.lt = function( a, b ){ return a.lt( b ); };
-
-        Arithmetic.inside = function( a, m, M, closed ){ return closed ? (a.geq( m )) && (a.leq( M )) : (a.gt( m )) && (a.lt( M ));
-        };
-        Arithmetic.clamp = function( a, m, M ){ return a.lt( m ) ? m : (a.gt( M ) ? M : a); };
-        Arithmetic.wrap = function( a, m, M ){ return a.lt( m ) ? M : (a.gt( M ) ? m : a); };
-        Arithmetic.wrapR = function( a, M ){ return a.lt( bigInt.zero ) ? a.plus( M ) : a; };
-
-        Arithmetic.add = function( a, b ){ return a.plus( b ); };
-        Arithmetic.sub = function( a, b ){ return a.minus( b ); };
-        Arithmetic.mul = function( a, b ){ return a.times( b ); };
-        Arithmetic.div = function( a, b ){ return a.over( b ); };
-        Arithmetic.mod = function( a, b ){ return a.mod( b ); };
-        Arithmetic.pow = function( a, b ){ return a.pow( b ); };
-
-        Arithmetic.shl = function( a, b ){ return a.shiftLeft( b ); };
-        Arithmetic.shr = function( a, b ){ return a.shiftRight( b ); };
-        Arithmetic.bor = function( a, b ){ return a.or( b ); };
-        Arithmetic.band = function( a, b ){ return a.and( b ); };
-        Arithmetic.xor = function( a, b ){ return a.xor( b ); };
-
-        Arithmetic.rnd = bigInt.randBetween;
-        Arithmetic.abs = function( a ){ return a.abs( ); };
-        Arithmetic.min = bigInt.min;
-        Arithmetic.max = bigInt.max;
-
-        Arithmetic.num = function( a ){ return bigInt.isInstance( a ) ? a : bigInt( a ); };
-    }( Abacus, bigInt );
-
-    codemirror_define_grammar_mode("expr", {
-
-    // prefix ID for regular expressions used in the grammar
-    "RegExpID"                      : "RE::",
-
-    // Style model
-    "Style"                         : {
-
-         "TERM"                     : "keyword"
-        ,"NUMBER"                   : "atom"
-        ,"OP"                       : "builtin"
-
-    },
-
-    // Lexical model
-    "Lex"                           : {
-         "<term>"                   : "RE::/[a-zA-Z](?:_\\{?\\d+\\}?)?/"
-        ,"<number>"                 : "RE::/\\d+(?:\\.\\d+)?(?:\\s*\\*?\\s*[ij])?|[ij]/"
-        ,"<op>"                     : "RE::/[\\+\\-\\*\\/\\^=]/"
-    },
-
-    "Syntax"                        : {
-        "<expr>"                    : "(<number>.NUMBER | <term>.TERM | <op>.OP)*"
-    },
-
-    // what to parse and in what order
-    "Parser"                        : [ ["<expr>"] ]
-
-    }, {
-
-    "supportGrammarAnnotations" : false,
-    "supportCodeFolding"        : false,
-    "supportCodeMatching"       : false,
-    "supportAutoCompletion"     : false
-
-    });
-
-    var undef = undefined, $window = $(window), $screen = $('#screen'), math = $('#math'),
-        output = document.getElementById('output'), expr = document.getElementById('expr'), out, exprout,
-        appModel, appView, appRouter, width = output.clientWidth, height, toJSON = JSON.stringify,
-        MAXITEMS = 10000, $conditions = $('#conditions>tbody'), $condition_tpl = $('#condition_tpl'),
-        html_esc_re = /[&<>]/g;
-
-    var promise = Promise.resolve();  // Used to hold chain of typesetting calls
-    function print_math( tex )
-    {
-
-        if (window.MathJax.typesetPromise)
-        {
-            math.html(tex);
-            promise = promise.then(function(){
-                return MathJax.typesetPromise([math[0]]);
-            }).catch(function(err){
-                console.log('MathJax.Typeset failed: ' + err.message)
-            });
-            /*setTimeout(function(){
-                MathJax.typeset([math[0]]); // synchronous
-            }, 40);*/
-        }
-        return promise;
-    }
-    function clear_math( )
-    {
-        if (window.MathJax.typesetClear)
-        {
-            math.html('');
-            MathJax.typesetClear([math[0]]);
-        }
-    }
-    function esc_html( s )
-    {
-        return s.replace(html_esc_re, function(m){
-            return '&'===m ? '&amp;' : ('<'===m ? '&lt;' : '&gt;');
+        math.html(tex);
+        promise = promise.then(function() {
+            return MathJax.typesetPromise([math[0]]);
+        }).catch(function(err) {
+            console.log('MathJax.Typeset failed: ' + err.message)
         });
+        /*setTimeout(function(){
+            MathJax.typeset([math[0]]); // synchronous
+        }, 40);*/
     }
-    function trim( s )
+    return promise;
+}
+function clear_math()
+{
+    if (window.MathJax && window.MathJax.typesetClear)
     {
-        return String(s).trim();
+        math.html('');
+        MathJax.typesetClear([math[0]]);
     }
-    function number( x )
-    {
-        return Number(x);
-    }
-    function toArray( o )
-    {
-        o.length = Object.keys(o).length;
-        return Array.prototype.slice.call(o);
-    }
-    function group_factors_tex( factors, constant )
-    {
-        var out = '', i, t;
+}
+function esc_html(s)
+{
+    return s.replace(html_esc_re, function(m){
+        return '&'===m ? '&amp;' : ('<'===m ? '&lt;' : '&gt;');
+    });
+}
+function trim(s)
+{
+    return String(s).trim();
+}
+function number(x)
+{
+    return Number(x);
+}
+function toArray(o)
+{
+    o.length = Object.keys(o).length;
+    return Array.prototype.slice.call(o);
+}
+function group_factors_tex(factors, constant)
+{
+    var out = '', i, t;
 
-        if ( factors.length )
+    if (factors.length)
+    {
+        if ( constant.equ(Abacus.Arithmetic.J) ) out = '-';
+        else if ( !constant.equ(Abacus.Arithmetic.I) ) out = '('+constant.toTex()+')';
+    }
+    else
+    {
+        out = '('+constant.toTex()+')';
+    }
+
+    for (i=0; i<factors.length; ++i)
+    {
+        t = factors[i][0].toTex();
+        out += '('+t+')'+(1<factors[i][1]?('^{'+String(factors[i][1])+'}'):'');
+    }
+    return out;
+}
+function factor(f, as_tex)
+{
+    var s = String(f[0]) + (Abacus.Arithmetic.lt(Abacus.Arithmetic.I, f[1]) ? ('^' + (as_tex ? '{' : '') + String(f[1]) + (as_tex ? '}' : '')) : '');
+    if (!as_tex) s = '(' + s + ')';
+    return s;
+}
+
+$MV.jquery($);
+
+height = output.clientHeight;
+out = CodeMirror.fromTextArea(output, {
+    mode: "text",
+    lineWrapping: true,
+    lineNumbers : true,
+    indentUnit: 4,
+    indentWithTabs: false,
+    theme: 'lesser-dark',
+    foldGutter: true,
+    gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+});
+out.setSize( width, height );
+exprout = CodeMirror.fromTextArea(expr, {
+    mode: "expr",
+    lineWrapping: true,
+    lineNumbers : true,
+    indentUnit: 4,
+    indentWithTabs: false,
+    theme: 'lesser-dark',
+    foldGutter: true,
+    gutters: ["CodeMirror-linenumbers"]
+});
+
+function produce(model)
+{
+    var comb = null, sep = ',', N = model.get('N'), K = model.get('K'), Text = model.get('Text'),
+        object = model.get('object'), type = model.get('type'), order = model.get('order'),
+        $ = {order:order}, $$ = null, n, nn = null, klass = null, filter = null, filter_code = null,
+        subklass = null, subklass_code = '', sub$ = null, subn = null, submethod = null,
+        conditions, data, res, r, sol, free_vars, ring, max, NL = /\r\n|\r|\n/,
+        poly_coeffs_dense_re = /^\-?\d+(?:\s+\-?\d+)*$/, s0 = '', s1 = '',
+        Arithmetic = Abacus.Arithmetic;
+
+    clear_math();
+
+    if ('divisors' === object)
+    {
+        klass = "divisors";
+        model.set('summary', esc_html("Abacus.Math.divisors(\""+String(N)+"\", true)"), true);
+    }
+    else if ('prime_sieve' === object)
+    {
+        klass = "PrimeSieve"; res = Arithmetic.gt(Arithmetic.num(N), MAXITEMS);
+        N = res ? MAXITEMS : +N;
+        model.set('summary', esc_html("Abacus.PrimeSieve().get("+N+")"+(res ? ' (max '+MAXITEMS+' shown)' : '')), true);
+    }
+    else if ('is_prime' === object)
+    {
+        model.set('summary', esc_html("Abacus.Math.isProbablePrime(\""+N+"\") && Abacus.Math.isPrime(\""+N+"\")"), true);
+        N = Arithmetic.num(N);
+        res = Arithmetic.equ(N, 0) || Arithmetic.equ(N, 1) ? false : Abacus.Math.isProbablePrime(N) && Abacus.Math.isPrime(N);
+        out.setValue(String(N) + ' is ' + (res ? 'PRIME' : 'COMPOSITE'));
+        print_math('\\['+String(N)+(res ? ' \\in ' : ' \\notin ')+'\\mathbb{P}\\]');
+        return;
+    }
+    else if ('prime_factors' === object)
+    {
+        N = Arithmetic.num(N);
+        model.set('summary', esc_html("Abacus.Math.factorize(\""+String(N)+"\")"), true);
+        res = Arithmetic.equ(N, 0) ? [[Arithmetic.O, Arithmetic.I]] : (Arithmetic.equ(N, 1) ? [[Arithmetic.I, Arithmetic.I]] : Abacus.Math.factorize(N));
+        out.setValue(String(N)+'='+res.map(function(p) {return factor(p,false);}).join('·'));
+        print_math('\\['+String(N)+'='+res.map(function(p) {return factor(p,true);}).join('\\cdot')+'\\]');
+        return;
+    }
+    else if ('num2cfrac' === object)
+    {
+        model.set('summary', esc_html("Abacus.Rational.fromString(\""+N+"\").toContFrac()"), true);
+        r = Abacus.Rational.fromString(N); res = r.toContFrac();
+        out.setValue('['+res.map(String).join(',')+']');
+        print_math('\\['+r.toTex()+' = '+res.map(function(a,i) {return String(a)+(i+1<res.length?'+\\cfrac{1}{':'')}).join('')+(new Array(res.length).join('}'))+'\\]');
+        return;
+    }
+    else if ('cfrac2num' === object)
+    {
+        model.set('summary', esc_html("Abacus.Rational.fromContFrac(["+N+"])"), true);
+        r = Arithmetic.nums(trim(N).split(',').map(trim)); res = Abacus.Rational.fromContFrac(r);
+        model.set('summary', esc_html("Abacus.Rational.fromContFrac(["+r.map(function(a) {return '"'+String(a)+'"';}).join(',')+"])"), true);
+        out.setValue(res.toString());
+        print_math('\\['+res.toTex()+' = '+r.map(function(a,i) {return String(a)+(i+1<r.length?'+\\cfrac{1}{':'')}).join('')+(new Array(r.length).join('}'))+'\\]');
+        return;
+    }
+    else if ('diophantines' === object)
+    {
+        res = []; r = []; max = 0;
+        trim(Text).split(NL).forEach(function(entry) {
+            entry = trim(entry);
+            if ( !entry.length ) return;
+            entry = entry.split('=');
+            res.push(trim(entry[0]).split(' ').map(trim).filter(function(n){return 0<n.length;}));
+            max = Math.max(max, res[res.length-1].length);
+            r.push(1<entry.length ? trim(entry[1]) : 0);
+        });
+        if (0 < res.length)
         {
-            if ( constant.equ(Abacus.Arithmetic.J) ) out = '-';
-            else if ( !constant.equ(Abacus.Arithmetic.I) ) out = '('+constant.toTex()+')';
+            res = res.map(function(entry) {
+                if (max > entry.length) entry = entry.concat(Abacus.Util.array(max-entry.length, 0));
+                return entry;
+            });
+            sol = Abacus.Math.diophantines(res, r, "k", true);
+            free_vars = sol ? sol[1] : null;
+            sol = sol ? sol[0] : null;
+            model.set('summary', esc_html("Abacus.Math.diophantines(["+res.map(function(row) {return '['+row.map(function(c) {return'"'+String(c)+'"';}).join(',')+']';}).join(',')+"], ["+r.map(function(c) {return'"'+String(c)+'"';}).join(',')+"], \"k\")"), true);
+            out.setValue(sol ? sol.map(function(x, i) {return 'x_'+(i+1)+'='+x.toString();}).join("\n")+(free_vars.length ? ("\nk_1" + (2===free_vars.length ? ",k_2" : (2<free_vars.length ? (",..,k_"+free_vars.length) : "")) + " any integer(s)") : "") : 'No solution in integers');
+            print_math('\\['+Abacus.Matrix.toTex(res)+Abacus.Matrix.toTex(Abacus.Util.array(res[0].length, function(i) {return 'x_{'+(i+1)+'}';}))+'='+Abacus.Matrix.toTex(r)+'\\]'+"\n\n"+(sol ? (sol.map(function(x, i) {return '\\[x_{'+(i+1)+'} = '+x.toTex()+'\\]';}).join("\n")+(free_vars.length ? ('\\[k_{1}' + (2===free_vars.length ? ',k_{2}' : (2<free_vars.length ? (',\\dots,k_{'+free_vars.length+'}') : '')) + ' \\in \\mathbb{Z}\\]') : '')) : '\\[\\text{No solution in }\\mathbb{Z}\\]'));
         }
         else
         {
-            out = '('+constant.toTex()+')';
+            model.set('summary', '', true);
+            out.setValue('Please provide at least one equation!');
         }
-
-        for(i=0; i<factors.length; i++)
-        {
-            t = factors[i][0].toTex();
-            out += '('+t+')'+(1<factors[i][1]?('^{'+String(factors[i][1])+'}'):'');
-        }
-        return out;
+        return;
     }
-    function factor( f, as_tex )
+    else if ('linears' === object)
     {
-        var s = String(f[0]) + (Abacus.Arithmetic.lt(Abacus.Arithmetic.I, f[1]) ? ('^' + (as_tex ? '{' : '') + String(f[1]) + (as_tex ? '}' : '')) : '');
-        if (!as_tex) s = '(' + s + ')';
-        return s;
+        res = []; r = []; max = 0;
+        trim(Text).split(NL).forEach(function(entry) {
+            entry = trim(entry);
+            if ( !entry.length ) return;
+            entry = entry.split('=');
+            res.push(trim(entry[0]).split(' ').map(trim).filter(function(n) {return 0<n.length;}));
+            max = Math.max(max, res[res.length-1].length);
+            r.push(1<entry.length ? trim(entry[1]) : 0);
+        });
+        if (0 < res.length)
+        {
+            res = res.map(function(entry) {
+                if ( max > entry.length ) entry = entry.concat(Abacus.Util.array(max-entry.length, 0));
+                return entry;
+            });
+            sol = Abacus.Math.linears(res, r, "z");
+            model.set('summary', esc_html("Abacus.Math.linears(["+res.map(function(row) {return '['+row.map(function(c) {return'"'+String(c)+'"';}).join(',')+']';}).join(',')+"], ["+r.map(function(c) {return'"'+String(c)+'"';}).join(',')+"], \"z\")"), true);
+            out.setValue(sol ? sol.map(function(x, i) {return 'x_'+(i+1)+'='+x.toString();}).join("\n") : 'No solution');
+            print_math('\\['+Abacus.Matrix.toTex(res)+Abacus.Matrix.toTex(Abacus.Util.array(res[0].length, function(i) {return 'x_{'+(i+1)+'}';}))+'='+Abacus.Matrix.toTex(r)+'\\]'+"\n\n"+(sol ? (sol.map(function(x, i) {return '\\[x_{'+(i+1)+'} = '+x.toTex()+'\\]';}).join("\n")) : '\\[\\text{No solution}\\]'));
+        }
+        else
+        {
+            model.set('summary', '', true);
+            out.setValue('Please provide at least one equation!');
+        }
+        return;
+    }
+    else if ('gcd' === object)
+    {
+        res = []; ring = Abacus.Ring.Q("x");
+        trim(Text).split(NL).forEach(function(entry) {
+            entry = trim(entry);
+            if ( !entry.length ) return;
+            // parse from tex format
+            res.push(ring.fromString(entry));
+        });
+        if (1 < res.length)
+        {
+            r = ring.xgcd(res);
+            model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.xgcd('+res.map(function(p) {return 'Ring.fromString("'+p.toString()+'")';}).join(',')+')'), true);
+            out.setValue(r[0].toString()+'='+r.slice(1).map(function(g, i) {
+                return '('+g.toString()+')*('+res[i].toString()+')';
+            }).join('+'));
+            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+r[0].toTex()+'='+r.slice(1).map(function(g, i) {
+                return '('+g.toTex()+')('+res[i].toTex()+')'
+            }).join('+')+'\\]')
+        }
+        else
+        {
+            model.set('summary', '', true);
+            out.setValue('Please provide at least two entries!');
+        }
+        return;
+    }
+    else if ('poly_factors' === object)
+    {
+        res = []; ring = Abacus.Ring.Q("x");
+        trim(Text).split(NL).forEach(function(entry) {
+            entry = trim(entry);
+            if ( !entry.length ) return;
+            // parse from tex format
+            res.push(Abacus.Polynomial.fromString(entry));
+        });
+        if (1 <= res.length)
+        {
+            r = res[0].factors();
+            model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.fromString("'+res[0].toString()+'").factors()'), true);
+            out.setValue(res[0].toString()+'='+'('+r[1].toString()+')*'+r[0].map(function(p) {return '('+p[0].toString()+')'+(1<p[1]?('^'+String(p[1])):'');}).join('*'));
+            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+res[0].toTex()+'='+group_factors_tex(r[0], r[1])+'\\]')
+        }
+        else
+        {
+            model.set('summary', '', true);
+            out.setValue('Please provide a polynomial entry!');
+        }
+        return;
+    }
+    else if ('groebner' === object)
+    {
+        res = []; free_vars = trim(model.get('alphabet')); if ( !free_vars.length ) free_vars = 'x';
+        free_vars = free_vars.split(',').map(trim).filter(function(x) {return x.length;});
+        if ( !free_vars.length ) free_vars = ['x'];
+        ring = Abacus.Ring.Q(free_vars);
+        trim(Text).split(NL).forEach(function(entry){
+            entry = trim(entry);
+            if ( !entry.length ) return;
+            // parse from tex format
+            res.push(ring.fromString(entry));
+        });
+        if (1 <= res.length)
+        {
+            r = Abacus.Math.groebner(res);
+            model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Abacus.Math.groebner(['+res.map(function(p) {return 'Ring.fromString("'+p.toString()+'")';}).join(',')+'])'), true);
+            out.setValue(r.map(String).join("\n"));
+            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+r.map(function(p) {return p.toTex();}).join("\\]\n\\[")+'\\]');
+        }
+        else
+        {
+            model.set('summary', '', true);
+            out.setValue('Please provide at least a polynomial entry!');
+        }
+        return;
+    }
+    else if ('polynomials' === object)
+    {
+        res = [];
+        ring = Abacus.Ring.Q("x");
+        trim(Text).split(NL).forEach(function(entry){
+            entry = trim(entry);
+            if ( !entry.length ) return;
+            // parse from tex format
+            res.push(ring.fromString(entry));
+        });
+        if (1 <= res.length)
+        {
+            r = ring.gcd(Abacus.Math.groebner(res)); sol = r.roots();
+            model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.gcd(Abacus.Math.groebner(['+res.map(function(p) {return 'Ring.fromString("'+p.toString()+'")';}).join(',')+'])).roots()'), true);
+            out.setValue(res.map(function(p) {return p.toString()+' = 0';}).join("\n")+"\nis equivalent to\n"+r.toTex()+' = 0'+"\n"+(r.equ(0) ? 'Infinite solutions in Rationals' : (r.equ(1) ? 'Inconsistent system' : (sol.length ? sol.map(function(r, i) {
+                return 'x_'+(i+1)+' = '+r[0].toString()+(1<r[1] ? ', multiplicity:'+String(r[1]) : '');
+            }).join("\n") : 'No solutions in Rationals'))));
+            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+res.map(function(p) {return p.toTex()+' = 0';}).join("\\]\n\\[")+'\\]'+"\n"+'\\[\\Longleftrightarrow\\]'+"\n"+'\\['+r.toTex()+' = 0\\]'+"\n"+'\\['+(r.equ(0) ? '\\text{Infinite solutions in } \\mathbb{Q}' : (r.equ(1) ? '\\text{Inconsistent system}' : (sol.length ? sol.map(function(r, i) {
+                return 'x_{'+(i+1)+'} = '+r[0].toTex()+(1<r[1] ? '\\text{, multiplicity:'+String(r[1])+'}' : '');
+            }).join("\\]\n\\[") : '\\text{No solutions in } \\mathbb{Q}')))+'\\]');
+        }
+        else
+        {
+            model.set('summary', '', true);
+            out.setValue('Please provide at least a polynomial entry!');
+        }
+        return;
     }
 
-    $MV.jquery( $ );
+    if ("divisors" !== object) N = (+N)|0;
 
-    height = output.clientHeight;
-    out = CodeMirror.fromTextArea(output, {
-        mode: "text",
-        lineWrapping: true,
-        lineNumbers : true,
-        indentUnit: 4,
-        indentWithTabs: false,
-        theme: 'lesser-dark',
-        foldGutter: true,
-        gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]
-    });
-    out.setSize( width, height );
-    exprout = CodeMirror.fromTextArea(expr, {
-        mode: "expr",
-        lineWrapping: true,
-        lineNumbers : true,
-        indentUnit: 4,
-        indentWithTabs: false,
-        theme: 'lesser-dark',
-        foldGutter: true,
-        gutters: ["CodeMirror-linenumbers"]
-    });
-
-    function produce( model )
+    if ("latin_square" === object)
     {
-        var comb = null, sep = ',', N = model.get('N'), K = model.get('K'), Text = model.get('Text'),
-            object = model.get('object'), type = model.get('type'), order = model.get('order'),
-            $ = {order:order}, $$ = null, n, nn = null, klass = null, filter = null, filter_code = null,
-            subklass = null, subklass_code = '', sub$ = null, subn = null, submethod = null,
-            conditions, data, res, r, sol, free_vars, ring, max, NL = /\r\n|\r|\n/,
-            poly_coeffs_dense_re = /^\-?\d+(?:\s+\-?\d+)*$/, s0 = '', s1 = '',
-            Arithmetic = Abacus.Arithmetic;
-
-        clear_math();
-
-        if ( 'divisors' === object )
+        model.set('summary', esc_html("Abacus.LatinSquare("+N+")"), true);
+        out.setValue(Abacus.LatinSquare(N).toString());
+        return;
+    }
+    else if ("magic_square" === object)
+    {
+        model.set('summary', esc_html("Abacus.MagicSquare("+N+")"), true);
+        out.setValue(Abacus.MagicSquare(N).toString());
+        return;
+    }
+    else if ("tensor" === object)
+    {
+        klass = "Tensor";
+        if ("tensor_inversion" === type)
         {
-            klass = "divisors";
-            model.set('summary', esc_html("Abacus.Math.divisors(\""+String(N)+"\", true)"), true);
+            $.output = "inversion";
+            n = Abacus.Util.array(N,1,1);
         }
-        else if ( 'prime_sieve' === object )
+        else
         {
-            klass = "PrimeSieve"; res = Arithmetic.gt(Arithmetic.num(N), MAXITEMS);
-            N = res ? MAXITEMS : +N;
-            model.set('summary', esc_html("Abacus.PrimeSieve().get("+N+")"+(res ? ' (max '+MAXITEMS+' shown)' : '')), true);
+            n = String(K).split(',').map(number);
         }
-        else if ( 'is_prime' === object )
+    }
+    else if ("tuple" === object)
+    {
+        klass = "Tensor";
+        n = [N, +K];
+        $.type = "tuple";
+        if ("word" === type)
         {
-            model.set('summary', esc_html("Abacus.Math.isProbablePrime(\""+N+"\") && Abacus.Math.isPrime(\""+N+"\")"), true);
-            N = Arithmetic.num(N);
-            res = Arithmetic.equ(N, 0) || Arithmetic.equ(N, 1) ? false : Abacus.Math.isProbablePrime(N) && Abacus.Math.isPrime(N);
-            out.setValue(String(N) + ' is ' + (res ? 'PRIME' : 'COMPOSITE'));
-            print_math('\\['+String(N)+(res ? ' \\in ' : ' \\notin ')+'\\mathbb{P}\\]');
-            return;
+            var alphabet = model.get("alphabet");
+            if (!!alphabet) $.output = alphabet;
         }
-        else if ( 'prime_factors' === object )
+        else if ("gray" === type)
         {
-            N = Arithmetic.num(N);
-            model.set('summary', esc_html("Abacus.Math.factorize(\""+String(N)+"\")"), true);
-            res = Arithmetic.equ(N, 0) ? [[Arithmetic.O, Arithmetic.I]] : (Arithmetic.equ(N, 1) ? [[Arithmetic.I, Arithmetic.I]] : Abacus.Math.factorize(N));
-            out.setValue(String(N)+'='+res.map(function(p){return factor(p,false);}).join('·'));
-            print_math('\\['+String(N)+'='+res.map(function(p){return factor(p,true);}).join('\\cdot')+'\\]');
-            return;
+            $.output = "gray";
         }
-        else if ( 'num2cfrac' === object )
+        else if ("conditional-tuple" === type)
         {
-            model.set('summary', esc_html("Abacus.Rational.fromString(\""+N+"\").toContFrac()"), true);
-            r = Abacus.Rational.fromString(N); res = r.toContFrac();
-            out.setValue('['+res.map(String).join(',')+']');
-            print_math('\\['+r.toTex()+' = '+res.map(function(a,i){return String(a)+(i+1<res.length?'+\\cfrac{1}{':'')}).join('')+(new Array(res.length).join('}'))+'\\]');
-            return;
-        }
-        else if ( 'cfrac2num' === object )
-        {
-            model.set('summary', esc_html("Abacus.Rational.fromContFrac(["+N+"])"), true);
-            r = Arithmetic.nums(trim(N).split(',').map(trim)); res = Abacus.Rational.fromContFrac(r);
-            model.set('summary', esc_html("Abacus.Rational.fromContFrac(["+r.map(function(a){return '"'+String(a)+'"';}).join(',')+"])"), true);
-            out.setValue(res.toString());
-            print_math('\\['+res.toTex()+' = '+r.map(function(a,i){return String(a)+(i+1<r.length?'+\\cfrac{1}{':'')}).join('')+(new Array(r.length).join('}'))+'\\]');
-            return;
-        }
-        else if ( 'diophantines' === object )
-        {
-            res = []; r = []; max = 0;
-            trim(Text).split(NL).forEach(function(entry){
-                entry = trim(entry);
-                if ( !entry.length ) return;
-                entry = entry.split('=');
-                res.push(trim(entry[0]).split(' ').map(trim).filter(function(n){return 0<n.length;}));
-                max = Math.max(max, res[res.length-1].length);
-                r.push(1<entry.length ? trim(entry[1]) : 0);
-            });
-            if ( 0 < res.length )
+            conditions = model.get('conditions');
+            if (conditions)
             {
-                res = res.map(function(entry){
-                    if ( max > entry.length ) entry = entry.concat(Abacus.Util.array(max-entry.length, 0));
-                    return entry;
-                });
-                sol = Abacus.Math.diophantines(res, r, "k", true);
-                free_vars = sol ? sol[1] : null;
-                sol = sol ? sol[0] : null;
-                model.set('summary', esc_html("Abacus.Math.diophantines(["+res.map(function(row){return '['+row.map(function(c){return'"'+String(c)+'"';}).join(',')+']';}).join(',')+"], ["+r.map(function(c){return'"'+String(c)+'"';}).join(',')+"], \"k\")"), true);
-                out.setValue(sol ? sol.map(function(x, i){return 'x_'+(i+1)+'='+x.toString();}).join("\n")+(free_vars.length ? ("\nk_1" + (2===free_vars.length ? ",k_2" : (2<free_vars.length ? (",..,k_"+free_vars.length) : "")) + " any integer(s)") : "") : 'No solution in integers');
-                print_math('\\['+Abacus.Matrix.toTex(res)+Abacus.Matrix.toTex(Abacus.Util.array(res[0].length, function(i){return 'x_{'+(i+1)+'}';}))+'='+Abacus.Matrix.toTex(r)+'\\]'+"\n\n"+(sol ? (sol.map(function(x, i){return '\\[x_{'+(i+1)+'} = '+x.toTex()+'\\]';}).join("\n")+(free_vars.length ? ('\\[k_{1}' + (2===free_vars.length ? ',k_{2}' : (2<free_vars.length ? (',\\dots,k_{'+free_vars.length+'}') : '')) + ' \\in \\mathbb{Z}\\]') : '')) : '\\[\\text{No solution in }\\mathbb{Z}\\]'));
+                klass = "Tensor"; $.type = "partial";
+                n = +K; data = [];
+                for (var i=0,l=conditions.data.length; i<conditions.data.length; ++i)
+                    data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
+                $.data = data; $.position = conditions.pos;
+                subklass = "Tensor";
+                sub$ = {order:order,type:"tuple"};
+                subn = [N-data.length, +K];
+                submethod = "interleaveWith";
             }
-            else
-            {
-                model.set('summary', '', true);
-                out.setValue('Please provide at least one equation!');
-            }
-            return;
         }
-        else if ( 'linears' === object )
+    }
+    else if ("permutation" === object)
+    {
+        klass = "Permutation";
+        n = N;
+        if ("cyclic" === type)
         {
-            res = []; r = []; max = 0;
-            trim(Text).split(NL).forEach(function(entry){
-                entry = trim(entry);
-                if ( !entry.length ) return;
-                entry = entry.split('=');
-                res.push(trim(entry[0]).split(' ').map(trim).filter(function(n){return 0<n.length;}));
-                max = Math.max(max, res[res.length-1].length);
-                r.push(1<entry.length ? trim(entry[1]) : 0);
-            });
-            if ( 0 < res.length )
-            {
-                res = res.map(function(entry){
-                    if ( max > entry.length ) entry = entry.concat(Abacus.Util.array(max-entry.length, 0));
-                    return entry;
-                });
-                sol = Abacus.Math.linears(res, r, "z");
-                model.set('summary', esc_html("Abacus.Math.linears(["+res.map(function(row){return '['+row.map(function(c){return'"'+String(c)+'"';}).join(',')+']';}).join(',')+"], ["+r.map(function(c){return'"'+String(c)+'"';}).join(',')+"], \"z\")"), true);
-                out.setValue(sol ? sol.map(function(x, i){return 'x_'+(i+1)+'='+x.toString();}).join("\n") : 'No solution');
-                print_math('\\['+Abacus.Matrix.toTex(res)+Abacus.Matrix.toTex(Abacus.Util.array(res[0].length, function(i){return 'x_{'+(i+1)+'}';}))+'='+Abacus.Matrix.toTex(r)+'\\]'+"\n\n"+(sol ? (sol.map(function(x, i){return '\\[x_{'+(i+1)+'} = '+x.toTex()+'\\]';}).join("\n")) : '\\[\\text{No solution}\\]'));
-            }
-            else
-            {
-                model.set('summary', '', true);
-                out.setValue('Please provide at least one equation!');
-            }
-            return;
+            $.type = "cyclic";
         }
-        else if ( 'gcd' === object )
+        else if ("multiset" === type)
         {
-            res = []; ring = Abacus.Ring.Q("x");
-            trim(Text).split(NL).forEach(function(entry){
-                entry = trim(entry);
-                if ( !entry.length ) return;
-                // parse from tex format
-                res.push(ring.fromString(entry));
-            });
-            if ( 1 < res.length )
-            {
-                r = ring.xgcd(res);
-                model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.xgcd('+res.map(function(p){return 'Ring.fromString("'+p.toString()+'")';}).join(',')+')'), true);
-                out.setValue(r[0].toString()+'='+r.slice(1).map(function(g, i){
-                    return '('+g.toString()+')*('+res[i].toString()+')';
-                }).join('+'));
-                print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+r[0].toTex()+'='+r.slice(1).map(function(g, i){
-                    return '('+g.toTex()+')('+res[i].toTex()+')'
-                }).join('+')+'\\]')
-            }
-            else
-            {
-                model.set('summary', '', true);
-                out.setValue('Please provide at least two entries!');
-            }
-            return;
+            $.type = "multiset";
+            $.multiplicity = String(K).split(',').map(number);
         }
-        else if ( 'poly_factors' === object )
+        else if ("derangement" === type)
         {
-            res = []; ring = Abacus.Ring.Q("x");
-            trim(Text).split(NL).forEach(function(entry){
-                entry = trim(entry);
-                if ( !entry.length ) return;
-                // parse from tex format
-                res.push(Abacus.Polynomial.fromString(entry));
-            });
-            if ( 1 <= res.length )
-            {
-                r = res[0].factors();
-                model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.fromString("'+res[0].toString()+'").factors()'), true);
-                out.setValue(res[0].toString()+'='+'('+r[1].toString()+')*'+r[0].map(function(p){return '('+p[0].toString()+')'+(1<p[1]?('^'+String(p[1])):'');}).join('*'));
-                print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+res[0].toTex()+'='+group_factors_tex(r[0], r[1])+'\\]')
-            }
-            else
-            {
-                model.set('summary', '', true);
-                out.setValue('Please provide a polynomial entry!');
-            }
-            return;
+            $.type = "derangement";
         }
-        else if ( 'groebner' === object )
+        else if ("involution" === type)
         {
-            res = []; free_vars = trim(model.get('alphabet')); if ( !free_vars.length ) free_vars = 'x';
-            free_vars = free_vars.split(',').map(trim).filter(function(x){return x.length;});
-            if ( !free_vars.length ) free_vars = ['x'];
-            ring = Abacus.Ring.Q(free_vars);
-            trim(Text).split(NL).forEach(function(entry){
-                entry = trim(entry);
-                if ( !entry.length ) return;
-                // parse from tex format
-                res.push(ring.fromString(entry));
-            });
-            if ( 1 <= res.length )
-            {
-                r = Abacus.Math.groebner(res);
-                model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Abacus.Math.groebner(['+res.map(function(p){return 'Ring.fromString("'+p.toString()+'")';}).join(',')+'])'), true);
-                out.setValue(r.map(String).join("\n"));
-                print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+r.map(function(p){return p.toTex();}).join("\\]\n\\[")+'\\]');
-            }
-            else
-            {
-                model.set('summary', '', true);
-                out.setValue('Please provide at least a polynomial entry!');
-            }
-            return;
+            $.type = "involution";
+            //filter = Abacus.Permutation.isInvolution;
+            //filter_code = 'Abacus.Permutation.isInvolution';
         }
-        else if ( 'polynomials' === object )
-        {
-            res = [];
-            ring = Abacus.Ring.Q("x");
-            trim(Text).split(NL).forEach(function(entry){
-                entry = trim(entry);
-                if ( !entry.length ) return;
-                // parse from tex format
-                res.push(ring.fromString(entry));
-            });
-            if ( 1 <= res.length )
-            {
-                r = ring.gcd(Abacus.Math.groebner(res)); sol = r.roots();
-                model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.gcd(Abacus.Math.groebner(['+res.map(function(p){return 'Ring.fromString("'+p.toString()+'")';}).join(',')+'])).roots()'), true);
-                out.setValue(res.map(function(p){return p.toString()+' = 0';}).join("\n")+"\nis equivalent to\n"+r.toTex()+' = 0'+"\n"+(r.equ(0) ? 'Infinite solutions in Rationals' : (r.equ(1) ? 'Inconsistent system' : (sol.length ? sol.map(function(r, i){
-                    return 'x_'+(i+1)+' = '+r[0].toString()+(1<r[1] ? ', multiplicity:'+String(r[1]) : '');
-                }).join("\n") : 'No solutions in Rationals'))));
-                print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+res.map(function(p){return p.toTex()+' = 0';}).join("\\]\n\\[")+'\\]'+"\n"+'\\[\\Longleftrightarrow\\]'+"\n"+'\\['+r.toTex()+' = 0\\]'+"\n"+'\\['+(r.equ(0) ? '\\text{Infinite solutions in } \\mathbb{Q}' : (r.equ(1) ? '\\text{Inconsistent system}' : (sol.length ? sol.map(function(r, i){
-                    return 'x_{'+(i+1)+'} = '+r[0].toTex()+(1<r[1] ? '\\text{, multiplicity:'+String(r[1])+'}' : '');
-                }).join("\\]\n\\[") : '\\text{No solutions in } \\mathbb{Q}')))+'\\]');
-            }
-            else
-            {
-                model.set('summary', '', true);
-                out.setValue('Please provide at least a polynomial entry!');
-            }
-            return;
-        }
-
-        if ( "divisors"!==object ) N = (+N)|0;
-
-        if ( "latin_square" === object )
-        {
-            model.set('summary', esc_html("Abacus.LatinSquare("+N+")"), true);
-            out.setValue(Abacus.LatinSquare(N).toString());
-            return;
-        }
-        else if ( "magic_square" === object )
-        {
-            model.set('summary', esc_html("Abacus.MagicSquare("+N+")"), true);
-            out.setValue(Abacus.MagicSquare(N).toString());
-            return;
-        }
-        else if ( "tensor" === object )
+        else if ("inversion" === type)
         {
             klass = "Tensor";
-            if ( "tensor_inversion" === type )
-            {
-                $.output = "inversion";
-                n = Abacus.Util.array(N,1,1);
-            }
-            else
-            {
-                n = String(K).split(',').map(number);
-            }
+            n = Abacus.Util.array(n, n, -1);
+            nn = toJSON(n);
         }
-        else if ( "tuple" === object )
+        else if ("connected" === type)
         {
-            klass = "Tensor";
-            n = [N, +K];
-            $.type = "tuple";
-            if ( "word" === type )
-            {
-                var alphabet = model.get("alphabet");
-                if ( !!alphabet ) $.output = alphabet;
-            }
-            else if ( "gray" === type )
-            {
-                $.output = "gray";
-            }
-            else if ( "conditional-tuple" === type )
-            {
-                conditions = model.get('conditions');
-                if ( conditions )
-                {
-                    klass = "Tensor"; $.type = "partial";
-                    n = +K; data = [];
-                    for(var i=0,l=conditions.data.length; i<conditions.data.length; i++)
-                        data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
-                    $.data = data; $.position = conditions.pos;
-                    subklass = "Tensor";
-                    sub$ = {order:order,type:"tuple"};
-                    subn = [N-data.length, +K];
-                    submethod = "interleaveWith";
-                }
-            }
+            $.type = "connected";
         }
-        else if ( "permutation" === object )
+        else if ("recursive-permutation" === type)
         {
-            klass = "Permutation";
-            n = N;
-            if ( "cyclic"===type )
-            {
-                $.type = "cyclic";
-            }
-            else if ( "multiset"===type )
-            {
-                $.type = "multiset";
-                $.multiplicity = String(K).split(',').map(number);
-            }
-            else if ( "derangement"===type )
-            {
-                $.type = "derangement";
-            }
-            else if ( "involution"===type )
-            {
-                $.type = "involution";
-                //filter = Abacus.Permutation.isInvolution;
-                //filter_code = 'Abacus.Permutation.isInvolution';
-            }
-            else if ( "inversion"===type )
+            if ( 1 < N )
             {
                 klass = "Tensor";
-                n = Abacus.Util.array(n, n, -1);
-                nn = toJSON(n);
+                n = N;
+                subklass = "Permutation";
+                sub$ = {order:order};
+                subn = N-1;
+                submethod = "intersperseWith";
             }
-            else if ( "connected"===type )
+            else
             {
-                $.type = "connected";
+                klass = "Permutation";
+                n = N;
             }
-            else if ( "recursive-permutation"===type )
+        }
+        else if ("k-permutation" === type)
+        {
+            klass = "Combination";
+            $.type = "variation";
+            n = [N, +K];
+        }
+        else if ("k-derangement" === type)
+        {
+            /*klass = "Combination"; $.type = "combination";
+            n = [N, +K];
+            subklass = "Permutation";
+            sub$ = {order:order,type:"derangement"};
+            subn = N-(+K);
+            submethod = "combineWith";*/
+            $.type = "derangement";
+            $["fixed="] = +K;
+        }
+        else if ("k-cycle-permutation" === type)
+        {
+            $["cycles="] = +K;
+        }
+        else if ("conditional-permutation" === type)
+        {
+            conditions = model.get('conditions');
+            if (conditions)
             {
-                if ( 1 < N )
-                {
-                    klass = "Tensor";
-                    n = N;
-                    subklass = "Permutation";
-                    sub$ = {order:order};
-                    subn = N-1;
-                    submethod = "intersperseWith";
-                }
-                else
-                {
-                    klass = "Permutation";
-                    n = N;
-                }
+                klass = "Tensor"; $.type = "partial";
+                n = N; data = [];
+                for (var i=0,l=conditions.data.length; i<conditions.data.length; ++i)
+                    data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
+                $.data = data; $.ordering = "<>"; $.position = conditions.pos;
+                subklass = "Permutation";
+                sub$ = {order:order};
+                subn = N-data.length;
+                submethod = "completeWith";
             }
-            else if ( "k-permutation"===type )
+        }
+        else if ("conditional-k-permutation" === type)
+        {
+            conditions = model.get('conditions');
+            if (conditions)
+            {
+                klass = "Tensor"; $.type = "partial";
+                n = N; data = [];
+                for (var i=0,l=conditions.data.length; i<conditions.data.length; ++i)
+                    data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
+                $.data = data; $.ordering = "<>"; $.position = conditions.pos;
+                subklass = "Combination";
+                sub$ = {order:order,type:"variation"};
+                subn = [N-data.length, (+K)-data.length];
+                submethod = "completeWith";
+            }
+            else
             {
                 klass = "Combination";
                 $.type = "variation";
                 n = [N, +K];
             }
-            else if ( "k-derangement"===type )
-            {
-                /*klass = "Combination"; $.type = "combination";
-                n = [N, +K];
-                subklass = "Permutation";
-                sub$ = {order:order,type:"derangement"};
-                subn = N-(+K);
-                submethod = "combineWith";*/
-                $.type = "derangement";
-                $["fixed="] = +K;
-            }
-            else if ( "k-cycle-permutation"===type )
-            {
-                $["cycles="] = +K;
-            }
-            else if ( "conditional-permutation"===type )
-            {
-                conditions = model.get('conditions');
-                if ( conditions )
-                {
-                    klass = "Tensor"; $.type = "partial";
-                    n = N; data = [];
-                    for(var i=0,l=conditions.data.length; i<conditions.data.length; i++)
-                        data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
-                    $.data = data; $.ordering = "<>"; $.position = conditions.pos;
-                    subklass = "Permutation";
-                    sub$ = {order:order};
-                    subn = N-data.length;
-                    submethod = "completeWith";
-                }
-            }
-            else if ( "conditional-k-permutation"===type )
-            {
-                conditions = model.get('conditions');
-                if ( conditions )
-                {
-                    klass = "Tensor"; $.type = "partial";
-                    n = N; data = [];
-                    for(var i=0,l=conditions.data.length; i<conditions.data.length; i++)
-                        data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
-                    $.data = data; $.ordering = "<>"; $.position = conditions.pos;
-                    subklass = "Combination";
-                    sub$ = {order:order,type:"variation"};
-                    subn = [N-data.length, (+K)-data.length];
-                    submethod = "completeWith";
-                }
-                else
-                {
-                    klass = "Combination";
-                    $.type = "variation";
-                    n = [N, +K];
-                }
-            }
         }
-        else if ( "combination" === object )
+    }
+    else if ("combination" === object)
+    {
+        klass = "Combination"; $.type = "combination";
+        n = [N, +K];
+        if ("ordered" === type)
         {
-            klass = "Combination"; $.type = "combination";
-            n = [N, +K];
-            if ( "ordered"===type )
-            {
-                $.type = "variation";
-            }
-            else if ( "conditional-ordered"===type )
-            {
-                conditions = model.get('conditions');
-                if ( conditions )
-                {
-                    klass = "Tensor"; $.type = "partial";
-                    n = N; data = [];
-                    for(var i=0,l=conditions.data.length; i<conditions.data.length; i++)
-                        data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
-                    $.data = data; $.ordering = "<>"; $.position = conditions.pos;
-                    subklass = "Combination";
-                    sub$ = {order:order,type:"variation"};
-                    subn = [N-data.length, (+K)-data.length];
-                    submethod = "completeWith";
-                }
-                else
-                {
-                    $.type = "variation";
-                }
-            }
-            else if ( "conditional-combination"===type )
-            {
-                conditions = model.get('conditions');
-                if ( conditions )
-                {
-                    klass = "Tensor"; $.type = "partial";
-                    n = N; data = [];
-                    for(var i=0,l=conditions.data.length; i<conditions.data.length; i++)
-                        data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
-                    $.data = data; $.ordering = "<"; $.position = conditions.pos;
-                    subklass = "Combination";
-                    sub$ = {order:order,type:"combination"};
-                    subn = [N-data.length, (+K)-data.length];
-                    submethod = "completeWith";
-                    // completing with partial data is not enough for combinations
-                    // since some duplicates or out-of-order items still exist (few though)
-                    // thus extra filtering is needed to finally reject these invalid combinations
-                    filter = Abacus.Filter.SORTED("<");
-                    filter_code = 'Abacus.Filter.SORTED("<")';
-                }
-                else
-                {
-                    $.type = "combination";
-                }
-            }
-            else if ( "repeated"===type )
-            {
-                $.type = "repeated";
-            }
-            else if ( "ordered_repeated"===type )
-            {
-                $.type = "variation+repeated";
-            }
-            else if ( "conditional-ordered_repeated"===type )
-            {
-                conditions = model.get('conditions');
-                if ( conditions )
-                {
-                    klass = "Tensor"; $.type = "partial";
-                    n = N; data = [];
-                    for(var i=0,l=conditions.data.length; i<conditions.data.length; i++)
-                        data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
-                    $.data = data; $.position = conditions.pos;
-                    subklass = "Combination";
-                    sub$ = {order:order,type:"variation+repeated"};
-                    subn = [N, (+K)-data.length];
-                    submethod = "interleaveWith";
-                }
-                else
-                {
-                    $.type = "variation+repeated";
-                }
-            }
-            else if ( "unordered_01"===type )
-            {
-                sep = '';
-                $.output = "binary";
-            }
+            $.type = "variation";
         }
-        else if ( "subset" === object )
+        else if ("conditional-ordered" === type)
         {
-            klass = "Subset";
-            s0 = '{'; s1 = '}';
-            n = N;
-            if ( "subset_combination"===type )
+            conditions = model.get('conditions');
+            if (conditions)
             {
-                klass = "CombinatorialIterator";
-                n = []; nn = [];
-                for(var i=0; i<=N; i++)
-                {
-                    n.push(["Combination",[N,i]]);
-                    nn.push("Abacus.Combination("+[N,i].join(',')+")");
-                }
-                nn = "["+nn.join(',')+"]";
-            }
-            else if ( "subset_binary"===type )
-            {
-                $.type = "binary";
-            }
-            else if ( "subset_01"===type )
-            {
-                sep = '';
-                $.output = "binary";
-            }
-        }
-        else if ( "partition" === object )
-        {
-            klass = "Partition";
-            n = N;
-            sep = '+';
-            if ( "partition_min" === type )
-            {
-                $["min="] = +K;
-            }
-            else if ( "partition_max" === type )
-            {
-                $["max="] = +K;
-            }
-            else if ( "partition_parts" === type )
-            {
-                $["parts="] = +K;
-                //$["max="] = +K;
-                //$.output = "conjugate";
-            }
-            else if ( "partition_min_max" === type )
-            {
-                K = String(K).split(',').map(number);
-                $["min="] = K[0]; $["max="] = K[1];
-                //filter = Abacus.Filter.MAX(K[1]).AND(Abacus.Filter.MIN(K[0]));
-                //filter_code = 'Abacus.Filter.MAX('+K[1]+').AND(Abacus.Filter.MIN('+K[0]+'))';
-            }
-            else if ( "partition_min_parts" === type )
-            {
-                K = String(K).split(',').map(number);
-                $["min="] = K[0]; $["parts="] = K[1];
-                //filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MIN(K[0]));
-                //filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MIN('+K[0]+'))';
-            }
-            else if ( "partition_max_parts" === type )
-            {
-                K = String(K).split(',').map(number);
-                $["max="] = K[0]; $["parts="] = K[1];
-                //filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MAX(K[0]));
-                //filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MAX('+K[0]+'))';
-            }
-            else if ( "partition_min_max_parts" === type )
-            {
-                K = String(K).split(',').map(number);
-                $["min="] = K[0]; $["max="] = K[1]; $["parts="] = K[2];
-                //filter = Abacus.Filter.LEN(K[2]).AND(Abacus.Filter.MIN(K[0])).AND(Abacus.Filter.MAX(K[1]));
-                //filter_code = 'Abacus.Filter.LEN('+K[2]+').AND(Abacus.Filter.MIN('+K[0]+')).AND(Abacus.Filter.MAX('+K[1]+'))';
-            }
-            else if ( "partition_distinct" === type )
-            {
-                filter = Abacus.Filter.UNIQUE();
-                filter_code = 'Abacus.Filter.UNIQUE()';
-            }
-        }
-        else if ( "composition" === object )
-        {
-            klass = "Partition";
-            n = N;
-            sep = '+';
-            $.type = "composition";
-            if ( "composition_min" === type )
-            {
-                $["min="] = +K;
-            }
-            else if ( "composition_max" === type )
-            {
-                $["max="] = +K;
-            }
-            else if ( "composition_parts" === type )
-            {
-                $["parts="] = +K;
-            }
-            else if ( "composition_min_max" === type )
-            {
-                K = String(K).split(',').map(number);
-                $["min="] = K[0]; $["max="] = K[1];
-                //filter = Abacus.Filter.MAX(K[1]).AND(Abacus.Filter.MIN(K[0]));
-                //filter_code = 'Abacus.Filter.MAX('+K[1]+').AND(Abacus.Filter.MIN('+K[0]+'))';
-            }
-            else if ( "composition_min_parts" === type )
-            {
-                K = String(K).split(',').map(number);
-                $["min="] = K[0]; $["parts="] = K[1];
-                //filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MIN(K[0]));
-                //filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MIN('+K[0]+'))';
-            }
-            else if ( "composition_max_parts" === type )
-            {
-                K = String(K).split(',').map(number);
-                $["max="] = K[0]; $["parts="] = K[1];
-                //filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MAX(K[0]));
-                //filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MAX('+K[0]+'))';
-            }
-            else if ( "composition_min_max_parts" === type )
-            {
-                K = String(K).split(',').map(number);
-                $["min="] = K[0]; $["max="] = K[1]; $["parts="] = K[2];
-                //filter = Abacus.Filter.LEN(K[2]).AND(Abacus.Filter.MIN(K[0])).AND(Abacus.Filter.MAX(K[1]));
-                //filter_code = 'Abacus.Filter.LEN('+K[2]+').AND(Abacus.Filter.MIN('+K[0]+')).AND(Abacus.Filter.MAX('+K[1]+'))';
-            }
-            else if ( "composition_distinct" === type )
-            {
-                filter = Abacus.Filter.UNIQUE();
-                filter_code = 'Abacus.Filter.UNIQUE()';
-            }
-        }
-        else if ( "set_partition" === object )
-        {
-            klass = "SetPartition";
-            n = N;
-            sep = ',';
-            if ( "set_partition_parts" === type )
-            {
-                $["parts="] = +K;
-            }
-        }
-        else if ( "balanced_paren" === object )
-        {
-            klass = "CatalanWord";
-            n = N;
-            sep = '';
-        }
-
-        out.setValue('');
-
-        if ( !klass )
-        {
-            model.set('summary', '', true);
-            return;
-        }
-
-        if ( "prime_sieve" !== object && "divisors" !== object )
-        {
-            if ( null === nn ) nn = n.join?n.join(','):String(n);
-            if ( null === $$ ) $$ = toJSON($);
-        }
-
-        $screen.addClass('ui-delayed').removeClass('ui-undelayed');
-
-        var count = 0, chunk = 1000;
-
-        setTimeout(function(){
-            if ( "PrimeSieve"===klass )
-            {
-                comb = 0 >= N ? new Abacus.Iterator([]) : new Abacus.PrimeSieve();
-            }
-            else if ( "divisors"===klass )
-            {
-                N = Arithmetic.num(N);
-                comb = Arithmetic.equ(N, 0) ? new Abacus.Iterator([Arithmetic.O]) : Abacus.Math.divisors(N, true);
+                klass = "Tensor"; $.type = "partial";
+                n = N; data = [];
+                for (var i=0,l=conditions.data.length; i<conditions.data.length; ++i)
+                    data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
+                $.data = data; $.ordering = "<>"; $.position = conditions.pos;
+                subklass = "Combination";
+                sub$ = {order:order,type:"variation"};
+                subn = [N-data.length, (+K)-data.length];
+                submethod = "completeWith";
             }
             else
             {
-                if ( "CombinatorialIterator"===klass )
-                {
-                    // sequence iterator, init every iterator
-                    for(var i=0; i<n.length; i++) n[i] = new Abacus[n[i][0]](n[i][1]);
-                }
-                comb = new Abacus[klass](n, $);
+                $.type = "variation";
             }
-
-            if ( subklass )
+        }
+        else if ("conditional-combination" === type)
+        {
+            conditions = model.get('conditions');
+            if (conditions)
             {
-                if ( "conditional-permutation"===type )
-                {
-                    subn = N-comb.dimension();
-                    if ( 0 >= subn ) subklass = null;
-                }
-                else if ( "conditional-k-permutation"===type || "conditional-ordered"===type || "conditional-combination"===type )
-                {
-                    subn[0] = N-comb.dimension(); subn[1] = (+K)-comb.dimension();
-                    if ( 0 >= subn[0] || 0 >= subn[1] ) subklass = null;
-                }
-                else if ( "conditional-ordered_repeated"===type )
-                {
-                    subn[1] = (+K)-comb.dimension();
-                    if ( 0 >= subn[1] ) subklass = null;
-                }
-                else if ( "conditional-tuple"===type )
-                {
-                    subn[0] = N-comb.dimension();
-                    if ( 0 >= subn[0] ) subklass = null;
-                }
-                if ( subklass )
-                {
-                    subklass_code = "."+submethod+"(Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+"))";
-                    comb[submethod](new Abacus[subklass](subn, sub$));
-                }
-                else
-                {
-                    subklass_code = "";
-                }
+                klass = "Tensor"; $.type = "partial";
+                n = N; data = [];
+                for (var i=0,l=conditions.data.length; i<conditions.data.length; ++i)
+                    data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
+                $.data = data; $.ordering = "<"; $.position = conditions.pos;
+                subklass = "Combination";
+                sub$ = {order:order,type:"combination"};
+                subn = [N-data.length, (+K)-data.length];
+                submethod = "completeWith";
+                // completing with partial data is not enough for combinations
+                // since some duplicates or out-of-order items still exist (few though)
+                // thus extra filtering is needed to finally reject these invalid combinations
+                filter = Abacus.Filter.SORTED("<");
+                filter_code = 'Abacus.Filter.SORTED("<")';
             }
-            if ( filter ) comb.filterBy(filter);
-
-            var total, MAX = MAXITEMS, output = "", summary;
-            if ( "PrimeSieve"!==klass && "divisors"!==klass )
+            else
             {
-                summary = esc_html("Abacus."+klass+"("+nn+","+$$+")"+subklass_code+(filter ? '.filterBy('+filter_code+')' : '')) +
-                "<br />" + (filter ? "(filtered from) " : "");
-                total = comb.total();
-                model.set('summary', summary + "total = " + String(total) + (total.gt(MAXITEMS) ? " (max "+MAXITEMS+" shown)" : ""), true);
+                $.type = "combination";
             }
-            else if ( "PrimeSieve"===klass )
+        }
+        else if ("repeated" === type)
+        {
+            $.type = "repeated";
+        }
+        else if ("ordered_repeated" === type)
+        {
+            $.type = "variation+repeated";
+        }
+        else if ("conditional-ordered_repeated" === type)
+        {
+            conditions = model.get('conditions');
+            if ( conditions )
             {
-                MAX = Math.min(N, MAXITEMS);
+                klass = "Tensor"; $.type = "partial";
+                n = N; data = [];
+                for(var i=0,l=conditions.data.length; i<conditions.data.length; i++)
+                    data.push('EXPR'===conditions.type[i]?conditions.data[i]:('NOT_IN'===conditions.type[i]?"!{"+conditions.data[i]+"}":"{"+conditions.data[i]+"}"));
+                $.data = data; $.position = conditions.pos;
+                subklass = "Combination";
+                sub$ = {order:order,type:"variation+repeated"};
+                subn = [N, (+K)-data.length];
+                submethod = "interleaveWith";
             }
-
-            setTimeout(function next_chunk(){
-                var cnt = 0, next = null;
-                while( (cnt<chunk) && (count<MAX) && comb.hasNext() )
-                {
-                    next = comb.next();
-                    if ( null == next ) {next=false; break;}
-                    if ( 0 < count ) output += "\n";
-                    output += next.join ? s0+next.map(function(x){return x.join?('{'+x.join(',')+'}'):String(x);}).join(sep)+s1 : s0+String(next)+s1;
-                    count++; cnt++;
-                }
-
-                if ( (count<MAX) && comb.hasNext() && (false!==next) )
-                {
-                    setTimeout(next_chunk, 40);
-                }
-                else
-                {
-                    if ( comb )
-                    {
-                        comb.dispose();
-                        comb = null;
-                    }
-                    out.setValue(output);
-                    $screen.addClass('ui-undelayed').removeClass('ui-delayed');
-                }
-            }, 10);
-        }, 10);
+            else
+            {
+                $.type = "variation+repeated";
+            }
+        }
+        else if ("unordered_01" === type)
+        {
+            sep = '';
+            $.output = "binary";
+        }
+    }
+    else if ("subset" === object)
+    {
+        klass = "Subset";
+        s0 = '{'; s1 = '}';
+        n = N;
+        if ("subset_combination" === type)
+        {
+            klass = "CombinatorialIterator";
+            n = []; nn = [];
+            for (var i=0; i<=N; ++i)
+            {
+                n.push(["Combination",[N,i]]);
+                nn.push("Abacus.Combination("+[N,i].join(',')+")");
+            }
+            nn = "["+nn.join(',')+"]";
+        }
+        else if ("subset_binary" === type)
+        {
+            $.type = "binary";
+        }
+        else if ("subset_01" === type)
+        {
+            sep = '';
+            $.output = "binary";
+        }
+    }
+    else if ("partition" === object)
+    {
+        klass = "Partition";
+        n = N;
+        sep = '+';
+        if ("partition_min" === type)
+        {
+            $["min="] = +K;
+        }
+        else if ("partition_max" === type)
+        {
+            $["max="] = +K;
+        }
+        else if ("partition_parts" === type)
+        {
+            $["parts="] = +K;
+            //$["max="] = +K;
+            //$.output = "conjugate";
+        }
+        else if ("partition_min_max" === type)
+        {
+            K = String(K).split(',').map(number);
+            $["min="] = K[0]; $["max="] = K[1];
+            //filter = Abacus.Filter.MAX(K[1]).AND(Abacus.Filter.MIN(K[0]));
+            //filter_code = 'Abacus.Filter.MAX('+K[1]+').AND(Abacus.Filter.MIN('+K[0]+'))';
+        }
+        else if ("partition_min_parts" === type)
+        {
+            K = String(K).split(',').map(number);
+            $["min="] = K[0]; $["parts="] = K[1];
+            //filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MIN(K[0]));
+            //filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MIN('+K[0]+'))';
+        }
+        else if ("partition_max_parts" === type)
+        {
+            K = String(K).split(',').map(number);
+            $["max="] = K[0]; $["parts="] = K[1];
+            //filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MAX(K[0]));
+            //filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MAX('+K[0]+'))';
+        }
+        else if ("partition_min_max_parts" === type)
+        {
+            K = String(K).split(',').map(number);
+            $["min="] = K[0]; $["max="] = K[1]; $["parts="] = K[2];
+            //filter = Abacus.Filter.LEN(K[2]).AND(Abacus.Filter.MIN(K[0])).AND(Abacus.Filter.MAX(K[1]));
+            //filter_code = 'Abacus.Filter.LEN('+K[2]+').AND(Abacus.Filter.MIN('+K[0]+')).AND(Abacus.Filter.MAX('+K[1]+'))';
+        }
+        else if ("partition_distinct" === type)
+        {
+            filter = Abacus.Filter.UNIQUE();
+            filter_code = 'Abacus.Filter.UNIQUE()';
+        }
+    }
+    else if ("composition" === object)
+    {
+        klass = "Partition";
+        n = N;
+        sep = '+';
+        $.type = "composition";
+        if ("composition_min" === type)
+        {
+            $["min="] = +K;
+        }
+        else if ("composition_max" === type)
+        {
+            $["max="] = +K;
+        }
+        else if ("composition_parts" === type)
+        {
+            $["parts="] = +K;
+        }
+        else if ("composition_min_max" === type)
+        {
+            K = String(K).split(',').map(number);
+            $["min="] = K[0]; $["max="] = K[1];
+            //filter = Abacus.Filter.MAX(K[1]).AND(Abacus.Filter.MIN(K[0]));
+            //filter_code = 'Abacus.Filter.MAX('+K[1]+').AND(Abacus.Filter.MIN('+K[0]+'))';
+        }
+        else if ("composition_min_parts" === type)
+        {
+            K = String(K).split(',').map(number);
+            $["min="] = K[0]; $["parts="] = K[1];
+            //filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MIN(K[0]));
+            //filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MIN('+K[0]+'))';
+        }
+        else if ("composition_max_parts" === type)
+        {
+            K = String(K).split(',').map(number);
+            $["max="] = K[0]; $["parts="] = K[1];
+            //filter = Abacus.Filter.LEN(K[1]).AND(Abacus.Filter.MAX(K[0]));
+            //filter_code = 'Abacus.Filter.LEN('+K[1]+').AND(Abacus.Filter.MAX('+K[0]+'))';
+        }
+        else if ("composition_min_max_parts" === type)
+        {
+            K = String(K).split(',').map(number);
+            $["min="] = K[0]; $["max="] = K[1]; $["parts="] = K[2];
+            //filter = Abacus.Filter.LEN(K[2]).AND(Abacus.Filter.MIN(K[0])).AND(Abacus.Filter.MAX(K[1]));
+            //filter_code = 'Abacus.Filter.LEN('+K[2]+').AND(Abacus.Filter.MIN('+K[0]+')).AND(Abacus.Filter.MAX('+K[1]+'))';
+        }
+        else if ("composition_distinct" === type)
+        {
+            filter = Abacus.Filter.UNIQUE();
+            filter_code = 'Abacus.Filter.UNIQUE()';
+        }
+    }
+    else if ("set_partition" === object)
+    {
+        klass = "SetPartition";
+        n = N;
+        sep = ',';
+        if ("set_partition_parts" === type)
+        {
+            $["parts="] = +K;
+        }
+    }
+    else if ("balanced_paren" === object)
+    {
+        klass = "CatalanWord";
+        n = N;
+        sep = '';
     }
 
-    appRouter = new $R( );
-    appRouter.one({route:'#{%ALL%:hash}', handler:function( params ){
-        params = params.data;
-        params = params && params.hash ? appRouter.unglue( params.hash ) : null;
-        if ( params && ("produce"===params.action) )
+    out.setValue('');
+
+    if (!klass)
+    {
+        model.set('summary', '', true);
+        return;
+    }
+
+    if ("prime_sieve" !== object && "divisors" !== object)
+    {
+        if (null === nn) nn = n.join?n.join(','):String(n);
+        if (null === $$) $$ = toJSON($);
+    }
+
+    $screen.addClass('ui-delayed').removeClass('ui-undelayed');
+
+    var count = 0, chunk = 1000;
+
+    setTimeout(function() {
+        if ("PrimeSieve" === klass)
         {
-            if ( params.conditions && params.conditions.data )
+            comb = 0 >= N ? new Abacus.Iterator([]) : new Abacus.PrimeSieve();
+        }
+        else if ("divisors" === klass)
+        {
+            N = Arithmetic.num(N);
+            comb = Arithmetic.equ(N, 0) ? new Abacus.Iterator([Arithmetic.O]) : Abacus.Math.divisors(N, true);
+        }
+        else
+        {
+            if ("CombinatorialIterator" === klass)
             {
-                if ( null==params.conditions.data.length )
+                // sequence iterator, init every iterator
+                for (var i=0; i<n.length; ++i) n[i] = new Abacus[n[i][0]](n[i][1]);
+            }
+            comb = new Abacus[klass](n, $);
+        }
+
+        if (subklass)
+        {
+            if ("conditional-permutation" === type)
+            {
+                subn = N-comb.dimension();
+                if ( 0 >= subn ) subklass = null;
+            }
+            else if ("conditional-k-permutation" === type || "conditional-ordered" === type || "conditional-combination" === type)
+            {
+                subn[0] = N-comb.dimension(); subn[1] = (+K)-comb.dimension();
+                if ( 0 >= subn[0] || 0 >= subn[1] ) subklass = null;
+            }
+            else if ("conditional-ordered_repeated" === type)
+            {
+                subn[1] = (+K)-comb.dimension();
+                if ( 0 >= subn[1] ) subklass = null;
+            }
+            else if ("conditional-tuple" === type)
+            {
+                subn[0] = N-comb.dimension();
+                if ( 0 >= subn[0] ) subklass = null;
+            }
+            if (subklass)
+            {
+                subklass_code = "."+submethod+"(Abacus."+subklass+"("+(subn.join?subn.join(','):String(subn))+","+toJSON(sub$)+"))";
+                comb[submethod](new Abacus[subklass](subn, sub$));
+            }
+            else
+            {
+                subklass_code = "";
+            }
+        }
+        if (filter) comb.filterBy(filter);
+
+        var total, MAX = MAXITEMS, output = "", summary;
+        if ("PrimeSieve" !== klass && "divisors" !== klass)
+        {
+            summary = esc_html("Abacus."+klass+"("+nn+","+$$+")"+subklass_code+(filter ? '.filterBy('+filter_code+')' : '')) +
+            "<br />" + (filter ? "(filtered from) " : "");
+            total = comb.total();
+            model.set('summary', summary + "total = " + String(total) + (total.gt(MAXITEMS) ? " (max "+MAXITEMS+" shown)" : ""), true);
+        }
+        else if ("PrimeSieve" === klass)
+        {
+            MAX = Math.min(N, MAXITEMS);
+        }
+
+        setTimeout(function next_chunk() {
+            var cnt = 0, next = null;
+            while ((cnt < chunk) && (count < MAX) && comb.hasNext())
+            {
+                next = comb.next();
+                if (null == next) {next = false; break;}
+                if (0 < count) output += "\n";
+                output += next.join ? s0+next.map(function(x) {return x.join?('{'+x.join(',')+'}'):String(x);}).join(sep)+s1 : s0+String(next)+s1;
+                ++count; ++cnt;
+            }
+
+            if ((count < MAX) && comb.hasNext() && (false !== next))
+            {
+                setTimeout(next_chunk, 40);
+            }
+            else
+            {
+                if (comb)
                 {
-                    // make them arrays
-                    params.conditions.data = toArray(params.conditions.data).map(String);
-                    params.conditions.pos = toArray(params.conditions.pos).map(number);
-                    params.conditions.type = toArray(params.conditions.type).map(String);
+                    comb.dispose();
+                    comb = null;
                 }
-                else
+                out.setValue(output);
+                $screen.addClass('ui-undelayed').removeClass('ui-delayed');
+            }
+        }, 10);
+    }, 10);
+}
+
+appRouter = new $R();
+appRouter.one({route:'#{%ALL%:hash}', handler:function(params) {
+    params = params.data;
+    params = params && params.hash ? appRouter.unglue(params.hash.split('+').join('%20')) : null;
+    if (params && ("produce" === params.action))
+    {
+        if (params.conditions && params.conditions.data)
+        {
+            if (null == params.conditions.data.length)
+            {
+                // make them arrays
+                params.conditions.data = toArray(params.conditions.data).map(String);
+                params.conditions.pos = toArray(params.conditions.pos).map(number);
+                params.conditions.type = toArray(params.conditions.type).map(String);
+            }
+            else
+            {
+                params.conditions.data = params.conditions.data.map(String);
+                params.conditions.pos = params.conditions.pos.map(number);
+                params.conditions.type = params.conditions.type.map(String);
+            }
+        }
+        var model = $screen.modelview('model');
+        setTimeout(function() {
+            model.set('conditions_dom', params.conditions || null);
+            model.set('conditions', params.conditions || null);
+            model.set('Text', String(params.Text || ""), true);
+            model.set('order', String(params.order || ""), true);
+            model.set('alphabet', String(params.alphabet || ""), true);
+            model.set('N', String(params.N), true);
+            model.set('K', String(params.K), true);
+            model.set('object', String(params.object), true);
+            model.set('type', String(params.type), true);
+            setTimeout(function() {produce(model);}, 10);
+        }, 10);
+    }
+}});
+
+$screen.modelview({
+    autobind: true
+    ,livebind: 'text'
+    ,autoSync: true
+    /*,options: {
+        'model.events': true
+    }*/
+
+    ,model: {
+        id: 'model'
+        ,data: {
+            abacus_version: 'v.'+Abacus.VERSION,
+            summary: "",
+            object: "permutation",
+            type: "default",
+            order: "", // default
+            N: 2,
+            K: 1,
+            alphabet: "",
+            conditions: null
+        }
+        ,types: {
+            //N: $MV.Type.Cast.INT,
+            alphabet: $MV.Type.Cast.STR
+        }
+        ,setters: {
+            "conditions_dom": function(key, cond) {
+                $conditions.empty();
+                if (cond && cond.data)
                 {
-                    params.conditions.data = params.conditions.data.map(String);
-                    params.conditions.pos = params.conditions.pos.map(number);
-                    params.conditions.type = params.conditions.type.map(String);
-                }
-            }
-            var model = $screen.modelview('model');
-            setTimeout(function(){
-                model.set('conditions_dom', params.conditions||null);
-                model.set('conditions', params.conditions||null);
-                model.set('Text', String(params.Text||""), true);
-                model.set('order', String(params.order||""), true);
-                model.set('alphabet', String(params.alphabet||""), true);
-                model.set('N', String(params.N), true);
-                model.set('K', String(params.K), true);
-                model.set('object', String(params.object), true);
-                model.set('type', String(params.type), true);
-                setTimeout(function(){produce( model );}, 10);
-            }, 10);
-        }
-    }});
-
-    $screen.modelview({
-        autobind: true
-        ,livebind: 'text'
-        ,autoSync: true
-        /*,options: {
-            'model.events': true
-        }*/
-
-        ,model: {
-            id: 'model'
-            ,data: {
-                abacus_version: 'v.'+Abacus.VERSION,
-                summary: "",
-                object: "permutation",
-                type: "default",
-                order: "", // default
-                N: 2,
-                K: 1,
-                alphabet: "",
-                conditions: null
-            }
-            ,types: {
-                //N: $MV.Type.Cast.INT,
-                alphabet: $MV.Type.Cast.STR
-            }
-            ,setters: {
-                "conditions_dom": function( key, cond ){
-                    $conditions.empty();
-                    if ( cond && cond.data )
+                    var tpl = $condition_tpl.html(), node;
+                    for (var i=0,l=cond.data.length; i<l; ++i)
                     {
-                        var tpl = $condition_tpl.html(), node;
-                        for(var i=0,l=cond.data.length; i<l; i++)
-                        {
-                            $conditions.append(node=$(tpl));
-                            node.find('[name=pos]').val(cond.pos[i]);
-                            node.find('[name=op]').val(cond.type[i]);
-                            node.find('[name=dat]').val(cond.data[i]);
-                        }
+                        $conditions.append(node=$(tpl));
+                        node.find('[name=pos]').val(cond.pos[i]);
+                        node.find('[name=op]').val(cond.type[i]);
+                        node.find('[name=dat]').val(cond.data[i]);
                     }
-                },
-                "object": function( key, val/*, pub*/ ){
-                    this.$data.object = val;
-                    if ( val !== 'num2cfrac' && val !== 'cfrac2num' && val !== 'prime_sieve' && val !== 'is_prime' && val !== 'prime_factors' && val !== 'divisors' && val !== 'gcd' && val !== 'diophantines' && val !== 'linears' && val !== 'poly_factors' && val !== 'groebner' && val !== 'polynomials' )
-                    {
-                        this.set("type","default", true);
-                        this.set("order", "", true);
-                    }
-                },
-                "Text": function( key, val ) {
-                    exprout.setValue(val);
-                }
-            }
-            ,getters: {
-                "conditions_dom": function(){
-                    var cond = {data:[],pos:[],type:[]};
-                    $conditions.children('tr').each(function(){
-                        var node = $(this),
-                            p = $.trim(node.find('[name=pos]').val()),
-                            d = $.trim(node.find('[name=dat]').val())
-                        ;
-                        if ( !d.length || !p.length ) return;
-                        cond.pos.push(parseInt(p,10));
-                        cond.type.push(node.find('[name=op]').val());
-                        cond.data.push(d);
-                    });
-                    return cond.data.length ? cond : null;
-                },
-                "object.default": function(){
-                    var obj = this.$data.object;
-                    if ( "tensor" === obj ) return "Tensor";
-                    if ( "tuple" === obj ) return "Tuple";
-                    if ( "permutation" === obj ) return "Permutation";
-                    if ( "combination" === obj ) return "Combination";
-                    if ( "subset" === obj ) return "Subset";
-                    if ( "partition" === obj ) return "Unrestricted";
-                    if ( "composition" === obj ) return "Unrestricted";
-                    if ( "set_partition" === obj ) return "Unrestricted";
-                    return "Default";
-                },
-                "object.tensor": function(){
-                    return this.$data.object === "tensor";
-                },
-                "object.tuple": function(){
-                    return this.$data.object === "tuple";
-                },
-                "object.permutation": function(){
-                    return this.$data.object === "permutation";
-                },
-                "object.combination": function(){
-                    return this.$data.object === "combination";
-                },
-                "object.subset": function(){
-                    return this.$data.object === "subset";
-                },
-                "object.partition": function(){
-                    return this.$data.object === "partition";
-                },
-                "object.composition": function(){
-                    return this.$data.object === "composition";
-                },
-                "object.set_partition": function(){
-                    return this.$data.object === "set_partition";
-                },
-                "object.balanced_paren": function(){
-                    return this.$data.object === "balanced_paren";
-                },
-                "isCombinatorics": function(){
-                    var o = this.$data.object;
-                    return o!=="num2cfrac" && o!=="cfrac2num" && o!=="prime_sieve" && o!=="is_prime" && o!=="gcd" && o!=="diophantines" && o!=="linears" && o!=="prime_factors" && o!=="divisors" && o!=="poly_factors" && o!=="groebner" && o!=="polynomials" && o!=="latin_square" && o!=="magic_square";
-                },
-                "hasMath": function(){
-                    var o = this.$data.object;
-                    return o==="num2cfrac" || o==="cfrac2num" || o==="gcd" || o==="diophantines" || o==="linears" || o==="is_prime" || o==="prime_factors" || o==="poly_factors" || o==="groebner" || o==="polynomials";
-                },
-                "haslex": function(){
-                    return this.$data.object.slice(-7) !== "_square";
-                },
-                "hascolex": function(){
-                    return this.$data.object.slice(-7) !== "_square" && this.$data.object!=="set_partition"; //"composition"!==this.$data.object && "partition"!==this.$data.object;
-                },
-                "hasminimal": function(){
-                    return this.$data.object === "subset";
-                },
-                "hasrand": function(){
-                    return this.$data.object.slice(-7) !== "_square";
-                },
-                "hasN": function(){
-                    return ("tensor"!==this.$data.object || "tensor_inversion"===this.$data.type) && !("gcd"===this.$data.object || "diophantines"===this.$data.object || "linears"===this.$data.object || "poly_factors"===this.$data.object || "groebner"===this.$data.object || "polynomials"===this.$data.object);
-                },
-                "hasK": function(){
-                    var obj = this.$data.object, type = this.$data.type;
-                    return ("combination"===obj || ("tensor"===obj && "tensor_inversion"!==type) || "tuple"===obj) || ("permutation"===obj && ("multiset"===type || "k-permutation"===type || "conditional-k-permutation"===type || "k-derangement"===type || "k-cycle-permutation"===type)) || ("partition"===obj && ("partition_min"===type||"partition_max"===type||"partition_parts"===type||"partition_min_max"===type||"partition_min_parts"===type||"partition_max_parts"===type||"partition_min_max_parts"===type)) || ("composition"===obj && ("composition_min"===type||"composition_max"===type||"composition_parts"===type||"composition_min_max"===type||"composition_min_parts"===type||"composition_max_parts"===type||"composition_min_max_parts"===type)) || ("set_partition"===obj && "set_partition_parts"===type);
-                },
-                "hasAlphabet": function(){
-                    return ("groebner"===this.$data.object) || ("tuple"===this.$data.object && "word"===this.$data.type);
-                },
-                "hasText": function(){
-                    return "gcd"===this.$data.object || "diophantines"===this.$data.object || "linears"===this.$data.object || "poly_factors"===this.$data.object || "groebner"===this.$data.object || "polynomials"===this.$data.object;
-                },
-                "hasConditions": function(){
-                    var ret = "conditional-"===this.$data.type.substr(0,12);
-                    if ( ret && !$conditions.children('tr').length )
-                        $conditions.append($condition_tpl.html());
-                    return ret;
-                },
-                "labelN": function(){
-                    var obj = this.$data.object, type = this.$data.type;
-                    if ( "tuple" === obj ) return "Dimension = ";
-                    if ( "num2cfrac" === obj ) return "Decimal or Rational(num/denom) = ";
-                    if ( "cfrac2num" === obj ) return "Continued Fraction (a0,a1,a2,..) = ";
-                    return "N =";
-                },
-                "labelText": function(){
-                    var obj = this.$data.object;
-                    if ( "gcd" === obj || "groebner" === obj || "diophantines" === obj || "linears" === obj || "polynomials" === obj ) return "Entries = ";
-                    if ( "poly_factors" === obj ) return "Polynomial = ";
-                    return "";
-                },
-                "labelAlphabet": function(){
-                    var obj = this.$data.object;
-                    if ( "groebner" === obj ) return "Variables = ";
-                    return "Alphabet = ";
-                },
-                "placeholderText": function(){
-                    var obj = this.$data.object;
-                    if ( "groebner" === obj ) return "Each row represents a different multivariate polynomial (in tex format). \n<br /> Eg: \n<br /> x*y-(3/2)x^2+2 \n<br /> as: \n<br /> x*y-(3/2)x^2+2";
-                    if ( "gcd" === obj || "polynomials" === obj ) return "Each row represents a different polynomial (in tex format). \n<br /> Eg: \n<br /> -(3/2)x^2+2 \n<br /> as: \n<br /> -(3/2)x^2+2";
-                    if ( "diophantines" === obj ) return "Each row represents a different diophantine equation (coefficients of variables separated by space). \n<br /> Eg: \n<br /> x+y = 2 \n<br /> 2x+3y = 5 \n<br /> as: \n<br /> 1 1 = 2 \n<br /> 2 3 = 5";
-                    if ( "linears" === obj ) return "Each row represents a different equation (coefficients of variables separated by space). \n<br /> Eg: \n<br /> x/2 + y = 2 \n<br /> 2x+3y = 5 \n<br /> as: \n<br /> 1/2 1 = 2 \n<br /> 2 3 = 5";
-                    if ( "poly_factors" === obj ) return "Enter a polynomial (in tex format). \n<br /> Eg: \n<br /> -(3/2)x^2+2 \n<br /> as: \n<br /> -(3/2)x^2+2";
-                    return "";
-                },
-                "labelK": function(){
-                    var obj = this.$data.object, type = this.$data.type;
-                    if ( "tuple" === obj ) return "Base = ";
-                    if ( "tensor" === obj ) return "Dimensions(.. , ..) = ";
-                    if ( "permutation" === obj && "multiset" === type ) return "Multiplicities(.. , ..) = ";
-                    if ( "permutation" === obj && "k-derangement" === type ) return "#Fixed = ";
-                    if ( "permutation" === obj && "k-cycle-permutation" === type ) return "#Cycles = ";
-                    if ( "partition" === obj && "partition_min" === type ) return "Min = ";
-                    if ( "partition" === obj && "partition_max" === type ) return "Max = ";
-                    if ( "partition" === obj && "partition_parts" === type ) return "#Parts = ";
-                    if ( "partition" === obj && "partition_min_max" === type ) return "Min,Max = ";
-                    if ( "partition" === obj && "partition_min_parts" === type ) return "Min,#Parts = ";
-                    if ( "partition" === obj && "partition_max_parts" === type ) return "Max,#Parts = ";
-                    if ( "partition" === obj && "partition_min_max_parts" === type ) return "Min,Max,#Parts = ";
-                    if ( "composition" === obj && "composition_min" === type ) return "Min = ";
-                    if ( "composition" === obj && "composition_max" === type ) return "Max = ";
-                    if ( "composition" === obj && "composition_parts" === type ) return "#Parts = ";
-                    if ( "composition" === obj && "composition_min_max" === type ) return "Min,Max = ";
-                    if ( "composition" === obj && "composition_min_parts" === type ) return "Min,#Parts = ";
-                    if ( "composition" === obj && "composition_max_parts" === type ) return "Max,#Parts = ";
-                    if ( "composition" === obj && "composition_min_max_parts" === type ) return "Min,Max,#Parts = ";
-                    if ( "set_partition" === obj && "set_partition_parts" === type ) return "#Parts = ";
-                    return "K =";
-                },
-                "Text": function(){
-                    return exprout.getValue();
                 }
             },
-            dependencies: {
-                //"object.default": ["object"],
-                //"default_order": ["object","type"],
-                "isCombinatorics": ["object"],
-                "hasMath": ["object"],
-                "hasN": ["object","type"],
-                "hasText": ["object"],
-                "placeholderText": ["object"],
-                "hasK": ["object","type"],
-                "hasAlphabet": ["object","type"],
-                "hasConditions": ["object","type"],
-                "labelN": ["object","type"],
-                "labelText": ["object"],
-                "labelAlphabet": ["object"],
-                "labelK": ["object","type"],
-                "haslex": ["object","type"],
-                "hascolex": ["object","type"],
-                "hasminimal": ["object","type"],
-                "hasrand": ["object","type"]
+            "object": function(key, val/*, pub*/) {
+                this.$data.object = val;
+                if (val !== 'num2cfrac' && val !== 'cfrac2num' && val !== 'prime_sieve' && val !== 'is_prime' && val !== 'prime_factors' && val !== 'divisors' && val !== 'gcd' && val !== 'diophantines' && val !== 'linears' && val !== 'poly_factors' && val !== 'groebner' && val !== 'polynomials')
+                {
+                    this.set("type","default", true);
+                    this.set("order", "", true);
+                }
+            },
+            "Text": function(key, val) {
+                exprout.setValue(val);
             }
         }
-        ,actions: {
-            add_condition: function(evt, $el){
-                $conditions.append($condition_tpl.html());
+        ,getters: {
+            "conditions_dom": function() {
+                var cond = {data:[],pos:[],type:[]};
+                $conditions.children('tr').each(function(){
+                    var node = $(this),
+                        p = $.trim(node.find('[name=pos]').val()),
+                        d = $.trim(node.find('[name=dat]').val())
+                    ;
+                    if ( !d.length || !p.length ) return;
+                    cond.pos.push(parseInt(p,10));
+                    cond.type.push(node.find('[name=op]').val());
+                    cond.data.push(d);
+                });
+                return cond.data.length ? cond : null;
             },
-            remove_condition: function(evt, $el){
-                $($el).closest('tr').remove();
+            "object.default": function() {
+                var obj = this.$data.object;
+                if ("tensor" === obj) return "Tensor";
+                if ("tuple" === obj) return "Tuple";
+                if ("permutation" === obj) return "Permutation";
+                if ("combination" === obj) return "Combination";
+                if ("subset" === obj) return "Subset";
+                if ("partition" === obj) return "Unrestricted";
+                if ("composition" === obj) return "Unrestricted";
+                if ("set_partition" === obj) return "Unrestricted";
+                return "Default";
             },
-            produce: function(evt, $el, data) {
-                var model = this.$model,
-                    conditions = model.get('conditions_dom'),
-                    data = {
-                        action: 'produce',
-                        object: model.get('object'),
-                        type: model.get('type'),
-                        order: model.get('order'),
-                        N: model.get('N'),
-                        K: model.get('K'),
-                        alphabet: model.get('alphabet'),
-                        Text: model.get('Text'),
-                        conditions: conditions
-                    };
-                model.set('conditions',conditions);
-                location.hash = '#' + appRouter.glue(data);
-                produce( model );
+            "object.tensor": function() {
+                return this.$data.object === "tensor";
+            },
+            "object.tuple": function() {
+                return this.$data.object === "tuple";
+            },
+            "object.permutation": function() {
+                return this.$data.object === "permutation";
+            },
+            "object.combination": function() {
+                return this.$data.object === "combination";
+            },
+            "object.subset": function() {
+                return this.$data.object === "subset";
+            },
+            "object.partition": function() {
+                return this.$data.object === "partition";
+            },
+            "object.composition": function() {
+                return this.$data.object === "composition";
+            },
+            "object.set_partition": function() {
+                return this.$data.object === "set_partition";
+            },
+            "object.balanced_paren": function() {
+                return this.$data.object === "balanced_paren";
+            },
+            "isCombinatorics": function() {
+                var o = this.$data.object;
+                return o !== "num2cfrac" && o !== "cfrac2num" && o !== "prime_sieve" && o !== "is_prime" && o !== "gcd" && o !== "diophantines" && o !== "linears" && o !== "prime_factors" && o !== "divisors" && o !== "poly_factors" && o !== "groebner" && o !== "polynomials" && o !== "latin_square" && o !== "magic_square";
+            },
+            "hasMath": function() {
+                var o = this.$data.object;
+                return o === "num2cfrac" || o === "cfrac2num" || o === "gcd" || o === "diophantines" || o === "linears" || o === "is_prime" || o === "prime_factors" || o === "poly_factors" || o === "groebner" || o === "polynomials";
+            },
+            "haslex": function() {
+                return this.$data.object.slice(-7) !== "_square";
+            },
+            "hascolex": function() {
+                return this.$data.object.slice(-7) !== "_square" && this.$data.object!=="set_partition"; //"composition"!==this.$data.object && "partition"!==this.$data.object;
+            },
+            "hasminimal": function() {
+                return this.$data.object === "subset";
+            },
+            "hasrand": function() {
+                return this.$data.object.slice(-7) !== "_square";
+            },
+            "hasN": function() {
+                return ("tensor" !== this.$data.object || "tensor_inversion" === this.$data.type) && !("gcd" === this.$data.object || "diophantines" === this.$data.object || "linears" === this.$data.object || "poly_factors" === this.$data.object || "groebner" === this.$data.object || "polynomials" === this.$data.object);
+            },
+            "hasK": function() {
+                var obj = this.$data.object, type = this.$data.type;
+                return ("combination" === obj || ("tensor" === obj && "tensor_inversion" !== type) || "tuple" === obj) || ("permutation" === obj && ("multiset" === type || "k-permutation" === type || "conditional-k-permutation" === type || "k-derangement" === type || "k-cycle-permutation" === type)) || ("partition" === obj && ("partition_min" === type || "partition_max" === type || "partition_parts" === type || "partition_min_max" === type || "partition_min_parts" === type || "partition_max_parts" === type || "partition_min_max_parts" === type)) || ("composition" === obj && ("composition_min" === type || "composition_max" === type || "composition_parts" === type || "composition_min_max" === type || "composition_min_parts" === type || "composition_max_parts" === type || "composition_min_max_parts" === type)) || ("set_partition" === obj && "set_partition_parts" === type);
+            },
+            "hasAlphabet": function() {
+                return ("groebner" === this.$data.object) || ("tuple" === this.$data.object && "word" === this.$data.type);
+            },
+            "hasText": function() {
+                return "gcd" === this.$data.object || "diophantines" === this.$data.object || "linears" === this.$data.object || "poly_factors" === this.$data.object || "groebner" === this.$data.object || "polynomials" === this.$data.object;
+            },
+            "hasConditions": function() {
+                var ret = "conditional-"===this.$data.type.substr(0,12);
+                if (ret && !$conditions.children('tr').length)
+                    $conditions.append($condition_tpl.html());
+                return ret;
+            },
+            "labelN": function() {
+                var obj = this.$data.object, type = this.$data.type;
+                if ("tuple" === obj) return "Dimension = ";
+                if ("num2cfrac" === obj) return "Decimal or Rational(num/denom) = ";
+                if ("cfrac2num" === obj) return "Continued Fraction (a0,a1,a2,..) = ";
+                return "N =";
+            },
+            "labelText": function() {
+                var obj = this.$data.object;
+                if ("gcd" === obj || "groebner" === obj || "diophantines" === obj || "linears" === obj || "polynomials" === obj) return "Entries = ";
+                if ("poly_factors" === obj) return "Polynomial = ";
+                return "";
+            },
+            "labelAlphabet": function() {
+                var obj = this.$data.object;
+                if ("groebner" === obj) return "Variables = ";
+                return "Alphabet = ";
+            },
+            "placeholderText": function() {
+                var obj = this.$data.object;
+                if ("groebner" === obj) return "Each row represents a different multivariate polynomial (in tex format). \n<br /> Eg: \n<br /> x*y-(3/2)x^2+2 \n<br /> as: \n<br /> x*y-(3/2)x^2+2";
+                if ("gcd" === obj || "polynomials" === obj) return "Each row represents a different polynomial (in tex format). \n<br /> Eg: \n<br /> -(3/2)x^2+2 \n<br /> as: \n<br /> -(3/2)x^2+2";
+                if ("diophantines" === obj) return "Each row represents a different diophantine equation (coefficients of variables separated by space). \n<br /> Eg: \n<br /> x+y = 2 \n<br /> 2x+3y = 5 \n<br /> as: \n<br /> 1 1 = 2 \n<br /> 2 3 = 5";
+                if ("linears" === obj) return "Each row represents a different equation (coefficients of variables separated by space). \n<br /> Eg: \n<br /> x/2 + y = 2 \n<br /> 2x+3y = 5 \n<br /> as: \n<br /> 1/2 1 = 2 \n<br /> 2 3 = 5";
+                if ("poly_factors" === obj) return "Enter a polynomial (in tex format). \n<br /> Eg: \n<br /> -(3/2)x^2+2 \n<br /> as: \n<br /> -(3/2)x^2+2";
+                return "";
+            },
+            "labelK": function() {
+                var obj = this.$data.object, type = this.$data.type;
+                if ("tuple" === obj) return "Base = ";
+                if ("tensor" === obj) return "Dimensions(.. , ..) = ";
+                if ("permutation" === obj && "multiset" === type) return "Multiplicities(.. , ..) = ";
+                if ("permutation" === obj && "k-derangement" === type) return "#Fixed = ";
+                if ("permutation" === obj && "k-cycle-permutation" === type) return "#Cycles = ";
+                if ("partition" === obj && "partition_min" === type) return "Min = ";
+                if ("partition" === obj && "partition_max" === type) return "Max = ";
+                if ("partition" === obj && "partition_parts" === type) return "#Parts = ";
+                if ("partition" === obj && "partition_min_max" === type) return "Min,Max = ";
+                if ("partition" === obj && "partition_min_parts" === type) return "Min,#Parts = ";
+                if ("partition" === obj && "partition_max_parts" === type) return "Max,#Parts = ";
+                if ("partition" === obj && "partition_min_max_parts" === type) return "Min,Max,#Parts = ";
+                if ("composition" === obj && "composition_min" === type) return "Min = ";
+                if ("composition" === obj && "composition_max" === type) return "Max = ";
+                if ("composition" === obj && "composition_parts" === type) return "#Parts = ";
+                if ("composition" === obj && "composition_min_max" === type) return "Min,Max = ";
+                if ("composition" === obj && "composition_min_parts" === type) return "Min,#Parts = ";
+                if ("composition" === obj && "composition_max_parts" === type) return "Max,#Parts = ";
+                if ("composition" === obj && "composition_min_max_parts" === type) return "Min,Max,#Parts = ";
+                if ("set_partition" === obj && "set_partition_parts" === type) return "#Parts = ";
+                return "K =";
+            },
+            "Text": function(){
+                return exprout.getValue();
             }
+        },
+        dependencies: {
+            //"object.default": ["object"],
+            //"default_order": ["object","type"],
+            "isCombinatorics": ["object"],
+            "hasMath": ["object"],
+            "hasN": ["object","type"],
+            "hasText": ["object"],
+            "placeholderText": ["object"],
+            "hasK": ["object","type"],
+            "hasAlphabet": ["object","type"],
+            "hasConditions": ["object","type"],
+            "labelN": ["object","type"],
+            "labelText": ["object"],
+            "labelAlphabet": ["object"],
+            "labelK": ["object","type"],
+            "haslex": ["object","type"],
+            "hascolex": ["object","type"],
+            "hasminimal": ["object","type"],
+            "hasrand": ["object","type"]
         }
-    });
+    }
+    ,actions: {
+        add_condition: function(evt, $el){
+            $conditions.append($condition_tpl.html());
+        },
+        remove_condition: function(evt, $el){
+            $($el).closest('tr').remove();
+        },
+        produce: function(evt, $el, data) {
+            var model = this.$model,
+                conditions = model.get('conditions_dom'),
+                data = {
+                    action: 'produce',
+                    object: model.get('object'),
+                    type: model.get('type'),
+                    order: model.get('order'),
+                    N: model.get('N'),
+                    K: model.get('K'),
+                    alphabet: model.get('alphabet'),
+                    Text: model.get('Text'),
+                    conditions: conditions
+                };
+            model.set('conditions',conditions);
+            location.hash = '#' + appRouter.glue(data);
+            produce(model);
+        }
+    }
+});
 
-    $window
-        .on('resize', function( evt ) {
-            var v = output.style.visibility,
-                d = output.style.display;
-            output.style.visibility = 'hidden';
-            output.style.display = 'block';
-            width = output.clientWidth;
-            height = output.clientHeight;
-            output.style.display = d;
-            output.style.visibility = v;
-            out.setSize( width, height );
-        })
-        .one('hashchange', function( evt ) {
-            appRouter.route( location.hash );
-        })
-        .trigger( 'hashchange' )
-    ;
+$window
+    .on('resize', function(evt) {
+        var v = output.style.visibility,
+            d = output.style.display;
+        output.style.visibility = 'hidden';
+        output.style.display = 'block';
+        width = output.clientWidth;
+        height = output.clientHeight;
+        output.style.display = d;
+        output.style.visibility = v;
+        out.setSize(width, height);
+    })
+    .one('hashchange', function(evt) {
+        appRouter.route(location.hash);
+    })
+    .trigger('hashchange')
+;
 });
 //]]></script>
 

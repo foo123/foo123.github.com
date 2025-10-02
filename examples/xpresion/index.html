@@ -1,21 +1,8 @@
 <!doctype html>
-<!--[if lt IE 7]>
-<html lang="en" class="ie lt-ie9 lt-ie8 lt-ie7">
-<![endif]-->
-<!--[if IE 7]>
-<html lang="en" class="ie lt-ie9 lt-ie8">
-<![endif]-->
-<!--[if IE 8]>
-<html lang="en" class="ie lt-ie9">
-<![endif]-->
-<!--[if gt IE 8]><!-->
 <html lang="en" class="no-ie">
-<!--<![endif]-->
 <head>
 <title>Xpresion Expression Parser Engine</title>
-
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 <meta name="description" content="Xpresion Expression Parser Engine" />
 <meta property="og:title" content="Xpresion Expression Parser Engine">
@@ -23,10 +10,7 @@
 <meta property="og:image" content="https://foo123.github.io/thumbs/xpresion.jpg">
 <meta property="og:url" content="https://foo123.github.io/examples/xpresion/">
 <meta name="twitter:card" content="summary">
-
-
 <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-
 <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
 <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
 <link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
@@ -93,27 +77,19 @@
     position:relative;
 }
 </style>
-
-
-
-
 <script src="../common/js/codemirror/codemirror.min.js"></script>
 <script src="../common/js/codemirror/mode/javascript.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
 <script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
 <script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
-
 <script type="text/javascript" src="../common/js/require.js"></script>
 <script type="text/javascript" src="../common/js/require-config.js"></script>
-
-
-
 </head>
 <body class="responsive-864-container">
     <span id="forkongithub"><a href="https://github.com/foo123/Xpresion">Xpresed on GitHub</a></span>
-    
-    
+
+
 <header id="header">
     <h1>Xpresion</h1>
     <i>A simple and flexible Expression Parser Engine for PHP, Python, Node/XPCOM/JS</i>
@@ -121,8 +97,8 @@
 
 <br /><br />
 
-    
-    
+
+
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
         <strong>Xpresion ({xpresion_version}):</strong>
@@ -132,23 +108,23 @@
         <br />
         <textarea id="input">1+2+$v</textarea>
     </div>
-    
+
     <div class="fluid col-1-1" style="margin-top:10px">
         <strong>Variables (JSON):</strong><br />
         <textarea id="vars">{"v":3}</textarea>
     </div>
-    
+
     <div class="fluid col-1-1" style="margin-top:10px">
         <strong>Output:</strong><br />
         <textarea id="output"></textarea>
     </div>
 </div>
 
-    
-    
+
+
     <footer id="footer">
     <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
-    
+
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 
     <div class="showcase">Module management by <a href="http://requirejs.org/" target="_blank">RequireJS</a></div>
@@ -158,28 +134,28 @@
     <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
     </footer>
     <br /><br />
-    
-    
+
+
 <script type="text/javascript">//<![CDATA[
 require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'Xpresion'],
-    function( $, $R, $MV, _, __, Xpresion ) {
+    function($, $R, $MV, _, __, Xpresion) {
     "use strict";
-    
-    Xpresion.defaultConfiguration( );
-    
-    var undef=undefined, $window = $(window), $screen = $('#screen'), 
+
+    Xpresion.defaultConfiguration();
+
+    var undef=undefined, $window = $(window), $screen = $('#screen'),
         input = document.getElementById('input'),
         output = document.getElementById('output'),
         vars = document.getElementById('vars'),
         iEditor, oEditor, vEditor,
-        appTask, appModel, appView, appRouter, 
+        appTask, appModel, appView, appRouter,
         width = output.clientWidth, height,
         toJSON = JSON.stringify, fromJSON = JSON.parse,
         expr = null
     ;
-    
-    $MV.jquery( $ );
-    
+
+    $MV.jquery($);
+
     height = input.clientHeight;
     iEditor = CodeMirror.fromTextArea(input, {
         mode: "text",
@@ -192,7 +168,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     iEditor.setSize( width, height );
-    
+
     height = output.clientHeight;
     oEditor = CodeMirror.fromTextArea(output, {
         mode: "application/json",
@@ -205,7 +181,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     oEditor.setSize( width, height );
-        
+
     vEditor = CodeMirror.fromTextArea(vars, {
         mode: "application/json",
         lineWrapping: true,
@@ -217,7 +193,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     vEditor.setSize( width, height );
-        
+
     appTask = {
         debug: function( appModel ) {
             var input = appModel.get('expr'), error;
@@ -248,7 +224,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
                 oEditor.setValue("");
             }
         },
-        
+
         evaluate: function( appModel ) {
             var input = appModel.get('expr'), error;
             if ( !expr || expr.source !== input )
@@ -260,7 +236,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
                     error = err;
                 }
             }
-            
+
             if ( expr && !error )
             {
                 oEditor.setValue([
@@ -279,31 +255,31 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
             }
         }
     };
-    
-    appRouter = new $R( );
-    appRouter.one({route:'#{%ALL%:hash}', handler:function( params ){
+
+    appRouter = new $R();
+    appRouter.one({route:'#{%ALL%:hash}', handler:function(params) {
         params = params.data;
-        params = params && params.hash ? appRouter.unglue( params.hash ) : null;
-        if ( params && params.action && appTask.hasOwnProperty(params.action) )
+        params = params && params.hash ? appRouter.unglue(params.hash.split('+').join('%20')) : null;
+        if (params && params.action && appTask.hasOwnProperty(params.action))
         {
-            var appModel = $screen.modelview( 'model' );
-            if ( params.expr ) appModel.set('expr', params.expr, 1);
-            if ( params.data && params.data.length ) vEditor.setValue(params.data);
-            appTask[ params.action ]( appModel );
+            var appModel = $screen.modelview('model');
+            if (params.expr) appModel.set('expr', params.expr, 1);
+            if (params.data && params.data.length) vEditor.setValue(params.data);
+            setTimeout(function() {appTask[params.action](appModel);}, 10);
         }
     }});
-    
+
     $screen.modelview({
         //autobind: true
         livebind: 'text'
-        
+
         ,model: {
             id: 'model'
-            ,data: { 
+            ,data: {
                 //expr: null
                 xpresion_version: 'v.'+Xpresion.VERSION
             }
-            ,types: { 
+            ,types: {
                 //expr: $MV.Type.Cast.STR
             }
             ,getters: {
@@ -317,7 +293,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
                 }
             }
         }
-        ,actions: { 
+        ,actions: {
             debug: function(evt, $el, data) {
                 var model=this.$model;
                 location.hash = '#' + appRouter.glue({
@@ -327,7 +303,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
                 });
                 appTask.debug( model );
             },
-            
+
             evaluate: function(evt, $el, data) {
                 var model=this.$model;
                 location.hash = '#' + appRouter.glue({
@@ -339,7 +315,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
             }
         }
     });
-        
+
     $window
         .on('resize', function( evt ) {
             var v = output.style.visibility,
@@ -351,32 +327,32 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
             ;
             input.style.visibility = 'hidden';
             input.style.display = 'block';
-            width = input.clientWidth; 
+            width = input.clientWidth;
             height = input.clientHeight;
             input.style.display = di;
             input.style.visibility = vi;
             iEditor.setSize( width, height );
-            
+
             vars.style.visibility = 'hidden';
             vars.style.display = 'block';
-            width = vars.clientWidth; 
+            width = vars.clientWidth;
             height = vars.clientHeight;
             vars.style.display = d2;
             vars.style.visibility = v2;
             vEditor.setSize( width, height );
-            
+
             output.style.visibility = 'hidden';
             output.style.display = 'block';
-            width = output.clientWidth; 
+            width = output.clientWidth;
             height = output.clientHeight;
             output.style.display = d;
             output.style.visibility = v;
             oEditor.setSize( width, height );
         })
-        .one('hashchange', function( evt ) {
-            appRouter.route( location.hash );
+        .one('hashchange', function(evt) {
+            appRouter.route(location.hash);
         })
-        .trigger( 'hashchange' )
+        .trigger('hashchange')
     ;
 });
 //]]></script>

@@ -454,10 +454,23 @@ function doTest(model)
     args.unshift(asorted);
     showData = (N < 50);
     setTimeout(function() {
-        $S.vTime(function(tms) {
-            //
-            // show results
-            //
+        var start = performance.now();
+        sortingFunction.apply($S, args);
+        var end = performance.now();
+        //
+        // show results
+        //
+        setTimeout(function() {
+            model.set('result', {
+                    showData: showData,
+                    isSorted: asorted.isSorted(),
+                    original: showData ? a.toString() : '',
+                    sorted: showData ? asorted.toString() : '',
+                    tms: (end-start)
+                }, 1);
+            $console.removeClass('processing');
+        }, 100);
+        /*$S.vTime(function(tms) {
             model.set('result', {
                     showData: showData,
                     isSorted: asorted.isSorted(),
@@ -466,8 +479,8 @@ function doTest(model)
                     tms: tms
                 }, 1);
             $console.removeClass('processing');
-        }, sortingFunction, args)
-    }, 40);
+        }, sortingFunction, args)*/
+    }, 100);
 
     /*new Benchmark.Suite()
         // add tests

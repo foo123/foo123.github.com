@@ -1,19 +1,7 @@
 <!doctype html>
-<!--[if lt IE 7]>
-<html lang="en" class="ie lt-ie9 lt-ie8 lt-ie7">
-<![endif]-->
-<!--[if IE 7]>
-<html lang="en" class="ie lt-ie9 lt-ie8">
-<![endif]-->
-<!--[if IE 8]>
-<html lang="en" class="ie lt-ie9">
-<![endif]-->
-<!--[if gt IE 8]><!-->
 <html lang="en" class="no-ie">
-<!--<![endif]-->
 <head>
 <title>Regex Composer</title>
-
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
@@ -23,10 +11,7 @@
 <meta property="og:image" content="https://foo123.github.io/thumbs/yo-regex-composer.jpg">
 <meta property="og:url" content="https://foo123.github.io/examples/regex-composer/">
 <meta name="twitter:card" content="summary">
-
-
 <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-
 <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
 <link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
 <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
@@ -96,12 +81,12 @@
 }
 
 /* Define Accordion box */
-.accordion { 
-    overflow: hidden; 
-    margin: 10px auto; 
-    color: #efefef; 
-    background: #414141; 
-    padding: 10px; 
+.accordion {
+    overflow: hidden;
+    margin: 10px auto;
+    color: #efefef;
+    background: #414141;
+    padding: 10px;
 }
 .accordion-ctrl {
     display: inline-block;
@@ -112,45 +97,45 @@
 /* General Accordion */
 
 /* set style of closed slide */
-.accordion section { 
-    overflow: hidden; 
-    cursor: pointer; 
-    color: #333; 
-    background: #333; 
-    margin: 3px; 
-    max-height: 40px; 
+.accordion section {
+    overflow: hidden;
+    cursor: pointer;
+    color: #333;
+    background: #333;
+    margin: 3px;
+    max-height: 40px;
 }
-.accordion section > .heading { 
-    position: relative; 
+.accordion section > .heading {
+    position: relative;
     padding: 8px 10px;
     display: block;
-    font-size: 16px; 
+    font-size: 16px;
     font-weight: normal;
-    color: #eee; 
+    color: #eee;
     text-decoration: none !important;
     border: 0 !important; outline: 0 !important;
     background: none !important;
     cursor: pointer !important;
 }
-.accordion section:hover { 
+.accordion section:hover {
     background: #444;
 }
 
 /* Set style of open slide */
 .accordion .accordion-ctrl:checked + section,
-.accordion section:target { 
-    background: #efefef; 
-    padding: 10px; 
-    max-height: 600px; 
-    -webkit-transition: max-height 0.4s ease-in; 
-    -moz-transition: max-height 0.4s ease-in; 
-    -ms-transition: max-height 0.4s ease-in; 
-    -o-transition: max-height 0.4s ease-in; 
-    transition: max-height 0.4s ease-in; 
+.accordion section:target {
+    background: #efefef;
+    padding: 10px;
+    max-height: 600px;
+    -webkit-transition: max-height 0.4s ease-in;
+    -moz-transition: max-height 0.4s ease-in;
+    -ms-transition: max-height 0.4s ease-in;
+    -o-transition: max-height 0.4s ease-in;
+    transition: max-height 0.4s ease-in;
 }
 .accordion .accordion-ctrl:checked + section:hover,
-.accordion section:target:hover { 
-    background: #efefef; 
+.accordion section:target:hover {
+    background: #efefef;
 }
 .accordion .accordion-ctrl:checked + section > .heading,
 .accordion section:target .heading {
@@ -161,19 +146,15 @@
 /* End General Accordion */
 
 /* Vertical Accordion */
-.accordion.vertical section { 
-    width: 100%; 
-    -webkit-transition: max-height 0.4s ease-out; 
-    -moz-transition: max-height 0.4s ease-out; 
-    -ms-transition: max-height 0.4s ease-out; 
-    -o-transition: max-height 0.4s ease-out; 
-    transition: max-height 0.4s ease-out; 
+.accordion.vertical section {
+    width: 100%;
+    -webkit-transition: max-height 0.4s ease-out;
+    -moz-transition: max-height 0.4s ease-out;
+    -ms-transition: max-height 0.4s ease-out;
+    -o-transition: max-height 0.4s ease-out;
+    transition: max-height 0.4s ease-out;
 }
 </style>
-
-
-
-
 <script src="../common/js/codemirror/codemirror.min.js"></script>
 <script src="../common/js/codemirror/mode/javascript.js"></script>
 <script src="../common/js/codemirror/addon/lint/lint.js"></script>
@@ -184,17 +165,13 @@
 <script src="../common/js/codemirror_grammar.min.js"></script>
 <script src="../common/js/codemirror/grammar/define_grammar_mode.js"></script>
 <script src="../common/js/codemirror/grammar/regexp.js"></script>
-
 <script type="text/javascript" src="../common/js/require.js"></script>
 <script type="text/javascript" src="../common/js/require-config.js"></script>
-
-
-
 </head>
 <body class="responsive-864-container">
     <span id="forkongithub"><a href="https://github.com/foo123/RegexAnalyzer">Play on GitHub</a></span>
-    
-    
+
+
 <header id="header">
     <h1>Regex Composer</h1>
     <i>A generic &amp; simple Regular Expression Analyzer &amp; Composer for PHP, Python, Node.js / Browser / XPCOM Javascript</i>
@@ -202,8 +179,8 @@
 
 <br /><br />
 
-    
-    
+
+
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
         <strong>Composed Regular Expression ({regex_version}):</strong>
@@ -211,7 +188,7 @@
         <br />
         <textarea id="regex"></textarea>
     </div>
-        
+
     <div class="fluid col-1-1" style="margin-top:10px">
         <div class="fluid col-3-5">
             <strong>Code:</strong><br /><br />
@@ -454,7 +431,7 @@
                 <p>
                     <strong>&quot;x(?&lt;=y)&quot;</strong> Matches 'x' only if 'x' is preceded by 'y'. This is called a lookabehind.
                     <br /><br />
-                    For example, <code>/Jack(&lt;?=Sprat)/</code> matches 'Jack' only if it is preceded by 'Sprat'. 
+                    For example, <code>/Jack(&lt;?=Sprat)/</code> matches 'Jack' only if it is preceded by 'Sprat'.
                     <br /><br />
                     <strong>&quot;x(?&lt;!y)&quot;</strong> Matches 'x' only if 'x' is not preceded by 'y'. This is called a negated lookabehind.
                     <br /><br />
@@ -540,11 +517,11 @@
     </div>
 </div>
 
-    
-    
+
+
     <footer id="footer">
     <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
-    
+
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 <div class="showcase">Regular Expression syntax highlight mode by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
 <div class="showcase">Regular Expressions Documentation by <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank">MDN</a></div>
@@ -556,8 +533,8 @@
     <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
     </footer>
     <br /><br />
-    
-    
+
+
 <script type="text/javascript">//<![CDATA[
 require(['jQuery', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'Regex', 'Dromeo'],
     function($, ModelView, _, __, Regex, Router) {
@@ -568,7 +545,7 @@ require(['jQuery', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'Regex
         width = code.clientWidth, height = code.clientHeight,
         appRouter, fromJSON = JSON.parse, TAB = "    "
     ;
-    
+
     function esc_quote( s/*, q*/ )
     {
         var q = '"';
@@ -578,10 +555,10 @@ require(['jQuery', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'Regex
     {
         if ( !node || !node.type ) return '';
         if ( null == tab ) tab = "";
-        
+
         var code = '', type = node.type, fl = node.flags||{},
             i, l = node.value.length, q, g, tab2 = tab + TAB, check;
-        
+
         if ( "Sequence" === type )
         {
             for(i=0; i<l; i++)
@@ -707,9 +684,9 @@ require(['jQuery', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'Regex
         }
         return code;
     }
-    
-    ModelView.jquery( $ );
-    
+
+    ModelView.jquery($);
+
     oEditor = CodeMirror.fromTextArea(regex, {
         mode: "regexp",
         lineWrapping: true,
@@ -724,7 +701,7 @@ require(['jQuery', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'Regex
         gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     oEditor.setSize(owidth, oheight);
-    
+
     codeEditor = CodeMirror.fromTextArea(code, {
         mode: "javascript",
         lineWrapping: true,
@@ -736,30 +713,30 @@ require(['jQuery', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'Regex
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     codeEditor.setSize(width, height);
-        
-    appRouter = new Router( );
-    appRouter.one({route:'#{%ALL%:hash}', handler:function( params ){
+
+    appRouter = new Router();
+    appRouter.one({route:'#{%ALL%:hash}', handler:function(params) {
         params = params.data;
-        params = params && params.hash ? appRouter.unglue( params.hash ) : null;
-        if ( params && params.action && ('compose' === params.action) && !!params.ast )
+        params = params && params.hash ? appRouter.unglue(params.hash.split('+').join('%20')) : null;
+        if (params && params.action && ('compose' === params.action) && !!params.ast)
         {
-            codeEditor.setValue( ast2code(fromJSON(params.ast)) + "\n\n" + '.compose("'+(params.fl||'')+'")' );
+            codeEditor.setValue(ast2code(fromJSON(params.ast)) + "\n\n" + '.compose("'+(params.fl||'')+'")');
             $('#compose').trigger('click');
         }
     }});
-    
+
     $screen.modelview({
         autobind: false
         ,livebind: 'text'
-        
+
         ,model: {
             id: 'model'
-            ,data: { 
+            ,data: {
                 regex_version: 'v.'+Regex.VERSION,
                 regex_code: ''
                 //regex: ""
             }
-            ,types: { 
+            ,types: {
                 //regex: $.ModelView.Type.Cast.STR
             }
             ,getters: {
@@ -773,13 +750,13 @@ require(['jQuery', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'Regex
                 }
             }
         }
-        ,actions: { 
+        ,actions: {
             compose: function(evt, $el, data) {
                 var regex, e, model = this.$model;
-                
+
                 try{
                     regex = new Function("Composer", "\"use strict\"; return new Composer()"+codeEditor.getValue( )+";")( Regex.Composer ).pattern.toString();
-                } catch (e) { 
+                } catch (e) {
                     regex = '/(?# '+e.toString()+' )/';//"Error Occured!";
                     console.error(e.toString());
                 }
@@ -791,7 +768,7 @@ require(['jQuery', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'Regex
             }
         }
     });
-    
+
     $(window)
         .on('resize', function() {
             var v = code.style.visibility,
@@ -800,26 +777,26 @@ require(['jQuery', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'Regex
                 od = regex.style.display;
             regex.style.visibility = 'hidden';
             regex.style.display = 'block';
-            owidth = regex.clientWidth; 
+            owidth = regex.clientWidth;
             oheight = regex.clientHeight;
             regex.style.display = od;
             regex.style.visibility = ov;
             oEditor.setSize(owidth, oheight);
-            
+
             code.style.visibility = 'hidden';
             code.style.display = 'block';
-            width = code.clientWidth; 
+            width = code.clientWidth;
             height = code.clientHeight;
             code.style.display = d;
             code.style.visibility = v;
             codeEditor.setSize(width, height);
         })
-        .one('hashchange', function( evt ) {
-            appRouter.route( location.hash );
+        .one('hashchange', function(evt) {
+            appRouter.route(location.hash);
         })
-        .trigger( 'hashchange' )
+        .trigger('hashchange')
     ;
-});    
+});
 //]]></script>
 
 </body>
