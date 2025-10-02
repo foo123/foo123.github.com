@@ -235,7 +235,7 @@ input,select,textarea {
             <b style="display:inline-block;width:80px">Result</b>:&nbsp;{result.sorted}<br>
             <br><br>
         </div>
-        <strong>Time Taken = {result.tms} (ms)</strong>
+        <b>Time Taken = {result.tms} (ms)</b>
         <br><br>
         <b>Reality Check:</b>&nbsp;&nbsp;
         <span mv-model="result.isSorted" mv-model-evt mv-on-model-change="show">
@@ -391,7 +391,28 @@ function prepareTestData($S, N, dtype, stype)
 
     return a;
 }
-
+function time(f, repeat)
+{
+    var i, t0, t1, t = 0;
+    if (0 < repeat)
+    {
+        for (i=1; i<=repeat; ++i)
+        {
+            t0 = performance.now();
+            f();
+            t1 = performance.now();
+            t += t1 - t0;
+        }
+        return t / repeat;
+    }
+    else
+    {
+        t0 = performance.now();
+        f();
+        t1 = performance.now();
+        return t1 - t0;
+    }
+}
 function doTest(model)
 {
     //console.log('doTest');
@@ -454,9 +475,7 @@ function doTest(model)
     args.unshift(asorted);
     showData = (N < 50);
     setTimeout(function() {
-        var start = performance.now();
-        sortingFunction.apply($S, args);
-        var end = performance.now();
+        var tms = time(function() {sortingFunction.apply($S, args);});
         //
         // show results
         //
@@ -466,7 +485,7 @@ function doTest(model)
                     isSorted: asorted.isSorted(),
                     original: showData ? a.toString() : '',
                     sorted: showData ? asorted.toString() : '',
-                    tms: (end-start)
+                    tms: tms.toFixed(4)
                 }, 1);
             $console.removeClass('processing');
         }, 100);

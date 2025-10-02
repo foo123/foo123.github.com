@@ -170,6 +170,7 @@ input,select,textarea {
     <div id="result">
         <b style="display:inline-block;width:70px">Pattern</b>:&nbsp;&nbsp;<i style="white-space:pre-wrap">{algorithm.pattern}</i><br>
         <b style="display:inline-block;width:70px">Text</b>:&nbsp;&nbsp;<span style="white-space:pre-wrap;font-style:italic" mv-model="algorithm.matchedtext" mv-model-evt mv-on-model-change="html"></span><br><br>
+        <b>Time Taken = {result.tms} (ms)</b><br><br>
         <span mv-model="result.matched" mv-model-evt mv-on-model-change="show">
             <span style="color:green;font-weight:bold;font-size:20px;">&#10003;&nbsp;&nbsp;</span>
             <b>Matched at position {result.pos}</b>
@@ -208,6 +209,28 @@ var $window = $(window),
 $MV.jquery($);
 $P.Matchy($M);
 
+function time(f, repeat)
+{
+    var i, t0, t1, t = 0;
+    if (0 < repeat)
+    {
+        for (i=1; i<=repeat; ++i)
+        {
+            t0 = performance.now();
+            f();
+            t1 = performance.now();
+            t += t1 - t0;
+        }
+        return t / repeat;
+    }
+    else
+    {
+        t0 = performance.now();
+        f();
+        t1 = performance.now();
+        return t1 - t0;
+    }
+}
 function doTest(model)
 {
     //
@@ -231,14 +254,16 @@ function doTest(model)
     $console.addClass('processing');
 
     setTimeout(function() {
-        result = matcher.match(text);
-        model.set('algorithm.matchedtext', -1 !== result ? (text.slice(0, result)+'<span style="color:red">'+text.slice(result, result+pattern.length)+'</span>'+text.slice(result+pattern.length)) : text);
+        var tms = time(function() {
+            result = matcher.match(text);
+        }, 1000);
+        model.set('algorithm.matchedtext', -1 !== result ? (text.slice(0, result)+'<span style="color:red">'+text.slice(result, result+pattern.length)+'</span>'+text.slice(result+pattern.length)) : text, 1);
         matcher = null;
         setTimeout(function() {
             //
             // show results
             //
-            model.set('result', {matched: (-1 < result), pos: result}, 1);
+            model.set('result', {matched: (-1 < result), pos: result, tms: tms.toFixed(4)}, 1);
             $console.removeClass('processing');
         }, 100);
     }, 100);
@@ -266,7 +291,7 @@ $panel.modelview({
                 reflink: $P['NaiveMatcher'].reference,
                 desc: $P['NaiveMatcher'].description
             },
-            result: {matched: true, pos: 4}
+            result: {matched: true, pos: 4, tms: 0}
         },
 
         types: {
