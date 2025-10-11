@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html><head>
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Gradients without Canvas</title>
+<meta name="viewport" content="width=device-width">
+<meta name="description" content="Linear gradient, radial gradient, conic gradient and elliptic gradient without canvas" />
+<meta property="og:image" content="https://foo123.github.io/thumbs/gradient.png">
+<meta property="og:url" content="https://foo123.github.io/examples/gradient/">
+<meta name="twitter:card" content="summary">
+<style type="text/css">
+body {
+    font-size: 16px;
+    font-family: Arial, san-serif;
+}
+#container {
+    position: relative;
+    width: 100%;
+    height: 1000px;
+    padding: 0;
+    margin: 0 auto;
+    overflow: visible;
+}
+.button {
+    position: relative;
+    display: inline-block;
+    padding: 8px 12px;
+    background: white;
+    color: black;
+    border: 1px solid #676767;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 1px;
+    margin-right: 10px;
+}
+.button:hover {
+    border-width: 2px;
+    margin: 0;
+    margin-right: 9px;
+}
+canvas {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    margin-right: 10px
+    margin-bottom: 10px;
+}
+h4 {
+    display: block;
+}
+#forkongithub  a {
+    background: #aa0000;
+    color: #fff;
+    text-decoration: none;
+    font-family: arial, sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.4rem;
+    position: relative;
+    transition: all 0.5s;
+}
+#forkongithub a:hover {
+    background: #aa0000;
+    color: #fff;
+}
+#forkongithub a::before, #forkongithub a::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    z-index: 100;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub a::after
+{
+    bottom: 1px;
+    top: auto;
+}
+@media screen and (min-width:800px) {
+    #forkongithub {
+        position: absolute;
+        display: block;
+        z-index: 100;
+        top: 0;
+        right: 0;
+        width: 200px;
+        overflow: hidden;
+        height: 200px;
+    }
+    #forkongithub a {
+        width: 200px;
+        position: absolute;
+        top: 60px;
+        right: -60px;
+        transform: rotate(45deg);
+        box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    }
+}
+</style>
+</head><body>
+<span id="forkongithub"><a href="https://github.com/foo123/Gradient">Play with me on GitHub</a></span>
+<h1>Gradients and Patterns (<span id="ver"></span>)</h1>
+<div id="container">
+<h4>Linear:</h4>
+<canvas id="linear1" width="200" height="200"></canvas>
+<canvas id="linear2" width="200" height="200"></canvas>
+<h4>Radial:</h4>
+<canvas id="radial1" width="200" height="200"></canvas>
+<canvas id="radial2" width="200" height="200"></canvas>
+<h4>Elliptic:</h4>
+<canvas id="elliptic1" width="200" height="200"></canvas>
+<canvas id="elliptic2" width="200" height="200"></canvas>
+<h4>Elliptic Rotated:</h4>
+<canvas id="elliptic3" width="200" height="200"></canvas>
+<canvas id="elliptic4" width="200" height="200"></canvas>
+<h4>Conic:</h4>
+<canvas id="conic1" width="200" height="200"></canvas>
+<canvas id="conic2" width="200" height="200"></canvas>
+</div>
+<script src="../common/js/Gradient.min.js"></script>
+<script>
+(function() {
+"use strict";
+document.getElementById('ver').textContent = 'v.'+Gradient.VERSION;
+const w = 200, h = 200;
+const Matrix = Gradient.Matrix;
+
+function addColorStops(gradient)
+{
+    const colors = ['red', 'yellow', 'green', 'blue'];
+    const stops = [0.0, 0.33, 0.66, 1.0];
+    stops.forEach((s, i) => {
+        gradient.addColorStop(s, colors[i]);
+    });
+    return gradient;
+}
+function fill_transformed_rect(ctx, x, y, w, h)
+{
+    const m = ctx.getTransform();
+    const m2 = (new Matrix(m.a, m.c, m.e, m.b, m.d, m.f)).inv();
+    const p1 = m2.transform(x, y),
+        p2 = m2.transform(x+w, y),
+        p3 = m2.transform(x+w, y+h),
+        p4 = m2.transform(x, y+h);
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.lineTo(p3.x, p3.y);
+    ctx.lineTo(p4.x, p4.y);
+    ctx.closePath();
+    ctx.fill();
+}
+function drawLinearGradient(x1, y1, x2, y2)
+{
+    const canvas1 = document.getElementById('linear1');
+    const canvas2 = document.getElementById('linear2');
+    const ctx1 = canvas1.getContext("2d");
+    const ctx2 = canvas2.getContext("2d");
+
+    const gradient1 = ctx1.createLinearGradient(x1, y1, x2, y2);
+    const gradient2 = Gradient.createLinearGradient(x1, y1, x2, y2);
+
+    addColorStops(gradient1);
+    addColorStops(gradient2);
+
+    ctx1.fillStyle = gradient1;
+    ctx1.fillRect(0, 0, w, h);
+
+    const imData = ctx2.createImageData(w, h);
+    imData.data.set(gradient2.getBitmap(w, h));
+    ctx2.putImageData(imData, 0, 0);
+}
+function drawRadialGradient(x1, y1, r1, x2, y2, r2)
+{
+    const canvas1 = document.getElementById('radial1');
+    const canvas2 = document.getElementById('radial2');
+    const ctx1 = canvas1.getContext("2d");
+    const ctx2 = canvas2.getContext("2d");
+
+    const gradient1 = ctx1.createRadialGradient(x1, y1, r1, x2, y2, r2);
+    const gradient2 = Gradient.createRadialGradient(x1, y1, r1, x2, y2, r2);
+
+    addColorStops(gradient1);
+    addColorStops(gradient2);
+
+    ctx1.fillStyle = gradient1;
+    ctx1.fillRect(0, 0, w, h);
+
+    const imData = ctx2.createImageData(w, h);
+    imData.data.set(gradient2.getBitmap(w, h));
+    ctx2.putImageData(imData, 0, 0);
+}
+function drawEllipticGradient(cx, cy, rx, ry, angle)
+{
+    const canvas1 = document.getElementById('elliptic1');
+    const canvas2 = document.getElementById('elliptic2');
+    const canvas3 = document.getElementById('elliptic3');
+    const canvas4 = document.getElementById('elliptic4');
+    const ctx1 = canvas1.getContext("2d");
+    const ctx2 = canvas2.getContext("2d");
+    const ctx3 = canvas3.getContext("2d");
+    const ctx4 = canvas4.getContext("2d");
+
+    const r = Math.max(rx, ry), sx = rx/r, sy = ry/r;
+
+    const gradient1 = ctx1.createRadialGradient(cx/sx, cy/sy, 0, cx/sx, cy/sy, r);
+    const gradient2 = Gradient.createRadialGradient(cx/sx, cy/sy, 0, cx/sx, cy/sy, r);
+    const gradient3 = ctx3.createRadialGradient(cx, cy, 0, cx, cy, r);
+    const gradient4 = Gradient.createEllipticGradient(cx, cy, rx, ry, angle);
+
+    addColorStops(gradient1);
+    addColorStops(gradient2);
+    addColorStops(gradient3);
+    addColorStops(gradient4);
+
+    // transform radial gradient1 to become an unrotated elliptic
+    ctx1.scale(sx, sy);
+    ctx1.fillStyle = gradient1;
+    fill_transformed_rect(ctx1, 0, 0, w, h);
+
+    // create a pattern from the gradient, just for fun
+    const pattern2 = Gradient.createPattern({
+        data: gradient2.getBitmap(w/sx, h/sy),
+        width: Math.round(w/sx),
+        height: Math.round(h/sy)
+    }, 'no-repeat');
+    // gradient2/pattern2 is a transformed radial gradient
+    //pattern2.transform.translate(-cx, -cy);
+    pattern2.transform.scale(sx, sy);
+    //pattern2.transform.rotate(-angle);
+    //pattern2.transform.translate(cx, cy);
+    const imData2 = ctx2.createImageData(w, h);
+    imData2.data.set(pattern2.getBitmap(w, h));
+    ctx2.putImageData(imData2, 0, 0);
+
+    // transform radial gradient3 to become a rotated elliptic
+    ctx3.translate(cx, cy);
+    ctx3.rotate(-angle);
+    ctx3.translate(-cx*sx, -cy*sy);
+    ctx3.scale(sx, sy);
+    ctx3.fillStyle = gradient3;
+    fill_transformed_rect(ctx3, 0, 0, w, h);
+    // gradient4 is elliptic gradient
+    const imData4 = ctx4.createImageData(w, h);
+    imData4.data.set(gradient4.getBitmap(w, h));
+    ctx4.putImageData(imData4, 0, 0);
+}
+function drawConicGradient(angle, cx, cy)
+{
+    const canvas1 = document.getElementById('conic1');
+    const canvas2 = document.getElementById('conic2');
+    const ctx1 = canvas1.getContext("2d");
+    const ctx2 = canvas2.getContext("2d");
+
+    const gradient1 = ctx1.createConicGradient(angle, cx, cy);
+    const gradient2 = Gradient.createConicGradient(angle, cx, cy);
+
+    addColorStops(gradient1);
+    addColorStops(gradient2);
+
+    ctx1.fillStyle = gradient1;
+    ctx1.fillRect(0, 0, w, h);
+
+    const imData = ctx2.createImageData(w, h);
+    imData.data.set(gradient2.getBitmap(w, h));
+    ctx2.putImageData(imData, 0, 0);
+}
+
+drawLinearGradient(20, 20, w - 20, h - 20);
+drawRadialGradient(100, 100, 10, 160, 120, 80);
+drawEllipticGradient(100, 100, 100, 40, Math.PI/4);
+drawConicGradient(-Math.PI/4, 60, 80);
+})();
+</script>
+</body></html>
