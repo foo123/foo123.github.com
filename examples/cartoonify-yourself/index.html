@@ -175,17 +175,18 @@ function init()
     edges = F.CompositeFilter([
      F.ColorMatrixFilter().grayscale()
     ,F.StatisticalFilter().median(3).setMode(F.MODE.GRAY)
-    ,F.ConvolutionMatrixFilter().prewitt(3).setMode(F.MODE.GRAY)
-    ,F.ColorTableFilter().threshold(0.4).invert()
+    //,F.ConvolutionMatrixFilter().prewitt(3).setMode(F.MODE.GRAY)
+    ,F.CannyEdgesFilter(10, 60).setMode(F.MODE.GRAY)
+    ,F.ColorTableFilter()/*.threshold(0.4)*/.invert()
     //,F.MorphologicalFilter().erode(3, null, 1).setMode(F.MODE.GRAY)
     ]).worker(runInParallel).makeGLSL(runInWebGL).makeWASM(runInWasm);
 
     cartoonify = F.CompositeFilter([
      //F.HistogramEqualizeFilter()
      F.ConvolutionMatrixFilter().bilateral(5, 20, 120)
-    ,F.StatisticalFilter().median(7)
+    ,F.StatisticalFilter().median(5)
     //,F.HistogramEqualizeFilter()
-    ,F.ColorTableFilter().quantize(5)
+    ,F.ColorTableFilter().quantize(4)
     ,F.BlendFilter(['multiply', 0, 0, 1]).setInput(1, edgesframe)
     ]).worker(runInParallel).makeGLSL(runInWebGL).makeWASM(runInWasm);
 
