@@ -1,12 +1,10 @@
 <!doctype html>
 <html lang="en" class="no-ie">
 <head>
-<title>Abacus: Combinatorics &amp; Algebraic Number Theory Symbolic Computation Library for JavaScript</title>
+<title>Abacus: Computer Algebra and Symbolic Computations System for Combinatorics and Algebraic Number Theory for JavaScript</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 <meta name="description" content="Abacus: Combinatorics, Tensors, Permutations, Combinations, Variations, Subsets, Restricted Partitions, Restricted Compositions, Set Partitions, Algebraic Number Theory, Matrices, Polynomials, Greatest Common Divisor, Gröbner Basis, Prime Factorisation, Continued Fractions, Diophantine Systems Equations" />
-<meta property="og:title" content="Abacus: Combinatorics &amp; Algebraic Number Theory Symbolic Computation Library for JavaScript">
-<meta property="og:description" content="Abacus: Combinatorics, Tensors, Permutations, Combinations, Variations, Subsets, Restricted Partitions, Restricted Compositions, Set Partitions, Algebraic Number Theory, Matrices, Polynomials, Greatest Common Divisor, Gröbner Basis, Prime Factorisation, Continued Fractions, Diophantine Systems Equations">
 <meta property="og:image" content="https://foo123.github.io/thumbs/abacus-live.jpg">
 <meta property="og:url" content="https://foo123.github.io/examples/abacus/">
 <meta name="twitter:card" content="summary">
@@ -300,7 +298,7 @@ window.MathJax = {
 
 <header id="header">
     <h1>Abacus</h1>
-    <i>A simple, fast &amp; versatile <b>Combinatorics</b> &amp <b>Algebraic Number Theory</b> Symbolic Computation library for JavaScript, Python</i>
+    <i>A versatile Computer Algebra and Symbolic Computations System for <b>Combinatorics</b> &amp <b>Algebraic Number Theory</b> for JavaScript</i>
 </header>
 
 <br /><br />
@@ -308,7 +306,7 @@ window.MathJax = {
 
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
-        <strong>Abacus ({abacus_version}):</strong>
+        <strong>Abacus ({abacus_version}) (pre-release):</strong>
         <div class="sepa"></div>
         <div style="display:inline-block;margin-bottom:10px">
         <label style="text-"for="object">Type:</label><select id="object" name="model[object]">
@@ -370,18 +368,18 @@ window.MathJax = {
         <option value="subset_binary" mv-model="object.subset" mv-model-evt mv-on-model-change="show">Subset (Binary)</option>
         <option value="subset_combination" mv-model="object.subset" mv-model-evt mv-on-model-change="show">Subset (Combination)</option>
         <option value="subset_01" mv-model="object.subset" mv-model-evt mv-on-model-change="show">Zero/One</option>
-        <!--<option value="partition_min" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Fixed Min. Part</option>-->
+        <option value="partition_min" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Fixed Min. Part</option>
         <option value="partition_max" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Fixed Max. Part</option>
         <option value="partition_parts" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Fixed Num. Parts</option>
-        <!--<option value="partition_min_max" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Fixed Min. &amp; Max. Part</option>-->
+        <option value="partition_min_max" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Fixed Min. &amp; Max. Part</option>
         <option value="partition_min_parts" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Fixed Min. Part &amp; Num. Parts</option>
         <option value="partition_max_parts" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Fixed Max. Part &amp; Num. Parts</option>
         <option value="partition_min_max_parts" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Fixed Min./Max. Part &amp; Num. Parts</option>
         <option value="partition_distinct" mv-model="object.partition" mv-model-evt mv-on-model-change="show">Distinct Parts</option>
-        <!--<option value="composition_min" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Fixed Min. Part</option>-->
+        <option value="composition_min" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Fixed Min. Part</option>
         <option value="composition_max" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Fixed Max. Part</option>
         <option value="composition_parts" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Fixed Num. Parts</option>
-        <!--<option value="composition_min_max" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Fixed Min. &amp; Max. Part</option>-->
+        <option value="composition_min_max" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Fixed Min. &amp; Max. Part</option>
         <option value="composition_min_parts" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Fixed Min. Part &amp; Num. Parts</option>
         <option value="composition_max_parts" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Fixed Max. Part &amp; Num. Parts</option>
         <option value="composition_min_max_parts" mv-model="object.composition" mv-model-evt mv-on-model-change="show">Fixed Min./Max. Part &amp; Num. Parts</option>
@@ -547,7 +545,7 @@ codemirror_define_grammar_mode("expr", {
 var undef = undefined, $window = $(window), $screen = $('#screen'), math = $('#math'),
     output = document.getElementById('output'), expr = document.getElementById('expr'), out, exprout,
     appModel, appView, appRouter, width = output.clientWidth, height, toJSON = JSON.stringify,
-    MAXITEMS = 10000, $conditions = $('#conditions>tbody'), $condition_tpl = $('#condition_tpl'),
+    MAXITEMS = 1000, $conditions = $('#conditions>tbody'), $condition_tpl = $('#condition_tpl'),
     html_esc_re = /[&<>]/g;
 
 var promise = Promise.resolve();  // Used to hold chain of typesetting calls
@@ -601,8 +599,8 @@ function group_factors_tex(factors, constant)
 
     if (factors.length)
     {
-        if ( constant.equ(Abacus.Arithmetic.J) ) out = '-';
-        else if ( !constant.equ(Abacus.Arithmetic.I) ) out = '('+constant.toTex()+')';
+        if (constant.equ(Abacus.Arithmetic.J)) out = '-';
+        else if (!constant.equ(Abacus.Arithmetic.I)) out = '('+constant.toTex()+')';
     }
     else
     {
@@ -1290,7 +1288,7 @@ function produce(model)
 
     $screen.addClass('ui-delayed').removeClass('ui-undelayed');
 
-    var count = 0, chunk = 1000;
+    var count = 0, chunk = 100;
 
     setTimeout(function() {
         if ("PrimeSieve" === klass)
@@ -1317,22 +1315,22 @@ function produce(model)
             if ("conditional-permutation" === type)
             {
                 subn = N-comb.dimension();
-                if ( 0 >= subn ) subklass = null;
+                if (0 >= subn) subklass = null;
             }
             else if ("conditional-k-permutation" === type || "conditional-ordered" === type || "conditional-combination" === type)
             {
                 subn[0] = N-comb.dimension(); subn[1] = (+K)-comb.dimension();
-                if ( 0 >= subn[0] || 0 >= subn[1] ) subklass = null;
+                if (0 >= subn[0] || 0 >= subn[1]) subklass = null;
             }
             else if ("conditional-ordered_repeated" === type)
             {
                 subn[1] = (+K)-comb.dimension();
-                if ( 0 >= subn[1] ) subklass = null;
+                if (0 >= subn[1]) subklass = null;
             }
             else if ("conditional-tuple" === type)
             {
                 subn[0] = N-comb.dimension();
-                if ( 0 >= subn[0] ) subklass = null;
+                if (0 >= subn[0]) subklass = null;
             }
             if (subklass)
             {
