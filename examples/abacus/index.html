@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=2">
 <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png?v=2">
 <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png?v=2">
-<link rel="manifest" href="./site.webmanifest?v=2">
+<link rel="manifest" href="./manifest.json?v=2">
 <link rel="mask-icon" href="./safari-pinned-tab.svg?v=2" color="#121212">
 <link rel="shortcut icon" href="./favicon.ico?v=2">
 <meta name="apple-mobile-web-app-title" content="Abacus">
@@ -777,7 +777,7 @@ function produce(model)
             // parse from tex format
             res.push(ring.fromString(entry));
         });
-        if (1 < res.length)
+        if (1 <= res.length)
         {
             r = ring.gcd(res);
             model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.gcd('+res.map(function(p) {return 'Ring.fromString("'+p.toString()+'")';}).join(',')+')'), true);
@@ -791,7 +791,7 @@ function produce(model)
         else
         {
             model.set('summary', '', true);
-            out.setValue('Please provide at least two entries!');
+            out.setValue('Please provide at least a polynomial entry!');
         }
         return;
     }
@@ -831,8 +831,8 @@ function produce(model)
         {
             sol = res[0].roots();
             model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.fromString("'+res[0].toString()+'").roots()'), true);
-            out.setValue('roots('+res[0].toString()+')='+sol.map(function(si) {return '('+[si[0].toString(), String(si[1])].join(',')+')';}).join(','));
-            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\[\\text{roots}('+res[0].toTex()+')='+sol.map(function(si) {return '('+[si[0].toTex(), String(si[1])].join(',')+')';}).join(',')+'\\]');
+            out.setValue('roots('+res[0].toString()+')'+(sol && sol.length ? ('='+sol.map(function(si) {return '('+[si[0].toString(), String(si[1])].join(',')+')';}).join(',')) : ' No rational roots'));
+            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\[\\text{roots}('+res[0].toTex()+')'+(sol && sol.length ? ('='+sol.map(function(si) {return '('+[si[0].toTex(), String(si[1])].join(',')+')';}).join(',')) : ('\\]'+"\n"+'\\['+'\\text{No roots in } \\mathbb{Q}'))+'\\]');
         }
         else
         {
@@ -906,10 +906,10 @@ function produce(model)
         {
             sol = Abacus.Math.polynomials(res, free_vars);
             model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Abacus.Math.polynomials(['+res.map(function(p) {return 'Ring.fromString("'+p.toString()+'")';}).join(',')+'],["'+free_vars.join('","')+'"])'), true);
-            out.setValue(res.map(function(p) {return p.toString()+' = 0';}).join("\n")+"\n"+(!sol ? 'Inconsistent system' : (!sol.length ? 'No solutions in Rationals' : sol.map(function(s) {
+            out.setValue(res.map(function(p) {return p.toString()+' = 0';}).join("\n")+"\n"+(!sol ? 'Inconsistent or not 0-dimensional system' : (!sol.length ? 'No rational solutions' : sol.map(function(s) {
                 return '('+free_vars.join(',')+')=('+s.map(String).join(',')+')';
             }).join("\n"))));
-            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+res.map(function(p) {return p.toTex()+' = 0';}).join("\\]\n\\[")+'\\]'+"\n"+'\\['+(!sol ? '\\text{Inconsistent system}' : (!sol.length ? '\\text{No solutions in } \\mathbb{Q}' : sol.map(function(s) {
+            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+res.map(function(p) {return p.toTex()+' = 0';}).join("\\]\n\\[")+'\\]'+"\n"+'\\['+(!sol ? '\\text{Inconsistent or not 0-dimensional system}' : (!sol.length ? '\\text{No solutions in } \\mathbb{Q}' : sol.map(function(s) {
                 return '('+free_vars.join(',')+')=('+s.map(function(si) {return si.toTex();}).join(',')+')';
             }).join("\\]\n\\[")))+'\\]');
         }
