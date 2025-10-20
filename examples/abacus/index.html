@@ -335,7 +335,7 @@ window.MathJax = {
             <option value="gcd">Polynomial Greatest Common Divisor</option>
             <option value="groebner">Gröbner Basis</option>
             <option value="poly_factors">Polynomial Factorization</option>
-            <option value="poly_roots">Exact Rational Polynomial Roots</option>
+            <option value="poly_roots">Exact Polynomial Roots</option>
             <option value="poly_zeros">Approximate Complex Polynomial Roots</option>
             <option value="polynomials">Exact Rational Solutions of Polynomial System</option>
         </optgroup>
@@ -829,10 +829,10 @@ function produce(model)
         });
         if (1 <= res.length)
         {
-            sol = res[0].roots();
-            model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.fromString("'+res[0].toString()+'").roots()'), true);
-            out.setValue('roots('+res[0].toString()+')'+(sol && sol.length ? ('='+sol.map(function(si) {return '('+[si[0].toString(), String(si[1])].join(',')+')';}).join(',')) : ' No rational roots'));
-            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\[\\text{roots}('+res[0].toTex()+')'+(sol && sol.length ? ('='+sol.map(function(si) {return '('+[si[0].toTex(), String(si[1])].join(',')+')';}).join(',')) : ('\\]'+"\n"+'\\['+'\\text{No roots in } \\mathbb{Q}'))+'\\]');
+            sol = res[0].exactroots();
+            model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.fromString("'+res[0].toString()+'").exactroots()'), true);
+            out.setValue('roots('+res[0].toString()+')'+(sol && sol.length ? ('='+sol.map(function(si) {return '('+[si[0].toString(), String(si[1])].join(',')+')';}).join(',')) : ' No roots found'));
+            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\[\\text{exactroots}('+res[0].toTex()+')'+(sol && sol.length ? ('='+sol.map(function(si) {return '('+[si[0].toTex(), String(si[1])].join(',')+')';}).join(',')) : ('\\]'+"\n"+'\\['+'\\text{No roots found}'))+'\\]');
         }
         else
         {
