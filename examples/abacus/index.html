@@ -820,7 +820,7 @@ function produce(model)
     }
     else if ('poly_roots' === object)
     {
-        res = []; ring = Abacus.Ring.Q("x");
+        res = []; ring = Abacus.Ring.C("x");
         trim(Text).split(NL).forEach(function(entry) {
             entry = trim(entry);
             if ( !entry.length ) return;
