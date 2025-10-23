@@ -411,7 +411,7 @@ window.MathJax = {
         </div><div style="display:inline-block" mv-model="hasK" mv-model-evt mv-on-model-change="show">
         <label for="K">{labelK}</label><input id="K"  name="model[K]" size="8" type="text" value="1" />
         </div><div style="display:inline-block;vertical-align:top;margin-right:5px;" mv-model="hasAlphabet" mv-model-evt mv-on-model-change="show">
-        <label for="alphabet">{labelAlphabet}</label><input id="alphabet" name="model[alphabet]" size="12" type="text" value="" />
+        <label for="alphabet">{labelAlphabet}</label><input id="alphabet" name="model[alphabet]" size="12" type="text" value="" placeholder="{placeholderAlphabet}"/>
         </div><div style="display:inline-block;position:relative;width:80%" mv-model="hasText" mv-model-evt mv-on-model-change="show">
         <div mv-model="placeholderText" mv-model-evt mv-on-model-change="html"></div><label for="expr">{labelText}</label><textarea id="expr" style="position:relative;display:inline-block;vertical-align:top;padding:4px;height:200px;width:90%"></textarea>
         </div>
@@ -710,7 +710,7 @@ function produce(model)
         res = []; r = []; max = 0;
         trim(Text).split(NL).forEach(function(entry) {
             entry = trim(entry);
-            if ( !entry.length ) return;
+            if (!entry.length) return;
             entry = entry.split('=');
             res.push(trim(entry[0]).split(' ').map(trim).filter(function(n){return 0<n.length;}));
             max = Math.max(max, res[res.length-1].length);
@@ -741,7 +741,7 @@ function produce(model)
         res = []; r = []; max = 0;
         trim(Text).split(NL).forEach(function(entry) {
             entry = trim(entry);
-            if ( !entry.length ) return;
+            if (!entry.length) return;
             entry = entry.split('=');
             res.push(trim(entry[0]).split(' ').map(trim).filter(function(n) {return 0<n.length;}));
             max = Math.max(max, res[res.length-1].length);
@@ -750,7 +750,7 @@ function produce(model)
         if (0 < res.length)
         {
             res = res.map(function(entry) {
-                if ( max > entry.length ) entry = entry.concat(Abacus.Util.array(max-entry.length, 0));
+                if (max > entry.length) entry = entry.concat(Abacus.Util.array(max-entry.length, 0));
                 return entry;
             });
             sol = Abacus.Math.linears(res, r, "z");
@@ -797,12 +797,15 @@ function produce(model)
     }
     else if ('poly_factors' === object)
     {
-        res = []; ring = Abacus.Ring.Q("x");
+        res = []; free_vars = trim(model.get('alphabet')); if (!free_vars.length) free_vars = 'x';
+        free_vars = free_vars.split(',').map(trim).filter(function(x) {return x.length;});
+        if (!free_vars.length) free_vars = ['x'];
+        ring = Abacus.Ring.K.apply(Abacus.Ring.K, [Abacus.Rational].concat(free_vars).concat(true));
         trim(Text).split(NL).forEach(function(entry) {
             entry = trim(entry);
-            if ( !entry.length ) return;
+            if (!entry.length) return;
             // parse from tex format
-            res.push(Abacus.Polynomial.fromString(entry));
+            res.push(ring.fromString(entry));
         });
         if (1 <= res.length)
         {
@@ -823,9 +826,9 @@ function produce(model)
         res = []; ring = Abacus.Ring.C("x");
         trim(Text).split(NL).forEach(function(entry) {
             entry = trim(entry);
-            if ( !entry.length ) return;
+            if (!entry.length) return;
             // parse from tex format
-            res.push(Abacus.Polynomial.fromString(entry));
+            res.push(ring.fromString(entry));
         });
         if (1 <= res.length)
         {
@@ -846,9 +849,9 @@ function produce(model)
         res = []; ring = Abacus.Ring.C("x");
         trim(Text).split(NL).forEach(function(entry) {
             entry = trim(entry);
-            if ( !entry.length ) return;
+            if (!entry.length) return;
             // parse from tex format
-            res.push(Abacus.Polynomial.fromString(entry));
+            res.push(ring.fromString(entry));
         });
         if (1 <= res.length)
         {
@@ -906,10 +909,10 @@ function produce(model)
         {
             sol = Abacus.Math.polynomials(res, free_vars);
             model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Abacus.Math.polynomials(['+res.map(function(p) {return 'Ring.fromString("'+p.toString()+'")';}).join(',')+'],["'+free_vars.join('","')+'"])'), true);
-            out.setValue(res.map(function(p) {return p.toString()+' = 0';}).join("\n")+"\n"+(!sol ? 'Inconsistent or not 0-dimensional system' : (!sol.length ? 'No rational solutions' : sol.map(function(s) {
+            out.setValue(res.map(function(p) {return p.toString()+' = 0';}).join("\n")+"\n"+(!sol ? 'No solution' : (!sol.length ? 'No rational solution' : sol.map(function(s) {
                 return '('+free_vars.join(',')+')=('+s.map(String).join(',')+')';
             }).join("\n"))));
-            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+res.map(function(p) {return p.toTex()+' = 0';}).join("\\]\n\\[")+'\\]'+"\n"+'\\['+(!sol ? '\\text{Inconsistent or not 0-dimensional system}' : (!sol.length ? '\\text{No solutions in } \\mathbb{Q}' : sol.map(function(s) {
+            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+res.map(function(p) {return p.toTex()+' = 0';}).join("\\]\n\\[")+'\\]'+"\n"+'\\['+(!sol ? '\\text{No solution}' : (!sol.length ? '\\text{No solution in } \\mathbb{Q}' : sol.map(function(s) {
                 return '('+free_vars.join(',')+')=('+s.map(function(si) {return si.toTex();}).join(',')+')';
             }).join("\\]\n\\[")))+'\\]');
         }
@@ -1610,7 +1613,7 @@ $screen.modelview({
                 return ("combination" === obj || ("tensor" === obj && "tensor_inversion" !== type) || "tuple" === obj) || ("permutation" === obj && ("multiset" === type || "k-permutation" === type || "conditional-k-permutation" === type || "k-derangement" === type || "k-cycle-permutation" === type)) || ("partition" === obj && ("partition_min" === type || "partition_max" === type || "partition_parts" === type || "partition_min_max" === type || "partition_min_parts" === type || "partition_max_parts" === type || "partition_min_max_parts" === type)) || ("composition" === obj && ("composition_min" === type || "composition_max" === type || "composition_parts" === type || "composition_min_max" === type || "composition_min_parts" === type || "composition_max_parts" === type || "composition_min_max_parts" === type)) || ("set_partition" === obj && "set_partition_parts" === type);
             },
             "hasAlphabet": function() {
-                return ("gcd" === this.$data.object) || ("groebner" === this.$data.object) || ("polynomials" === this.$data.object) || ("tuple" === this.$data.object && "word" === this.$data.type);
+                return ("gcd" === this.$data.object) || ("poly_factors" === this.$data.object) || ("groebner" === this.$data.object) || ("polynomials" === this.$data.object) || ("tuple" === this.$data.object && "word" === this.$data.type);
             },
             "hasText": function() {
                 return "gcd" === this.$data.object || "diophantines" === this.$data.object || "linears" === this.$data.object || "poly_factors" === this.$data.object || "poly_roots" === this.$data.object || "poly_zeros" === this.$data.object || "groebner" === this.$data.object || "polynomials" === this.$data.object;
@@ -1636,8 +1639,13 @@ $screen.modelview({
             },
             "labelAlphabet": function() {
                 var obj = this.$data.object;
-                if ("gcd" === obj || "groebner" === obj || "polynomials" === obj) return "Symbol(s) = ";
+                if ("gcd" === obj || "poly_factors" === obj || "groebner" === obj || "polynomials" === obj) return "Symbol(s) = ";
                 return "Alphabet = ";
+            },
+            "placeholderAlphabet": function() {
+                var obj = this.$data.object;
+                if ("gcd" === obj || "poly_factors" === obj || "groebner" === obj || "polynomials" === obj) return "e.g. x,y";
+                return "e.g. abc";
             },
             "placeholderText": function() {
                 var obj = this.$data.object;
@@ -1689,6 +1697,7 @@ $screen.modelview({
             "labelN": ["object","type"],
             "labelText": ["object"],
             "labelAlphabet": ["object"],
+            "placeholderAlphabet": ["object"],
             "labelK": ["object","type"],
             "haslex": ["object","type"],
             "hascolex": ["object","type"],
