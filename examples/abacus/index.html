@@ -909,10 +909,10 @@ function produce(model)
         {
             sol = Abacus.Math.polynomials(res, free_vars);
             model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Abacus.Math.polynomials(['+res.map(function(p) {return 'Ring.fromString("'+p.toString()+'")';}).join(',')+'],["'+free_vars.join('","')+'"])'), true);
-            out.setValue(res.map(function(p) {return p.toString()+' = 0';}).join("\n")+"\n"+(!sol ? 'No solution' : (!sol.length ? 'No rational solution' : sol.map(function(s) {
+            out.setValue(res.map(function(p) {return p.toString()+' = 0';}).join("\n")+"\n"+(!sol ? (false === sol ? 'Inconsistent' : 'Not zero-dimensional') : (!sol.length ? 'No rational solution' : sol.map(function(s) {
                 return '('+free_vars.join(',')+')=('+s.map(String).join(',')+')';
             }).join("\n"))));
-            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+res.map(function(p) {return p.toTex()+' = 0';}).join("\\]\n\\[")+'\\]'+"\n"+'\\['+(!sol ? '\\text{No solution}' : (!sol.length ? '\\text{No solution in } \\mathbb{Q}' : sol.map(function(s) {
+            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\['+res.map(function(p) {return p.toTex()+' = 0';}).join("\\]\n\\[")+'\\]'+"\n"+'\\['+(!sol ? (false === sol ? '\\text{Inconsistent}' : '\\text{Not zero-dimensional}') : (!sol.length ? '\\text{No solution in } \\mathbb{Q}' : sol.map(function(s) {
                 return '('+free_vars.join(',')+')=('+s.map(function(si) {return si.toTex();}).join(',')+')';
             }).join("\\]\n\\[")))+'\\]');
         }
