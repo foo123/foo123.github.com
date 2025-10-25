@@ -784,7 +784,7 @@ function produce(model)
         }
         if (err)
         {
-            model.set('summary', err.split("\n").join('<br>'), true);
+            model.set('summary', err.split(" ").join('&nbsp;').split("\n").join('<br>'), true);
             out.setValue(err);
         }
         else if (1 <= res.length)
@@ -824,7 +824,7 @@ function produce(model)
         }
         if (err)
         {
-            model.set('summary', err.split("\n").join('<br>'), true);
+            model.set('summary', err.split(" ").join('&nbsp;').split("\n").join('<br>'), true);
             out.setValue(err);
         }
         else if (1 <= res.length)
@@ -857,7 +857,7 @@ function produce(model)
         }
         if (err)
         {
-            model.set('summary', err.split("\n").join('<br>'), true);
+            model.set('summary', err.split(" ").join('&nbsp;').split("\n").join('<br>'), true);
             out.setValue(err);
         }
         else if (1 <= res.length)
@@ -890,7 +890,7 @@ function produce(model)
         }
         if (err)
         {
-            model.set('summary', err.split("\n").join('<br>'), true);
+            model.set('summary', err.split(" ").join('&nbsp;').split("\n").join('<br>'), true);
             out.setValue(err);
         }
         else if (1 <= res.length)
@@ -926,7 +926,7 @@ function produce(model)
         }
         if (err)
         {
-            model.set('summary', err.split("\n").join('<br>'), true);
+            model.set('summary', err.split(" ").join('&nbsp;').split("\n").join('<br>'), true);
             out.setValue(err);
         }
         else if (1 <= res.length)
@@ -962,7 +962,7 @@ function produce(model)
         }
         if (err)
         {
-            model.set('summary', err.split("\n").join('<br>'), true);
+            model.set('summary', err.split(" ").join('&nbsp;').split("\n").join('<br>'), true);
             out.setValue(err);
         }
         else if (1 <= res.length)
