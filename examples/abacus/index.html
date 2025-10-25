@@ -409,7 +409,7 @@ window.MathJax = {
         <div style="display:inline-block" mv-model="hasN" mv-model-evt mv-on-model-change="show">
         <label for="N">{labelN}</label><input id="N"  name="model[N]" size="8" type="text" value="1" />
         </div><div style="display:inline-block" mv-model="hasK" mv-model-evt mv-on-model-change="show">
-        <label for="K">{labelK}</label><input id="K"  name="model[K]" size="8" type="text" value="1" />
+        <label for="K">{labelK}</label><input id="K" name="model[K]" size="8" type="text" value="1" placeholder="{placeholderK}" />
         </div><div style="display:inline-block;vertical-align:top;margin-right:5px;" mv-model="hasAlphabet" mv-model-evt mv-on-model-change="show">
         <label for="alphabet">{labelAlphabet}</label><input id="alphabet" name="model[alphabet]" size="12" type="text" value="" placeholder="{placeholderAlphabet}"/>
         </div><div style="display:inline-block;position:relative;width:80%" mv-model="hasText" mv-model-evt mv-on-model-change="show">
@@ -655,7 +655,7 @@ function produce(model)
         subklass = null, subklass_code = '', sub$ = null, subn = null, submethod = null,
         conditions, data, res, r, sol, free_vars, ring, max, NL = /\r\n|\r|\n/,
         poly_coeffs_dense_re = /^\-?\d+(?:\s+\-?\d+)*$/, s0 = '', s1 = '',
-        Arithmetic = Abacus.Arithmetic;
+        Arithmetic = Abacus.Arithmetic, err;
 
     clear_math();
 
@@ -767,17 +767,27 @@ function produce(model)
     }
     else if ('gcd' === object)
     {
+        err = false;
         res = []; free_vars = trim(model.get('alphabet')); if (!free_vars.length) free_vars = 'x';
         free_vars = free_vars.split(',').map(trim).filter(function(x) {return x.length;});
         if (!free_vars.length) free_vars = ['x'];
         ring = Abacus.Ring.K.apply(Abacus.Ring.K, [Abacus.Rational].concat(free_vars).concat(true));
+        try {
         trim(Text).split(NL).forEach(function(entry){
             entry = trim(entry);
             if (!entry.length) return;
             // parse from tex format
             res.push(ring.fromString(entry));
         });
-        if (1 <= res.length)
+        } catch (e) {
+            err = e.toString();
+        }
+        if (err)
+        {
+            model.set('summary', err.split("\n").join('<br>'), true);
+            out.setValue(err);
+        }
+        else if (1 <= res.length)
         {
             r = ring.gcd(res);
             model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.gcd('+res.map(function(p) {return 'Ring.fromString("'+p.toString()+'")';}).join(',')+')'), true);
@@ -797,17 +807,27 @@ function produce(model)
     }
     else if ('poly_factors' === object)
     {
+        err = false;
         res = []; free_vars = trim(model.get('alphabet')); if (!free_vars.length) free_vars = 'x';
         free_vars = free_vars.split(',').map(trim).filter(function(x) {return x.length;});
         if (!free_vars.length) free_vars = ['x'];
         ring = Abacus.Ring.K.apply(Abacus.Ring.K, [Abacus.Rational].concat(free_vars).concat(true));
+        try {
         trim(Text).split(NL).forEach(function(entry) {
             entry = trim(entry);
             if (!entry.length) return;
             // parse from tex format
             res.push(ring.fromString(entry));
         });
-        if (1 <= res.length)
+        } catch (e) {
+            err = e.toString();
+        }
+        if (err)
+        {
+            model.set('summary', err.split("\n").join('<br>'), true);
+            out.setValue(err);
+        }
+        else if (1 <= res.length)
         {
             r = res[0].factors();
             model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.fromString("'+res[0].toString()+'").factors()'), true);
@@ -823,14 +843,24 @@ function produce(model)
     }
     else if ('poly_roots' === object)
     {
+        err = false;
         res = []; ring = Abacus.Ring.C("x");
+        try {
         trim(Text).split(NL).forEach(function(entry) {
             entry = trim(entry);
             if (!entry.length) return;
             // parse from tex format
             res.push(ring.fromString(entry));
         });
-        if (1 <= res.length)
+        } catch (e) {
+            err = e.toString();
+        }
+        if (err)
+        {
+            model.set('summary', err.split("\n").join('<br>'), true);
+            out.setValue(err);
+        }
+        else if (1 <= res.length)
         {
             sol = res[0].exactroots();
             model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.fromString("'+res[0].toString()+'").exactroots()'), true);
@@ -846,14 +876,24 @@ function produce(model)
     }
     else if ('poly_zeros' === object)
     {
+        err = false;
         res = []; ring = Abacus.Ring.C("x");
+        try {
         trim(Text).split(NL).forEach(function(entry) {
             entry = trim(entry);
             if (!entry.length) return;
             // parse from tex format
             res.push(ring.fromString(entry));
         });
-        if (1 <= res.length)
+        } catch (e) {
+        err = e.toString();
+        }
+        if (err)
+        {
+            model.set('summary', err.split("\n").join('<br>'), true);
+            out.setValue(err);
+        }
+        else if (1 <= res.length)
         {
             sol = res[0].zeros();
             model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.fromString("'+res[0].toString()+'").zeros()'), true);
@@ -869,17 +909,27 @@ function produce(model)
     }
     else if ('groebner' === object)
     {
+        err = false;
         res = []; free_vars = trim(model.get('alphabet')); if (!free_vars.length) free_vars = 'x';
         free_vars = free_vars.split(',').map(trim).filter(function(x) {return x.length;});
         if (!free_vars.length) free_vars = ['x'];
         ring = Abacus.Ring.K.apply(Abacus.Ring.K, [Abacus.Rational].concat(free_vars).concat(true));
+        try {
         trim(Text).split(NL).forEach(function(entry){
             entry = trim(entry);
             if (!entry.length) return;
             // parse from tex format
             res.push(ring.fromString(entry));
         });
-        if (1 <= res.length)
+        } catch (e) {
+            err = e.toString();
+        }
+        if (err)
+        {
+            model.set('summary', err.split("\n").join('<br>'), true);
+            out.setValue(err);
+        }
+        else if (1 <= res.length)
         {
             r = Abacus.Math.groebner(res);
             model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Abacus.Math.groebner(['+res.map(function(p) {return 'Ring.fromString("'+p.toString()+'")';}).join(',')+'])'), true);
@@ -895,17 +945,27 @@ function produce(model)
     }
     else if ('polynomials' === object)
     {
+        err = false;
         res = []; free_vars = trim(model.get('alphabet')); if (!free_vars.length) free_vars = 'x';
         free_vars = free_vars.split(',').map(trim).filter(function(x) {return x.length;});
         if (!free_vars.length) free_vars = ['x'];
         ring = Abacus.Ring.K.apply(Abacus.Ring.K, [Abacus.Rational].concat(free_vars).concat(true));
+        try {
         trim(Text).split(NL).forEach(function(entry){
             entry = trim(entry);
             if (!entry.length) return;
             // parse from tex format
             res.push(ring.fromString(entry));
         });
-        if (1 <= res.length)
+        } catch (e) {
+            err = e.toString();
+        }
+        if (err)
+        {
+            model.set('summary', err.split("\n").join('<br>'), true);
+            out.setValue(err);
+        }
+        else if (1 <= res.length)
         {
             sol = Abacus.Math.polynomials(res, free_vars);
             model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Abacus.Math.polynomials(['+res.map(function(p) {return 'Ring.fromString("'+p.toString()+'")';}).join(',')+'],["'+free_vars.join('","')+'"])'), true);
@@ -1649,7 +1709,8 @@ $screen.modelview({
             },
             "placeholderText": function() {
                 var obj = this.$data.object;
-                if ("poly_factors" === obj || "poly_roots" === obj | "poly_zeros" === obj) return "Enter a polynomial (in tex format). \n<br /> Eg: \n<br /> -(3/2)x^2+2 \n<br /> as: \n<br /> -(3/2)x^2+2";
+                if ("poly_roots" === obj | "poly_zeros" === obj) return "Enter a polynomial (in tex format). \n<br /> Eg: \n<br /> -(3/2)x^2+2 \n<br /> as: \n<br /> -(3/2)x^2+2";
+                if ("poly_factors" === obj) return "Enter a multivariate polynomial (in tex format). \n<br /> Eg: \n<br /> x*y-(3/2)x^2+2 \n<br /> as: \n<br /> x*y-(3/2)x^2+2";
                 if ("groebner" === obj || "gcd" === obj || "polynomials" === obj) return "Each row represents a different multivariate polynomial (in tex format). \n<br /> Eg: \n<br /> x*y-(3/2)x^2+2 \n<br /> as: \n<br /> x*y-(3/2)x^2+2";
                 if ("diophantines" === obj) return "Each row represents a different diophantine equation (coefficients of variables separated by space). \n<br /> Eg: \n<br /> x+y = 2 \n<br /> 2x+3y = 5 \n<br /> as: \n<br /> 1 1 = 2 \n<br /> 2 3 = 5";
                 if ("linears" === obj) return "Each row represents a different equation (coefficients of variables separated by space). \n<br /> Eg: \n<br /> x/2 + y = 2 \n<br /> 2x+3y = 5 \n<br /> as: \n<br /> 1/2 1 = 2 \n<br /> 2 3 = 5";
@@ -1679,6 +1740,20 @@ $screen.modelview({
                 if ("set_partition" === obj && "set_partition_parts" === type) return "#Parts = ";
                 return "K =";
             },
+            "placeholderK": function() {
+                var obj = this.$data.object, type = this.$data.type;
+                if ("tensor" === obj) return "e.g. 2,3";
+                if ("permutation" === obj && "multiset" === type) return "e.g 2,3";
+                if ("partition" === obj && "partition_min_max" === type) return "e.g. 2,3";
+                if ("partition" === obj && "partition_min_parts" === type) return "e.g. 2,3";
+                if ("partition" === obj && "partition_max_parts" === type) return "e.g. 2,3";
+                if ("partition" === obj && "partition_min_max_parts" === type) return "e.g. 2,3,2";
+                if ("composition" === obj && "composition_min_max" === type) return "e.g. 2,3";
+                if ("composition" === obj && "composition_min_parts" === type) return "e.g. 2,3";
+                if ("composition" === obj && "composition_max_parts" === type) return "e.g. 2,3";
+                if ("composition" === obj && "composition_min_max_parts" === type) return "e.g. 2,3,2";
+                return "e.g. 2";
+            },
             "Text": function(){
                 return exprout.getValue();
             }
@@ -1699,6 +1774,7 @@ $screen.modelview({
             "labelAlphabet": ["object"],
             "placeholderAlphabet": ["object"],
             "labelK": ["object","type"],
+            "placeholderK": ["object","type"],
             "haslex": ["object","type"],
             "hascolex": ["object","type"],
             "hasminimal": ["object","type"],
