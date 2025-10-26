@@ -211,6 +211,7 @@ $P.Matchy($M);
 
 function time(f, repeat)
 {
+    f(); // warmup/precompile
     var i, t0, t1, t = 0;
     if (0 < repeat)
     {
