@@ -27,91 +27,72 @@
 <link rel="stylesheet" href="../common/js/codemirror/theme/lesser-dark.css" />
 <style type="text/css">
 #output {
-    position:relative;
-    padding:2px;
+    position: relative;
+    padding: 2px;
     width: 90%;
-    height: 500px;
+    height: 400px;
 }
 #math {
-    position:relative;
-    padding:8px 2px;
+    position: relative;
+    box-sizing: border-box;
+    padding: 8px 2px;
     border: 1px solid #888;
     width: 90%;
     overflow: hidden;
     overflow-x: auto;
 }
-
 .button {
-    -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
-    -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
-    box-shadow:inset 0px 1px 0px 0px #ffffff;
-    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
-    background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
-    background-color:#ededed;
-    -webkit-border-top-left-radius:20px;
-    -moz-border-radius-topleft:20px;
-    border-top-left-radius:20px;
-    -webkit-border-top-right-radius:20px;
-    -moz-border-radius-topright:20px;
-    border-top-right-radius:20px;
-    -webkit-border-bottom-right-radius:20px;
-    -moz-border-radius-bottomright:20px;
-    border-bottom-right-radius:20px;
-    -webkit-border-bottom-left-radius:20px;
-    -moz-border-radius-bottomleft:20px;
-    border-bottom-left-radius:20px;
-    text-indent:0;
-    border:1px solid #dcdcdc;
-    display:inline-block;
-    color:#777777;
-    font-family:Arial;
-    font-size:15px;
-    font-weight:bold;
-    font-style:normal;
-    height:50px;
-    line-height:50px;
-    width:86px;
-    text-decoration:none;
-    text-align:center;
-    text-shadow:1px 1px 0px #ffffff;
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    color: #777;
+    background: #ededed;
+    box-shadow: inset 0px 1px 0px 0px #ffffff;
+    border-radius: 20px;
+    border: 2px solid transparent;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    text-decoration: none;
+    text-indent: 0;
+    text-align: center;
+    text-shadow: 1px 1px 0px #ffffff;
+    padding: 10px 28px;
+    cursor: pointer;
 }
 .button:hover {
-    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
-    background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
-    background-color:#dfdfdf;
+    background: #dfdfdf;
 }.button:active {
-    position:relative;
-    top:1px;
-}
-.button {
-    width:120px;
-    height:30px;
-    line-height:30px;
-    cursor:pointer;
-    position:relative;
+    top: 1px;
 }
 button, input, optgroup, select, textarea {
-    color: #121212;
+    color: #565656;
 }
-select, input {
-    display: inline-block;
-    padding: 4px 2px;
+input,select,textarea {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    background: #efefef;
+    border-radius: 10px;
+    padding: 8px 6px;
+    min-width: 100px;
+    max-width: calc(100% - 12px);
+    margin: 4px 0 20px 0;
+}
+input {
+    max-width: 100px;
 }
 label {
     font-weight: bold;
     display: inline-block;
-    margin-left: 10px;
-    margin-right: 6px;
+    margin-right: 5px;
 }
 div.sepa {
     display: block;
     height: 1px;
     margin-bottom: 1.6em;
 }
-.ui-delayable-overlay
-{
+.ui-delayable-overlay {
     position: absolute;
     padding: 0;
     margin: 0;
@@ -133,18 +114,15 @@ div.sepa {
     transition-delay: 0s, .04s;
     cursor: inherit;
 }
-.ui-delayed  > .ui-delayable-overlay
-{
+.ui-delayed  > .ui-delayable-overlay {
     z-index: 500;
     opacity: 1;
     cursor: progress;
 }
-.ui-undelayed  > .ui-delayable-overlay
-{
+.ui-undelayed  > .ui-delayable-overlay {
     transition-delay: .65s, 0s;
 }
-.ui-spinner
-{
+.ui-spinner {
     -webkit-box-sizing:border-box;
     -moz-box-sizing:border-box;
     -ms-box-sizing:border-box;
@@ -164,8 +142,7 @@ div.sepa {
     transform: translate(-50%, -50%);
 }
 /* http://frayd.us/blog/pure-css-loading-animation/ */
-.ui-spinner:before
-{
+.ui-spinner:before {
     -webkit-box-sizing:border-box;
     -moz-box-sizing:border-box;
     -ms-box-sizing:border-box;
@@ -181,12 +158,10 @@ div.sepa {
     animation-name: none;
 }
 /* adapted from https://github.com/lukehaas/css-loaders */
-.ui-spinner.ui-spinner-dots
-{
+.ui-spinner.ui-spinner-dots {
     width: 20%; height: 1px; padding-bottom: 20%; /* 1:1 */
 }
-.ui-spinner.ui-spinner-dots:before
-{
+.ui-spinner.ui-spinner-dots:before {
     position: relative;
     font-size: 25px;
     margin: 0 auto;
@@ -202,44 +177,14 @@ div.sepa {
     -webkit-animation-timing-function: ease;
     animation-timing-function: ease;
 }
-.ui-delayed .ui-spinner
-{
+.ui-delayed .ui-spinner {
     visibility: visible;
     /*display: block;*/
 }
-.ui-delayed .ui-spinner.ui-spinner-dots:before
-{
+.ui-delayed .ui-spinner.ui-spinner-dots:before {
     visibility: visible;
     -webkit-animation-name: ui-spin-dots;
     animation-name: ui-spin-dots;
-}
-
-@-webkit-keyframes ui-spin-dots {
-  0%,
-  100% {
-    box-shadow: 0em -2.6em 0em 0em #808080, 1.8em -1.8em 0 0em rgba(128,128,128, 0.2), 2.5em 0em 0 0em rgba(128,128,128, 0.2), 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.2), -1.8em 1.8em 0 0em rgba(128,128,128, 0.2), -2.6em 0em 0 0em rgba(128,128,128, 0.5), -1.8em -1.8em 0 0em rgba(128,128,128, 0.7);
-  }
-  12.5% {
-    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.7), 1.8em -1.8em 0 0em #808080, 2.5em 0em 0 0em rgba(128,128,128, 0.2), 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.2), -1.8em 1.8em 0 0em rgba(128,128,128, 0.2), -2.6em 0em 0 0em rgba(128,128,128, 0.2), -1.8em -1.8em 0 0em rgba(128,128,128, 0.5);
-  }
-  25% {
-    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.5), 1.8em -1.8em 0 0em rgba(128,128,128, 0.7), 2.5em 0em 0 0em #808080, 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.2), -1.8em 1.8em 0 0em rgba(128,128,128, 0.2), -2.6em 0em 0 0em rgba(128,128,128, 0.2), -1.8em -1.8em 0 0em rgba(128,128,128, 0.2);
-  }
-  37.5% {
-    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.2), 1.8em -1.8em 0 0em rgba(128,128,128, 0.5), 2.5em 0em 0 0em rgba(128,128,128, 0.7), 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.2), -1.8em 1.8em 0 0em rgba(128,128,128, 0.2), -2.6em 0em 0 0em rgba(128,128,128, 0.2), -1.8em -1.8em 0 0em rgba(128,128,128, 0.2);
-  }
-  50% {
-    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.2), 1.8em -1.8em 0 0em rgba(128,128,128, 0.2), 2.5em 0em 0 0em rgba(128,128,128, 0.5), 1.75em 1.75em 0 0em rgba(128,128,128, 0.7), 0em 2.5em 0 0em #808080, -1.8em 1.8em 0 0em rgba(128,128,128, 0.2), -2.6em 0em 0 0em rgba(128,128,128, 0.2), -1.8em -1.8em 0 0em rgba(128,128,128, 0.2);
-  }
-  62.5% {
-    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.2), 1.8em -1.8em 0 0em rgba(128,128,128, 0.2), 2.5em 0em 0 0em rgba(128,128,128, 0.2), 1.75em 1.75em 0 0em rgba(128,128,128, 0.5), 0em 2.5em 0 0em rgba(128,128,128, 0.7), -1.8em 1.8em 0 0em #808080, -2.6em 0em 0 0em rgba(128,128,128, 0.2), -1.8em -1.8em 0 0em rgba(128,128,128, 0.2);
-  }
-  75% {
-    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.2), 1.8em -1.8em 0 0em rgba(128,128,128, 0.2), 2.5em 0em 0 0em rgba(128,128,128, 0.2), 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.5), -1.8em 1.8em 0 0em rgba(128,128,128, 0.7), -2.6em 0em 0 0em #808080, -1.8em -1.8em 0 0em rgba(128,128,128, 0.2);
-  }
-  87.5% {
-    box-shadow: 0em -2.6em 0em 0em rgba(128,128,128, 0.2), 1.8em -1.8em 0 0em rgba(128,128,128, 0.2), 2.5em 0em 0 0em rgba(128,128,128, 0.2), 1.75em 1.75em 0 0em rgba(128,128,128, 0.2), 0em 2.5em 0 0em rgba(128,128,128, 0.2), -1.8em 1.8em 0 0em rgba(128,128,128, 0.5), -2.6em 0em 0 0em rgba(128,128,128, 0.7), -1.8em -1.8em 0 0em #808080;
-  }
 }
 @keyframes ui-spin-dots {
   0%,
@@ -309,7 +254,7 @@ window.MathJax = {
         <strong>Abacus ({abacus_version} pre-release):</strong>
         <div class="sepa"></div>
         <div style="display:inline-block;margin-bottom:10px">
-        <label style="text-"for="object">Type:</label><select id="object" name="model[object]">
+        <label style="text-"for="object">Type:</label><br><select id="object" name="model[object]">
         <optgroup label="Combinatorics">
             <option value="tensor">Tensor</option>
             <option value="tuple">Tuple</option>
@@ -342,7 +287,7 @@ window.MathJax = {
         </select>
         </div>
         <div style="display:inline-block;margin-bottom:10px" mv-model="isCombinatorics" mv-model-evt mv-on-model-change="show">
-        <label for="type">SubType:</label><select id="type" name="model[type]">
+        <label for="type">SubType:</label><br><select id="type" name="model[type]">
         <option value="default" selected>{object.default}</option>
         <option value="tensor_inversion" mv-model="object.tensor" mv-model-evt mv-on-model-change="show">Permutation</option>
         <option value="gray" mv-model="object.tuple" mv-model-evt mv-on-model-change="show">(n,k)-Gray Code</option>
@@ -390,7 +335,7 @@ window.MathJax = {
         </select>
         </div>
         <div style="display:inline-block;margin-bottom:10px" mv-model="isCombinatorics" mv-model-evt mv-on-model-change="show">
-        <label for="order">Order:</label><select id="order" name="model[order]">
+        <label for="order">Order:</label><br><select id="order" name="model[order]">
         <option value="" >Default</option>
         <option value="lex" mv-model="haslex" mv-model-evt mv-on-model-change="show">Lexicographic</option>
         <option value="colex" mv-model="hascolex" mv-model-evt mv-on-model-change="show">CoLexicographic</option>
@@ -405,19 +350,19 @@ window.MathJax = {
         <option value="random,reflected" mv-model="hasrand" mv-model-evt mv-on-model-change="show">Random Reflected</option>
         </select>
         </div>
-        <div class="sepa"></div>
-        <div style="display:inline-block" mv-model="hasN" mv-model-evt mv-on-model-change="show">
-        <label for="N">{labelN}</label><input id="N"  name="model[N]" size="8" type="text" value="1" />
-        </div><div style="display:inline-block" mv-model="hasK" mv-model-evt mv-on-model-change="show">
-        <label for="K">{labelK}</label><input id="K" name="model[K]" size="8" type="text" value="1" placeholder="{placeholderK}" />
+        <div class="sepa" style="margin:0"></div>
+        <div style="display:inline-block;margin-right:5px;" mv-model="hasN" mv-model-evt mv-on-model-change="show">
+        <label for="N">{labelN}:</label><br><input id="N"  name="model[N]" size="8" type="text" value="1" />
+        </div><div style="display:inline-block;margin-right:5px;" mv-model="hasK" mv-model-evt mv-on-model-change="show">
+        <label for="K">{labelK}:</label><br><input id="K" name="model[K]" size="8" type="text" value="1" placeholder="{placeholderK}" />
         </div><div style="display:inline-block;vertical-align:top;margin-right:5px;" mv-model="hasAlphabet" mv-model-evt mv-on-model-change="show">
-        <label for="alphabet">{labelAlphabet}</label><input id="alphabet" name="model[alphabet]" size="12" type="text" value="" placeholder="{placeholderAlphabet}"/>
-        </div><div style="display:inline-block;position:relative;width:80%" mv-model="hasText" mv-model-evt mv-on-model-change="show">
-        <div mv-model="placeholderText" mv-model-evt mv-on-model-change="html"></div><label for="expr">{labelText}</label><textarea id="expr" style="position:relative;display:inline-block;vertical-align:top;padding:4px;height:200px;width:90%"></textarea>
+        <label for="alphabet">{labelAlphabet}:</label><br><input id="alphabet" name="model[alphabet]" size="12" type="text" value="" placeholder="{placeholderAlphabet}"/>
+        </div><div style="display:block;position:relative;width:90%" mv-model="hasText" mv-model-evt mv-on-model-change="show">
+        <div mv-model="placeholderText" mv-model-evt mv-on-model-change="html"></div><label for="expr">{labelText}:</label><br><textarea id="expr" style="position:relative;display:block;vertical-align:top;padding:4px;height:90px;width:90%"></textarea>
         </div>
-        <div style="display:inline-block;position:relative;vertical-align:top;margin-left:5px;margin-top:-1.6em" mv-model="hasConditions" mv-model-evt mv-on-model-change="show">
-        <table id="conditions" style="position:relative;max-width:100%;border-spacing:2">
-        <thead><tr><th>Position</th><th>&nbsp;Op&nbsp;</th><th>Value(s)</th><th>&nbsp;<button title="Add New" style="font-weight:bold" mv-evt mv-on-click="add_condition">+</button></th></tr></thead><tbody></tbody></table>
+        <div style="display:block;position:relative;vertical-align:top;" mv-model="hasConditions" mv-model-evt mv-on-model-change="show">
+        <table id="conditions" style="position:relative;max-width:100%;">
+        <thead><tr><th>Pos</th><th>&nbsp;Op&nbsp;</th><th>Val</th><th><button title="Add New" style="font-weight:bold" mv-evt mv-on-click="add_condition">&nbsp;+&nbsp;</button></th></tr></thead><tbody></tbody></table>
         </div>
     </div>
 
@@ -431,14 +376,14 @@ window.MathJax = {
 </div>
 <script type="text/x-template" id="condition_tpl">
 <tr>
-<td><input type="text" name="pos" value="" size="2" title="Position number (0..N-1)" /></td>
-<td>&nbsp;<select name="op" title="Values or Algebraic Expression">
+<td><input type="text" name="pos" value="" size="2" title="Position number (0..N-1)" style="min-width:auto;width:50px;"/></td>
+<td><select name="op" title="Values or Algebraic Expression">
 <option value="IN">IN</option>
 <option value="NOT_IN">NOT IN</option>
 <option value="EXPR">=EXPR</option>
-</select>&nbsp;</td>
-<td><input type="text" name="dat" value="" size="6" title="Values or Expression. Eg Value Set: 0 or 1 or 2 = 0,1,2. Value at pos &quot;1&quot; plus 4 = [1]+4" /></td>
-<td>&nbsp;<button title="Remove" style="font-weight:bold" mv-evt mv-on-click="remove_condition">-</button></td>
+</select></td>
+<td><input type="text" name="dat" value="" size="6" title="Values or Expression. Eg Value Set: 0 or 1 or 2 = 0,1,2. Value at pos &quot;1&quot; plus 4 = [1]+4" style="min-width:auto;width:100px;" /></td>
+<td style="padding-top:12px;vertical-align:top"><button title="Remove" style="font-weight:bold" mv-evt mv-on-click="remove_condition">&nbsp;-&nbsp;</button></td>
 </tr>
 </script>
 
@@ -579,7 +524,7 @@ function esc_html(s)
 {
     return s.replace(html_esc_re, function(m){
         return '&' === m ? '&amp;' : ('<' === m ? '&lt;' : '&gt;');
-    });
+    }).split(' ').join('&nbsp;').split("\n").join('<br>');
 }
 function trim(s)
 {
@@ -635,7 +580,7 @@ out = CodeMirror.fromTextArea(output, {
     foldGutter: true,
     gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]
 });
-out.setSize( width, height );
+out.setSize(width, height);
 exprout = CodeMirror.fromTextArea(expr, {
     mode: "expr",
     lineWrapping: true,
@@ -784,7 +729,7 @@ function produce(model)
         }
         if (err)
         {
-            model.set('summary', err.split(" ").join('&nbsp;').split("\n").join('<br>'), true);
+            model.set('summary', esc_html(err), true);
             out.setValue(err);
         }
         else if (1 <= res.length)
@@ -824,7 +769,7 @@ function produce(model)
         }
         if (err)
         {
-            model.set('summary', err.split(" ").join('&nbsp;').split("\n").join('<br>'), true);
+            model.set('summary', esc_html(err), true);
             out.setValue(err);
         }
         else if (1 <= res.length)
@@ -857,7 +802,7 @@ function produce(model)
         }
         if (err)
         {
-            model.set('summary', err.split(" ").join('&nbsp;').split("\n").join('<br>'), true);
+            model.set('summary', esc_html(err), true);
             out.setValue(err);
         }
         else if (1 <= res.length)
@@ -890,7 +835,7 @@ function produce(model)
         }
         if (err)
         {
-            model.set('summary', err.split(" ").join('&nbsp;').split("\n").join('<br>'), true);
+            model.set('summary', esc_html(err), true);
             out.setValue(err);
         }
         else if (1 <= res.length)
@@ -926,7 +871,7 @@ function produce(model)
         }
         if (err)
         {
-            model.set('summary', err.split(" ").join('&nbsp;').split("\n").join('<br>'), true);
+            model.set('summary', esc_html(err), true);
             out.setValue(err);
         }
         else if (1 <= res.length)
@@ -962,7 +907,7 @@ function produce(model)
         }
         if (err)
         {
-            model.set('summary', err.split(" ").join('&nbsp;').split("\n").join('<br>'), true);
+            model.set('summary', esc_html(err), true);
             out.setValue(err);
         }
         else if (1 <= res.length)
@@ -1679,6 +1624,7 @@ $screen.modelview({
                 return "gcd" === this.$data.object || "diophantines" === this.$data.object || "linears" === this.$data.object || "poly_factors" === this.$data.object || "poly_roots" === this.$data.object || "poly_zeros" === this.$data.object || "groebner" === this.$data.object || "polynomials" === this.$data.object;
             },
             "hasConditions": function() {
+                if (!this.get('isCombinatorics')) return false;
                 var ret = "conditional-"===this.$data.type.substr(0,12);
                 if (ret && !$conditions.children('tr').length)
                     $conditions.append($condition_tpl.html());
@@ -1686,21 +1632,21 @@ $screen.modelview({
             },
             "labelN": function() {
                 var obj = this.$data.object, type = this.$data.type;
-                if ("tuple" === obj) return "Dimension = ";
-                if ("num2cfrac" === obj) return "Decimal or Rational(num/denom) = ";
-                if ("cfrac2num" === obj) return "Continued Fraction (a0,a1,a2,..) = ";
-                return "N =";
+                if ("tuple" === obj) return "Dimension";
+                if ("num2cfrac" === obj) return "Decimal or Rational(num/denom)";
+                if ("cfrac2num" === obj) return "Continued Fraction (a0,a1,a2,..)";
+                return "N";
             },
             "labelText": function() {
                 var obj = this.$data.object;
-                if ("gcd" === obj || "groebner" === obj || "diophantines" === obj || "linears" === obj || "polynomials" === obj) return "Entries = ";
-                if ("poly_factors" === obj || "poly_roots" === obj || "poly_zeros" === obj) return "Polynomial = ";
+                if ("gcd" === obj || "groebner" === obj || "diophantines" === obj || "linears" === obj || "polynomials" === obj) return "Entries";
+                if ("poly_factors" === obj || "poly_roots" === obj || "poly_zeros" === obj) return "Polynomial";
                 return "";
             },
             "labelAlphabet": function() {
                 var obj = this.$data.object;
-                if ("gcd" === obj || "poly_factors" === obj || "groebner" === obj || "polynomials" === obj) return "Symbol(s) = ";
-                return "Alphabet = ";
+                if ("gcd" === obj || "poly_factors" === obj || "groebner" === obj || "polynomials" === obj) return "Symbols";
+                return "Alphabet";
             },
             "placeholderAlphabet": function() {
                 var obj = this.$data.object;
@@ -1709,36 +1655,36 @@ $screen.modelview({
             },
             "placeholderText": function() {
                 var obj = this.$data.object;
-                if ("poly_roots" === obj | "poly_zeros" === obj) return "Enter a polynomial (in tex format). \n<br /> Eg: \n<br /> -(3/2)x^2+2 \n<br /> as: \n<br /> -(3/2)x^2+2";
-                if ("poly_factors" === obj) return "Enter a multivariate polynomial (in tex format). \n<br /> Eg: \n<br /> x*y-(3/2)x^2+2 \n<br /> as: \n<br /> x*y-(3/2)x^2+2";
-                if ("groebner" === obj || "gcd" === obj || "polynomials" === obj) return "Each row represents a different multivariate polynomial (in tex format). \n<br /> Eg: \n<br /> x*y-(3/2)x^2+2 \n<br /> as: \n<br /> x*y-(3/2)x^2+2";
-                if ("diophantines" === obj) return "Each row represents a different diophantine equation (coefficients of variables separated by space). \n<br /> Eg: \n<br /> x+y = 2 \n<br /> 2x+3y = 5 \n<br /> as: \n<br /> 1 1 = 2 \n<br /> 2 3 = 5";
-                if ("linears" === obj) return "Each row represents a different equation (coefficients of variables separated by space). \n<br /> Eg: \n<br /> x/2 + y = 2 \n<br /> 2x+3y = 5 \n<br /> as: \n<br /> 1/2 1 = 2 \n<br /> 2 3 = 5";
+                if ("poly_roots" === obj | "poly_zeros" === obj) return "Enter a polynomial in tex format. \n<br> Eg: \n<br> -(3/2)x^2+2 \n<br> as: \n<br> -(3/2)x^2+2";
+                if ("poly_factors" === obj) return "Enter a multivariate polynomial in tex format. \n<br> Eg: \n<br> x*y-(3/2)x^2+2 \n<br> as: \n<br> xy-(3/2)x^2+2";
+                if ("groebner" === obj || "gcd" === obj || "polynomials" === obj) return "Each row represents a different multivariate polynomial in tex format. \n<br> Eg: \n<br> xy-(3/2)x^2+2 \n<br> as: \n<br /> xy-(3/2)x^2+2";
+                if ("diophantines" === obj) return "Each row represents a different diophantine equation (coefficients of variables separated by space). \n<br> Eg: \n<br> x+y = 2 \n<br> 2x+3y = 5 \n<br> as: \n<br> 1 1 = 2 \n<br> 2 3 = 5";
+                if ("linears" === obj) return "Each row represents a different equation (coefficients of variables separated by space). \n<br> Eg: \n<br> x/2 + y = 2 \n<br> 2x+3y = 5 \n<br> as: \n<br> 1/2 1 = 2 \n<br> 2 3 = 5";
                 return "";
             },
             "labelK": function() {
                 var obj = this.$data.object, type = this.$data.type;
-                if ("tuple" === obj) return "Base = ";
-                if ("tensor" === obj) return "Dimensions(.. , ..) = ";
-                if ("permutation" === obj && "multiset" === type) return "Multiplicities(.. , ..) = ";
-                if ("permutation" === obj && "k-derangement" === type) return "#Fixed = ";
-                if ("permutation" === obj && "k-cycle-permutation" === type) return "#Cycles = ";
-                if ("partition" === obj && "partition_min" === type) return "Min = ";
-                if ("partition" === obj && "partition_max" === type) return "Max = ";
-                if ("partition" === obj && "partition_parts" === type) return "#Parts = ";
-                if ("partition" === obj && "partition_min_max" === type) return "Min,Max = ";
-                if ("partition" === obj && "partition_min_parts" === type) return "Min,#Parts = ";
-                if ("partition" === obj && "partition_max_parts" === type) return "Max,#Parts = ";
-                if ("partition" === obj && "partition_min_max_parts" === type) return "Min,Max,#Parts = ";
-                if ("composition" === obj && "composition_min" === type) return "Min = ";
-                if ("composition" === obj && "composition_max" === type) return "Max = ";
-                if ("composition" === obj && "composition_parts" === type) return "#Parts = ";
-                if ("composition" === obj && "composition_min_max" === type) return "Min,Max = ";
-                if ("composition" === obj && "composition_min_parts" === type) return "Min,#Parts = ";
-                if ("composition" === obj && "composition_max_parts" === type) return "Max,#Parts = ";
-                if ("composition" === obj && "composition_min_max_parts" === type) return "Min,Max,#Parts = ";
-                if ("set_partition" === obj && "set_partition_parts" === type) return "#Parts = ";
-                return "K =";
+                if ("tuple" === obj) return "Base";
+                if ("tensor" === obj) return "Dimensions(.. , ..)";
+                if ("permutation" === obj && "multiset" === type) return "Multiplicities(.. , ..)";
+                if ("permutation" === obj && "k-derangement" === type) return "#Fixed";
+                if ("permutation" === obj && "k-cycle-permutation" === type) return "#Cycles";
+                if ("partition" === obj && "partition_min" === type) return "Min";
+                if ("partition" === obj && "partition_max" === type) return "Max";
+                if ("partition" === obj && "partition_parts" === type) return "#Parts";
+                if ("partition" === obj && "partition_min_max" === type) return "Min,Max";
+                if ("partition" === obj && "partition_min_parts" === type) return "Min,#Parts";
+                if ("partition" === obj && "partition_max_parts" === type) return "Max,#Parts";
+                if ("partition" === obj && "partition_min_max_parts" === type) return "Min,Max,#Parts";
+                if ("composition" === obj && "composition_min" === type) return "Min";
+                if ("composition" === obj && "composition_max" === type) return "Max";
+                if ("composition" === obj && "composition_parts" === type) return "#Parts";
+                if ("composition" === obj && "composition_min_max" === type) return "Min,Max";
+                if ("composition" === obj && "composition_min_parts" === type) return "Min,#Parts";
+                if ("composition" === obj && "composition_max_parts" === type) return "Max,#Parts";
+                if ("composition" === obj && "composition_min_max_parts" === type) return "Min,Max,#Parts";
+                if ("set_partition" === obj && "set_partition_parts" === type) return "#Parts";
+                return "K";
             },
             "placeholderK": function() {
                 var obj = this.$data.object, type = this.$data.type;
