@@ -1,33 +1,14 @@
 <!doctype html>
-<!--[if lt IE 7]>
-<html lang="en" class="ie lt-ie9 lt-ie8 lt-ie7">
-<![endif]-->
-<!--[if IE 7]>
-<html lang="en" class="ie lt-ie9 lt-ie8">
-<![endif]-->
-<!--[if IE 8]>
-<html lang="en" class="ie lt-ie9">
-<![endif]-->
-<!--[if gt IE 8]><!-->
 <html lang="en" class="no-ie">
-<!--<![endif]-->
 <head>
-<title>Plot.js Simple chart and functional graph plotting library which can render to Canvas, SVG and plain HTML</title>
-
+<title>Plot.js Simple chart and function graph plotting library which can render to Canvas, SVG and plain HTML</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
-<meta name="description" content="Plot.js Simple chart and functional graph plotting library which can render to Canvas, SVG and plain HTML" />
-<meta property="og:title" content="Plot.js Simple chart and functional graph plotting library which can render to Canvas, SVG and plain HTML">
-<meta property="og:description" content="Plot.js Simple chart and functional graph plotting library which can render to Canvas, SVG and plain HTML">
-<meta property="og:image" content="https://foo123.github.io/thumbs/plot.jpg">
+<meta name="description" content="Plot.js Simple chart and function graph plotting library which can render to Canvas, SVG and plain HTML" />
+<meta property="og:title" content="Plot.js Simple chart and function graph plotting library which can render to Canvas, <meta property="og:image" content="https://foo123.github.io/thumbs/plot.jpg">
 <meta property="og:url" content="https://foo123.github.io/examples/plot/">
 <meta name="twitter:card" content="summary">
-
-
 <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-
-
 <style type="text/css">
 body {
     position: relative; /*needed for tooltip to show up correctly*/
@@ -131,7 +112,7 @@ i {
 <span id="forkongithub"><a href="https://github.com/foo123/Plot.js">See me on GitHub</a></span>
 
 <header id="header">
-    <h1>Plot.js <span id="ver"></span>: simple &amp; small plotting library which can render to <b>Canvas</b>, <b>SVG</b> and <b>plain HTML</b></h1>
+    <h1>Plot.js <span id="ver"></span>: simple plotting library which can render to <b>Canvas</b>, <b>SVG</b> and <b>plain HTML</b></h1>
 </header>
 
 <div class="input">
@@ -188,8 +169,7 @@ i {
 !function() {
 "use strict";
 document.getElementById('ver').innerHTML = 'v.'+Plot.VERSION;
-
-var plotOptions = {
+let plotOptions = {
         background: {
             color: '#ffffff'
         },
@@ -225,9 +205,9 @@ var plotOptions = {
     type = 'graph', legend = 'bottom', n = 4
 ;
 
-function genData( )
+function genData()
 {
-   if ( 'graph' === type )
+   if ('graph' === type)
    {
         fStr = document.getElementById('f').value.trim();
 
@@ -240,8 +220,8 @@ function genData( )
             console.error(e.toString());
             f = null;
         }
-        if ( ("function" === typeof f) &&
-            isFinite(range[0]) && isFinite(range[1]) )
+        if (("function" === typeof f) &&
+            isFinite(range[0]) && isFinite(range[1]))
         {
              // cache plot samples to avoid recomputation time
             return htmlPlot.sample(f, range[0], range[1]);
@@ -249,23 +229,23 @@ function genData( )
    }
    else
    {
-       var data = new Array(n), i, labels = new Array(n);
-       for(i=0; i<n; i++)
+       let data = new Array(n), i, labels = new Array(n);
+       for (i=0; i<n; ++i)
        {
-            data[i] = (200*Math.random()-100)||1;
+            data[i] = 5*i + (10*Math.random()-5);
             labels[i] = 'Entry: '+String(i+1);
         }
         return {data:data, colors:Plot.Util.palette(n), labels:labels};
    }
 }
 
-function plot( reset )
+function plot(reset)
 {
-    if ( reset || !data ) data = genData();
+    if (reset || !data) data = genData();
 
-    if ( data )
+    if (data)
     {
-        if ( 'graph' === type )
+        if ('graph' === type)
         {
             htmlPlot
                 .clear()
@@ -312,6 +292,17 @@ function plot( reset )
         }
         else
         {
+            let padding = 'line' === type ? {
+                top: 40,
+                right: 20,
+                bottom: 40,
+                left: 10
+            } : {
+                top: 10,
+                right: 10,
+                bottom: 10,
+                left: 10
+            };
             htmlPlot
                 .clear()
                 .chart(type, data.data, {colors:data.colors, labels:data.labels, legend:{position:legend},axes:{
@@ -324,6 +315,7 @@ function plot( reset )
                         ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
                     }
                 }
+                ,padding: padding
             })
             ;
             canvasPlot
@@ -338,6 +330,7 @@ function plot( reset )
                         ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
                     }
                 }
+                ,padding: padding
             })
             ;
             svgPlot
@@ -352,14 +345,15 @@ function plot( reset )
                         ticks: {color: 'rgba(0,0,0,0.2)', step: 10}
                     }
                 }
+                ,padding: padding
             })
             ;
         }
     }
 }
 
-typeSelect.addEventListener('change', ()=>{
-    if ( 'graph'===typeSelect.options[typeSelect.selectedIndex].value )
+typeSelect.addEventListener('change', () => {
+    if ('graph' === typeSelect.options[typeSelect.selectedIndex].value)
     {
         document.getElementById('graph-input').style.display = 'inline-block';
         document.getElementById('chart-input').style.display = 'none';
@@ -371,14 +365,14 @@ typeSelect.addEventListener('change', ()=>{
     }
 }, false);
 
-document.getElementById('plot').addEventListener('click', ()=>{
+document.getElementById('plot').addEventListener('click', () => {
     type = typeSelect.options[typeSelect.selectedIndex].value;
     legend = legendSelect.options[legendSelect.selectedIndex].value;
     n = parseInt(dataSelect.options[dataSelect.selectedIndex].value);
-    plot( true );
+    plot(true);
 }, false);
 
-window.addEventListener('resize', Plot.Util.debounce(()=>{
+window.addEventListener('resize', Plot.Util.debounce(() => {
     htmlPlot.resize();
     canvasPlot.resize();
     svgPlot.resize();
