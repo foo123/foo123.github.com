@@ -158,6 +158,7 @@
 
         <div id="filters"  class="fluid col-2-5 panel">
             <strong>Post-Processed Video <!--(downsampled)--></strong><br /><br />
+            <div id="video_container" style="position:relative;box-sizing:border-box;width:100%"></div>
         </div>
 
     </div>
@@ -357,6 +358,7 @@
             video = getEl('video'),
             container = getEl('container'),
             filters = getEl('filters'),
+            video_container = getEl('video_container'),
             selectBt = getEl('select'),
             deselectBt = getEl('deselect'),
 
@@ -617,7 +619,7 @@
             dtheta = Math.PI*Max(2*rnd(), 1)/32;
             dr = Max(2*rnd()+1, 1);
 
-            add(filters, postVideo.domElement);
+            add(video_container, postVideo.domElement);
             areaSelect = new AreaSelect(postVideo.domElement);
 
             stats = new Stats();
@@ -714,7 +716,7 @@
                     paramHue.value = hue;
                 }
                 qcc.color = hue;
-                hueExtractor.thresholds = [Math.max(0,hue-20), Math.min(360,hue+20)];
+                hueExtractor.thresholds = [Math.max(0,hue-10), Math.min(360,hue+10)];
             });
             addEvent(paramThresh, "change", function() {
                 var thresh = +paramThresh.value;
@@ -725,15 +727,20 @@
                 var sel = areaSelect.getSelection();
                 if (sel)
                 {
-                    var w = postVideo.width, h = postVideo.height;
-                    currentSelection = [Math.min(sel.x1/w, 1), Math.min(sel.y1/h, 1), Math.min(sel.x2/w, 1), Math.min(sel.y2/h, 1)];
+                    var w = postVideo.width, h = postVideo.height,
+                        rect = postVideo.domElement.getBoundingClientRect(),
+                        rw = Math.floor(rect.width), rh = Math.floor(rect.height),
+                        sx1 = sel.x1, sx2 = sel.x2, sy1 = sel.y1, sy2 = sel.y2;
+                    // having different aspect ratio breaks rendering (TOFIX in Image.image())
+                    sx2 = Math.min(Math.max(sx1 + (sy2-sy1)*((rw-1)/(rh-1)), 0), rw-1);
+                    currentSelection = [sx1/(rw-1), sy1/(rh-1), sx2/(rw-1), sy2/(rh-1)];
                     areaSelect.hide();
                     doSelect = true;
 
-                    cX1 = sel.x1;
-                    cY1 = sel.y1;
-                    cX2 = sel.x2;
-                    cY2 = sel.y2;
+                    cX1 = Math.floor(sx1*w/rw);
+                    cY1 = Math.floor(sy1*h/rh);
+                    cX2 = Math.floor(sx2*w/rw);
+                    cY2 = Math.floor(sy2*h/rh);
 
                     setTimeout(function() {
                         selectBt.style.display = 'none';
