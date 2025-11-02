@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en" class="no-ie">
+<head>
+<title>Abacus REPL: Computer Algebra and Symbolic Computations System for Combinatorics and Algebraic Number Theory for JavaScript</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="description" content="Abacus REPL: Combinatorics, Tensors, Permutations, Combinations, Variations, Subsets, Restricted Partitions, Restricted Compositions, Set Partitions, Algebraic Number Theory, Matrices, Polynomials, Greatest Common Divisor, Gröbner Basis, Prime Factorisation, Continued Fractions, Diophantine Systems Equations" />
+<meta property="og:url" content="https://foo123.github.io/examples/abacus-repl/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#fefefe">
+<link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+<link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
+<link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
+<link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
+<style type="text/css">
+body {
+    font-size: 16px;
+    font-family: Helvetica, sans-serif;
+    color: #343434;
+    background: #efefef;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 2px 10px 30px 10px;
+}
+.code {
+    position: relative;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    outline: 0;
+    padding: 8px 2px;
+    width: 100%;
+    min-height: 100px;
+}
+.math {
+    position: relative;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    outline: 0;
+    padding: 4px;
+    padding-left: 30px;
+    width: 100%;
+    overflow: hidden;
+    overflow-x: auto;
+}
+mjx-container[jax="CHTML"][display="true"] {
+  text-align: left !important;
+}
+.err {
+    position: relative;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    outline: 0;
+    padding: 8px 4px;
+    width: 100%;
+}
+.label {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    font-style: italic;
+    font-weight: bold;
+    width: 62px;
+    text-align: right;
+    margin-right: 4px;
+}
+#screen {
+    position: relative;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    outline: 0;
+    width: 700px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+#output {
+    position: relative;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    outline: 0;
+    width: calc(100% - 70px);
+    padding: 10px 4px;
+    border: 1px solid #232323;
+    background: #fff;
+    height: 540px;
+    overflow-y: auto;
+    display: inline-block;
+    vertical-align: top;
+}
+#input {
+    position: relative;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    outline: 0;
+    width: calc(100% - 130px);
+    display: inline-block;
+    vertical-align: top;
+}
+#inputarea {
+    position: relative;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    outline: 0;
+    width: 100%;
+    padding: 10px 4px;
+    border: 1px solid #232323;
+    height: 50px;
+}
+#run {
+    position: relative;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    outline: 0;
+    background: #fefefe;
+    color: #232323;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 4px 8px;
+    border-radius: 10px;
+    border: 1px solid #232323;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 10px;
+    margin-left: 8px;
+}
+#run:active {
+    top: 1px;
+}
+
+@media all and (max-width: 360px) {
+.label {
+    font-size: 13px;
+    width: 42px;
+}
+#output {
+    width: calc(100% - 50px);
+}
+#input {
+    width: calc(100% - 110px);
+}
+}
+@media all and (max-height: 360px) {
+#output {
+    height: 300px;
+}
+}
+</style>
+
+<script src="../common/js/codemirror/codemirror.min.js"></script>
+<script src="../common/js/codemirror/addon/lint/lint.js"></script>
+<script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
+<script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
+<script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
+<script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
+<script src="../common/js/codemirror_grammar.min.js"></script>
+<script src="../common/js/codemirror/grammar/define_grammar_mode.js"></script>
+<script type="text/javascript">
+window.MathJax = {
+  loader: {
+    typeset: false           // Perform initial typeset?
+    }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<span id="forkongithub"><a href="https://github.com/foo123/Abacus">Play with me on GitHub</a></span>
+
+<header id="header">
+<h1>Abacus REPL (2.0.0 pre-release)</h1>
+<i>A simple <b>REPL</b> for the Computer Algebra and Symbolic Computations System <b>Abacus</b></i>
+</header>
+
+<br><br>
+
+<div id="screen">
+<span class="label">output:</span><div id="output"></div><br>
+<span class="label">input:</span><div id="input"><textarea id="inputarea"></textarea></div>
+<button id="run">RUN</button>
+</div>
+
+<br><br>
+
+<footer id="footer">
+<div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
+</footer>
+
+<iframe id="iframe_sandbox" src="./abacus_runtime.html" style="display:none"></iframe>
+<script type="text/javascript">//<![CDATA[
+!function() {
+function esc_html(s)
+{
+    return s.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split(' ').join('&nbsp;').split("\n").join('<br>');
+}
+
+function Tex(output, tex_only)
+{
+    if ("function" === typeof output.toTex)
+    {
+        output = output.toTex();
+    }
+    else if (Array.isArray(output))
+    {
+        if (Array.isArray(output[0]))
+        {
+            output = output.map(entry => "\\["+'('+entry.map(a => Tex(a, true)).join(',')+')'+"\\]");
+        }
+        else
+        {
+            output = output.map(Tex);
+        }
+    }
+    else
+    {
+        output = String(output);
+    }
+    return true === tex_only ? output : (Array.isArray(output) ? output.join("\n") : ("\\["+output+"\\]"));
+}
+
+let currentLine = 0;
+function print_code(out)
+{
+    const lines = String(out).split("\n").length;
+    const code = document.createElement('textarea');
+    code.className = 'code';
+    code.innerHTML = String(out);
+    output.appendChild(code);
+    const cm = CodeMirror.fromTextArea(code, {
+        mode: "expr",
+        readOnly: true,
+        lineWrapping: true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        foldGutter: true,
+        lineNumbers: true,
+        firstLineNumber: currentLine+1,
+        gutters: ["CodeMirror-linenumbers"]
+    });
+    cm.setSize(null, lines*30);
+    currentLine += lines;
+}
+
+function print_math(out)
+{
+    if (null == out) return;
+    if (window.MathJax && window.MathJax.typesetPromise)
+    {
+        const math = document.createElement('div');
+        math.className = 'math';
+        math.innerHTML = Tex(out);
+        output.appendChild(math);
+        Promise.resolve().then(function() {
+            return MathJax.typesetPromise([math]);
+        }).catch(function(err) {
+            console.error('MathJax.Typeset failed: ' + err.message)
+        });
+    }
+}
+
+function print_err(err)
+{
+    let error = document.createElement('div');
+    error.className = 'err';
+    error.innerHTML = esc_html(err.toString());
+    output.appendChild(error);
+}
+
+let sandbox = null;
+function create_sandbox()
+{
+    if (!sandbox)
+    {
+        iframe = document.getElementById('iframe_sandbox');
+        sandbox = iframe.contentWindow;
+    }
+}
+
+function repl(inp)
+{
+    // read
+    inp = inp.trim();
+    let out = null, err = null;
+    if (inp.length)
+    {
+        // eval
+        try {
+            out = sandbox.eval(inp + ';');
+        } catch (e) {
+            err = e;
+        }
+        // print
+        if (err)
+        {
+            print_code(inp);
+            print_err(err);
+        }
+        else
+        {
+            print_code(inp);
+            print_math(out);
+        }
+        setTimeout(() => output.scrollTop = output.scrollHeight, 100);
+    }
+}
+
+function run_example(example)
+{
+    switch (String(example).toLowerCase())
+    {
+        case 'matrices':
+        ([
+            '/* matrix operations */',
+            'field = Ring.Q("x","y").associatedField()',
+            'm = Matrix(field, ['
+            +"\n"+'["x^2 + x*y", "x*y + y^2"],'
+            +"\n"+'["x*y + y^2", "x^2 + x*y"]'
+            +"\n"+'])',
+            'm.inv()',
+            'm.inv().mul(m)'
+        ]).forEach(repl);
+        break;
+        case 'polys':
+        ([
+            '/* polynomial operations */',
+            'ring = Ring.Q("x","y")',
+            'p1 = Poly("x+y", ring)',
+            'p2 = Poly("xy+2", ring)',
+            'p1.add(p2)',
+            'p1.mul(p2)',
+            'p2.divmod(p1)'
+        ]).forEach(repl);
+        break;
+        case 'gcd':
+        ([
+            '/* polynomial gcd */',
+            'ring = Ring.Q("x","y")',
+            'p1 = Poly("(x+y)(xy+1)", ring)',
+            'p2 = Poly("(x+y)(x^2+y)", ring)',
+            'p3 = ring.gcd(p1, p2)'
+        ]).forEach(repl);
+        break;
+        case 'factors':
+        ([
+            '/* polynomial factorization */',
+            'ring = Ring.Q("x","y")',
+            'p = Poly("(x+y)(xy+1)(x^2+x+2)", ring)',
+            'p.factors()[1]',
+            'p.factors()[0]'
+        ]).forEach(repl);
+        break;
+        case 'roots':
+        ([
+            '/* polynomial roots */',
+            'p = Poly("x^2+1")',
+            'p.exactroots()'
+        ]).forEach(repl);
+        break;
+    }
+}
+
+codemirror_define_grammar_mode("expr", {
+
+// prefix ID for regular expressions used in the grammar
+"RegExpID"                      : "RE::",
+
+// Style model
+"Style"                         : {
+
+     "COMMENT"                  : "comment"
+    ,"KEYWORD"                  : "keyword"
+    ,"IDENTIFIER"               : "variable"
+    ,"PROPERTY"                 : "atom"
+    ,"STRING"                   : "string"
+    ,"NUMBER"                   : "number"
+    ,"OP"                       : "builtin"
+
+},
+
+// Lexical model
+"Lex"                           : {
+    "<comment>"                 : {"type":"comment","tokens":[
+                                    // line comment
+                                    // start, end delims  (null matches end-of-line)
+                                    [  "//",  null ],
+                                    // block comments
+                                    // start,  end    delims
+                                    [  "/*",   "*/" ]
+                                ]}
+    ,"<keyword>"                : ["Abacus", "Expr", "Poly", "Ring", "Matrix"]
+    ,"<identifier>"             : "RE::/[_A-Za-z$][_A-Za-z0-9$]*/"
+    ,"<string>"                 : {"type":"escaped-block","escape":"\\","tokens":
+                                    [ "RE::/(['\"])/",   1 ]
+                                }
+    ,"<number>"                 : "RE::/\\d+(?:\\.\\d+)?/"
+    ,"<op>"                     : "RE::/[\\+\\-\\*\\/\\^=><\\(\\)\\[\\]]+/"
+},
+
+"Syntax"                        : {
+    "<expr>"                    : "(<comment>.COMMENT | <keyword>.KEYWORD | <identifier>.IDENTIFIER | '.' <identifier>.PROPERTY | <string>.STRING | <number>.NUMBER | <op>.OP)*"
+},
+
+// what to parse and in what order
+"Parser"                        : [ ["<expr>"] ]
+
+}, {
+
+"supportGrammarAnnotations" : false,
+"supportCodeFolding"        : false,
+"supportCodeMatching"       : false,
+"supportAutoCompletion"     : false
+
+});
+
+const output = document.getElementById('output');
+const input = CodeMirror.fromTextArea(document.getElementById('inputarea'), {
+    mode: "expr",
+    lineWrapping: false,
+    lineNumbers : false,
+    indentUnit: 0,
+    indentWithTabs: false,
+    foldGutter: false,
+    gutters: []
+});
+input.setSize(null, 50);
+
+create_sandbox();
+
+document.getElementById('run').addEventListener('click', () => {
+    let codetorun = input.getValue();
+    input.setValue('');
+    repl(codetorun);
+}, false);
+
+setTimeout(() => {
+    run_example('polys');
+    run_example('gcd');
+    run_example('matrices');
+}, 700);
+}();
+//]]></script>
+
+</body>
+</html>
