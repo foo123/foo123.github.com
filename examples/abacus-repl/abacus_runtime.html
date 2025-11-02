@@ -51,12 +51,32 @@ function(bigInt, Abacus) {
     Arithmetic.min = bigInt.min;
     Arithmetic.max = bigInt.max;
 }(Abacus, bigInt);
+
 // export
 window.Abacus = Abacus;
+// symbolics
 window.Expr = Abacus.Expr;
 window.Poly = Abacus.Poly;
 window.Ring = Abacus.Ring;
 window.Matrix = Abacus.Matrix;
+// combinatorics
+window.Tensor = Abacus.Tensor;
+window.Permutation = Abacus.Permutation;
+window.Combination = Abacus.Combination;
+window.Subset = Abacus.Subset;
+window.Partition = Abacus.Partition;
+window.SetPartition = Abacus.SetPartition;
+
+(function runtimeReady() {
+    if ("function" === typeof window.top.onRuntimeReady)
+    {
+        window.top.onRuntimeReady();
+    }
+    else
+    {
+        setTimeout(runtimeReady, 20);
+    }
+})();
 });
 </script>
 </head>

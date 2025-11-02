@@ -8,7 +8,7 @@
 <meta property="og:image" content="https://foo123.github.io/thumbs/abacus-repl.png">
 <meta property="og:url" content="https://foo123.github.io/examples/abacus-repl/">
 <meta name="twitter:card" content="summary">
-<meta name="theme-color" content="#fefefe">
+<meta name="theme-color" content="#efefef">
 <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
 <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
 <link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
@@ -22,6 +22,34 @@ body {
     margin: 0 auto;
     box-sizing: border-box;
     padding: 2px 10px 30px 10px;
+}
+.icon {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    --icon: none;
+    --aspect-ratio: calc(1 / 1);
+}
+.icon::before {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    content: "";
+    width: 100%;
+    height: auto;
+    padding: 0;
+    padding-bottom: calc(100% / var(--aspect-ratio));
+    background-color: transparent;
+    background-image: var(--icon);
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.icon.run {
+    --icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><path fill="green" d="M20 4v9a4 4 0 0 1-4 4H6.914l2.5 2.5L8 20.914L3.086 16L8 11.086L9.414 12.5l-2.5 2.5H16a2 2 0 0 0 2-2V4h2Z"></path></svg>');
+}
+.icon.clear {
+    --icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 17 17"><path fill="red" fill-rule="evenodd" d="m12.566 8l3.045-3.044c.42-.421.42-1.103 0-1.522L12.566.389a1.078 1.078 0 0 0-1.523 0L7.999 3.433L4.955.389a1.078 1.078 0 0 0-1.523 0L.388 3.434a1.074 1.074 0 0 0-.001 1.522L3.431 8L.387 11.044a1.075 1.075 0 0 0 .001 1.523l3.044 3.044c.42.421 1.102.421 1.523 0l3.044-3.044l3.044 3.044a1.076 1.076 0 0 0 1.523 0l3.045-3.044c.42-.421.42-1.103 0-1.523L12.566 8z"></path></svg>');
 }
 .code {
     position: relative;
@@ -59,6 +87,7 @@ mjx-container[jax="CHTML"][display="true"] {
     outline: 0;
     padding: 8px 4px;
     width: 100%;
+    color: #f90b13;
 }
 .label {
     position: relative;
@@ -70,6 +99,48 @@ mjx-container[jax="CHTML"][display="true"] {
     text-align: right;
     margin-right: 4px;
 }
+#examples {
+    text-align: center;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+#examples a {
+    color: #f90b13;
+}
+#overlay {
+    position: absolute;
+    display: block;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #efefef;
+    opacity: 0.8;
+}
+#overlay::before {
+    position: absolute;
+    display: inline-block;
+    content: "loading..";
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: -25px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+#overlay::after {
+    position: absolute;
+    display: inline-block;
+    content: "";
+    margin-top: 25px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 64px; height: 64px;
+    background: transparent url('../../css/cubes2.gif') 0 0 no-repeat;
+}
+
 #screen {
     position: relative;
     box-sizing: border-box;
@@ -77,7 +148,7 @@ mjx-container[jax="CHTML"][display="true"] {
     margin: 0;
     border: 0;
     outline: 0;
-    width: 700px;
+    width: 840px;
     max-width: 100%;
     margin: 0 auto;
 }
@@ -104,7 +175,7 @@ mjx-container[jax="CHTML"][display="true"] {
     margin: 0;
     border: 0;
     outline: 0;
-    width: calc(100% - 130px);
+    width: calc(100% - 140px);
     display: inline-block;
     vertical-align: top;
 }
@@ -120,7 +191,7 @@ mjx-container[jax="CHTML"][display="true"] {
     border: 1px solid #232323;
     height: 50px;
 }
-#run {
+.button {
     position: relative;
     box-sizing: border-box;
     padding: 0;
@@ -131,15 +202,15 @@ mjx-container[jax="CHTML"][display="true"] {
     color: #232323;
     font-weight: bold;
     font-size: 14px;
-    padding: 4px 8px;
-    border-radius: 10px;
+    padding: 6px 4px 4px 4px;
+    border-radius: 8px;
     border: 1px solid #232323;
     display: inline-block;
     vertical-align: top;
-    margin-top: 10px;
-    margin-left: 8px;
+    margin-top: 4px;
+    margin-left: 4px;
 }
-#run:active {
+.button:active {
     top: 1px;
 }
 
@@ -152,7 +223,7 @@ mjx-container[jax="CHTML"][display="true"] {
     width: calc(100% - 50px);
 }
 #input {
-    width: calc(100% - 110px);
+    width: calc(100% - 120px);
 }
 }
 @media all and (max-height: 360px) {
@@ -190,9 +261,28 @@ window.MathJax = {
 <br><br>
 
 <div id="screen">
+<div id="examples">
+<b>Demo Examples:</b>
+<br>
+<a href="#" onclick="return runExample('matrices');">Matrices</a>
+• <a href="#" onclick="return runExample('polys');">Polynomials</a>
+• <a href="#" onclick="return runExample('gcd');">GCD</a>
+• <a href="#" onclick="return runExample('factors');">Factorization</a>
+• <a href="#" onclick="return runExample('roots');">Polynomial Roots</a>
+<br>
+<a href="#" onclick="return runExample('permutations');">Permutations</a>
+• <a href="#" onclick="return runExample('combinations');">Combinations</a>
+• <a href="#" onclick="return runExample('variations');">Variations</a>
+• <a href="#" onclick="return runExample('subsets');">Subsets</a>
+• <a href="#" onclick="return runExample('partitions');">Partitions</a>
+• <a href="#" onclick="return runExample('compositions');">Compositions</a>
+</div>
 <span class="label">output:</span><div id="output"></div><br>
 <span class="label">input:</span><div id="input"><textarea id="inputarea"></textarea></div>
-<button id="run">RUN</button>
+<button id="run" title="RUN" class="button"><i class="icon run" style="width:18px"></i></button>
+<button id="clear" title="CLEAR" class="button"><i class="icon clear" style="width:18px"></i></button>
+<div id="overlay">
+</div>
 </div>
 
 <br><br>
@@ -211,7 +301,11 @@ function esc_html(s)
 
 function Tex(output, tex_only)
 {
-    if ("function" === typeof output.toTex)
+    if (null == output)
+    {
+        output = '';
+    }
+    else if ("function" === typeof output.toTex)
     {
         output = output.toTex();
     }
@@ -225,6 +319,11 @@ function Tex(output, tex_only)
         {
             output = output.map(Tex);
         }
+    }
+    else if ("object" === typeof output)
+    {
+        // pass
+        output = '';
     }
     else
     {
@@ -244,7 +343,7 @@ function print_code(out)
     const cm = CodeMirror.fromTextArea(code, {
         mode: "expr",
         readOnly: true,
-        lineWrapping: true,
+        lineWrapping: false,
         indentUnit: 4,
         indentWithTabs: false,
         foldGutter: true,
@@ -279,6 +378,12 @@ function print_err(err)
     error.className = 'err';
     error.innerHTML = esc_html(err.toString());
     output.appendChild(error);
+}
+
+function clear()
+{
+    output.textContent = '';
+    currentLine = 0;
 }
 
 let sandbox = null;
@@ -323,6 +428,42 @@ function run_example(example)
 {
     switch (String(example).toLowerCase())
     {
+        case 'permutations':
+        ([
+            '/* permutations */',
+            'permutations = Permutation(3).get()'
+        ]).forEach(repl);
+        break;
+        case 'combinations':
+        ([
+            '/* combinations */',
+            'combinations = Combination(5, 3).get()'
+        ]).forEach(repl);
+        break;
+        case 'variations':
+        ([
+            '/* variations */',
+            'combinations = Combination(3, 2, {type:"variation"}).get()'
+        ]).forEach(repl);
+        break;
+        case 'subsets':
+        ([
+            '/* subsets */',
+            'subsets = Subset(3).get()'
+        ]).forEach(repl);
+        break;
+        case 'partitions':
+        ([
+            '/* partitions */',
+            'partitions = Partition(5).get()'
+        ]).forEach(repl);
+        break;
+        case 'compositions':
+        ([
+            '/* compositions */',
+            'compositions = Partition(4, {type:"composition"}).get()'
+        ]).forEach(repl);
+        break;
         case 'matrices':
         ([
             '/* matrix operations */',
@@ -342,6 +483,7 @@ function run_example(example)
             'p1 = Poly("x+y", ring)',
             'p2 = Poly("xy+2", ring)',
             'p1.add(p2)',
+            'p2.sub(p1)',
             'p1.mul(p2)',
             'p2.divmod(p1)'
         ]).forEach(repl);
@@ -367,7 +509,7 @@ function run_example(example)
         case 'roots':
         ([
             '/* polynomial roots */',
-            'p = Poly("x^2+1")',
+            'p = Poly("x^2+1", "x")',
             'p.exactroots()'
         ]).forEach(repl);
         break;
@@ -437,7 +579,7 @@ const input = CodeMirror.fromTextArea(document.getElementById('inputarea'), {
     foldGutter: false,
     gutters: []
 });
-input.setSize(null, 50);
+input.setSize(null, 70);
 
 create_sandbox();
 
@@ -446,12 +588,31 @@ document.getElementById('run').addEventListener('click', () => {
     input.setValue('');
     repl(codetorun);
 }, false);
+document.getElementById('clear').addEventListener('click', () => {
+    clear();
+}, false);
 
-setTimeout(() => {
-    run_example('polys');
-    run_example('gcd');
-    run_example('matrices');
-}, 700);
+window.runExample = function(example) {
+    clear();
+    run_example(example);
+    return false;
+};
+
+let runtimeReady = false;
+window.onRuntimeReady = () => {
+    runtimeReady = true;
+};
+(function onReady() {
+    if (!runtimeReady || !window.MathJax.typesetPromise)
+    {
+        setTimeout(onReady, 80);
+    }
+    else
+    {
+        document.getElementById('overlay').style.display = 'none';
+        run_example('polys');
+    }
+})();
 }();
 //]]></script>
 
