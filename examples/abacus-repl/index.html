@@ -163,7 +163,7 @@ mjx-container[jax="CHTML"][display="true"] {
     padding: 10px 4px;
     border: 1px solid #232323;
     background: #fff;
-    height: 540px;
+    height: 460px;
     overflow-y: auto;
     display: inline-block;
     vertical-align: top;
@@ -267,13 +267,17 @@ window.MathJax = {
 <a href="#" onclick="return runExample('matrices');">Matrices</a>
 • <a href="#" onclick="return runExample('polys');">Polynomials</a>
 • <a href="#" onclick="return runExample('gcd');">GCD</a>
-• <a href="#" onclick="return runExample('factors');">Factorization</a>
+<br>
+<a href="#" onclick="return runExample('factors');">Polynomial Factorization</a>
 • <a href="#" onclick="return runExample('roots');">Polynomial Roots</a>
 <br>
 <a href="#" onclick="return runExample('permutations');">Permutations</a>
-• <a href="#" onclick="return runExample('combinations');">Combinations</a>
+• <a href="#" onclick="return runExample('derangements');">Derangements</a>
+<br>
+<a href="#" onclick="return runExample('combinations');">Combinations</a>
 • <a href="#" onclick="return runExample('variations');">Variations</a>
-• <a href="#" onclick="return runExample('subsets');">Subsets</a>
+<br>
+<a href="#" onclick="return runExample('subsets');">Subsets</a>
 • <a href="#" onclick="return runExample('partitions');">Partitions</a>
 • <a href="#" onclick="return runExample('compositions');">Compositions</a>
 </div>
@@ -432,6 +436,12 @@ function run_example(example)
         ([
             '/* permutations */',
             'permutations = Permutation(3).get()'
+        ]).forEach(repl);
+        break;
+        case 'derangements':
+        ([
+            '/* derangements */',
+            'derangements = Permutation(4, {type:"derangement"}).get()'
         ]).forEach(repl);
         break;
         case 'combinations':
