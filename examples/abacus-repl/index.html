@@ -266,10 +266,12 @@ window.MathJax = {
 <br>
 <a href="#" onclick="return runExample('matrices');">Matrices</a>
 • <a href="#" onclick="return runExample('polys');">Polynomials</a>
+<br>
+<a href="#" onclick="return runExample('factors');">Factorization</a>
 • <a href="#" onclick="return runExample('gcd');">GCD</a>
 <br>
-<a href="#" onclick="return runExample('factors');">Polynomial Factorization</a>
-• <a href="#" onclick="return runExample('roots');">Polynomial Roots</a>
+<a href="#" onclick="return runExample('roots');">Polynomial Roots</a>
+• <a href="#" onclick="return runExample('zeros');">Polynomial Zeros</a>
 <br>
 <a href="#" onclick="return runExample('permutations');">Permutations</a>
 • <a href="#" onclick="return runExample('derangements');">Derangements</a>
@@ -336,11 +338,14 @@ function Tex(output, tex_only)
     return true === tex_only ? output : (Array.isArray(output) ? output.join("\n") : ("\\["+output+"\\]"));
 }
 
+let id = 0;
 let currentLine = 0;
+let CM = {};
 function print_code(out)
 {
     const lines = String(out).split("\n").length;
     const code = document.createElement('textarea');
+    code.id = 'code-'+String(++id);
     code.className = 'code';
     code.innerHTML = String(out);
     output.appendChild(code);
@@ -356,6 +361,7 @@ function print_code(out)
         gutters: ["CodeMirror-linenumbers"]
     });
     cm.setSize(null, lines*30);
+    CM[code.id] = cm;
     currentLine += lines;
 }
 
@@ -365,6 +371,7 @@ function print_math(out)
     if (window.MathJax && window.MathJax.typesetPromise)
     {
         const math = document.createElement('div');
+        math.id = 'math-'+String(++id);
         math.className = 'math';
         math.innerHTML = Tex(out);
         output.appendChild(math);
@@ -386,6 +393,22 @@ function print_err(err)
 
 function clear()
 {
+    [].forEach.call(output.children, function(el) {
+        if ('math' === el.className)
+        {
+            MathJax.typesetClear([el]);
+            //el.textContent = '';
+        }
+        else if ('code' === el.className)
+        {
+            const cm = CM[el.id];
+            if (cm)
+            {
+                delete CM[el.id];
+                cm.toTextArea();
+            }
+        }
+    });
     output.textContent = '';
     currentLine = 0;
 }
@@ -424,7 +447,7 @@ function repl(inp)
             print_code(inp);
             print_math(out);
         }
-        setTimeout(() => output.scrollTop = output.scrollHeight, 100);
+        setTimeout(() => output.scrollTop = output.scrollHeight, 40);
     }
 }
 
@@ -453,7 +476,7 @@ function run_example(example)
         case 'variations':
         ([
             '/* variations */',
-            'combinations = Combination(3, 2, {type:"variation"}).get()'
+            'variations = Combination(3, 2, {type:"variation"}).get()'
         ]).forEach(repl);
         break;
         case 'subsets':
@@ -491,7 +514,7 @@ function run_example(example)
             '/* polynomial operations */',
             'ring = Ring.Q("x","y")',
             'p1 = Poly("x+y", ring)',
-            'p2 = Poly("xy+2", ring)',
+            'p2 = Poly("(x+y)(xy+1)", ring)',
             'p1.add(p2)',
             'p2.sub(p1)',
             'p1.mul(p2)',
@@ -504,7 +527,7 @@ function run_example(example)
             'ring = Ring.Q("x","y")',
             'p1 = Poly("(x+y)(xy+1)", ring)',
             'p2 = Poly("(x+y)(x^2+y)", ring)',
-            'p3 = ring.gcd(p1, p2)'
+            'ring.gcd(p1, p2)'
         ]).forEach(repl);
         break;
         case 'factors':
@@ -521,6 +544,13 @@ function run_example(example)
             '/* polynomial roots */',
             'p = Poly("x^2+1", "x")',
             'p.exactroots()'
+        ]).forEach(repl);
+        break;
+        case 'zeros':
+        ([
+            '/* polynomial zeros */',
+            'p = Poly("x^6+x^4+2x+1", "x")',
+            'p.zeros().map(z => z.toDec())'
         ]).forEach(repl);
         break;
     }
