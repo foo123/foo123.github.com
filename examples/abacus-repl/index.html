@@ -305,38 +305,43 @@ function esc_html(s)
     return s.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split(' ').join('&nbsp;').split("\n").join('<br>');
 }
 
-function Tex(output, tex_only)
+function toTex(x)
 {
-    if (null == output)
+    if (null == x)
     {
         // pass
-        output = '';
+        x = '';
     }
-    else if ("function" === typeof output.toTex)
+    else if ("function" === typeof x.toTex)
     {
-        output = output.toTex();
+        x = x.toTex();
     }
-    else if (Array.isArray(output))
+    else if (Array.isArray(x))
     {
-        if (Array.isArray(output[0]))
-        {
-            output = output.map(entry => "\\["+'('+entry.map(a => Tex(a, true)).join(',')+')'+"\\]");
-        }
-        else
-        {
-            output = output.map(Tex);
-        }
+        x = '\\left(' + x.map(toTex).join(',') + '\\right)';
     }
-    else if (("object" === typeof output) || ("function" === typeof output))
+    else if (("object" === typeof x) || ("function" === typeof x))
     {
         // pass
-        output = '';
+        x = '';
     }
     else
     {
-        output = String(output);
+        x = String(x);
     }
-    return true === tex_only ? output : (Array.isArray(output) ? output.join("\n") : ("\\["+output+"\\]"));
+    return x;
+}
+function Tex(x)
+{
+    if (Array.isArray(x))
+    {
+        x = "\\[" + x.map(toTex).join("\\]\n\\[") + "\\]";
+    }
+    else
+    {
+        x = "\\[" + toTex(x) + "\\]";
+    }
+    return x;
 }
 
 let printCompleted = Promise.resolve();
@@ -443,14 +448,13 @@ function repl(inp)
 
         // print
         ++cnt;
+        print_code(inp);
         if (err)
         {
-            print_code(inp);
             print_err(err);
         }
         else
         {
-            print_code(inp);
             print_math(out);
         }
         printCompleted = printCompleted.then(() => output.scrollTop = output.scrollHeight);
@@ -541,9 +545,8 @@ function run_example(example)
             '/* polynomial factorization */',
             'ring = Ring.Q("x","y")',
             'p = Poly("3(x+y)(xy+1)(x^2+x+2)", ring)',
-            'p.factors()[1]',
-            'p.factors()[0]',
-            'p.factors()[0].reduce((e, f) => e.mul(f[0].toExpr().pow(f[1])), p.factors()[1].toExpr())'
+            '[factors, content] = p.factors()',
+            'factors.reduce((expr, fac) => expr.mul(fac[0].toExpr().pow(fac[1])), content.toExpr())'
         ]).forEach(repl);
         break;
         case 'roots':
