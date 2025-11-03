@@ -345,7 +345,7 @@ let cnt = 0;
 let CM = {};
 function print_code(out)
 {
-    const lines = out.split("\n").length;
+    const lines = out.split("\n");
     const code = document.createElement('textarea');
     code.id = 'code-' + String(cnt);
     code.className = 'code';
@@ -362,9 +362,9 @@ function print_code(out)
         firstLineNumber: currentLine+1,
         gutters: ["CodeMirror-linenumbers"]
     });
-    cm.setSize(null, lines*30);
+    cm.setSize(null, lines.length*(lines.reduce((m, l) => Math.max(m, l.length), 0) > 80 ? 50 : 30));
     CM[code.id] = cm;
-    currentLine += lines;
+    currentLine += lines.length;
 }
 
 function print_math(out)
@@ -540,9 +540,10 @@ function run_example(example)
         ([
             '/* polynomial factorization */',
             'ring = Ring.Q("x","y")',
-            'p = Poly("(x+y)(xy+1)(x^2+x+2)", ring)',
+            'p = Poly("3(x+y)(xy+1)(x^2+x+2)", ring)',
             'p.factors()[1]',
-            'p.factors()[0]'
+            'p.factors()[0]',
+            'p.factors()[0].reduce((e, f) => e.mul(f[0].toExpr().pow(f[1])), p.factors()[1].toExpr())'
         ]).forEach(repl);
         break;
         case 'roots':
