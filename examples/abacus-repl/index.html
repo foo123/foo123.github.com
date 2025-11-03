@@ -155,7 +155,7 @@ mjx-container[jax="CHTML"][display="true"] {
     margin: 0;
     border: 0;
     outline: 0;
-    width: 840px;
+    width: 1200px;
     max-width: 100%;
     margin: 0 auto;
 }
@@ -185,6 +185,7 @@ mjx-container[jax="CHTML"][display="true"] {
     width: calc(100% - 140px);
     display: inline-block;
     vertical-align: top;
+    border: 1px solid #232323;
 }
 #inputarea {
     position: relative;
@@ -197,6 +198,12 @@ mjx-container[jax="CHTML"][display="true"] {
     padding: 10px 4px;
     border: 1px solid #232323;
     height: 50px;
+}
+#buttons {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    font-size: 0;
 }
 .button {
     position: relative;
@@ -263,6 +270,7 @@ mjx-container[jax="CHTML"][display="true"] {
 <script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
 <script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
 <script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
+<script src="../common/js/codemirror/addon/display/placeholder.js"></script>
 <script src="../common/js/codemirror_grammar.min.js"></script>
 <script src="../common/js/codemirror/grammar/define_grammar_mode.js"></script>
 <script src="../common/js/Dromeo.min.js"></script>
@@ -310,10 +318,10 @@ window.MathJax = {
 • <a href="#" onclick="return runExample('setpartitions');">SetPartitions</a>
 </div>
 <span class="label">output:</span><div id="output"></div><br>
-<span class="label">input:</span><div id="input"><textarea id="inputarea"></textarea></div><div style="display:inline-block">
-<button id="run" title="Run" class="button"><i class="icon run" style="width:18px"></i></button>
-<button id="clear" title="Clear" class="button"><i class="icon clear" style="width:18px"></i></button>
-<br><button id="share" title="Share Session" class="button" style="font-size:18px;margin-top:8px;">Share</button>
+<span class="label">input:</span><div id="input"><textarea id="inputarea" placeholder="code to run.."></textarea></div><div id="buttons">
+<button id="run" title="Run" class="button"><i class="icon run" style="width:20px"></i></button>
+<button id="clear" title="Clear" class="button"><i class="icon clear" style="width:20px"></i></button>
+<br><button id="share" title="Share Session" class="button" style="font-size:21px;margin-top:8px;">Share</button>
 </div>
 <div id="overlay">
 </div>
