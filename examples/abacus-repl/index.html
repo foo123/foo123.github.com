@@ -278,10 +278,11 @@ window.MathJax = {
 <br>
 <a href="#" onclick="return runExample('combinations');">Combinations</a>
 • <a href="#" onclick="return runExample('variations');">Variations</a>
+• <a href="#" onclick="return runExample('subsets');">Subsets</a>
 <br>
-<a href="#" onclick="return runExample('subsets');">Subsets</a>
-• <a href="#" onclick="return runExample('partitions');">Partitions</a>
+<a href="#" onclick="return runExample('partitions');">Partitions</a>
 • <a href="#" onclick="return runExample('compositions');">Compositions</a>
+• <a href="#" onclick="return runExample('setpartitions');">SetPartitions</a>
 </div>
 <span class="label">output:</span><div id="output"></div><br>
 <span class="label">input:</span><div id="input"><textarea id="inputarea"></textarea></div>
@@ -507,6 +508,12 @@ function run_example(example)
             'compositions = Partition(4, {type:"composition"}).get()'
         ]).forEach(repl);
         break;
+        case 'setpartitions':
+        ([
+            '/* set partitions */',
+            'setpartitions = SetPartition(4,{"parts=":3}).get()'
+        ]).forEach(repl);
+        break;
         case 'matrices':
         ([
             '/* matrix operations */',
@@ -553,13 +560,18 @@ function run_example(example)
         ([
             '/* polynomial roots */',
             'p = Poly("x^2+1", "x")',
-            'p.exactroots()'
+            '/* all complex roots, when solvable */',
+            'p.exactroots()',
+            'p = Poly("(x-1)(x+1)", "x")',
+            '/* only rational roots, if any */',
+            'p.roots()'
         ]).forEach(repl);
         break;
         case 'zeros':
         ([
             '/* polynomial zeros */',
             'p = Poly("x^6+x^4+2x+1", "x")',
+            '/* all complex zeros, approximately */',
             'p.zeros().map(z => z.toDec())'
         ]).forEach(repl);
         break;
@@ -597,7 +609,8 @@ codemirror_define_grammar_mode("expr", {
     ,"<jskeyword>"                : [
                                     "if", "else", "for", "do", "while",
                                     "break", "continue", "catch", "throw",
-                                    "function", "async", "await", "goto"
+                                    "function", "async", "await", "goto",
+                                    "new", "true", "false", "null"
                                 ]
     ,"<keyword>"                : [
                                     "Abacus", "Expr", "Poly", "Ring", "Matrix",
