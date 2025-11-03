@@ -99,6 +99,9 @@ mjx-container[jax="CHTML"][display="true"] {
     text-align: right;
     margin-right: 4px;
 }
+.showcase {
+    color: inherit;
+}
 #examples {
     text-align: center;
     margin-bottom: 10px;
@@ -213,7 +216,23 @@ mjx-container[jax="CHTML"][display="true"] {
 .button:active {
     top: 1px;
 }
-
+#footer {
+    position: relative;
+    box-sizing: border-box;
+    display: block;
+    border-top: 1px solid #fff;
+    padding-top: 20px;
+    text-align: center;
+}
+#footer::before {
+    position: absolute;
+    didplay: block;
+    box-sizing: border-box;
+    content: "";
+    top: 2px; left: 0;
+    width: 100%; height: 0;
+    border-top: 1px solid #bbb;
+}
 @media all and (max-width: 360px) {
 .label {
     font-size: 13px;
@@ -286,16 +305,21 @@ window.MathJax = {
 </div>
 <span class="label">output:</span><div id="output"></div><br>
 <span class="label">input:</span><div id="input"><textarea id="inputarea"></textarea></div>
-<button id="run" title="RUN" class="button"><i class="icon run" style="width:18px"></i></button>
-<button id="clear" title="CLEAR" class="button"><i class="icon clear" style="width:18px"></i></button>
+<button id="run" title="Run" class="button"><i class="icon run" style="width:18px"></i></button>
+<button id="clear" title="Clear" class="button"><i class="icon clear" style="width:18px"></i></button>
 <div id="overlay">
 </div>
 </div>
 
-<br><br>
+<br><br><br>
 
 <footer id="footer">
-<div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
+<div class="showcase">Computer Algebra by <a href="https://github.com/foo123/Abacus" target="_blank">Abacus</a></div>
+<div class="showcase">Big Integer Arithmetic plugin by <a href="https://github.com/peterolson/BigInteger.js" target="_blank">BigInteger.js</a></div>
+<div class="showcase">Syntax Highlight by <a href="https://codemirror.net/" target="_blank">CodeMirror</a></div>
+<div class="showcase">Syntax Highlight Grammar by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">CodeMirror Grammar</a></div>
+<div class="showcase">Mathematics Rendering by <a href="https://www.mathjax.org/" target="_blank">MathJax</a></div>
+<div class="fluid col-1-1 text-center" style="margin-top: 10px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
 </footer>
 
 <iframe id="sandbox" src="./abacus_runtime.html" style="display:none"></iframe>
