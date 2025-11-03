@@ -10,6 +10,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#efefef">
 <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
+<link rel="stylesheet" type="text/css" href="../common/css/humane/libnotify.css" />
 <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
 <link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
 <link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
@@ -98,6 +99,9 @@ mjx-container[jax="CHTML"][display="true"] {
     width: 62px;
     text-align: right;
     margin-right: 4px;
+}
+.msg.error {
+    color: #f90b13;
 }
 .showcase {
     color: inherit;
@@ -252,6 +256,7 @@ mjx-container[jax="CHTML"][display="true"] {
 }
 </style>
 
+<script src="../common/js/humane.min.js"></script>
 <script src="../common/js/codemirror/codemirror.min.js"></script>
 <script src="../common/js/codemirror/addon/lint/lint.js"></script>
 <script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
@@ -260,6 +265,7 @@ mjx-container[jax="CHTML"][display="true"] {
 <script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
 <script src="../common/js/codemirror_grammar.min.js"></script>
 <script src="../common/js/codemirror/grammar/define_grammar_mode.js"></script>
+<script src="../common/js/Dromeo.min.js"></script>
 <script type="text/javascript">
 window.MathJax = {
   loader: {
@@ -304,9 +310,11 @@ window.MathJax = {
 • <a href="#" onclick="return runExample('setpartitions');">SetPartitions</a>
 </div>
 <span class="label">output:</span><div id="output"></div><br>
-<span class="label">input:</span><div id="input"><textarea id="inputarea"></textarea></div>
+<span class="label">input:</span><div id="input"><textarea id="inputarea"></textarea></div><div style="display:inline-block">
 <button id="run" title="Run" class="button"><i class="icon run" style="width:18px"></i></button>
 <button id="clear" title="Clear" class="button"><i class="icon clear" style="width:18px"></i></button>
+<br><button id="share" title="Share Session" class="button" style="font-size:18px;margin-top:8px;">Share</button>
+</div>
 <div id="overlay">
 </div>
 </div>
@@ -319,6 +327,7 @@ window.MathJax = {
 <div class="showcase">Syntax Highlight by <a href="https://codemirror.net/" target="_blank">CodeMirror</a></div>
 <div class="showcase">Syntax Highlight Grammar by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">CodeMirror Grammar</a></div>
 <div class="showcase">Mathematics Rendering by <a href="https://www.mathjax.org/" target="_blank">MathJax</a></div>
+<div class="showcase">Notifications by <a href="https://wavded.github.io/humane-js/" target="_blank">Humane.js</a></div>
 <div class="fluid col-1-1 text-center" style="margin-top: 10px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
 </footer>
 
@@ -373,6 +382,7 @@ let printCompleted = Promise.resolve();
 let currentLine = 0;
 let cnt = 0;
 let CM = {};
+let session = [];
 function print_code(out)
 {
     const lines = out.split("\n");
@@ -445,6 +455,7 @@ function clear()
     output.textContent = '';
     currentLine = 0;
     cnt = 0;
+    session = [];
 }
 
 let sandbox = null;
@@ -458,10 +469,12 @@ function create_sandbox()
 
 function repl(inp)
 {
+    if (null == inp) return;
     inp = String(inp).trim();
     if (inp.length)
     {
         // read
+        session.push(inp); // add to current session
         let out = null, err = null;
 
         // eval
@@ -486,60 +499,67 @@ function repl(inp)
     }
 }
 
+function run_session(session)
+{
+    if (Array.isArray(session))
+    {
+        session.forEach(repl);
+    }
+}
 function run_example(example)
 {
     switch (String(example).toLowerCase())
     {
         case 'permutations':
-        ([
+            run_session([
             '/* permutations */',
             'permutations = Permutation(3).get()'
-        ]).forEach(repl);
+            ]);
         break;
         case 'derangements':
-        ([
+            run_session([
             '/* derangements */',
             'derangements = Permutation(4, {type:"derangement"}).get()'
-        ]).forEach(repl);
+            ]);
         break;
         case 'combinations':
-        ([
+            run_session([
             '/* combinations */',
             'combinations = Combination(5, 3).get()'
-        ]).forEach(repl);
+            ]);
         break;
         case 'variations':
-        ([
+            run_session([
             '/* variations */',
             'variations = Combination(3, 2, {type:"variation"}).get()'
-        ]).forEach(repl);
+            ]);
         break;
         case 'subsets':
-        ([
+            run_session([
             '/* subsets */',
             'subsets = Subset(3).get()'
-        ]).forEach(repl);
+            ]);
         break;
         case 'partitions':
-        ([
+            run_session([
             '/* partitions */',
             'partitions = Partition(5).get()'
-        ]).forEach(repl);
+            ]);
         break;
         case 'compositions':
-        ([
+            run_session([
             '/* compositions */',
             'compositions = Partition(4, {type:"composition"}).get()'
-        ]).forEach(repl);
+            ]);
         break;
         case 'setpartitions':
-        ([
+            run_session([
             '/* set partitions */',
             'setpartitions = SetPartition(4,{"parts=":3}).get()'
-        ]).forEach(repl);
+            ]);
         break;
         case 'matrices':
-        ([
+            run_session([
             '/* matrix operations */',
             'field = Ring.Q("x","y").associatedField()',
             'm = Matrix(field, ['
@@ -548,10 +568,10 @@ function run_example(example)
             +"\n"+'])',
             'm.inv()',
             'm.inv().mul(m)'
-        ]).forEach(repl);
+            ]);
         break;
         case 'polys':
-        ([
+            run_session([
             '/* polynomial operations */',
             'ring = Ring.Q("x","y")',
             'p1 = Poly("x+y", ring)',
@@ -560,28 +580,28 @@ function run_example(example)
             'p2.sub(p1)',
             'p1.mul(p2)',
             'p2.divmod(p1)'
-        ]).forEach(repl);
+            ]);
         break;
         case 'gcd':
-        ([
+            run_session([
             '/* polynomial gcd */',
             'ring = Ring.Q("x","y")',
             'p1 = Poly("(x+y)(xy+1)", ring)',
             'p2 = Poly("(x+y)(x^2+y)", ring)',
             'ring.gcd(p1, p2)'
-        ]).forEach(repl);
+            ]);
         break;
         case 'factors':
-        ([
+            run_session([
             '/* polynomial factorization */',
             'ring = Ring.Q("x","y")',
             'p = Poly("3(x+y)(xy+1)(x^2+x+2)", ring)',
             '[factors, content] = p.factors()',
             'factors.reduce((expr, fac) => expr.mul(fac[0].toExpr().pow(fac[1])), content.toExpr())'
-        ]).forEach(repl);
+            ]);
         break;
         case 'roots':
-        ([
+            run_session([
             '/* polynomial roots */',
             'p = Poly("x^2+1", "x")',
             '/* all complex roots, when solvable */',
@@ -589,18 +609,46 @@ function run_example(example)
             'p = Poly("(x-1)(x+1)", "x")',
             '/* only rational roots, if any */',
             'p.roots()'
-        ]).forEach(repl);
+            ]);
         break;
         case 'zeros':
-        ([
+            run_session([
             '/* polynomial zeros */',
             'p = Poly("x^6+x^4+2x+1", "x")',
             '/* all complex zeros, approximately */',
             'p.zeros().map(z => z.toDec())'
-        ]).forEach(repl);
+            ]);
         break;
     }
 }
+function notify(msg, type)
+{
+    if ('error' === type) humane.error(msg);
+    else if ('success' === type) humane.info(msg);
+    else humane.log(msg);
+}
+function obj_to_array(o)
+{
+    o.length = Object.keys(o).length;
+    return Array.prototype.slice.call(o);
+}
+function session_link(href)
+{
+    if (arguments.length)
+    {
+        const uri = new URL(href);
+        return '' !== uri.hash ? obj_to_array((new Dromeo()).unglue(uri.hash.slice(1).split('+').join('%20')).session || []) : [];
+    }
+    else
+    {
+        const uri = new URL(location.href);
+        uri.hash = '#' + (new Dromeo()).glue({session:session});
+        return uri.href;
+    }
+}
+
+humane.info = humane.spawn({addnCls: 'humane-libnotify-success', timeout: 4000})
+humane.error = humane.spawn({addnCls: 'humane-libnotify-error', timeout: 4000})
 
 codemirror_define_grammar_mode("expr", {
 // prefix ID for regular expressions used in the grammar
@@ -689,6 +737,13 @@ document.getElementById('run').addEventListener('click', () => {
 document.getElementById('clear').addEventListener('click', () => {
     clear();
 }, false);
+document.getElementById('share').addEventListener('click', () => {
+    navigator.clipboard.writeText(session_link()).then(() => {
+        notify('Session link copied to clipboard.', 'success');
+    }).catch((err) => {
+        notify('Cannot write to clipboard!', 'error');
+    });
+}, false);
 
 window.runExample = function(example) {
     clear();
@@ -703,12 +758,14 @@ window.onRuntimeReady = () => {
 (function onReady() {
     if (!runtimeReady || !window.MathJax.typesetPromise)
     {
-        setTimeout(onReady, 80);
+        setTimeout(onReady, 80); // wait
     }
     else
     {
         document.getElementById('overlay').style.display = 'none';
-        run_example('polys');
+        let loaded_session = session_link(location.href);
+        if (loaded_session.length) run_session(loaded_session); // other session passed
+        else run_example('polys'); // default
     }
 })();
 }();
