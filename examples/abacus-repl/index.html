@@ -297,7 +297,7 @@ window.MathJax = {
 <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
 </footer>
 
-<iframe id="iframe_sandbox" src="./abacus_runtime.html" style="display:none"></iframe>
+<iframe id="sandbox" src="./abacus_runtime.html" style="display:none"></iframe>
 <script type="text/javascript">//<![CDATA[
 !function() {
 function esc_html(s)
@@ -309,6 +309,7 @@ function Tex(output, tex_only)
 {
     if (null == output)
     {
+        // pass
         output = '';
     }
     else if ("function" === typeof output.toTex)
@@ -326,7 +327,7 @@ function Tex(output, tex_only)
             output = output.map(Tex);
         }
     }
-    else if ("object" === typeof output)
+    else if (("object" === typeof output) || ("function" === typeof output))
     {
         // pass
         output = '';
@@ -338,16 +339,17 @@ function Tex(output, tex_only)
     return true === tex_only ? output : (Array.isArray(output) ? output.join("\n") : ("\\["+output+"\\]"));
 }
 
-let id = 0;
+let printCompleted = Promise.resolve();
 let currentLine = 0;
+let cnt = 0;
 let CM = {};
 function print_code(out)
 {
-    const lines = String(out).split("\n").length;
+    const lines = out.split("\n").length;
     const code = document.createElement('textarea');
-    code.id = 'code-'+String(++id);
+    code.id = 'code-' + String(cnt);
     code.className = 'code';
-    code.innerHTML = String(out);
+    code.innerHTML = out;
     output.appendChild(code);
     const cm = CodeMirror.fromTextArea(code, {
         mode: "expr",
@@ -368,14 +370,14 @@ function print_code(out)
 function print_math(out)
 {
     if (null == out) return;
-    if (window.MathJax && window.MathJax.typesetPromise)
+    if (window.MathJax.typesetPromise)
     {
         const math = document.createElement('div');
-        math.id = 'math-'+String(++id);
+        math.id = 'math-' + String(cnt);
         math.className = 'math';
         math.innerHTML = Tex(out);
         output.appendChild(math);
-        Promise.resolve().then(function() {
+        printCompleted = printCompleted.then(function() {
             return MathJax.typesetPromise([math]);
         }).catch(function(err) {
             console.error('MathJax.Typeset failed: ' + err.message)
@@ -386,6 +388,7 @@ function print_math(out)
 function print_err(err)
 {
     let error = document.createElement('div');
+    error.id = 'err-' + String(cnt);
     error.className = 'err';
     error.innerHTML = esc_html(err.toString());
     output.appendChild(error);
@@ -401,7 +404,7 @@ function clear()
         }
         else if ('code' === el.className)
         {
-            const cm = CM[el.id];
+            const cm = CM[el.id || ''];
             if (cm)
             {
                 delete CM[el.id];
@@ -411,6 +414,7 @@ function clear()
     });
     output.textContent = '';
     currentLine = 0;
+    cnt = 0;
 }
 
 let sandbox = null;
@@ -418,25 +422,27 @@ function create_sandbox()
 {
     if (!sandbox)
     {
-        iframe = document.getElementById('iframe_sandbox');
-        sandbox = iframe.contentWindow;
+        sandbox = document.getElementById('sandbox').contentWindow;
     }
 }
 
 function repl(inp)
 {
-    // read
-    inp = inp.trim();
-    let out = null, err = null;
+    inp = String(inp).trim();
     if (inp.length)
     {
+        // read
+        let out = null, err = null;
+
         // eval
         try {
             out = sandbox.eval(inp + ';');
         } catch (e) {
             err = e;
         }
+
         // print
+        ++cnt;
         if (err)
         {
             print_code(inp);
@@ -447,7 +453,7 @@ function repl(inp)
             print_code(inp);
             print_math(out);
         }
-        setTimeout(() => output.scrollTop = output.scrollHeight, 40);
+        printCompleted = printCompleted.then(() => output.scrollTop = output.scrollHeight);
     }
 }
 
@@ -625,7 +631,7 @@ const input = CodeMirror.fromTextArea(document.getElementById('inputarea'), {
     foldGutter: false,
     gutters: []
 });
-input.setSize(null, 70);
+input.setSize(null, 90);
 
 create_sandbox();
 
