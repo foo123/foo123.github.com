@@ -557,7 +557,6 @@ function run_example(example)
 }
 
 codemirror_define_grammar_mode("expr", {
-
 // prefix ID for regular expressions used in the grammar
 "RegExpID"                      : "RE::",
 
@@ -565,6 +564,7 @@ codemirror_define_grammar_mode("expr", {
 "Style"                         : {
 
      "COMMENT"                  : "comment"
+    ,"JSKEYWORD"                : "def"
     ,"KEYWORD"                  : "keyword"
     ,"IDENTIFIER"               : "variable"
     ,"PROPERTY"                 : "atom"
@@ -579,34 +579,39 @@ codemirror_define_grammar_mode("expr", {
     "<comment>"                 : {"type":"comment","tokens":[
                                     // line comment
                                     // start, end delims  (null matches end-of-line)
-                                    [  "//",  null ],
+                                    [ "//",  null],
                                     // block comments
                                     // start,  end    delims
-                                    [  "/*",   "*/" ]
+                                    ["/*",   "*/"]
                                 ]}
-    ,"<keyword>"                : ["Abacus", "Expr", "Poly", "Ring", "Matrix"]
+    ,"<jskeyword>"                : [
+                                    "if", "else", "for", "do", "while",
+                                    "break", "continue", "function", "goto"
+                                ]
+    ,"<keyword>"                : [
+                                    "Abacus", "Expr", "Poly", "Ring", "Matrix",
+                                    "Tensor", "Permutation", "Combination",
+                                    "Subset", "Partition", "SetPartition"
+                                ]
     ,"<identifier>"             : "RE::/[_A-Za-z$][_A-Za-z0-9$]*/"
     ,"<string>"                 : {"type":"escaped-block","escape":"\\","tokens":
-                                    [ "RE::/(['\"])/",   1 ]
+                                    ["RE::/(['\"])/",   1]
                                 }
     ,"<number>"                 : "RE::/\\d+(?:\\.\\d+)?/"
     ,"<op>"                     : "RE::/[\\+\\-\\*\\/\\^=><\\(\\)\\[\\]]+/"
 },
 
 "Syntax"                        : {
-    "<expr>"                    : "(<comment>.COMMENT | <keyword>.KEYWORD | <identifier>.IDENTIFIER | '.' <identifier>.PROPERTY | <string>.STRING | <number>.NUMBER | <op>.OP)*"
+    "<expr>"                    : "(<comment>.COMMENT | <jskeyword>.JSKEYWORD | <keyword>.KEYWORD | <identifier>.IDENTIFIER | '.' <comment>.COMMENT? <identifier>.PROPERTY | <string>.STRING | <number>.NUMBER | <op>.OP)*"
 },
 
 // what to parse and in what order
-"Parser"                        : [ ["<expr>"] ]
-
+"Parser"                        : [["<expr>"]]
 }, {
-
 "supportGrammarAnnotations" : false,
 "supportCodeFolding"        : false,
 "supportCodeMatching"       : false,
 "supportAutoCompletion"     : false
-
 });
 
 const output = document.getElementById('output');
