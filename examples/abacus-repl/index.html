@@ -11,18 +11,33 @@
 <meta name="theme-color" content="#efefef">
 <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
 <link rel="stylesheet" type="text/css" href="../common/css/humane/libnotify.css" />
+<link rel="stylesheet" type="text/css" href="../common/css/InfoPopup.min.css" />
 <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
-<link rel="stylesheet" href="../common/js/codemirror/addon/lint/lint.css">
-<link rel="stylesheet" href="../common/js/codemirror/addon/fold/foldgutter.css" />
 <style type="text/css">
 body {
     font-size: 16px;
     font-family: Helvetica, sans-serif;
     color: #343434;
     background: #efefef;
-    margin: 0 auto;
     box-sizing: border-box;
+    margin: 0 auto;
     padding: 2px 10px 30px 10px;
+}
+.humane {
+    font-weight: bold;
+    line-height: 1.4;
+}
+.info-popup {
+    display: inline-block;
+    width: auto;
+    max-width: 180px;
+    margin-top: -20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 8px 12px;
+    line-height: 1.4;
+    box-sizing: border-box;
 }
 .icon {
     position: relative;
@@ -99,9 +114,6 @@ mjx-container[jax="CHTML"][display="true"] {
     width: 62px;
     text-align: right;
     margin-right: 4px;
-}
-.msg.error {
-    color: #f90b13;
 }
 .showcase {
     color: inherit;
@@ -244,6 +256,11 @@ mjx-container[jax="CHTML"][display="true"] {
     width: 100%; height: 0;
     border-top: 1px solid #bbb;
 }
+@media all and (max-width: 800px) {
+h1 {
+    font-size: 1.3em;
+}
+}
 @media all and (max-width: 360px) {
 .label {
     font-size: 13px;
@@ -264,16 +281,12 @@ mjx-container[jax="CHTML"][display="true"] {
 </style>
 
 <script src="../common/js/humane.min.js"></script>
+<script src="../common/js/InfoPopup.min.js"></script>
+<script src="../common/js/Dromeo.min.js"></script>
 <script src="../common/js/codemirror/codemirror.min.js"></script>
-<script src="../common/js/codemirror/addon/lint/lint.js"></script>
-<script src="../common/js/codemirror/addon/fold/foldcode.js"></script>
-<script src="../common/js/codemirror/addon/fold/foldgutter.js"></script>
-<script src="../common/js/codemirror/addon/fold/brace-fold.js"></script>
-<script src="../common/js/codemirror/addon/fold/comment-fold.js"></script>
 <script src="../common/js/codemirror/addon/display/placeholder.js"></script>
 <script src="../common/js/codemirror_grammar.min.js"></script>
 <script src="../common/js/codemirror/grammar/define_grammar_mode.js"></script>
-<script src="../common/js/Dromeo.min.js"></script>
 <script type="text/javascript">
 window.MathJax = {
   loader: {
@@ -294,48 +307,51 @@ window.MathJax = {
 <br><br>
 
 <div id="screen">
+
 <div id="examples">
 <b>Demo Examples:</b>
 <br>
-<a href="#" onclick="return runExample('matrices');">Matrices</a>
-• <a href="#" onclick="return runExample('polys');">Polynomials</a>
+<a href="#" aria-label="run matrices example" onclick="return runExample('matrices');">Matrices</a>
+• <a href="#" aria-label="run polynomials example" onclick="return runExample('polys');">Polynomials</a>
 <br>
-<a href="#" onclick="return runExample('factors');">Factorization</a>
-• <a href="#" onclick="return runExample('gcd');">GCD</a>
+<a href="#" aria-label="run polynomial factorization example" onclick="return runExample('factors');">Factorization</a>
+• <a href="#" aria-label="run polynomial gcd example" onclick="return runExample('gcd');">GCD</a>
 <br>
-<a href="#" onclick="return runExample('roots');">Polynomial Roots</a>
-• <a href="#" onclick="return runExample('zeros');">Polynomial Zeros</a>
+<a href="#" aria-label="run polynomial roots example" onclick="return runExample('roots');">Polynomial Roots</a>
+• <a href="#" aria-label="run polynomial zeros example" onclick="return runExample('zeros');">Polynomial Zeros</a>
 <br>
-<a href="#" onclick="return runExample('permutations');">Permutations</a>
-• <a href="#" onclick="return runExample('derangements');">Derangements</a>
+<a href="#" aria-label="run permutations example" onclick="return runExample('permutations');">Permutations</a>
+• <a href="#" aria-label="run derangements example" onclick="return runExample('derangements');">Derangements</a>
 <br>
-<a href="#" onclick="return runExample('combinations');">Combinations</a>
-• <a href="#" onclick="return runExample('variations');">Variations</a>
-• <a href="#" onclick="return runExample('subsets');">Subsets</a>
+<a href="#" aria-label="run combinations example" onclick="return runExample('combinations');">Combinations</a>
+• <a href="#" aria-label="run variations example" onclick="return runExample('variations');">Variations</a>
+• <a href="#" aria-label="run subsets example" onclick="return runExample('subsets');">Subsets</a>
 <br>
-<a href="#" onclick="return runExample('partitions');">Partitions</a>
-• <a href="#" onclick="return runExample('compositions');">Compositions</a>
-• <a href="#" onclick="return runExample('setpartitions');">SetPartitions</a>
+<a href="#" aria-label="run partitions example" onclick="return runExample('partitions');">Partitions</a>
+• <a href="#" aria-label="run compositions example" onclick="return runExample('compositions');">Compositions</a>
+• <a href="#" aria-label="run set partitions example" onclick="return runExample('setpartitions');">SetPartitions</a>
 </div>
+
 <span class="label">output:</span><div id="output"></div><br>
 <span class="label">input:</span><div id="input"><textarea id="inputarea" placeholder="code to run.."></textarea></div><div id="buttons">
-<button id="run" title="Run" class="button"><i class="icon run" style="width:20px"></i></button>
-<button id="clear" title="Clear" class="button"><i class="icon clear" style="width:20px"></i></button>
-<br><button id="share" title="Share Session" class="button" style="font-size:21px;margin-top:8px;">Share</button>
+<button id="run" aria-label="run code" class="button"><i class="icon run" style="width:20px"></i></button>
+<button id="clear" aria-label="clear contents" class="button"><i class="icon clear" style="width:20px"></i></button>
+<br><button id="share" aria-label="get link to share current session" class="button" style="font-size:16px;margin-top:11px;padding:10px 11px">Share</button>
 </div>
-<div id="overlay">
-</div>
+
+<div id="overlay"></div>
 </div>
 
 <br><br><br>
 
 <footer id="footer">
 <div class="showcase">Computer Algebra by <a href="https://github.com/foo123/Abacus" target="_blank">Abacus</a></div>
-<div class="showcase">Big Integer Arithmetic plugin by <a href="https://github.com/peterolson/BigInteger.js" target="_blank">BigInteger.js</a></div>
+<div class="showcase">Big Integer Arithmetic by <a href="https://github.com/peterolson/BigInteger.js" target="_blank">BigInteger.js</a></div>
 <div class="showcase">Syntax Highlight by <a href="https://codemirror.net/" target="_blank">CodeMirror</a></div>
 <div class="showcase">Syntax Highlight Grammar by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">CodeMirror Grammar</a></div>
 <div class="showcase">Mathematics Rendering by <a href="https://www.mathjax.org/" target="_blank">MathJax</a></div>
-<div class="showcase">Notifications by <a href="https://wavded.github.io/humane-js/" target="_blank">Humane.js</a></div>
+<div class="showcase">Notifications by <a href="https://wavded.github.io/humane-js/" target="_blank">humane.js</a></div>
+<div class="showcase">Tooltips by <a href="https://github.com/foo123/InfoPopup" target="_blank">InfoPopup</a></div>
 <div class="fluid col-1-1 text-center" style="margin-top: 10px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
 </footer>
 
@@ -405,7 +421,7 @@ function print_code(out)
         lineWrapping: false,
         indentUnit: 4,
         indentWithTabs: false,
-        foldGutter: true,
+        foldGutter: false,
         lineNumbers: true,
         firstLineNumber: currentLine+1,
         gutters: ["CodeMirror-linenumbers"]
@@ -632,7 +648,7 @@ function run_example(example)
 function notify(msg, type)
 {
     if ('error' === type) humane.error(msg);
-    else if ('success' === type) humane.info(msg);
+    else if ('success' === type) humane.success(msg);
     else humane.log(msg);
 }
 function obj_to_array(o)
@@ -655,7 +671,7 @@ function session_link(href)
     }
 }
 
-humane.info = humane.spawn({addnCls: 'humane-libnotify-success', timeout: 4000})
+humane.success = humane.spawn({addnCls: 'humane-libnotify-success', timeout: 4000})
 humane.error = humane.spawn({addnCls: 'humane-libnotify-error', timeout: 4000})
 
 codemirror_define_grammar_mode("expr", {
@@ -710,6 +726,7 @@ codemirror_define_grammar_mode("expr", {
     ,"<op>"                     : "RE::/[\\+\\-\\*\\/\\^=><\\(\\)\\[\\]]+/"
 },
 
+// Syntax model
 "Syntax"                        : {
     "<expr>"                    : "(<comment>.COMMENT | <jskeyword>.JSKEYWORD | <keyword>.KEYWORD | <identifier>.IDENTIFIER | '.' <comment>.COMMENT? <identifier>.PROPERTY | <string>.STRING | <number>.NUMBER | <op>.OP)*"
 },
@@ -737,21 +754,33 @@ input.setSize(null, 90);
 
 create_sandbox();
 
-document.getElementById('run').addEventListener('click', () => {
+document.getElementById('run').addEventListener('click', (evt) => {
     let codetorun = input.getValue();
     input.setValue('');
     repl(codetorun);
 }, false);
-document.getElementById('clear').addEventListener('click', () => {
+document.getElementById('clear').addEventListener('click', (evt) => {
     clear();
 }, false);
-document.getElementById('share').addEventListener('click', () => {
-    navigator.clipboard.writeText(session_link()).then(() => {
-        notify('Session link copied to clipboard.', 'success');
-    }).catch((err) => {
-        notify('Cannot write to clipboard!', 'error');
-    });
+document.getElementById('share').addEventListener('click', (evt) => {
+    try {
+        navigator.clipboard.writeText(session_link()).then(() => {
+            notify('Session link copied to clipboard.', 'success');
+        }).catch((err) => {
+            notify('Cannot write to clipboard!', 'error');
+        });
+    } catch (err) {
+        notify('Clipboard access error!', 'error');
+    }
 }, false);
+
+InfoPopup({
+    item: '[aria-label]',
+    content: (item) => item.getAttribute('aria-label'),
+    atItemX: 'center',
+    atItemY: 'top',
+    hideDelay: 800
+});
 
 window.runExample = function(example) {
     clear();
@@ -772,7 +801,7 @@ window.onRuntimeReady = () => {
     {
         document.getElementById('overlay').style.display = 'none';
         let loaded_session = session_link(location.href);
-        if (loaded_session.length) run_session(loaded_session); // other session passed
+        if (loaded_session.length) run_session(loaded_session); // other session loaded
         else run_example('polys'); // default
     }
 })();
