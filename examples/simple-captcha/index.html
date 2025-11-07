@@ -8,8 +8,12 @@
 <meta property="og:url" content="https://foo123.github.io/examples/simple-captcha/">
 <style type="text/css">
 body {
+    --color: #121212;
+    --background: #fff;
     font-family: helvetica, sans-serif;
     font-size: 18px;
+    color: var(--color);
+    background: var(--background);
 }
 h1 {
     font-size: 1.8em;
@@ -23,10 +27,15 @@ select, button, img, pre {
 select {
     padding: 8px 12px;
     border-radius: 10px;
+    color: var(--color);
+    background: var(--background);
 }
 button {
     padding: 12px 16px;
     border-radius: 10px;
+    color: var(--color);
+    background: var(--background);
+    border: 1px solid var(--color);
 }
 button:active {
     top: 1px;
@@ -34,9 +43,11 @@ button:active {
 pre {
     max-width: calc(100% - 56px);
     overflow-x: auto;
+    color: var(--color);
 }
 label,.label {
     font-weight: bold;
+    color: var(--color);
 }
 #forkongithub  a {
     background: #aa0000;
@@ -90,6 +101,12 @@ label,.label {
         transform: rotate(45deg);
         box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
     }
+}
+@media (prefers-color-scheme:dark) {
+body {
+    --color: #fff;
+    --background: #121212;
+}
 }
 </style>
 </head><body>
