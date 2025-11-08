@@ -141,7 +141,7 @@ input,select,textarea {
     <option value="KnuthMorrisPrattMatcher">Knuth-Morris-Pratt Matcher</option>
     <option value="BoyerMooreMatcher">Boyer-Moore Matcher</option>
     <option value="TwoWayMatcher">Two-Way Matcher</option>
-    <!--<option value="FuzzyMatcher">Fuzzy Matcher</option>-->
+    <option value="FuzzyMatcher">Fuzzy Matcher</option>
 </select></div>
 
 <strong>Text: </strong>
@@ -149,6 +149,11 @@ input,select,textarea {
 
 <strong>Pattern: </strong>
 <input name="model[algorithm][pattern]" type="text" value=""/>
+
+<div mv-model="algorithm.fuzzy" mv-model-evt mv-on-model-change="show">
+<strong>Max. Errors: </strong>
+<input name="model[algorithm][errors]" type="text" value="2"/>
+</div>
 
 <button id="test" type="button" class="button" mv-evt mv-on-click="test">Run Test</button>
 <br><br>
@@ -246,6 +251,7 @@ function doTest(model)
     selectedAlgorithm = model.get('algorithm.selected');
 
     matcher = $P[selectedAlgorithm].pattern(pattern);
+    if ('FuzzyMatcher' === selectedAlgorithm) matcher._err = model.get('algorithm.errors');
 
     model.set('algorithm.name', selectedAlgorithm);
     model.set('algorithm.reflink', matcher.reference);
@@ -289,7 +295,8 @@ $panel.modelview({
                 matchedtext: 'The <span style="color:red">rain</span> in Spain stays mainly in the plain',
                 name: 'NaiveMatcher',
                 reflink: $P['NaiveMatcher'].reference,
-                desc: $P['NaiveMatcher'].description
+                desc: $P['NaiveMatcher'].description,
+                errors: 2
             },
             result: {matched: true, pos: 4, tms: 0}
         },
@@ -301,11 +308,18 @@ $panel.modelview({
                 reflink: $MV.Type.Cast.STR,
                 desc: $MV.Type.Cast.STR,
                 pattern: $MV.Type.Cast.STR,
-                text: $MV.Type.Cast.STR
+                text: $MV.Type.Cast.STR,
+                errors: $MV.Type.Cast.INT
             }
-        }/*,
+        },
 
-        validators: {}*/
+        //validators: {},
+
+        getters: {
+            "algorithm.fuzzy": function() {
+                return 'FuzzyMatcher' === this.$data.algorithm.selected;
+            }
+        }
     },
 
     actions: {
@@ -315,7 +329,8 @@ $panel.modelview({
                 action: 'test',
                 match_algorithm: algoInfo.selected,
                 pattern: algoInfo.pattern,
-                text: algoInfo.text
+                text: algoInfo.text,
+                errors: algoInfo.errors
             });
             doTest(model);
         }
@@ -336,8 +351,10 @@ appRouter.one({route:'#{%ALL%:hash}', handler:function(params) {
             appModel.set('algorithm.selected', params.match_algorithm);
         if (null != params.pattern)
             appModel.set('algorithm.pattern', params.pattern);
-        if (null !== params.text)
+        if (null != params.text)
             appModel.set('algorithm.text', params.text);
+        if (null != params.errors)
+            appModel.set('algorithm.errors', params.errors);
         setTimeout(function() {doTest(appModel);}, 10);
     }
 }});
