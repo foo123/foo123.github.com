@@ -250,8 +250,7 @@ function doTest(model)
     text = model.get('algorithm.text');
     selectedAlgorithm = model.get('algorithm.selected');
 
-    matcher = $P[selectedAlgorithm].pattern(pattern);
-    if ('FuzzyMatcher' === selectedAlgorithm) matcher._err = model.get('algorithm.errors');
+    matcher = $P[selectedAlgorithm].pattern(pattern, model.get('algorithm.errors'));
 
     model.set('algorithm.name', selectedAlgorithm);
     model.set('algorithm.reflink', matcher.reference);
