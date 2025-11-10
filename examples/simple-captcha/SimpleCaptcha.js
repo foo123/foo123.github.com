@@ -2,7 +2,7 @@
 *   SimpleCaptcha
 *   Simple image-based macthematical captcha
 *
-*   @version 2.6.1
+*   @version 2.6.2
 *   https://github.com/foo123/simple-captcha
 *
 **/
@@ -31,7 +31,7 @@ var HAS = Object.prototype.hasOwnProperty,
 
 class SimpleCaptcha
 {
-    static VERSION = '2.6.1';
+    static VERSION = '2.6.2';
 
     opts = null;
     captcha = null;
@@ -237,7 +237,7 @@ class SimpleCaptcha
         // img bitmap
         x1 = 0;
         y1 = h/2;
-        x2 = w;
+        x2 = w-1;
         y2 = h/2;
         for (j=0,i=0,x=0,y=0; i<wh; ++i,++x,j+=4)
         {
@@ -289,9 +289,9 @@ class SimpleCaptcha
                         sh = stdMath.min(h, stdMath.round(scale * ch));
                         y0 = stdMath.max(0, stdMath.round((h - sh) / 2));
                         x1 = 0;
-                        y1 = sh/2;
-                        x2 = sw;
-                        y2 = sh/2;
+                        y1 = h/2;//sh/2;
+                        x2 = w-1;//sw;
+                        y2 = h/2;//sh/2;
                         for (ys=0; ys<sh; ++ys)
                         {
                             y = stdMath.max(0, stdMath.min(h-1, stdMath.round(10 + ys / scale)));
@@ -302,7 +302,7 @@ class SimpleCaptcha
                                 if (0 < alpha)
                                 {
                                     alpha /= 255.0;
-                                    c = colorAt(xs, ys, color, x1, y1, x2, y2);
+                                    c = colorAt(x0+xs, y0+ys, color, x1, y1, x2, y2);
                                     j = ((x0+xs + (y0+ys)*w) << 2);
                                     img[j  ] = clamp(img[j  ]*(1-alpha) + alpha*c[0]);
                                     img[j+1] = clamp(img[j+1]*(1-alpha) + alpha*c[1]);
@@ -319,9 +319,9 @@ class SimpleCaptcha
                     phase = rand(0, 2) * 3.14 / 2.0;
                     amplitude = distortion && ('object' === typeof distortion) && HAS.call(distortion, String(difficulty)) ? parseFloat(distortion[String(difficulty)]) : (3 === difficulty ? 5.0 : (2 === difficulty ? 3.0 : 1.5));
                     x1 = 0;
-                    y1 = ch/2;
-                    x2 = cw;
-                    y2 = ch/2;
+                    y1 = h/2;//ch/2;
+                    x2 = w-1;//cw;
+                    y2 = h/2;//ch/2;
                     for (y=0,yw=0; y<h; ++y,yw+=w)
                     {
                         y0 = y;
@@ -335,7 +335,7 @@ class SimpleCaptcha
                                 alpha /= 255.0;
                                 xc = x - 10 + space - stdMath.floor((x - 10 + space)/(cw + space))*(cw + space);
                                 yc = y - 10;
-                                c = colorAt(xc, yc, color, x1, y1, x2, y2);
+                                c = colorAt(x, y, color, x1, y1, x2, y2);
                                 j = ((x + yw) << 2);
                                 img[j  ] = clamp(img[j  ]*(1-alpha) + alpha*c[0]);
                                 img[j+1] = clamp(img[j+1]*(1-alpha) + alpha*c[1]);
@@ -349,9 +349,9 @@ class SimpleCaptcha
         {
             // create non-distorted image data
             x1 = 0;
-            y1 = ch/2;
-            x2 = cw;
-            y2 = ch/2;
+            y1 = h/2;//ch/2;
+            x2 = w-1;//cw;
+            y2 = h/2;//ch/2;
             for (y=0,yw=0; y<h; ++y,yw+=w)
             {
                 for (x=0; x<w; ++x)
@@ -364,7 +364,7 @@ class SimpleCaptcha
                         // xc = x - x0 + space - i*(cw + space)
                         xc = x - 10 + space - stdMath.floor((x - 10 + space)/(cw + space))*(cw + space);
                         yc = y - 10;
-                        c = colorAt(xc, yc, color, x1, y1, x2, y2);
+                        c = colorAt(x, y, color, x1, y1, x2, y2);
                         j = (i << 2);
                         img[j  ] = clamp(img[j  ]*(1-alpha) + alpha*c[0]);
                         img[j+1] = clamp(img[j+1]*(1-alpha) + alpha*c[1]);
