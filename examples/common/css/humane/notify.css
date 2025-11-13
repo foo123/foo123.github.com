@@ -1,0 +1,133 @@
+html,
+body {
+    min-height: 100%;
+}
+.humane-container {
+    display: block;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    z-index: 100000;
+}
+.humane,
+.humane-notify {
+    position: fixed;
+    -moz-transition: all 0.35s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+    -webkit-transition: all 0.35s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+    -ms-transition: all 0.35s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+    -o-transition: all 0.35s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+    z-index: 100000;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+}
+.humane,
+.humane-notify {
+    font-family: Ubuntu, Arial, sans-serif;
+    text-align: center;
+    font-size: 15px;
+    bottom: 10px;
+    right: 10px;
+    opacity: 0;
+    width: 150px;
+    color: #fff;
+    padding: 10px;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABQCAYAAADYxx/bAAAABmJLR0QA/wD/AP+gvaeTAAAANElEQVQYlWNgYGB4ysTAwMDAxMjICCUQXDQWAwMDAxMTExMedcRyB6d5CAMQ5hGrjSrmAQBQdgIXlosSTwAAAABJRU5ErkJggg==');
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0,0,0,0.9)), color-stop(1, rgba(50,50,50,0.9))) no-repeat;
+    background: -moz-linear-gradient(top, rgba(0,0,0,0.9) 0%, rgba(50,50,50,0.9) 100%) no-repeat;
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0.9) 0%, rgba(50,50,50,0.9) 100%) no-repeat;
+    background: -ms-linear-gradient(top, rgba(0,0,0,0.9) 0%, rgba(50,50,50,0.9) 100%) no-repeat;
+    background: -o-linear-gradient(top, rgba(0,0,0,0.9) 0%, rgba(50,50,50,0.9) 100%) no-repeat;
+    background: linear-gradient(top, rgba(0,0,0,0.9) 0%, rgba(50,50,50,0.9) 100%) no-repeat;
+    *background-color: #000;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 4px 4px -4px #000;
+    box-shadow: 0 4px 4px -4px #000;
+    -moz-transform: translateX(100%);
+    -webkit-transform: translateX(100%);
+    -ms-transform: translateX(100%);
+    -o-transform: translateX(100%);
+    transform: translateX(100%);
+}
+.humane-container .humane,
+.humane-container .humane-notify {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    margin: 6px 0 0 0;
+}
+.humane p,
+.humane-notify p,
+.humane ul,
+.humane-notify ul {
+    margin: 0;
+    padding: 0;
+}
+.humane ul,
+.humane-notify ul {
+    list-style: none;
+}
+.humane.humane-notify-info,
+.humane-notify.humane-notify-info {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABQCAYAAADYxx/bAAAABmJLR0QA/wD/AP+gvaeTAAAAMUlEQVQYlWNgYDB6ysTAwMDAxMDACCcYUFkMDEwMDEwMBNVhkxg65jGhmke6M6hgHgBSdgHnpZwADwAAAABJRU5ErkJggg==');
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0,0,50,0.9)), color-stop(1, rgba(0,0,100,0.9))) no-repeat;
+    background: -moz-linear-gradient(top, rgba(0,0,50,0.9) 0%, rgba(0,0,100,0.9) 100%) no-repeat;
+    background: -webkit-linear-gradient(top, rgba(0,0,50,0.9) 0%, rgba(0,0,100,0.9) 100%) no-repeat;
+    background: -ms-linear-gradient(top, rgba(0,0,50,0.9) 0%, rgba(0,0,100,0.9) 100%) no-repeat;
+    background: -o-linear-gradient(top, rgba(0,0,50,0.9) 0%, rgba(0,0,100,0.9) 100%) no-repeat;
+    background: linear-gradient(top, rgba(0,0,50,0.9) 0%, rgba(0,0,100,0.9) 100%) no-repeat;
+    *background-color: #030;
+}
+.humane.humane-notify-success,
+.humane-notify.humane-notify-success {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABQCAYAAADYxx/bAAAABmJLR0QA/wD/AP+gvaeTAAAAMUlEQVQYlWNgMGJ4ysTAwMDAxMAIJxhQWQwMDEwMTKgS2NRhkxg65jGhmke6M6hhHgBS2QHn2LzhygAAAABJRU5ErkJggg==');
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0,50,0,0.9)), color-stop(1, rgba(0,100,0,0.9))) no-repeat;
+    background: -moz-linear-gradient(top, rgba(0,50,0,0.9) 0%, rgba(0,100,0,0.9) 100%) no-repeat;
+    background: -webkit-linear-gradient(top, rgba(0,50,0,0.9) 0%, rgba(0,100,0,0.9) 100%) no-repeat;
+    background: -ms-linear-gradient(top, rgba(0,50,0,0.9) 0%, rgba(0,100,0,0.9) 100%) no-repeat;
+    background: -o-linear-gradient(top, rgba(0,50,0,0.9) 0%, rgba(0,100,0,0.9) 100%) no-repeat;
+    background: linear-gradient(top, rgba(0,50,0,0.9) 0%, rgba(0,100,0,0.9) 100%) no-repeat;
+    *background-color: #030;
+}
+.humane.humane-notify-error,
+.humane-notify.humane-notify-error {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADICAYAAAAp8ov1AAAABmJLR0QA/wD/AP+gvaeTAAAAPklEQVQokWMwYmB4ysTAwMCATjASFsOmBBvBRJ7x+O0g0wCS7CDTH/RwH7X9MVDuwyaG032D2M2UeIYO7gMAqt8C19Bn7+YAAAAASUVORK5CYII=');
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(50,0,0,0.9)), color-stop(1, rgba(100,0,0,0.9))) no-repeat;
+    background: -moz-linear-gradient(top, rgba(50,0,0,0.9) 0%, rgba(100,0,0,0.9) 100%) no-repeat;
+    background: -webkit-linear-gradient(top, rgba(50,0,0,0.9) 0%, rgba(100,0,0,0.9) 100%) no-repeat;
+    background: -ms-linear-gradient(top, rgba(50,0,0,0.9) 0%, rgba(100,0,0,0.9) 100%) no-repeat;
+    background: -o-linear-gradient(top, rgba(50,0,0,0.9) 0%, rgba(100,0,0,0.9) 100%) no-repeat;
+    background: linear-gradient(top, rgba(50,0,0,0.9) 0%, rgba(100,0,0,0.9) 100%) no-repeat;
+    *background-color: #300;
+}
+.humane.humane-animate,
+.humane-notify.humane-notify-animate {
+    opacity: 1;
+    -moz-transform: translateX(0);
+    -webkit-transform: translateX(0);
+    -ms-transform: translateX(0);
+    -o-transform: translateX(0);
+    transform: translateX(0);
+}
+.humane.humane-animate:hover,
+.humane-notify.humane-notify-animate:hover {
+    opacity: 0.2;
+}
+.humane.humane-animate,
+.humane-notify.humane-notify-js-animate {
+    opacity: 1;
+    -moz-transform: translateX(0);
+    -webkit-transform: translateX(0);
+    -ms-transform: translateX(0);
+    -o-transform: translateX(0);
+    transform: translateX(0);
+}
+.humane.humane-animate:hover,
+.humane-notify.humane-notify-js-animate:hover {
+    opacity: 0.2;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
+}

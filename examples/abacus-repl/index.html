@@ -10,7 +10,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#efefef">
 <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-<link rel="stylesheet" type="text/css" href="../common/css/humane/libnotify.css" />
+<link rel="stylesheet" type="text/css" href="../common/css/humane/notify.css" />
 <link rel="stylesheet" type="text/css" href="../common/css/InfoPopup.min.css" />
 <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
 <style type="text/css">
@@ -350,7 +350,7 @@ window.MathJax = {
 <div class="showcase">Syntax Highlight by <a href="https://codemirror.net/" target="_blank">CodeMirror</a></div>
 <div class="showcase">Syntax Highlight Grammar by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">CodeMirror Grammar</a></div>
 <div class="showcase">Mathematics Rendering by <a href="https://www.mathjax.org/" target="_blank">MathJax</a></div>
-<div class="showcase">Notifications by <a href="https://wavded.github.io/humane-js/" target="_blank">humane.js</a></div>
+<div class="showcase">Notifications by <a href="https://github.com/foo123/humane-js" target="_blank">humane.js</a></div>
 <div class="showcase">Tooltips by <a href="https://github.com/foo123/InfoPopup" target="_blank">InfoPopup</a></div>
 <div class="fluid col-1-1 text-center" style="margin-top: 10px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
 </footer>
@@ -671,8 +671,8 @@ function session_link(href)
     }
 }
 
-humane.success = humane.spawn({addnCls: 'humane-libnotify-success', timeout: 4000})
-humane.error = humane.spawn({addnCls: 'humane-libnotify-error', timeout: 4000})
+humane.success = humane.spawn({addnCls: 'humane-notify-success', timeout: 4000})
+humane.error = humane.spawn({addnCls: 'humane-notify-error', timeout: 4000})
 
 codemirror_define_grammar_mode("expr", {
 // prefix ID for regular expressions used in the grammar
@@ -809,6 +809,6 @@ window.onRuntimeReady = () => {
 })();
 }();
 //]]></script>
-
+<div id="notifications" class="humane-container"></div>
 </body>
 </html>
