@@ -1,0 +1,87 @@
+html,
+body {
+    min-height: 100%;
+}
+.humane-container-libnotify {
+    position: fixed;
+    display: block;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    top: 10px;
+    right: 10px;
+    z-index: 100000;
+}
+.humane,
+.humane-libnotify {
+    box-sizing: border-box;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    margin: 0;
+    z-index: 100000;
+    opacity: 0;
+    transform: translateY(-40px);
+    transition: all 0.3s ease-out;
+}
+.humane-container-libnotify .humane,
+.humane-container-libnotify .humane-libnotify {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin: 6px 0 0 0;
+}
+.humane,
+.humane-libnotify {
+    font-family: Ubuntu, Arial, sans-serif;
+    text-align: center;
+    font-size: 15px;
+    width: 170px;
+    color: #fff;
+    padding: 10px;
+    background: linear-gradient(180deg,rgba(0,0,0,0.9) 0%, rgba(50,50,50,0.9) 100%) no-repeat;
+    border-radius: 5px;
+    box-shadow: 0 4px 4px -4px #000;
+}
+.humane.humane-libnotify-info,
+.humane-libnotify.humane-libnotify-info {
+    background: linear-gradient(180deg,rgba(0,0,50,0.9) 0%, rgba(0,0,100,0.9) 100%) no-repeat;
+}
+.humane.humane-libnotify-success,
+.humane-libnotify.humane-libnotify-success {
+    background: linear-gradient(180deg,rgba(0,50,0,0.9) 0%, rgba(0,100,0,0.9) 100%) no-repeat;
+}
+.humane.humane-libnotify-error,
+.humane-libnotify.humane-libnotify-error {
+    background: linear-gradient(180deg,rgba(50,0,0,0.9) 0%, rgba(100,0,0,0.9) 100%) no-repeat;
+}
+.humane.humane-animate,
+.humane-libnotify.humane-libnotify-animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+.humane.humane-animate:hover,
+.humane-libnotify.humane-libnotify-animate:hover {
+    opacity: 0.2;
+}
+.humane.humane-animate,
+.humane-libnotify.humane-libnotify-js-animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+.humane.humane-animate:hover,
+.humane-libnotify.humane-libnotify-js-animate:hover {
+    opacity: 0.2;
+}
+.humane p,
+.humane-libnotify p,
+.humane ul,
+.humane-libnotify ul {
+    margin: 0;
+    padding: 0;
+}
+.humane ul,
+.humane-libnotify ul {
+    list-style: none;
+}

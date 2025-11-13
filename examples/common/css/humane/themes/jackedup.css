@@ -1,0 +1,100 @@
+html,
+body {
+    min-height: 100%;
+}
+.humane-container-jackedup {
+    position: fixed;
+    display: block;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    top: 20px;
+    left: 30%;
+    z-index: 100000;
+    width: 100%;
+}
+.humane,
+.humane-jackedup {
+    box-sizing: border-box;
+    position: fixed;
+    top: 20px;
+    left: 30%;
+    margin: 0;
+    z-index: 100000;
+    opacity: 0;
+    transform: translateY(-100px);
+    transition: all 0.6s ease-in-out;
+}
+.humane-container-jackedup .humane,
+.humane-container-jackedup .humane-jackedup {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin: 6px 0 0 0;
+}
+.humane,
+.humane-jackedup {
+    font-family: Helvetica Neue, Helvetica, sans-serif;
+    font-size: 18px;
+    letter-spacing: -1px;
+    width: 40%;
+    color: #333;
+    padding: 10px;
+    text-align: center;
+    background: linear-gradient(180deg,rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.2) 100%) no-repeat;
+    background-color: #fff;
+    border-radius: 3px;
+    text-shadow: 0 1px 1px rgba(255,255,255,0.8);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+.humane.humane-jackedup-info,
+.humane-jackedup.humane-jackedup-info {
+    background: linear-gradient(180deg,rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.85) 100%) no-repeat;
+    background-color: #fff;
+    color: #fff;
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.35);
+}
+.humane.humane-jackedup-success,
+.humane-jackedup.humane-jackedup-success {
+    background: linear-gradient(180deg,#62c462 0%, #57a957 100%) no-repeat;
+    background-color: #64ff64;
+    color: #fff;
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.35);
+}
+.humane.humane-jackedup-error,
+.humane-jackedup.humane-jackedup-error {
+    background: linear-gradient(180deg,#ee5f5b 0%, #c43c35 100%) no-repeat;
+    background-color: #ee5f5b;
+    color: #fff;
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.35);
+}
+.humane-animate,
+.humane-jackedup.humane-jackedup-animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+.humane-animate:hover,
+.humane-jackedup.humane-jackedup-animate:hover {
+    opacity: 0.7;
+}
+.humane-js-animate,
+.humane-jackedup.humane-jackedup-js-animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+.humane-js-animate:hover,
+.humane-jackedup.humane-jackedup-js-animate:hover {
+    opacity: 0.7;
+}
+.humane p,
+.humane-jackedup p,
+.humane ul,
+.humane-jackedup ul {
+    margin: 0;
+    padding: 0;
+}
+.humane ul,
+.humane-jackedup ul {
+    list-style: none;
+}

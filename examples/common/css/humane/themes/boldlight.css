@@ -1,0 +1,91 @@
+html,
+body {
+    min-height: 100%;
+}
+.humane-container-boldlight {
+    position: fixed;
+    display: block;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    top: 25%;
+    left: 25%;
+    z-index: 100000;
+    width: 100%;
+}
+.humane,
+.humane-boldlight {
+    box-sizing: border-box;
+    position: fixed;
+    top: 25%;
+    left: 25%;
+    margin: 0;
+    z-index: 100000;
+    opacity: 0;
+    transform: scale(1.1);
+    transition: all 0.3s ease-out;
+}
+.humane-container-boldlight .humane,
+.humane-container-boldlight .humane-boldlight {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin: 6px 0 0 0;
+}
+.humane,
+.humane-boldlight {
+    font-family: Ubuntu, Verdana, sans-serif;
+    font-size: 25px;
+    letter-spacing: -1px;
+    width: 50%;
+    color: #000;
+    padding: 10px;
+    text-align: center;
+    background: linear-gradient(180deg,rgba(255,255,255,0.8) 0%, rgba(150,150,150,0.8) 100%) no-repeat;
+    border-radius: 15px;
+    text-shadow: 0 -1px 1px rgba(221,221,221,0.4);
+    box-shadow: 0 4px 4px -4px #eee;
+}
+.humane.humane-boldlight-info,
+.humane-boldlight.humane-boldlight-info {
+    background: linear-gradient(180deg,#6464ff 0%, rgba(100,100,255,0.8) 100%) no-repeat;
+}
+.humane.humane-boldlight-success,
+.humane-boldlight.humane-boldlight-success {
+    background: linear-gradient(180deg,#64ff64 0%, rgba(100,255,100,0.8) 100%) no-repeat;
+}
+.humane.humane-boldlight-error,
+.humane-boldlight.humane-boldlight-error {
+    background: linear-gradient(180deg,#ff6464 0%, rgba(255,100,100,0.8) 100%) no-repeat;
+}
+.humane.humane-animate,
+.humane-boldlight.humane-boldlight-animate {
+    opacity: 1;
+    transform: scale(1);
+}
+.humane.humane-animate:hover,
+.humane-boldlight.humane-boldlight-animate:hover {
+    opacity: 0.4;
+    transform: scale(1.8);
+}
+.humane.humane-animate,
+.humane-boldlight.humane-boldlight-js-animate {
+    opacity: 1;
+    transform: scale(1);
+}
+.humane.humane-animate:hover,
+.humane-boldlight.humane-boldlight-js-animate:hover {
+    opacity: 0.4;
+}
+.humane p,
+.humane-boldlight p,
+.humane ul,
+.humane-boldlight ul {
+    margin: 0;
+    padding: 0;
+}
+.humane ul,
+.humane-boldlight ul {
+    list-style: none;
+}

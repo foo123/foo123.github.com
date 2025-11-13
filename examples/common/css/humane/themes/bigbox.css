@@ -1,0 +1,92 @@
+html,
+body {
+    min-height: 100%;
+}
+.humane-container-bigbox {
+    position: fixed;
+    display: block;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    top: 25%;
+    left: 25%;
+    z-index: 100000;
+    width: 100%;
+}
+.humane,
+.humane-bigbox {
+    box-sizing: border-box;
+    position: fixed;
+    top: 25%;
+    left: 25%;
+    margin: 0;
+    z-index: 100000;
+    opacity: 0;
+    transform: scale(0.1);
+    transition: all 0.3s ease-out;
+}
+.humane-container-bigbox .humane,
+.humane-container-bigbox .humane-bigbox {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin: 6px 0 0 0;
+}
+.humane,
+.humane-bigbox {
+    font-family: Ubuntu, Verdana, sans-serif;
+    line-height: 40px;
+    font-size: 35px;
+    width: 50%;
+    min-height: 40px;
+    padding: 30px;
+    text-align: center;
+    background: linear-gradient(180deg,#000 0%, rgba(0,0,0,0.9) 100%) no-repeat;
+    color: #fff;
+    border-radius: 15px;
+    text-shadow: 0 -1px 1px #ddd;
+    box-shadow: 0 15px 15px -15px #000;
+}
+.humane.humane-bigbox-info,
+.humane-bigbox.humane-bigbox-info {
+    background: linear-gradient(180deg,#000064 0%, rgba(0,0,100,0.9) 100%) no-repeat;
+}
+.humane.humane-bigbox-success,
+.humane-bigbox.humane-bigbox-success {
+    background: linear-gradient(180deg,#006400 0%, rgba(0,100,0,0.9) 100%) no-repeat;
+}
+.humane.humane-bigbox-error,
+.humane-bigbox.humane-bigbox-error {
+    background: linear-gradient(180deg,#640000 0%, rgba(100,0,0,0.9) 100%) no-repeat;
+}
+.humane.humane-animate,
+.humane-bigbox.humane-bigbox-animate {
+    opacity: 1;
+    transform: scale(1);
+}
+.humane.humane-animate:hover,
+.humane-bigbox.humane-bigbox-animate:hover {
+    opacity: 0.6;
+    transform: scale(0.8);
+}
+.humane.humane-js-animate,
+.humane-bigbox.humane-bigbox-js-animate {
+    opacity: 1;
+    transform: scale(1);
+}
+.humane.humane-js-animate:hover,
+.humane-bigbox.humane-bigbox-js-animate:hover {
+    opacity: 0.6;
+}
+.humane p,
+.humane-bigbox p,
+.humane ul,
+.humane-bigbox ul {
+    margin: 0;
+    padding: 0;
+}
+.humane ul,
+.humane-bigbox ul {
+    list-style: none;
+}

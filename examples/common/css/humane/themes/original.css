@@ -1,0 +1,86 @@
+html,
+body {
+    min-height: 100%;
+}
+.humane-container-original {
+    position: fixed;
+    display: block;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    top: 25%;
+    left: 25%;
+    z-index: 100000;
+    width: 100%;
+}
+.humane,
+.humane-original {
+    box-sizing: border-box;
+    position: fixed;
+    top: 25%;
+    left: 25%;
+    margin: 0;
+    z-index: 100000;
+    opacity: 0;
+    transition: all 0.2s ease-out;
+}
+.humane-container-original .humane,
+.humane-container-original .humane-original {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin: 6px 0 0 0;
+}
+.humane,
+.humane-original {
+    font-family: Ubuntu, Verdana, sans-serif;
+    line-height: 40px;
+    font-size: 25px;
+    width: 50%;
+    min-height: 40px;
+    padding: 10px;
+    text-align: center;
+    background-color: #000;
+    color: #fff;
+    border-radius: 15px;
+}
+.humane.humane-original-info,
+.humane-original.humane-original-info {
+    background-color: #030;
+}
+.humane.humane-original-success,
+.humane-original.humane-original-success {
+    background-color: #030;
+}
+.humane.humane-original-error,
+.humane-original.humane-original-error {
+    background-color: #300;
+}
+.humane.humane-animate,
+.humane-original.humane-original-animate {
+    opacity: 0.8;
+}
+.humane.humane-animate:hover,
+.humane-original.humane-original-animate:hover {
+    opacity: 0.6;
+}
+.humane.humane-js-animate,
+.humane-original.humane-original-js-animate {
+    opacity: 0.8;
+}
+.humane.humane-js-animate:hover,
+.humane-original.humane-original-js-animate:hover {
+    opacity: 0.6;
+}
+.humane p,
+.humane-original p,
+.humane ul,
+.humane-original ul {
+    margin: 0;
+    padding: 0;
+}
+.humane ul,
+.humane-original ul {
+    list-style: none;
+}

@@ -10,7 +10,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#efefef">
 <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
-<link rel="stylesheet" type="text/css" href="../common/css/humane/notify.css" />
+<link rel="stylesheet" type="text/css" href="../common/css/humane/themes/notify.css" />
 <link rel="stylesheet" type="text/css" href="../common/css/InfoPopup.min.css" />
 <link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
 <style type="text/css">
@@ -22,6 +22,9 @@ body {
     box-sizing: border-box;
     margin: 0 auto;
     padding: 2px 10px 30px 10px;
+}
+.humane-notify {
+    font-weight: bold;
 }
 .info-popup {
     display: inline-block;
@@ -353,7 +356,7 @@ window.MathJax = {
 
 <iframe id="sandbox" src="./abacus_runtime.html" style="display:none"></iframe>
 
-<div id="notifications-area" class="humane-container"></div>
+<div id="notifications-area" class="humane-container-notify"></div>
 
 <script type="text/javascript">//<![CDATA[
 !function() {
@@ -670,7 +673,7 @@ function session_link(href)
     }
 }
 
-const notifier = humane.create({container: document.getElementById('notifications-area'), timeout: 4000});
+const notifier = humane.create({container: document.getElementById('notifications-area'), baseCls: 'humane-notify', timeout: 4000});
 notifier.info = notifier.spawn({addnCls: 'humane-notify-info'}, true);
 notifier.success = notifier.spawn({addnCls: 'humane-notify-success'}, true);
 notifier.error = notifier.spawn({addnCls: 'humane-notify-error'}, true);
