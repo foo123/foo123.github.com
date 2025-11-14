@@ -41,22 +41,21 @@ body {
     width: 170px;
     min-height: 30px;
     padding: 5px 10px;
-    border-radius: 5px;
     color: #fff;
-    background: linear-gradient(180deg,rgba(31, 31, 31, 1) 0%, rgba(162, 162, 162, 1) 100%) no-repeat;
+    background: linear-gradient(180deg,rgba(72, 72, 72, 1) 0%, rgba(122, 122, 122, 1) 100%) no-repeat;
     box-shadow: 0 4px 4px -4px #000;
 }
 .humane.humane-notify-info,
 .humane-notify.humane-notify-info {
-    background: linear-gradient(180deg,rgba(31, 31, 31, 1) 0%, rgba(72, 72, 72, 1) 100%) no-repeat;
+    background: linear-gradient(180deg,rgba(72, 72, 72, 1) 0%, rgba(122, 122, 122, 1) 100%) no-repeat;
 }
 .humane.humane-notify-success,
 .humane-notify.humane-notify-success {
-    background: linear-gradient(180deg,rgba(12, 171, 33, 1) 1%, rgba(12, 130, 27, 1) 100%) no-repeat;
+    background: linear-gradient(180deg,rgba(24, 188, 156, 1) 0%, rgba(18, 140, 116, 1) 100%) no-repeat;
 }
 .humane.humane-notify-error,
 .humane-notify.humane-notify-error {
-    background: linear-gradient(180deg,rgba(237, 43, 43, 1) 1%, rgba(171, 5, 5, 1) 100%) no-repeat;
+    background: linear-gradient(180deg,rgba(231, 76, 60, 1) 0%, rgba(171, 59, 46, 1) 100%) no-repeat;
 }
 .humane.humane-animate,
 .humane-notify.humane-notify-animate {

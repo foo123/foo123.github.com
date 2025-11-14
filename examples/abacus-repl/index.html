@@ -279,7 +279,7 @@ h1 {
 }
 </style>
 
-<script src="../common/js/humane.min.js"></script>
+<script src="../common/js/humane2.min.js"></script>
 <script src="../common/js/InfoPopup.min.js"></script>
 <script src="../common/js/Dromeo.min.js"></script>
 <script src="../common/js/codemirror/codemirror.min.js"></script>
@@ -349,7 +349,7 @@ window.MathJax = {
 <div class="showcase">Syntax Highlight by <a href="https://codemirror.net/" target="_blank">CodeMirror</a></div>
 <div class="showcase">Syntax Highlight Grammar by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">CodeMirror Grammar</a></div>
 <div class="showcase">Mathematics Rendering by <a href="https://www.mathjax.org/" target="_blank">MathJax</a></div>
-<div class="showcase">Notifications by <a href="https://github.com/foo123/humane-js" target="_blank">humane.js</a></div>
+<div class="showcase">Notifications by <a href="https://github.com/foo123/humane2.js" target="_blank">humane2.js</a></div>
 <div class="showcase">Tooltips by <a href="https://github.com/foo123/InfoPopup" target="_blank">InfoPopup</a></div>
 <div class="fluid col-1-1 text-center" style="margin-top: 10px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
 </footer>
@@ -673,7 +673,7 @@ function session_link(href)
     }
 }
 
-const notifier = humane.create({container: document.getElementById('notifications-area'), baseCls: 'humane-notify', timeout: 4000});
+const notifier = humane2.create({container: document.getElementById('notifications-area'), baseCls: 'humane-notify', timeout: 4000});
 notifier.info = notifier.spawn({addnCls: 'humane-notify-info'}, true);
 notifier.success = notifier.spawn({addnCls: 'humane-notify-success'}, true);
 notifier.error = notifier.spawn({addnCls: 'humane-notify-error'}, true);
