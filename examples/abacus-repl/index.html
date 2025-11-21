@@ -29,6 +29,7 @@ body {
 .info-popup {
     display: inline-block;
     width: 156px;
+    max-width: 156px !important;
     margin-top: -16px;
     border-radius: 0;
     font-size: 14px;
@@ -133,7 +134,7 @@ mjx-container[jax="CHTML"][display="true"] {
     vertical-align: top;
     font-style: italic;
     font-weight: bold;
-    width: 62px;
+    width: 20px;
     text-align: right;
     margin-right: 4px;
 }
@@ -189,7 +190,7 @@ mjx-container[jax="CHTML"][display="true"] {
     margin: 0;
     border: 0;
     outline: 0;
-    width: 1200px;
+    width: 1800px;
     max-width: 100%;
     margin: 0 auto;
 }
@@ -200,7 +201,7 @@ mjx-container[jax="CHTML"][display="true"] {
     margin: 0;
     border: 0;
     outline: 0;
-    width: calc(100% - 70px);
+    width: calc(100% - 25px);
     padding: 10px 4px;
     border: 1px solid #232323;
     background: #fff;
@@ -216,7 +217,7 @@ mjx-container[jax="CHTML"][display="true"] {
     margin: 0;
     border: 0;
     outline: 0;
-    width: calc(100% - 140px);
+    width: calc(100% - 97px);
     display: inline-block;
     vertical-align: top;
     border: 1px solid #232323;
@@ -284,16 +285,6 @@ h1 {
 }
 }
 @media all and (max-width: 360px) {
-.label {
-    font-size: 13px;
-    width: 42px;
-}
-#output {
-    width: calc(100% - 50px);
-}
-#input {
-    width: calc(100% - 120px);
-}
 }
 @media all and (max-height: 360px) {
 #output {
@@ -354,8 +345,8 @@ window.MathJax = {
 • <a href="#" aria-label="run set partitions example" onclick="return runExample('setpartitions');">SetPartitions</a>
 </div>
 
-<span class="label">output:</span><div id="output"></div><br>
-<span class="label">input:</span><div id="input"><textarea id="inputarea" placeholder="code to run.."></textarea></div><div id="buttons">
+<span class="label">&nbsp;</span><div id="output"></div><br>
+<span class="label" style="margin-top:8px;color:#f90b13;">&gt;&gt;</span><div id="input"><textarea id="inputarea" placeholder="code to run.."></textarea></div><div id="buttons">
 <button id="run" aria-label="run code" class="button"><i class="icon run" style="width:20px"></i></button>
 <button id="clear" aria-label="clear contents" class="button"><i class="icon clear" style="width:20px"></i></button>
 <br><button id="share" aria-label="get link to share current session" class="button" style="font-size:16px;margin-top:11px;padding:10px 11px">Share</button>
