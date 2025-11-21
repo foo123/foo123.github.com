@@ -28,15 +28,34 @@ body {
 }
 .info-popup {
     display: inline-block;
-    width: auto;
-    max-width: 180px;
-    margin-top: -20px;
-    border-radius: 20px;
+    width: 156px;
+    margin-top: -16px;
+    border-radius: 0;
     font-size: 14px;
-    font-weight: bold;
-    padding: 8px 12px;
-    line-height: 1.4;
+    font-weight: normal;
+    padding: 4px 8px;
+    line-height: 1.2;
     box-sizing: border-box;
+}
+.info-icon {
+    position: relative;
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: middle;
+    width: 40px;
+    margin-right: 10px;
+}
+.info-icon .icon {
+    position: relative;
+    width: 100%;
+}
+.info-msg {
+    position: relative;
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: middle;
+    width: calc(100% - 50px);
+    text-align: left;
 }
 .icon {
     position: relative;
@@ -65,6 +84,9 @@ body {
 }
 .icon.clear {
     --icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 17 17"><path fill="red" fill-rule="evenodd" d="m12.566 8l3.045-3.044c.42-.421.42-1.103 0-1.522L12.566.389a1.078 1.078 0 0 0-1.523 0L7.999 3.433L4.955.389a1.078 1.078 0 0 0-1.523 0L.388 3.434a1.074 1.074 0 0 0-.001 1.522L3.431 8L.387 11.044a1.075 1.075 0 0 0 .001 1.523l3.044 3.044c.42.421 1.102.421 1.523 0l3.044-3.044l3.044 3.044a1.076 1.076 0 0 0 1.523 0l3.045-3.044c.42-.421.42-1.103 0-1.523L12.566 8z"></path></svg>');
+}
+.icon.info {
+    --icon: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 32 32" fill="%23f90b13"><g fill="none" stroke="%23f90b13"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 14h1v9h1m12-7a13 13 0 1 1-26 0a13 13 0 0 1 26 0Z"></path><path fill="%23f90b13" d="M17 9.5a1 1 0 1 1-2 0a1 1 0 0 1 2 0Z"></path></g></svg>')
 }
 .code {
     position: relative;
@@ -781,7 +803,7 @@ document.getElementById('share').addEventListener('click', (evt) => {
 
 InfoPopup({
     item: '[aria-label]',
-    content: (item) => item.getAttribute('aria-label'),
+    content: (item) => '<div class="info-icon"><i class="icon info"></i></div><div class="info-msg">'+item.getAttribute('aria-label')+'</div>',
     atItemX: 'center',
     atItemY: 'top',
     hideDelay: 400,
