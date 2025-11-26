@@ -312,9 +312,8 @@ window.MathJax = {
 <body>
 <span id="forkongithub"><a href="https://github.com/foo123/Abacus">Play with me on GitHub</a></span>
 
-<header id="header">
-<h1>Abacus REPL (v.2.0.0 pre-release)</h1>
-<i>A simple <b>REPL</b> for the Computer Algebra and Symbolic Computations System <b>Abacus</b></i>
+<header id="header" style="text-align:center;line-height:1.4;padding-top:10px;">
+<h1 style="font-size:1em;font-weight:normal"><b>Abacus REPL v.2.0.0 pre-release</b>: A simple REPL for the Computer Algebra and Symbolic Computations System <b>Abacus</b>.</h1>
 </header>
 
 <br><br>
@@ -761,7 +760,7 @@ codemirror_define_grammar_mode("expr", {
 const output = document.getElementById('output');
 const input = CodeMirror.fromTextArea(document.getElementById('inputarea'), {
     mode: "expr",
-    lineWrapping: false,
+    lineWrapping: true,
     lineNumbers : false,
     indentUnit: 0,
     indentWithTabs: false,
