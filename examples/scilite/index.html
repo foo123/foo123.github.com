@@ -101,6 +101,9 @@ body {
     width: 100%;
     min-height: 100px;
 }
+#output .CodeMirror {
+    height: auto;
+}
 .math {
     position: relative;
     box-sizing: border-box;
@@ -387,8 +390,8 @@ window.MathJax = {
 <a href="#" aria-label="run 2D plots example" onclick="return runExample('plots2d');">2D Plots</a>
 • <a href="#" aria-label="run 3D plots example" onclick="return runExample('plots3d');">3D Plots</a>
 <br>
-<a href="#" aria-label="run if else example" onclick="return runExample('ifelse');">If ElseIf Else</a>
-• <a href="#" aria-label="run for loop example" onclick="return runExample('forloop');">For Loops</a>
+<a href="#" aria-label="run if-else example" onclick="return runExample('ifelse');">If-ElseIf-Else</a>
+• <a href="#" aria-label="run loops example" onclick="return runExample('loops');">Loops</a>
 </div>
 
 <span class="label">&nbsp;</span><div id="output"></div><br>
@@ -657,7 +660,7 @@ function run_example(example)
             'b'
             ]);
         break;
-        case 'forloop':
+        case 'loops':
             return run_session([
             '% for .. end',
             'for a=1:3\n b=a+1\nend',
@@ -665,6 +668,13 @@ function run_example(example)
             'for a=1:3\n if a==3\n  continue\n end\n b=a+1\nend',
             'b',
             'for a=1:3\n if a==3\n  break\n end\n b=a+1\nend',
+            'b',
+            '% while .. end',
+            'a = 1',
+            'b = 1',
+            'while a==1\n b=b+1\n if b==3\n  break\n end\nend',
+            'b',
+            'while a==0\n b=b+1\n if b==3\n  break\n end\nend',
             'b'
             ]);
         break;
