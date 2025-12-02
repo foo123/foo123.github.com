@@ -806,10 +806,10 @@ function produce(model)
         }
         else if (1 <= res.length)
         {
-            sol = res[0].exactroots();
-            model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.fromString("'+res[0].toString()+'").exactroots()'), true);
-            out.setValue('exactroots('+res[0].toString()+')'+(sol && sol.length ? ('='+sol.map(function(si) {return '('+[si[0].toString(), String(si[1])].join(',')+')';}).join(',')) : ' No roots found'));
-            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\[\\text{exactroots}('+res[0].toTex()+')'+(sol && sol.length ? ('\\]'+"\n"+'\\['+sol.map(function(si) {return si[0].toTex()+' \\text{ multiplicity '+String(si[1])+'}';}).join('\\]'+"\n"+'\\[')) : ('\\]'+"\n"+'\\['+'\\text{No roots found}'))+'\\]');
+            sol = res[0].allroots();
+            model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Ring.fromString("'+res[0].toString()+'").allroots()'), true);
+            out.setValue('allroots('+res[0].toString()+')'+(sol && sol.length ? ('='+sol.map(function(si) {return '('+[si[0].toString(), String(si[1])].join(',')+')';}).join(',')) : ' No roots found'));
+            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\[\\text{allroots}('+res[0].toTex()+')'+(sol && sol.length ? ('\\]'+"\n"+'\\['+sol.map(function(si) {return si[0].toTex()+' \\text{ multiplicity '+String(si[1])+'}';}).join('\\]'+"\n"+'\\[')) : ('\\]'+"\n"+'\\['+'\\text{No roots found}'))+'\\]');
         }
         else
         {
