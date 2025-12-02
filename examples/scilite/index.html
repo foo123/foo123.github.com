@@ -652,31 +652,23 @@ function run_example(example)
             '% if .. elseif .. else .. end',
             'a = 1',
             'if a == 1\n b = 2\nelseif a == 2\n b = 3\nelse\n b = 4\nend',
-            'b',
             'a = 2',
             'if a == 1\n b = 2\nelseif a == 2\n b = 3\nelse\n b = 4\nend',
-            'b',
             'a = 3',
-            'if a == 1\n b = 2\nelseif a == 2\n b = 3\nelse\n b = 4\nend',
-            'b'
+            'if a == 1\n b = 2\nelseif a == 2\n b = 3\nelse\n b = 4\nend'
             ]);
         break;
         case 'loops':
             return run_session([
             '% for .. end',
             'for a=1:3\n b=a+1\nend',
-            'b',
             'for a=1:3\n if a==3\n  continue\n end\n b=a+1\nend',
-            'b',
             'for a=1:3\n if a==3\n  break\n end\n b=a+1\nend',
-            'b',
             '% while .. end',
             'a = 1',
             'b = 1',
             'while a==1\n b=b+1\n if b==3\n  break\n end\nend',
-            'b',
-            'while a==0\n b=b+1\n if b==3\n  break\n end\nend',
-            'b'
+            'while a==0\n b=b+1\n if b==3\n  break\n end\nend'
             ]);
         break;
     }
