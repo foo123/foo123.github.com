@@ -386,6 +386,7 @@ window.MathJax = {
 <br>
 <a href="#" aria-label="run polynomial functions example" onclick="return runExample('polys');">Polynomials</a>
 • <a href="#" aria-label="run dsp example" onclick="return runExample('dsp');">DSP</a>
+• <a href="#" aria-label="run statistics example" onclick="return runExample('stats');">Stat</a>
 <br>
 <a href="#" aria-label="run 2D plots example" onclick="return runExample('plots2d');">2D Plots</a>
 • <a href="#" aria-label="run 3D plots example" onclick="return runExample('plots3d');">3D Plots</a>
@@ -588,6 +589,17 @@ function run_example(example)
             'filter([2 4 4], [1 2], [1 2 3 4 5])',
             'ifft(fft([1 2 3]))',
             'ifft2(fft2([1 2;3 4]))',
+            '% and more..'
+            ]);
+        break;
+        case 'stats':
+            return run_session([
+            '% statistics',
+            'X = randn(10, 10);',
+            'mean(X)',
+            'std(X)',
+            'cov(X)',
+            'corrcoef(X)',
             '% and more..'
             ]);
         break;
