@@ -384,9 +384,9 @@ window.MathJax = {
 <a href="#" aria-label="run functions example" onclick="return runExample('functions');">Functions</a>
 • <a href="#" aria-label="run linear algebra example" onclick="return runExample('linalg');">Linear Algebra</a>
 <br>
-<a href="#" aria-label="run polynomial functions example" onclick="return runExample('polys');">Polynomials</a>
+<a href="#" aria-label="run polynomial functions example" onclick="return runExample('polys');">Polys</a>
+• <a href="#" aria-label="run statistics example" onclick="return runExample('stats');">Stats</a>
 • <a href="#" aria-label="run dsp example" onclick="return runExample('dsp');">DSP</a>
-• <a href="#" aria-label="run statistics example" onclick="return runExample('stats');">Stat</a>
 <br>
 <a href="#" aria-label="run 2D plots example" onclick="return runExample('plots2d');">2D Plots</a>
 • <a href="#" aria-label="run 3D plots example" onclick="return runExample('plots3d');">3D Plots</a>
@@ -485,7 +485,11 @@ function run_example(example)
             'inf',
             '-inf',
             'nan',
-            'eps'
+            'eps',
+            'realmax',
+            'realmin',
+            'intmax',
+            'intmin'
             ]);
         break;
         case 'strings':
@@ -553,18 +557,26 @@ function run_example(example)
             'b = [1;2]',
             'A\\b',
             'A = magic(3)',
+            'trace(A)',
             'det(A)',
             'charpoly(A)',
-            'rref(A)',
+            '[R, p] = rref(A)',
             'inv(A)',
             'pinv(A)',
             'inv(A)*A',
-            'eig([1 2 3; 0 3 4; 0 0 2])',
+            'A = [1 2 3; 0 3 4; 0 0 2]',
+            '[V, D, W] = eig(A)',
+            'A*V','V*D',
+            'W\'*A','D*W\'',
+            //'A = [1+1i, 2; 2, 2+1i]',
+            //'[V, D, W] = eig(A)',
+            //'A*V','V*D',
+            //'W\'*A','D*W\'',
             'A = [1+1i, 2; 0, -1j]',
             '[U,S,V] = svd(A)',
-            'U*S*V\'',
-            'U\'*U',
-            'V*V\'',
+            'U*S*V\'','U\'*U','V*V\'',
+            //'H = [-149 -50 -154; 537 180 546; -27 -9 -25]',
+            //'hess(H)',
             '% and more..'
             ]);
         break;
@@ -581,6 +593,19 @@ function run_example(example)
             '% and more..'
             ]);
         break;
+        case 'stats':
+            return run_session([
+            '% statistics',
+            'X = randn(10, 10);',
+            'mean(X)',
+            'median(X)',
+            'mode(X)',
+            'std(X)',
+            'var(X)',
+            'corrcoef(X)',
+            '% and more..'
+            ]);
+        break;
         case 'dsp':
             return run_session([
             '% digital signal processing',
@@ -589,17 +614,6 @@ function run_example(example)
             'filter([2 4 4], [1 2], [1 2 3 4 5])',
             'ifft(fft([1 2 3]))',
             'ifft2(fft2([1 2;3 4]))',
-            '% and more..'
-            ]);
-        break;
-        case 'stats':
-            return run_session([
-            '% statistics',
-            'X = randn(10, 10);',
-            'mean(X)',
-            'std(X)',
-            'cov(X)',
-            'corrcoef(X)',
             '% and more..'
             ]);
         break;
