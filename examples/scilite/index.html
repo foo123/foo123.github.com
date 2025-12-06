@@ -564,10 +564,16 @@ function run_example(example)
             'inv(A)',
             'pinv(A)',
             'inv(A)*A',
+            //'H = [-149 -50 -154; 537 180 546; -27 -9 -25]',
+            //'[Q, H] = hess(H)',
             'A = [1 2 3; 0 3 4; 0 0 2]',
             '[V, D, W] = eig(A)',
             'A*V','V*D',
             'W\'*A','D*W\'',
+            //'A = [1 2 3; 0 1 4; 0 0 2]',
+            //'[V, D, W] = eig(A)',
+            //'A*V','V*D',
+            //'W\'*A','D*W\'',
             //'A = [1+1i, 2; 2, 2+1i]',
             //'[V, D, W] = eig(A)',
             //'A*V','V*D',
@@ -575,8 +581,6 @@ function run_example(example)
             'A = [1+1i, 2; 0, -1j]',
             '[U,S,V] = svd(A)',
             'U*S*V\'','U\'*U','V*V\'',
-            //'H = [-149 -50 -154; 537 180 546; -27 -9 -25]',
-            //'[Q, H] = hess(H)',
             '% and more..'
             ]);
         break;
