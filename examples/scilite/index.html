@@ -773,12 +773,15 @@ function session_link(href)
     if (arguments.length)
     {
         const uri = new URL(href);
-        return '' !== uri.hash ? obj_to_array((new Dromeo()).unglue(uri.hash.slice(1).split('+').join('%20')).session || []) : [];
+        const params = '' !== uri.hash ? (new Dromeo()).unglue(uri.hash.slice(1).split('+').join('%20')) : {session:[],arbprec:0};
+        params.session = obj_to_array(params.session || []);
+        params.arbprec = '1' === String(params.arbprec) ? true : false;
+        return params;
     }
     else
     {
         const uri = new URL(location.href);
-        uri.hash = '#' + (new Dromeo()).glue({session:session});
+        uri.hash = '#' + (new Dromeo()).glue({session:session, arbprec:document.getElementById('arbitrary_precision').checked? 1 : 0});
         return uri.href;
     }
 }
@@ -809,9 +812,17 @@ function notify(msg, type)
         input.setSize(null, 90);
         document.getElementById('ver').textContent = 'v.'+SciLite.VERSION;
         document.getElementById('overlay').style.display = 'none';
-        let loaded_session = session_link(location.href);
-        if (loaded_session.length) run_session(loaded_session).then(() => 0); // other session loaded
-        else run_example('numbers').then(() => 0); // default
+        const params = session_link(location.href);
+        if (params.session.length)
+        {
+            document.getElementById('arbitrary_precision').checked = params.arbprec;
+            arbitraryPrecision(params.arbprec);
+            run_session(params.session).then(() => 0); // other session loaded
+        }
+        else
+        {
+            run_example('numbers').then(() => 0); // default
+        }
     }
 })();
 }();
