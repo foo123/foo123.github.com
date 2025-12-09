@@ -193,7 +193,7 @@ mjx-container[jax="CHTML"][display="true"] {
     margin-bottom: 10px;
     line-height: 1.4;
 }
-#examples a {
+#examples a, #examples label {
     color: #f90b13;
 }
 #overlay {
@@ -309,6 +309,44 @@ mjx-container[jax="CHTML"][display="true"] {
 .button:active {
     top: 1px;
 }
+.checkbox {
+    position: relative;
+    box-sizing: border-box;
+    display: inline-block;
+    color: #f90b13;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.checkbox > input {
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+}
+.checkbox > span {
+    position: relative;
+    box-sizing: border-box;
+    display: inline-block;
+    padding: 0;
+    color: inherit;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 1px solid #aaa;
+    z-index: 1;
+}
+.checkbox > span::before {
+    position: absolute;
+    content: "";
+    box-sizing: border-box;
+    display: inline-block;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    z-index: 1;
+}
+.checkbox > input:checked ~ span::before {
+    content: "•";
+}
 #footer {
     position: relative;
     box-sizing: border-box;
@@ -359,7 +397,9 @@ window.MathJax = {
 };
 </script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<script src="https://cdn.plot.ly/plotly-3.3.0.min.js" charset="utf-8"></script>
+<script async src="https://cdn.plot.ly/plotly-3.3.0.min.js" charset="utf-8"></script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/10.6.0/decimal.min.js"></script>
+<!--<script src="../common/js/decimal.min.js"></script>-->
 <script src="./SciLite.min.js"></script>
 <script src="./SciLiteEnv.min.js"></script>
 </head>
@@ -376,6 +416,8 @@ window.MathJax = {
 
 <div id="examples">
 <b>Demo Examples:</b>
+<br>
+<label for="arbitrary_precision" class="checkbox"><input type="checkbox" id="arbitrary_precision" value="arbitrary_precision" /><span></span></label>&nbsp;&nbsp;<label for="arbitrary_precision">Use Arbitrary Precision</label>
 <br>
 <a href="#" aria-label="run numbers example" onclick="return runExample('numbers');">Numbers</a>
 • <a href="#" aria-label="run strings example" onclick="return runExample('strings');">Strings</a>
@@ -410,6 +452,7 @@ window.MathJax = {
 <footer id="footer">
 <div class="showcase">Computing Environment by <a href="https://github.com/foo123/SciLite" target="_blank">SciLite</a></div>
 <!--<div class="showcase">Symbolic Computations by <a href="https://github.com/foo123/Abacus" target="_blank">Abacus</a></div>-->
+<div class="showcase">Arbitrary Precision Arithmetic by <a href="https://mikemcl.github.io/decimal.js/" target="_blank">Decimal</a></div>
 <div class="showcase">Mathematics Rendering by <a href="https://www.mathjax.org/" target="_blank">MathJax</a></div>
 <div class="showcase">2D and 3D Plots by <a href="https://plotly.com/javascript/" target="_blank">Plotly</a></div>
 <div class="showcase">Syntax Highlight by <a href="https://codemirror.net/" target="_blank">CodeMirror</a></div>
@@ -433,6 +476,10 @@ notifier.info = notifier.spawn({addnCls: 'humane-notify-info'}, true);
 notifier.success = notifier.spawn({addnCls: 'humane-notify-success'}, true);
 notifier.error = notifier.spawn({addnCls: 'humane-notify-error'}, true);
 
+document.getElementById('arbitrary_precision').checked = false;
+document.getElementById('arbitrary_precision').addEventListener('change', (evt) => {
+    if (arbitraryPrecision(evt.target.checked)) runExample('numbers');
+}, false);
 document.getElementById('run').addEventListener('click', (evt) => {
     let code = input.getValue().trim();
     input.setValue('');
@@ -607,6 +654,7 @@ function run_example(example)
             'std(X)',
             'var(X)',
             'corrcoef(X)',
+            'erf(0.76)',
             '% and more..'
             ]);
         break;
@@ -742,7 +790,7 @@ function notify(msg, type)
 }
 
 (function onReady() {
-    if (!window.CodeMirror || !window.Plotly || !window.MathJax.typesetPromise)
+    if (!window.CodeMirror || !window.Plotly || !window.Decimal || !window.MathJax.typesetPromise)
     {
         setTimeout(onReady, 80); // wait
     }
