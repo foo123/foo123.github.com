@@ -12,8 +12,8 @@
 <link rel="stylesheet" type="text/css" href="../common/css/common.min.css" />
 <link rel="stylesheet" type="text/css" href="../common/css/humane/themes/notify.css" />
 <link rel="stylesheet" type="text/css" href="../common/css/InfoPopup.min.css" />
-<link rel="stylesheet" href="../common/js/codemirror/codemirror.min.css" />
-<link rel="stylesheet" href="../common/js/codemirror/addon/hint/show-hint.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.20/codemirror.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.20/addon/hint/show-hint.min.css">
 <style type="text/css">
 body {
     font-size: 16px;
@@ -194,7 +194,9 @@ mjx-container[jax="CHTML"][display="true"] {
     line-height: 1.4;
 }
 #examples a, #examples label {
+    display: inline-block;
     color: #f90b13;
+    cursor: pointer;
 }
 #overlay {
     position: absolute;
@@ -381,14 +383,11 @@ h1 {
 }
 </style>
 
-<script src="../common/js/humane2.min.js"></script>
-<script src="../common/js/InfoPopup.min.js"></script>
-<script src="../common/js/Dromeo.min.js"></script>
-<script src="../common/js/codemirror/codemirror.min.js"></script>
-<script src="../common/js/codemirror/addon/display/placeholder.js"></script>
-<script src="../common/js/codemirror/addon/hint/show-hint.js"></script>
-<script src="../common/js/codemirror_grammar.min.js"></script>
-<script src="../common/js/codemirror/grammar/define_grammar_mode.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.20/codemirror.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.20/addon/display/placeholder.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.20/addon/hint/show-hint.min.js"></script>
+<script defer src="../common/js/codemirror_grammar.min.js"></script>
+<script async src="../common/js/codemirror/grammar/define_grammar_mode.js"></script>
 <script type="text/javascript">
 window.MathJax = {
     loader: {
@@ -399,9 +398,11 @@ window.MathJax = {
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script async src="https://cdn.plot.ly/plotly-3.3.0.min.js" charset="utf-8"></script>
 <script async src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/10.6.0/decimal.min.js"></script>
-<!--<script src="../common/js/decimal.min.js"></script>-->
-<script src="./SciLite.min.js"></script>
-<script src="./SciLiteEnv.min.js"></script>
+<script async src="../common/js/humane2.min.js"></script>
+<script async src="../common/js/InfoPopup.min.js"></script>
+<script async src="../common/js/Dromeo.min.js"></script>
+<script async src="./SciLite.min.js"></script>
+<script async src="./SciLiteREPL.min.js"></script>
 </head>
 <body>
 <span id="forkongithub"><a href="https://github.com/foo123/SciLite">Play with me on GitHub</a></span>
@@ -466,363 +467,368 @@ window.MathJax = {
 <script type="text/javascript">//<![CDATA[
 !function() {
 "use strict";
-let session = [];
 
-const output = document.getElementById('output');
-let input = null;
-
-const notifier = humane2.create({container: document.getElementById('notifications-area'), baseCls: 'humane-notify', timeout: 4000});
-notifier.info = notifier.spawn({addnCls: 'humane-notify-info'}, true);
-notifier.success = notifier.spawn({addnCls: 'humane-notify-success'}, true);
-notifier.error = notifier.spawn({addnCls: 'humane-notify-error'}, true);
-
-document.getElementById('arbitrary_precision').checked = false;
-document.getElementById('arbitrary_precision').addEventListener('change', (evt) => {
-    if (arbitraryPrecision(evt.target.checked)) runExample('numbers');
-}, false);
-document.getElementById('run').addEventListener('click', (evt) => {
-    let code = input.getValue().trim();
-    input.setValue('');
-    if (code.length) session.push(code);
-    repl(code, output).then(() => 0);
-}, false);
-document.getElementById('clear').addEventListener('click', (evt) => {
-    session = [];
-    clear(output);
-}, false);
-document.getElementById('share').addEventListener('click', (evt) => {
-    try {
-        navigator.clipboard.writeText(session_link()).then(() => {
-            notify('Session link copied to clipboard.', 'success');
-        }).catch((err) => {
-            notify('Cannot write to clipboard!', 'error');
-        });
-    } catch (err) {
-        notify('Clipboard access error!', 'error');
-    }
-}, false);
-
-InfoPopup({
-    item: '[aria-label]',
-    content: (item) => '<div class="info-icon"><i class="icon info"></i></div><div class="info-msg">'+item.getAttribute('aria-label')+'</div>',
-    atItemX: 'center',
-    atItemY: 'top',
-    hideDelay: 400,
-    showDelay: 400,
-    preventDefault: false
-});
-
-window.runExample = function(example) {
-    session = [];
-    clear(output);
-    run_example(example).then(() => 0);
-    return false;
-};
-
-function run_example(example)
+function init($)
 {
-    switch (String(example).toLowerCase())
+    function notify(msg, type)
     {
-        case 'numbers':
-            return run_session([
-            '% numbers',
-            'a = 1+2',
-            'b = 2j+a+1i',
-            'c = (3*a)+2*b',
-            'inf',
-            '-inf',
-            'nan',
-            'eps',
-            'realmax',
-            'realmin',
-            'intmax',
-            'intmin'
-            ]);
-        break;
-        case 'strings':
-            return run_session([
-            '% strings',
-            '"string"',
-            's = "str"',
-            's+"ing"',
-            '\'string\''
-            ]);
-        break;
-        case 'functions':
-            return run_session([
-            '% numeric functions',
-            'sin(linspace(0,4*pi,8))',
-            'cos(linspace(0,4*pi,8))',
-            'exp(linspace(0,2,4))',
-            'mod(0:5, 3)',
-            '% and more..'
-            ]);
-        break;
-        case 'matrices':
-            return run_session([
-            '% matrices',
-            '1:5',
-            '1:2:5',
-            'zeros(2, 3)',
-            'ones(2, 3)',
-            'eye(2)',
-            'A = ones(2,2)*3+1',
-            'A(:,2) = 2',
-            'A(1,1:2) = 3',
-            'A',
-            'A(1:end,2)',
-            'A(1:end)',
-            'A(2,2)',
-            'A(4)',
-            'A(:,[1 2]) = A(:,[2 1])',
-            'A',
-            'B = A\'',
-            'A(:)',
-            'B = [1 2; 3 4]',
-            'B(B>1)',
-            'B(B>1) = 2',
-            'C = [1 2; 3 4]',
-            '[C, C]',
-            '[C; C]',
-            '[C, C; C, C]',
-            '[[1 2; 3 4]; [5 6; 7 8]]',
-            'kron([1 2 3; 4 5 6], ones(2))',
-            'ones(2)(:)',
-            'ones(2)(:, 1)',
-            'a = (2*ones(2))(:)',
-            'b = (2*ones(2))(:, 1)',
-            'ones(20, 10)',
-            'ones(10, 20)',
-            'ones(20, 20)',
-            '% and more..'
-            ]);
-        break;
-        case 'linalg':
-            return run_session([
-            '% linear algebra',
-            'A = [1 2;3 4]',
-            'b = [1;2]',
-            'A\\b',
-            'A = magic(3)',
-            'trace(A)',
-            'det(A)',
-            'charpoly(A)',
-            '[R, p] = rref(A)',
-            'inv(A)',
-            'pinv(A)',
-            'inv(A)*A',
-            //'H = [-149 -50 -154; 537 180 546; -27 -9 -25]',
-            //'[Q, H] = hess(H)',
-            'A = [1 2 3; 0 3 4; 0 0 2]',
-            '[V, D, W] = eig(A)',
-            'A*V','V*D',
-            'W\'*A','D*W\'',
-            //'A = [1 2 3; 0 1 4; 0 0 2]',
-            //'[V, D, W] = eig(A)',
-            //'A*V','V*D',
-            //'W\'*A','D*W\'',
-            //'A = [1+1i, 2; 2, 2+1i]',
-            //'[V, D, W] = eig(A)',
-            //'A*V','V*D',
-            //'W\'*A','D*W\'',
-            'A = [1+1i, 2; 0, -1j]',
-            '[U,S,V] = svd(A)',
-            'U*S*V\'','U\'*U','V*V\'',
-            '% and more..'
-            ]);
-        break;
-        case 'polys':
-            return run_session([
-            '% polynomial functions',
-            'polyval([1 0 -1], [2 4])',
-            'polyvalm([1 0 -1], [2 4;3 1])',
-            'polydiv([2 7 4 9], [2 0 1])',
-            'polyfit([0 1], [0 2], 1)',
-            'polyfit([0 1 2], [1 2 5], 2)',
-            'roots([1 0 -1])',
-            'poly(roots([1 0 -1]))',
-            '% and more..'
-            ]);
-        break;
-        case 'stats':
-            return run_session([
-            '% statistics',
-            'X = randn(10, 10);',
-            'mean(X)',
-            'median(X)',
-            'mode(X)',
-            'std(X)',
-            'var(X)',
-            'corrcoef(X)',
-            'erf(0.76)',
-            '% and more..'
-            ]);
-        break;
-        case 'dsp':
-            return run_session([
-            '% digital signal processing',
-            'conv([1 2 3], [2 4])',
-            'conv2([1 2;3 4], [2 2;3 3])',
-            'filter([2 4 4], [1 2], [1 2 3 4 5])',
-            'ifft(fft([1 2 3]))',
-            'ifft2(fft2([1 2;3 4]))',
-            '% and more..'
-            ]);
-        break;
-        case 'plots2d':
-            return run_session([
-            '% 2D plots',
-            't = 0:pi/100:2*pi;',
-            'plot(t,sin(t),"Color","m","LineStyle","--",t,cos(t),"Color","b","LineStyle","-.");',
-            'xlabel("x");',
-            'ylabel("y");',
-            'title("plot x-y");',
-            'legend("sin","cos");',
-            'x1 = (10*randn(100,1)-5);',
-            'y1 = (10*randn(100,1)-5);',
-            'x2 = (10*randn(100,1)-15);',
-            'y2 = (10*randn(100,1)-15);',
-            'scatter(x1(:),y1(:),"Color","b",x2(:),y2(:),"Color","r");',
-            'xlabel("x");',
-            'ylabel("y");',
-            'title("scatter x-y");',
-            'semilogy(exp(0.1:0.1:5));',
-            'xlabel("x");',
-            'ylabel("y");',
-            'title("semilogy x-y");',
-            'a = 2*(1:5)-1;',
-            'b = 1.2*(1:5)-1/2;',
-            'bar(a,"Color","b",b,"Color","r");',
-            'xlabel("x");',
-            'ylabel("y");',
-            'title("bar x-y");',
-            'a = 2*(1:5)-1/2;',
-            'b = 3*(1:5)-1;',
-            'barh(a,"Color","b",b,"Color","r");',
-            'xlabel("y");',
-            'ylabel("x");',
-            'title("barh x-y");',
-            'piechart([1 2 3 4],[2 2 3 4]);',
-            'title("piechart");',
-            'legend(["1","2","3","4"],["a","b","c","d"]);',
-            '% and more..'
-            ]);
-        break;
-        case 'plots3d':
-            return run_session([
-            '% 3D plots',
-            'x = linspace(-2*pi,2*pi);',
-            'y = linspace(0,4*pi);',
-            '[X,Y] = meshgrid(x,y);',
-            'Z = sin(X)+cos(Y);',
-            'contour(X,Y,Z);',
-            't = 0:pi/50:10*pi;',
-            'plot3(sin(t),cos(t),t);',
-            '[X,Y] = meshgrid(-8:0.5:8);',
-            'R = sqrt(X.^2 + Y.^2) + eps;',
-            'Z = sin(R)./R;',
-            'mesh(X,Y,Z);',
-            '% and more..'
-            ]);
-        break;
-        case 'ifelse':
-            return run_session([
-            '% if .. elseif .. else .. end',
-            'a = 1',
-            'if a == 1\n b = 2\nelseif a == 2\n b = 3\nelse\n b = 4\nend',
-            'a = 2',
-            'if a == 1\n b = 2\nelseif a == 2\n b = 3\nelse\n b = 4\nend',
-            'a = 3',
-            'if a == 1\n b = 2\nelseif a == 2\n b = 3\nelse\n b = 4\nend'
-            ]);
-        break;
-        case 'loops':
-            return run_session([
-            '% for .. end',
-            'for a=1:3\n b=a+1\nend',
-            'for a=1:3\n if a==3\n  continue\n end\n b=a+1\nend',
-            'for a=1:3\n if a==3\n  break\n end\n b=a+1\nend',
-            '% while .. end',
-            'a = 1',
-            'b = 1',
-            'while a==1\n b=b+1\n if b==3\n  break\n end\nend',
-            'while a==0\n b=b+1\n if b==3\n  break\n end\nend'
-            ]);
-        break;
+        if ('error' === type) notifier.error(msg);
+        else if ('success' === type) notifier.success(msg);
+        else notifier.info(msg);
     }
-    return Promise.resolve();
-}
-async function run_session(statements)
-{
-    if (Array.isArray(statements))
+    function obj_to_array(o)
     {
-        for (let code of statements)
+        o.length = Object.keys(o).length;
+        return Array.prototype.slice.call(o);
+    }
+    function session_link(href)
+    {
+        if (arguments.length)
         {
-            session.push(code);
-            await repl(code, output);
-        }
-    }
-}
-function obj_to_array(o)
-{
-    o.length = Object.keys(o).length;
-    return Array.prototype.slice.call(o);
-}
-function session_link(href)
-{
-    if (arguments.length)
-    {
-        const uri = new URL(href);
-        const params = '' !== uri.hash ? (new Dromeo()).unglue(uri.hash.slice(1).split('+').join('%20')) : {session:[],arbprec:0};
-        params.session = obj_to_array(params.session || []);
-        params.arbprec = '1' === String(params.arbprec) ? true : false;
-        return params;
-    }
-    else
-    {
-        const uri = new URL(location.href);
-        uri.hash = '#' + (new Dromeo()).glue({session:session, arbprec:document.getElementById('arbitrary_precision').checked? 1 : 0});
-        return uri.href;
-    }
-}
-function notify(msg, type)
-{
-    if ('error' === type) notifier.error(msg);
-    else if ('success' === type) notifier.success(msg);
-    else notifier.info(msg);
-}
-
-(function onReady() {
-    if (!window.CodeMirror || !window.Plotly || !window.Decimal || !window.MathJax.typesetPromise)
-    {
-        setTimeout(onReady, 80); // wait
-    }
-    else
-    {
-        input = CodeMirror.fromTextArea(document.getElementById('inputarea'), {
-            mode: "scilite",
-            lineWrapping: false,
-            lineNumbers : false,
-            indentUnit: 0,
-            indentWithTabs: false,
-            foldGutter: false,
-            gutters: [],
-            extraKeys: {"Ctrl-Space": "scilite-mode-autocomplete"}
-        });
-        input.setSize(null, 90);
-        document.getElementById('ver').textContent = 'v.'+SciLite.VERSION;
-        document.getElementById('overlay').style.display = 'none';
-        const params = session_link(location.href);
-        if (params.session.length)
-        {
-            document.getElementById('arbitrary_precision').checked = params.arbprec;
-            arbitraryPrecision(params.arbprec);
-            run_session(params.session).then(() => 0); // other session loaded
+            const uri = new URL(href);
+            const params = '' !== uri.hash ? (new Dromeo()).unglue(uri.hash.slice(1).split('+').join('%20')) : {session:[],arbprec:0};
+            params.session = obj_to_array(params.session || []);
+            params.arbprec = '1' === String(params.arbprec) ? true : false;
+            return params;
         }
         else
         {
-            run_example('numbers').then(() => 0); // default
+            const uri = new URL(location.href);
+            uri.hash = '#' + (new Dromeo()).glue({session:session, arbprec:document.getElementById('arbitrary_precision').checked? 1 : 0});
+            return uri.href;
         }
+    }
+    async function run_session(statements)
+    {
+        if (Array.isArray(statements))
+        {
+            for (let code of statements)
+            {
+                session.push(code);
+                await $.repl(code, output);
+            }
+        }
+    }
+    function run_example(example)
+    {
+        switch (String(example).toLowerCase())
+        {
+            case 'numbers':
+                return run_session([
+                '% numbers',
+                'a = 1+2',
+                'b = 2j+a+1i',
+                'c = (3*a)+2*b',
+                'inf',
+                '-inf',
+                'nan',
+                'eps',
+                'realmax',
+                'realmin',
+                'intmax',
+                'intmin'
+                ]);
+            break;
+            case 'strings':
+                return run_session([
+                '% strings',
+                '"string"',
+                's = "str"',
+                's+"ing"',
+                '\'string\''
+                ]);
+            break;
+            case 'functions':
+                return run_session([
+                '% numeric functions',
+                'sin(linspace(0,4*pi,8))',
+                'cos(linspace(0,4*pi,8))',
+                'exp(linspace(0,2,4))',
+                'mod(0:5, 3)',
+                '% and more..'
+                ]);
+            break;
+            case 'matrices':
+                return run_session([
+                '% matrices',
+                '1:5',
+                '1:2:5',
+                'zeros(2, 3)',
+                'ones(2, 3)',
+                'eye(2)',
+                'A = ones(2,2)*3+1',
+                'A(:,2) = 2',
+                'A(1,1:2) = 3',
+                'A',
+                'A(1:end,2)',
+                'A(1:end)',
+                'A(2,2)',
+                'A(4)',
+                'A(:,[1 2]) = A(:,[2 1])',
+                'A',
+                'B = A\'',
+                'A(:)',
+                'B = [1 2; 3 4]',
+                'B(B>1)',
+                'B(B>1) = 2',
+                'C = [1 2; 3 4]',
+                '[C, C]',
+                '[C; C]',
+                '[C, C; C, C]',
+                '[[1 2; 3 4]; [5 6; 7 8]]',
+                'kron([1 2 3; 4 5 6], ones(2))',
+                'ones(2)(:)',
+                'ones(2)(:, 1)',
+                'a = (2*ones(2))(:)',
+                'b = (2*ones(2))(:, 1)',
+                'ones(20, 10)',
+                'ones(10, 20)',
+                'ones(20, 20)',
+                '% and more..'
+                ]);
+            break;
+            case 'linalg':
+                return run_session([
+                '% linear algebra',
+                'A = [1 2;3 4]',
+                'b = [1;2]',
+                'A\\b',
+                'A = magic(3)',
+                'trace(A)',
+                'det(A)',
+                'charpoly(A)',
+                '[R, p] = rref(A)',
+                'inv(A)',
+                'pinv(A)',
+                'inv(A)*A',
+                //'H = [-149 -50 -154; 537 180 546; -27 -9 -25]',
+                //'[Q, H] = hess(H)',
+                'A = [1 2 3; 0 3 4; 0 0 2]',
+                '[V, D, W] = eig(A)',
+                'A*V','V*D',
+                'W\'*A','D*W\'',
+                //'A = [1 2 3; 0 1 4; 0 0 2]',
+                //'[V, D, W] = eig(A)',
+                //'A*V','V*D',
+                //'W\'*A','D*W\'',
+                //'A = [1+1i, 2; 2, 2+1i]',
+                //'[V, D, W] = eig(A)',
+                //'A*V','V*D',
+                //'W\'*A','D*W\'',
+                'A = [1+1i, 2; 0, -1j]',
+                '[U,S,V] = svd(A)',
+                'U*S*V\'','U\'*U','V*V\'',
+                '% and more..'
+                ]);
+            break;
+            case 'polys':
+                return run_session([
+                '% polynomial functions',
+                'polyval([1 0 -1], [2 4])',
+                'polyvalm([1 0 -1], [2 4;3 1])',
+                'polydiv([2 7 4 9], [2 0 1])',
+                'polyfit([0 1], [0 2], 1)',
+                'polyfit([0 1 2], [1 2 5], 2)',
+                'roots([1 0 -1])',
+                'poly(roots([1 0 -1]))',
+                '% and more..'
+                ]);
+            break;
+            case 'stats':
+                return run_session([
+                '% statistics',
+                'X = randn(10, 10);',
+                'mean(X)',
+                'median(X)',
+                'mode(X)',
+                'std(X)',
+                'var(X)',
+                'corrcoef(X)',
+                'erf(0.76)',
+                '% and more..'
+                ]);
+            break;
+            case 'dsp':
+                return run_session([
+                '% digital signal processing',
+                'conv([1 2 3], [2 4])',
+                'conv2([1 2;3 4], [2 2;3 3])',
+                'filter([2 4 4], [1 2], [1 2 3 4 5])',
+                'ifft(fft([1 2 3]))',
+                'ifft2(fft2([1 2;3 4]))',
+                '% and more..'
+                ]);
+            break;
+            case 'plots2d':
+                return run_session([
+                '% 2D plots',
+                't = 0:pi/100:2*pi;',
+                'plot(t,sin(t),"Color","m","LineStyle","--",t,cos(t),"Color","b","LineStyle","-.");',
+                'xlabel("x");',
+                'ylabel("y");',
+                'title("plot x-y");',
+                'legend("sin","cos");',
+                'x1 = (10*randn(100,1)-5);',
+                'y1 = (10*randn(100,1)-5);',
+                'x2 = (10*randn(100,1)-15);',
+                'y2 = (10*randn(100,1)-15);',
+                'scatter(x1(:),y1(:),"Color","b",x2(:),y2(:),"Color","r");',
+                'xlabel("x");',
+                'ylabel("y");',
+                'title("scatter x-y");',
+                'semilogy(exp(0.1:0.1:5));',
+                'xlabel("x");',
+                'ylabel("y");',
+                'title("semilogy x-y");',
+                'a = 2*(1:5)-1;',
+                'b = 1.2*(1:5)-1/2;',
+                'bar(a,"Color","b",b,"Color","r");',
+                'xlabel("x");',
+                'ylabel("y");',
+                'title("bar x-y");',
+                'a = 2*(1:5)-1/2;',
+                'b = 3*(1:5)-1;',
+                'barh(a,"Color","b",b,"Color","r");',
+                'xlabel("y");',
+                'ylabel("x");',
+                'title("barh x-y");',
+                'piechart([1 2 3 4],[2 2 3 4]);',
+                'title("piechart");',
+                'legend(["1","2","3","4"],["a","b","c","d"]);',
+                '% and more..'
+                ]);
+            break;
+            case 'plots3d':
+                return run_session([
+                '% 3D plots',
+                'x = linspace(-2*pi,2*pi);',
+                'y = linspace(0,4*pi);',
+                '[X,Y] = meshgrid(x,y);',
+                'Z = sin(X)+cos(Y);',
+                'contour(X,Y,Z);',
+                't = 0:pi/50:10*pi;',
+                'plot3(sin(t),cos(t),t);',
+                '[X,Y] = meshgrid(-8:0.5:8);',
+                'R = sqrt(X.^2 + Y.^2) + eps;',
+                'Z = sin(R)./R;',
+                'mesh(X,Y,Z);',
+                '% and more..'
+                ]);
+            break;
+            case 'ifelse':
+                return run_session([
+                '% if .. elseif .. else .. end',
+                'a = 1',
+                'if a == 1\n b = 2\nelseif a == 2\n b = 3\nelse\n b = 4\nend',
+                'a = 2',
+                'if a == 1\n b = 2\nelseif a == 2\n b = 3\nelse\n b = 4\nend',
+                'a = 3',
+                'if a == 1\n b = 2\nelseif a == 2\n b = 3\nelse\n b = 4\nend'
+                ]);
+            break;
+            case 'loops':
+                return run_session([
+                '% for .. end',
+                'for a=1:3\n b=a+1\nend',
+                'for a=1:3\n if a==3\n  continue\n end\n b=a+1\nend',
+                'for a=1:3\n if a==3\n  break\n end\n b=a+1\nend',
+                '% while .. end',
+                'a = 1',
+                'b = 1',
+                'while a==1\n b=b+1\n if b==3\n  break\n end\nend',
+                'while a==0\n b=b+1\n if b==3\n  break\n end\nend'
+                ]);
+            break;
+        }
+        return Promise.resolve();
+    }
+
+    const notifier = humane2.create({container: document.getElementById('notifications-area'), baseCls: 'humane-notify', timeout: 4000});
+    notifier.info = notifier.spawn({addnCls: 'humane-notify-info'}, true);
+    notifier.success = notifier.spawn({addnCls: 'humane-notify-success'}, true);
+    notifier.error = notifier.spawn({addnCls: 'humane-notify-error'}, true);
+
+    const output = document.getElementById('output');
+    const input = CodeMirror.fromTextArea(document.getElementById('inputarea'), {
+        mode: "scilite",
+        lineWrapping: false,
+        lineNumbers : false,
+        indentUnit: 0,
+        indentWithTabs: false,
+        foldGutter: false,
+        gutters: [],
+        extraKeys: {"Ctrl-Space": "scilite-mode-autocomplete"}
+    });
+    input.setSize(null, 90);
+    document.getElementById('arbitrary_precision').checked = false;
+    document.getElementById('ver').textContent = 'v.'+SciLite.VERSION;
+    document.getElementById('overlay').style.display = 'none';
+
+    document.getElementById('arbitrary_precision').addEventListener('change', (evt) => {
+        if ($.arbitraryPrecision(evt.target.checked)) runExample('numbers');
+    }, false);
+    document.getElementById('run').addEventListener('click', (evt) => {
+        let code = input.getValue().trim();
+        input.setValue('');
+        if (code.length) session.push(code);
+        $.repl(code, output).then(() => 0);
+    }, false);
+    document.getElementById('clear').addEventListener('click', (evt) => {
+        session = [];
+        $.clear(output);
+    }, false);
+    document.getElementById('share').addEventListener('click', (evt) => {
+        try {
+            navigator.clipboard.writeText(session_link()).then(() => {
+                notify('Session link copied to clipboard.', 'success');
+            }).catch((err) => {
+                notify('Cannot write to clipboard!', 'error');
+            });
+        } catch (err) {
+            notify('Clipboard access error!', 'error');
+        }
+    }, false);
+
+    InfoPopup({
+        item: '[aria-label]',
+        content: (item) => '<div class="info-icon"><i class="icon info"></i></div><div class="info-msg">'+item.getAttribute('aria-label')+'</div>',
+        atItemX: 'center',
+        atItemY: 'top',
+        hideDelay: 400,
+        showDelay: 400,
+        preventDefault: false
+    });
+
+    let session = [];
+
+    window.runExample = function(example) {
+        session = [];
+        $.clear(output);
+        run_example(example).then(() => 0);
+        return false;
+    };
+
+    const params = session_link(location.href);
+    if (params.session.length)
+    {
+        document.getElementById('arbitrary_precision').checked = params.arbprec;
+        arbitraryPrecision(params.arbprec);
+        run_session(params.session).then(() => 0); // other session loaded
+    }
+    else
+    {
+        run_example('numbers').then(() => 0); // default
+    }
+}
+
+(function onReady() {
+    if (!window.SciLiteREPL || !window.SciLite || !window.CodeMirror || !window.CodeMirrorGrammar || !window.codemirror_define_grammar_mode || !window.Decimal || !window.MathJax.typesetPromise || !window.Plotly || !window.humane2 || !window.InfoPopup || !window.Dromeo)
+    {
+        setTimeout(onReady, 100); // wait
+    }
+    else
+    {
+        init(SciLiteREPL(SciLite, Decimal, MathJax, Plotly, CodeMirror, CodeMirrorGrammar, codemirror_define_grammar_mode));
     }
 })();
 }();
