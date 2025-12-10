@@ -266,7 +266,7 @@ mjx-container[jax="CHTML"][display="true"] {
     margin: 0;
     border: 0;
     outline: 0;
-    width: calc(100% - 97px);
+    width: calc(100% - 100px);
     display: inline-block;
     vertical-align: top;
     border: 1px solid #232323;
@@ -401,8 +401,8 @@ window.MathJax = {
 <script async src="../common/js/humane2.min.js"></script>
 <script async src="../common/js/InfoPopup.min.js"></script>
 <script async src="../common/js/Dromeo.min.js"></script>
-<script async src="./SciLite.min.js"></script>
-<script async src="./SciLiteREPL.min.js"></script>
+<script async src="../common/js/SciLite.min.js"></script>
+<script async src="./browser-repl.min.js"></script>
 </head>
 <body>
 <span id="forkongithub"><a href="https://github.com/foo123/SciLite">Play with me on GitHub</a></span>
@@ -822,13 +822,13 @@ function init($)
 }
 
 (function onReady() {
-    if (!window.SciLiteREPL || !window.SciLite || !window.CodeMirror || !window.CodeMirrorGrammar || !window.codemirror_define_grammar_mode || !window.Decimal || !window.MathJax.typesetPromise || !window.Plotly || !window.humane2 || !window.InfoPopup || !window.Dromeo)
+    if (!window.BrowserREPL || !window.SciLite || !window.CodeMirror || !window.CodeMirrorGrammar || !window.codemirror_define_grammar_mode || !window.Decimal || !window.MathJax.typesetPromise || !window.Plotly || !window.humane2 || !window.InfoPopup || !window.Dromeo)
     {
         setTimeout(onReady, 100); // wait
     }
     else
     {
-        init(SciLiteREPL(SciLite, Decimal, MathJax, Plotly, CodeMirror, CodeMirrorGrammar, codemirror_define_grammar_mode));
+        init(BrowserREPL(SciLite, Decimal, MathJax, Plotly, CodeMirror, CodeMirrorGrammar, codemirror_define_grammar_mode));
     }
 })();
 }();
