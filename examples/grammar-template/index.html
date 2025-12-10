@@ -1,16 +1,5 @@
 <!doctype html>
-<!--[if lt IE 7]>
-<html lang="en" class="ie lt-ie9 lt-ie8 lt-ie7">
-<![endif]-->
-<!--[if IE 7]>
-<html lang="en" class="ie lt-ie9 lt-ie8">
-<![endif]-->
-<!--[if IE 8]>
-<html lang="en" class="ie lt-ie9">
-<![endif]-->
-<!--[if gt IE 8]><!-->
 <html lang="en" class="no-ie">
-<!--<![endif]-->
 <head>
 <title>Grammar Template</title>
 
@@ -115,8 +104,8 @@
 </head>
 <body class="responsive-864-container">
     <span id="forkongithub"><a href="https://github.com/foo123/GrammarTemplate">Play on GitHub</a></span>
-    
-    
+
+
 <header id="header">
     <h1>Grammar Template</h1>
     <i>A versatile and intuitive grammar-based templating for PHP, Python, JavaScript</i>
@@ -124,12 +113,12 @@
 
 <br /><br />
 
-    
-    
+
+
 <div id="screen" class="fluid col-1-1">
     <div class="fluid col-1-1">
     <div class="fluid col-1-1" style="margin-bottom:10px">
-    
+
         <strong>Grammar Template ({grammartemplate_version}):</strong>
         &nbsp;&nbsp;<input type="button" class="button" id="render" mv-evt mv-on-click="render" value="Render" />
         &nbsp;&nbsp;<a class="button" id="help" href="https://github.com/foo123/GrammarTemplate" target="_blank">Help</a>&nbsp;&nbsp;<input id="mode" type="checkbox" mv-evt mv-on-change="setMode" />&nbsp;&nbsp;<label id="setmode" for="mode">PostOp Mode</label>
@@ -176,7 +165,7 @@ LIMIT &lt;offset|0&gt;, &lt;?count&gt;][#
 #]&lt;:EXPR&gt;:=[&lt;term:TERM&gt;[ OR &lt;*term:TERM&gt;]]</textarea>
     </div>
     <div class="fluid col-1-1" style="margin-bottom:10px">
-    
+
         <strong style="display:inline-block;margin-bottom:5px">Data (JSON):</strong><br />
         <textarea id="data">{
 "column"        : {
@@ -207,24 +196,24 @@ LIMIT &lt;offset|0&gt;, &lt;?count&gt;][#
 },
 "count"         : 5
 }</textarea>
-        
+
     </div>
     </div>
     <br /><br />
-    
+
     <div class="fluid col-1-1">
-    
+
         <strong>Output:</strong><br />
         <textarea id="output"></textarea>
-        
+
     </div>
 </div>
 
-    
-    
+
+
     <footer id="footer">
     <div class="fluid col-1-1 text-right" style="margin-top: 10px; padding-right: 20px;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a></div>
-    
+
 <div class="showcase">Syntax Highlight by <a href="http://codemirror.net/" target="_blank">Codemirror</a></div>
 <div class="showcase">JSON &amp; GrammarTemplate syntax highlight modes by <a href="https://github.com/foo123/codemirror-grammar" target="_blank">Codemirror Grammar</a></div>
 
@@ -235,27 +224,27 @@ LIMIT &lt;offset|0&gt;, &lt;?count&gt;][#
     <div class="showcase">MVC by <a href="https://github.com/foo123/modelview.js" target="_blank">ModelView</a></div>
     </footer>
     <br /><br />
-    
-    
+
+
 <script type="text/javascript">//<![CDATA[
 require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuery', 'GrammarTemplate'],
     function( $, $R, $MV, _, __, GrammarTemplate ) {
     "use strict";
-    
-    var undef=undefined, $window = $(window), $screen = $('#screen'), 
+
+    var undef=undefined, $window = $(window), $screen = $('#screen'),
         input = document.getElementById('input'),
         output = document.getElementById('output'),
         data = document.getElementById('data'),
         oEditor, vEditor, iEditor,
-        appTask, appModel, appView, appRouter, 
+        appTask, appModel, appView, appRouter,
         iwidth = input.clientWidth, iheight = input.clientHeight,
         width = output.clientWidth, height = output.clientHeight,
         toJSON = JSON.stringify, fromJSON = JSON.parse,
         cur_tpl = String(input.value), gramTpl = null, prevmode = false, postop = false
     ;
-    
+
     $MV.jquery( $ );
-    
+
     iEditor = CodeMirror.fromTextArea(input, {
         mode: "grammar-template",
         lineWrapping: true,
@@ -268,7 +257,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
         gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     iEditor.setSize( iwidth, iheight );
-    
+
     oEditor = CodeMirror.fromTextArea(output, {
         mode: "text",
         lineWrapping: true,
@@ -280,7 +269,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     oEditor.setSize( width, height );
-        
+
     vEditor = CodeMirror.fromTextArea(data, {
         mode: "application/json",
         lineWrapping: true,
@@ -295,7 +284,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
         gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     vEditor.setSize( width, height );
-        
+
     appTask = {
         render: function( ) {
             var template = iEditor.getValue();
@@ -304,15 +293,15 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
                 cur_tpl = template;
                 gramTpl = new GrammarTemplate(template, null, postop);
             }
-            
+
             oEditor.setValue(gramTpl.render(fromJSON(vEditor.getValue())));
         }
     };
-    
+
     appRouter = new $R( );
     appRouter.one({route:'#{%ALL%:hash}', handler:function( params ){
         params = params.data;
-        params = params && params.hash ? appRouter.unglue( params.hash ) : null;
+        params = params && params.hash ? appRouter.unglue( params.hash.split('+').join('%20') ) : null;
         if ( !params )
         {
             setTimeout(function(){
@@ -331,18 +320,18 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
             appTask[ params.action ]( );
         }
     }});
-    
+
     $screen.modelview({
         autobind: false
         ,livebind: 'text'
-        
+
         ,model: {
             id: 'model'
-            ,data: {  
+            ,data: {
                 grammartemplate_version: 'v.'+GrammarTemplate.VERSION
             }
         }
-        ,actions: { 
+        ,actions: {
             setMode: function(evt, el) {
                 prevmode = postop; postop = el.checked ? true : false;
                 if ( prevmode !== postop )
@@ -359,7 +348,7 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
             }
         }
     });
-        
+
     $window
         .on('resize', function( evt ) {
             var v = output.style.visibility,
@@ -371,23 +360,23 @@ require(['jQuery', 'Dromeo', 'ModelView', 'ModelViewValidation', 'ModelViewjQuer
             ;
             data.style.visibility = 'hidden';
             data.style.display = 'block';
-            width = data.clientWidth; 
+            width = data.clientWidth;
             height = data.clientHeight;
             data.style.display = d2;
             data.style.visibility = v2;
             vEditor.setSize( width, height );
-            
+
             output.style.visibility = 'hidden';
             output.style.display = 'block';
-            width = output.clientWidth; 
+            width = output.clientWidth;
             height = output.clientHeight;
             output.style.display = d;
             output.style.visibility = v;
             oEditor.setSize( width, height );
-            
+
             input.style.visibility = 'hidden';
             input.style.display = 'block';
-            iwidth = input.clientWidth; 
+            iwidth = input.clientWidth;
             iheight = input.clientHeight;
             input.style.display = d3;
             input.style.visibility = v3;
