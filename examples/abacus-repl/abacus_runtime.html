@@ -10,7 +10,7 @@
 require(['BigInteger', 'Abacus'],
 function(bigInt, Abacus) {
 "use strict";
-!function use_biginteger_arithmetic(Abacus, bigInt)
+(function use_biginteger_arithmetic(Abacus, bigInt)
 {
     // plug-in bigInteger arithmetic routines
     const Arithmetic = Abacus.Arithmetic;
@@ -50,7 +50,7 @@ function(bigInt, Abacus) {
     Arithmetic.abs = function(a) {return a.abs();};
     Arithmetic.min = bigInt.min;
     Arithmetic.max = bigInt.max;
-}(Abacus, bigInt);
+})(Abacus, bigInt);
 
 // export
 window.Abacus = Abacus;
@@ -74,11 +74,11 @@ window.SetPartition = Abacus.SetPartition;
     }
     else
     {
-        setTimeout(runtimeReady, 20);
+        setTimeout(runtimeReady, 60);
     }
 })();
 });
-</script>
+//]]></script>
 </head>
 <body></body>
 </html>
