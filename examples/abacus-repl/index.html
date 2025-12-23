@@ -641,8 +641,12 @@ function init()
             case 'factors':
                 run_session([
                 '/* polynomial factorization */',
-                'ring = Ring.Q("x","y")',
-                'p = Poly("3(x+y)(xy+1)(x^2+x+2)", ring)',
+                'Q = Ring.Q("x","y")',
+                'p = Poly("3(x+y)(xy+1)(x^2+x+2)", Q)',
+                '[factors, content] = p.factors()',
+                'factors.reduce((expr, fac) => expr.mul(fac[0].toExpr().pow(fac[1])), content.toExpr())',
+                'GF2 = Ring.Zn(2)("x","y")',
+                'p = Poly("x^2+x+y^2+y", GF2)',
                 '[factors, content] = p.factors()',
                 'factors.reduce((expr, fac) => expr.mul(fac[0].toExpr().pow(fac[1])), content.toExpr())'
                 ]);
