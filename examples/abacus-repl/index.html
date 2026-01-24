@@ -537,7 +537,7 @@ function init()
 
             // eval
             try {
-                out = sandbox.eval(inp + ';');
+                out = sandbox.$eval(inp + ';');
             } catch (e) {
                 err = e;
             }
@@ -647,12 +647,10 @@ function init()
                 '/* polynomial factorization */',
                 'Q = Ring.Q("x","y")',
                 'p = Poly("3(x+y)(xy+1)(x^2+x+2)", Q)',
-                '[factors, content] = p.factors()',
-                'factors.reduce((expr, fac) => expr.mul(fac[0].toExpr().pow(fac[1])), content.toExpr())',
+                'Factor(p)',
                 'GF2 = Ring.Zn(2)("x","y")',
                 'p = Poly("x^2+x+y^2+y", GF2)',
-                '[factors, content] = p.factors()',
-                'factors.reduce((expr, fac) => expr.mul(fac[0].toExpr().pow(fac[1])), content.toExpr())'
+                'Factor(p)'
                 ]);
             break;
             case 'roots':
@@ -660,10 +658,10 @@ function init()
                 '/* polynomial roots */',
                 'p = Poly("x^2+1", "x")',
                 '/* all complex roots, when solvable */',
-                'p.allroots()',
+                'Roots(p, true)',
                 'p = Poly("(x-1)(x+1)", "x")',
                 '/* only rational roots, if any */',
-                'p.roots()'
+                'Roots(p)'
                 ]);
             break;
             case 'zeros':
@@ -671,7 +669,7 @@ function init()
                 '/* polynomial zeros */',
                 'p = Poly("x^6+x^4+2x+1", "x")',
                 '/* all complex zeros, approximately */',
-                'p.zeros().map(z => z.toDec())'
+                'Zeros(p).map(z => z.toDec())'
                 ]);
             break;
         }
@@ -763,6 +761,7 @@ function init()
                                     ]
         ,"<keyword>"                : [
                                         "Abacus", "Expr", "Poly", "Ring", "Matrix",
+                                        "Expand", "Simplify", "Factor", "Roots", "Zeros",
                                         "Tensor", "Permutation", "Combination",
                                         "Subset", "Partition", "SetPartition"
                                     ]
