@@ -377,6 +377,9 @@ window.MathJax = {
 <script type="text/javascript">//<![CDATA[
 !function() {
 "use strict";
+
+let sandbox = null;
+
 function esc_html(s)
 {
     return s.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split(' ').join('&nbsp;').split("\n").join('<br>');
@@ -520,7 +523,6 @@ function init()
         session = [];
     }
 
-    let sandbox = null;
     function create_sandbox()
     {
         if (!sandbox)
