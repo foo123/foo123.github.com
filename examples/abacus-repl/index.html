@@ -397,6 +397,10 @@ function toTex(x)
     {
         x = x.toTex();
     }
+    else if (sandbox && sandbox.Abacus && sandbox.Abacus.Arithmetic.isNumber(x))
+    {
+        x = String(x);
+    }
     else if (Array.isArray(x))
     {
         x = '\\left(' + x.map(toTex).join(',') + '\\right)';
