@@ -878,7 +878,7 @@ function produce(model)
             r = Abacus.Math.groebner(res);
             model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Abacus.Math.groebner(['+res.map(function(p) {return 'Ring.fromString("'+p.toString()+'")';}).join(',')+'])'), true);
             out.setValue('groebner('+res.map(function(p) {return p.toString();}).join(',')+')={'+r.map(String).join(',')+'}');
-            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\[\\text{groebner}('+res.map(function(p) {return p.toTex();}).join(',')+')=\\{'+r.map(function(p) {return p.toTex();}).join(',')+'\\}\\]');
+            print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\[\\text{groebner}\\left(\\left{'+res.map(function(p) {return p.toTex();}).join(',')+'\\right}\\right)=\\left{'+r.map(function(p) {return p.toTex();}).join(',')+'\\right}\\]');
         }
         else
         {
