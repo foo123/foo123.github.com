@@ -499,7 +499,7 @@ function print_math(tex)
 {
     if (window.MathJax && window.MathJax.typesetPromise)
     {
-        math.html(tex);
+        math.html(esc(tex));
         promise = promise.then(function() {
             return MathJax.typesetPromise([math[0]]);
         }).catch(function(err) {
@@ -524,6 +524,10 @@ function esc_html(s)
     return s.replace(html_esc_re, function(m){
         return '&' === m ? '&amp;' : ('<' === m ? '&lt;' : '&gt;');
     }).split(' ').join('&nbsp;').split("\n").join('<br>');
+}
+function esc(s)
+{
+    return s.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;');
 }
 function trim(s)
 {
@@ -877,7 +881,7 @@ function produce(model)
         {
             r = Abacus.Math.groebner(res);
             model.set('summary', esc_html('Ring = Abacus.Ring.'+ring.toString())+'<br />'+esc_html('Abacus.Math.groebner(['+res.map(function(p) {return 'Ring.fromString("'+p.toString()+'")';}).join(',')+'])'), true);
-            out.setValue('groebner('+res.map(function(p) {return p.toString();}).join(',')+')={'+r.map(String).join(',')+'}');
+            out.setValue('groebner({'+res.map(function(p) {return p.toString();}).join(',')+'})={'+r.map(String).join(',')+'}');
             print_math('\\['+ring.toTex()+'\\]'+"\n"+'\\[\\text{groebner}(\\{'+res.map(function(p) {return p.toTex();}).join(',')+'\\})=\\{'+r.map(function(p) {return p.toTex();}).join(',')+'\\}\\]');
         }
         else
