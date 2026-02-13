@@ -382,6 +382,11 @@ window.MathJax = {
 
 let sandbox = null;
 
+function is_safe(code)
+{
+    // test for potential dangerous code
+    return !/(window)|(document)|(write)|(eval)/.test(code);
+}
 function esc_html(s)
 {
     return s.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split(' ').join('&nbsp;').split("\n").join('<br>');
@@ -544,7 +549,7 @@ function init()
         if (inp.length)
         {
             // read
-            session.push(inp); // add to current session
+            if (is_safe(inp)) session.push(inp); // add to current session
             let out = null, err = null;
 
             // eval
@@ -874,7 +879,7 @@ function init()
 
     document.getElementById('overlay').style.display = 'none';
     let loaded_session = session_link(location.href);
-    if (loaded_session.length) run_session(loaded_session); // other session loaded
+    if (loaded_session.length) run_session(loaded_session.filter(is_safe)); // other session loaded
     else run_example('polys'); // default
 }
 
