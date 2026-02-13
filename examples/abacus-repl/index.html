@@ -384,8 +384,8 @@ let sandbox = null;
 
 function is_safe(code)
 {
-    // test for potential dangerous code
-    return !/(window)|(self)|(top)|(document)|(cookie)|(navigator)|(write)|(eval)/.test(code);
+    // test for potentially unsafe code
+    return !/(window)|(this)|(self)|(top)|(document)|(cookie)|(navigator)|(write)|(fetch)|(XMLHttpRequest)|(eval)/.test(code);
 }
 function esc_html(s)
 {
