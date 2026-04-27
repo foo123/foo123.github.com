@@ -680,7 +680,7 @@ function Chess()
         ab:   {algo:"ab", iterativedeepening:true, depth:245, time:10000},
         mtdf: {algo:"mtdf", iterativedeepening:true, depth:245, time:10000},
         bns:  {algo:"bns", depth:7, time:10000},
-        mcts: {algo:"mcts", iterations:500, uct:4, depth:20, time:10000}
+        mcts: {algo:"mcts", iterations:500, uct:4, depth:25, time:10000}
     };
     const chess = {
         js: './chess/ChessWorker.js',
@@ -902,9 +902,7 @@ function Chess()
 
     function domove(pos1, pos2, promoted)
     {
-        let piece;
-
-        board.clear_possible_moves();
+        board.clearPossibleMoves();
         active_piece = null;
 
         if (moves)
@@ -914,50 +912,8 @@ function Chess()
         }
 
         game.doMove(pos1, pos2, promoted);
-        board.move(piece = game.getPieceAt(pos2), el(pos1), el(pos2));
+        board.doMove(game.getPieceAt(pos2), pos1, pos2);
 
-        if ('PAWN' === piece.type)
-        {
-            // handle en passants
-            if ('BLACK' === piece.color && '3' === pos2.charAt(1))
-            {
-                board.maybe_remove(el(pos2.charAt(0)+'4'), game.getPieceAt(pos2.charAt(0)+'4'));
-            }
-            if ('WHITE' === piece.color && '6' === pos2.charAt(1))
-            {
-                board.maybe_remove(el(pos2.charAt(0)+'5'), game.getPieceAt(pos2.charAt(0)+'5'));
-            }
-        }
-
-        if ('KING' === piece.type)
-        {
-            if ('e1' === pos1)
-            {
-                if ('g1' === pos2)
-                {
-                    // kingside castling white
-                    board.move(game.getPieceAt('f1'), el('h1'), el('f1'));
-                }
-                else if ('c1' === pos2)
-                {
-                    // queenside castling white
-                    board.move(game.getPieceAt('d1'), el('a1'), el('d1'));
-                }
-            }
-            else if ('e8' === pos1)
-            {
-                if ('g8' === pos2)
-                {
-                    // kingside castling black
-                    board.move(game.getPieceAt('f8'), el('h8'), el('f8'));
-                }
-                else if ('c8' === pos2)
-                {
-                    // queenside castling black
-                    board.move(game.getPieceAt('d8'), el('a8'), el('d8'));
-                }
-            }
-        }
         if (moves)
         {
             // Smith chess notation
@@ -968,7 +924,7 @@ function Chess()
 
     function undo()
     {
-        let mov = game.undoMove(), pos1, pos2, sq1, sq2, piece;
+        const mov = game.undoMove();
         if (mov)
         {
             abort_move_in_progress();
@@ -983,7 +939,7 @@ function Chess()
                 sunfish.send('isready');
             }
 
-            board.clear_possible_moves();
+            board.clearPossibleMoves();
             active_piece = null;
 
             if (moves)
@@ -992,55 +948,7 @@ function Chess()
                 else moves.lastChild.innerText = moves.lastChild.innerText.split(' ')[0];
             }
 
-            sq1 = el(pos1=mov[0]);
-            sq2 = el(pos2=mov[2]);
-            board.empty(sq1);
-            board.empty(sq2);
-            board.add(sq1, piece=mov[1]);
-            board.add(sq2, mov[3]);
-
-            if ('PAWN' === piece.type)
-            {
-                // handle en passants
-                if ('BLACK' === piece.color && '3' === pos2.charAt(1))
-                {
-                    board.add(el(pos2.charAt(0)+'4'), game.getPieceAt(pos2.charAt(0)+'4'));
-                }
-                if ('WHITE' === piece.color && '6' === pos2.charAt(1))
-                {
-                    board.add(el(pos2.charAt(0)+'5'), game.getPieceAt(pos2.charAt(0)+'5'));
-                }
-            }
-
-            if ('KING' === piece.type)
-            {
-                if ('e1' === pos1)
-                {
-                    if ('g1' === pos2)
-                    {
-                        // kingside castling white
-                        board.move(game.getPieceAt('h1'), el('f1'), el('h1'));
-                    }
-                    else if ('c1' === pos2)
-                    {
-                        // queenside castling white
-                        board.move(game.getPieceAt('a1'), el('d1'), el('a1'));
-                    }
-                }
-                else if ('e8' === pos1)
-                {
-                    if ('g8' === pos2)
-                    {
-                        // kingside castling black
-                        board.move(game.getPieceAt('h8'), el('f8'), el('h8'));
-                    }
-                    else if ('c8' === pos2)
-                    {
-                        // queenside castling black
-                        board.move(game.getPieceAt('a8'), el('d8'), el('a8'));
-                    }
-                }
-            }
+            board.undoMove(mov[1], mov[3], mov[0], mov[2]);
 
             update_gui();
             clearTimeout(move_waiting);
@@ -1050,7 +958,7 @@ function Chess()
 
     function redo()
     {
-        let mov = game.redoMove(), m, pos1, pos2, piece;
+        const mov = game.redoMove();
         if (mov)
         {
             abort_move_in_progress();
@@ -1065,7 +973,7 @@ function Chess()
                 sunfish.send('isready');
             }
 
-            board.clear_possible_moves();
+            board.clearPossibleMoves();
             active_piece = null;
 
             if (moves)
@@ -1074,52 +982,7 @@ function Chess()
                 else m = moves.lastChild;
             }
 
-            pos1 = mov[0];
-            pos2 = mov[1];
-            board.move(piece = game.getPieceAt(pos2), el(pos1), el(pos2));
-
-            if ('PAWN' === piece.type)
-            {
-                // handle en passants
-                if ('BLACK' === piece.color && '3' === pos2.charAt(1))
-                {
-                    board.maybe_remove(el(pos2.charAt(0)+'4'), game.getPieceAt(pos2.charAt(0)+'4'));
-                }
-                if ('WHITE' === piece.color && '6' === pos2.charAt(1))
-                {
-                    board.maybe_remove(el(pos2.charAt(0)+'5'), game.getPieceAt(pos2.charAt(0)+'5'));
-                }
-            }
-
-            if ('KING' === piece.type)
-            {
-                if ('e1' === pos1)
-                {
-                    if ('g1' === pos2)
-                    {
-                        // kingside castling white
-                        board.move(game.getPieceAt('f1'), el('h1'), el('f1'));
-                    }
-                    else if ('c1' === pos2)
-                    {
-                        // queenside castling white
-                        board.move(game.getPieceAt('d1'), el('a1'), el('d1'));
-                    }
-                }
-                else if ('e8' === pos1)
-                {
-                    if ('g8' === pos2)
-                    {
-                        // kingside castling black
-                        board.move(game.getPieceAt('f8'), el('h8'), el('f8'));
-                    }
-                    else if ('c8' === pos2)
-                    {
-                        // queenside castling black
-                        board.move(game.getPieceAt('d8'), el('a8'), el('d8'));
-                    }
-                }
-            }
+            board.doMove(game.getPieceAt(mov[1]), mov[0], mov[1]);
 
             if (moves)
             {
@@ -1164,8 +1027,8 @@ function Chess()
 
         game = new ChessGame(opts);
         if (controls && controls.querySelector('select[data-action="promoteto"]')) game.promoteTo(controls.querySelector('select[data-action="promoteto"]').value);
-        board = new ChessBoard(container, moves);
-        board.make(square => game.getPieceAt(square));
+        board = new ChessBoard(square => game.getPieceAt(square), container, moves);
+        board.make();
 
         if (msg) msg.innerText = 'Game start. WHITE\'s turn to play.';
 
@@ -1226,7 +1089,7 @@ function Chess()
             {
                 if (active_piece === square)
                 {
-                    board.clear_possible_moves();
+                    board.clearPossibleMoves();
                     active_piece = null;
                     return false;
                 }
@@ -1240,7 +1103,7 @@ function Chess()
                 }
                 else
                 {
-                    board.clear_possible_moves();
+                    board.clearPossibleMoves();
                     active_piece = null;
                 }
             }
@@ -1250,19 +1113,19 @@ function Chess()
                 if (piece && (piece.color === game.whoseTurn()))
                 {
                     active_piece = square;
-                    board.clear_possible_moves();
+                    board.clearPossibleMoves();
                     addClass(square, 'active');
-                    board.show_possible_moves(game.getPossibleMovesAt(square.id));
+                    board.showPossibleMoves(game.getPossibleMovesAt(square.id));
                 }
                 else
                 {
-                    board.clear_possible_moves();
+                    board.clearPossibleMoves();
                     active_piece = null;
                 }
             }
             else
             {
-                board.clear_possible_moves();
+                board.clearPossibleMoves();
                 active_piece = null;
             }
             return false;
@@ -1334,6 +1197,10 @@ function el(id)
 function $(sel, el)
 {
     return Array.prototype.slice.call((el || document).querySelectorAll(sel) || []);
+}
+function $$(tag)
+{
+    return document.createElement(tag);
 }
 function hasEventOptions()
 {
