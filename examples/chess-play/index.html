@@ -9,12 +9,12 @@
 <meta property="og:image" content="https://foo123.github.io/examples/chess-play/screenshot.png">
 <meta property="og:url" content="https://foo123.github.io/examples/chess-play/">
 <meta name="twitter:card" content="summary">
-<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=0.9.9">
-<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=0.9.9">
-<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png?v=0.9.9">
-<link rel="manifest" href="./manifest.json?v=0.9.9">
-<link rel="mask-icon" href="./safari-pinned-tab.svg?v=0.9.9" color="#454545">
-<link rel="shortcut icon" href="./favicon.ico?v=0.9.9">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=0.10.0">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=0.10.0">
+<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png?v=0.10.0">
+<link rel="manifest" href="./manifest.json?v=0.10.0">
+<link rel="mask-icon" href="./safari-pinned-tab.svg?v=0.10.0" color="#454545">
+<link rel="shortcut icon" href="./favicon.ico?v=0.10.0">
 <meta name="apple-mobile-web-app-title" content="Chess">
 <meta name="application-name" content="Chess">
 <meta name="msapplication-TileColor" content="#454545">
@@ -40,7 +40,7 @@ body {
     width: 0;
 }
 .hourglass {
-    --ico: url(./img/hourglass.svg);
+    --ico: url(./assets/img/hourglass.svg);
     --aspect-ratio: calc(1 / 1);
     --displ: inline-block;
     position: relative;
@@ -181,20 +181,19 @@ body {
     background-position: center center;
 }
 #controls button[data-action="flip"] {
-    --img: url(./img/updown-arrows.svg);
+    --img: url(./assets/img/updown-arrows.svg);
     --aspect-ratio: calc(1 / 1);
 }
 #controls button[data-action="new"] {
-    --img: url(./img/play-bt.svg);
+    --img: url(./assets/img/play-bt.svg);
     --aspect-ratio: calc(1 / 1);
 }
 #controls button[data-action="undo"] {
-    --img: url(./img/undo-bt.svg);
+    --img: url(./assets/img/undo-bt.svg);
     --aspect-ratio: calc(1 / 1);
 }
-#controls button[data-action="fen"],
 #controls button[data-action="redo"] {
-    --img: url(./img/redo-bt.svg);
+    --img: url(./assets/img/redo-bt.svg);
     --aspect-ratio: calc(1 / 1);
 }
 #controls .msg {
@@ -288,9 +287,329 @@ body {
     width: 100%;
 }
 }
+
+.chessscreen {
+    transform-origin: center center;
+    transform: rotate(0deg);
+}
+.chessscreen.flipped {
+    transform: rotate(180deg);
+}
+.chessboard {
+    --mrg: 30px;
+    --piecesz: 0.8;
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    padding: var(--mrg);
+    margin: 0 auto;
+    border: 0;
+    max-width: 100%;
+    /*.no-select*/
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.chessboard:focus {
+    /*.no-select*/
+    outline: none !important;
+}
+.chessboard-moves {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    padding: 10px;
+    width: 100%;
+    height: auto;
+    min-height: 200px;
+    max-height: 100%;
+    overflow-y: auto;
+    counter-reset: count 0;
+}
+.chessboard-moves span {
+    position: relative;
+    display: block;
+    font-size: 14px;
+    counter-increment: count 1;
+}
+.chessboard-moves span::before {
+    content: counter(count, decimal) '.';
+    position: relative;
+    display: inline-block;
+    padding-right: 6px;
+}
+.chessboard-moves span + span {
+    margin-top: 10px;
+}
+.chessboard-numbers {
+    position: absolute;
+    display: block;
+    box-sizing: border-box;
+    padding: 0;
+}
+.chessboard-numbers.top {
+    top: 0; left: var(--mrg);
+    width: calc(100% - 2 * var(--mrg));
+    height: var(--mrg);
+}
+.chessboard-numbers.bottom {
+    bottom: 0; left: var(--mrg);
+    width: calc(100% - 2 * var(--mrg));
+    height: var(--mrg);
+}
+.chessboard-numbers.left {
+    top: var(--mrg); left: 0;
+    height: calc(100% - 2 * var(--mrg));
+    width: var(--mrg);
+}
+.chessboard-numbers.right {
+    top: var(--mrg); right: 0;
+    height: calc(100% - 2 * var(--mrg));
+    width: var(--mrg);
+}
+.chessboard-numbers span {
+    --x: 0;
+    --y: 0;
+    position: absolute;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0;
+    font-family: serif;
+    font-size: calc(var(--mrg) * 2 / 3);
+    font-weight: 900;
+    top: calc(var(--y) * 100% / 8);
+    left: calc(var(--x) * 100% / 8);
+    transform-origin: center center;
+}
+.chessboard-numbers.bottom span,
+.chessboard-numbers.top span {
+    width: calc(100% / 8);
+    height: var(--mrg);
+    line-height: var(--mrg);
+    text-align: center;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.chessboard-numbers.right span,
+.chessboard-numbers.left span {
+    width: var(--mrg);
+    height: calc(100% / 8);
+    text-align: center;
+    transform: translate(0, calc(50% - var(--mrg) / 3));
+}
+.chessboard-squares {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0 auto;
+    width: 100%;
+    cursor: pointer;
+}
+.chessboard-squares::before {
+    content: "";
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    padding: 0;
+    padding-bottom: 100%;
+    z-index: -1;
+}
+.chessboard-squares .square {
+    --piece: none;
+    --x: 0;
+    --y: 0;
+    position: absolute;
+    display: inline-block;
+    box-sizing: border-box;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+    width: calc(100% / 8);
+    height: calc(100% / 8);
+    Overflow: hidden;
+    border: 2px solid var(--cb);
+    background-color: var(--c);
+    top: calc(var(--y) * 100% / 8);
+    left: calc(var(--x) * 100% / 8);
+}
+.chessboard-squares .square.piece::before {
+    content: "";
+    position: absolute;
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    width: calc(var(--piecesz) * 100%);
+    height: calc(var(--piecesz) * 100%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: transparent;
+    background-image: var(--piece);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+.chessboard-squares {
+    background-color: #E1B777;
+}
+.chessboard-squares .square.white {
+    --c: #E1B777;
+    --cb: #E1B777;
+}
+.chessboard-squares .square.black {
+    --c: #77613F;
+    --cb: #77613F;
+}
+.chessboard-squares .square.active {
+    --c: orange;
+    --cb: white;
+    z-index: 2;
+}
+.chessboard-squares.b-check .square.piece.b-king,
+.chessboard-squares.w-check .square.piece.w-king {
+    border: 2px solid red !important;
+}
+/*default piece set*/
+.chessboard-squares .piece.w-king {
+    --piece: url(./assets/pieceset/default/king_w.svg);
+}
+.chessboard-squares .piece.b-king {
+    --piece: url(./assets/pieceset/default/king_b.svg);
+}
+.chessboard-squares .piece.w-queen {
+    --piece: url(./assets/pieceset/default/queen_w.svg);
+}
+.chessboard-squares .piece.b-queen {
+    --piece: url(./assets/pieceset/default/queen_b.svg);
+}
+.chessboard-squares .piece.w-bishop {
+    --piece: url(./assets/pieceset/default/bishop_w.svg);
+}
+.chessboard-squares .piece.b-bishop {
+    --piece: url(./assets/pieceset/default/bishop_b.svg);
+}
+.chessboard-squares .piece.w-knight {
+    --piece: url(./assets/pieceset/default/knight_w.svg);
+}
+.chessboard-squares .piece.b-knight {
+    --piece: url(./assets/pieceset/default/knight_b.svg);
+}
+.chessboard-squares .piece.w-rook {
+    --piece: url(./assets/pieceset/default/rook_w.svg);
+}
+.chessboard-squares .piece.b-rook {
+    --piece: url(./assets/pieceset/default/rook_b.svg);
+}
+.chessboard-squares .piece.w-pawn {
+    --piece: url(./assets/pieceset/default/pawn_w.svg);
+}
+.chessboard-squares .piece.b-pawn {
+    --piece: url(./assets/pieceset/default/pawn_b.svg);
+}
+.chessboard.computer-human,
+.chessboard.human-human.b-turn {
+    transform-origin: center center;
+    transform: rotate(180deg);
+}
+.chessboard.computer-human .square.piece,
+.chessboard.human-human.b-turn .square.piece {
+    transform-origin: center center;
+    transform: rotate(180deg);
+}
+.chessboard.computer-human .chessboard-numbers:not(.left):not(.right) span,
+.chessboard.human-human.b-turn .chessboard-numbers:not(.left):not(.right) span {
+    transform: rotate(180deg);
+}
+.chessboard.computer-human .chessboard-numbers:not(.top):not(.bottom) span,
+.chessboard.human-human.b-turn .chessboard-numbers:not(.top):not(.bottom) span {
+    transform: rotate(180deg) translate(0, calc(50% - var(--mrg) / 3));
+}
+@media (max-width:800px) {
+.chessboard.human-human.b-turn {
+    transform-origin: center center;
+    transform: rotate(0deg);
+}
+.chessboard.human-human.b-turn .square.piece {
+    transform-origin: center center;
+    transform: rotate(180deg);
+}
+.chessboard.human-human.b-turn .chessboard-numbers:not(.left):not(.right) span {
+    transform: rotate(180deg);
+}
+.chessboard.human-human.b-turn .chessboard-numbers:not(.top):not(.bottom) span {
+    transform: rotate(180deg) translate(0, calc(50% - var(--mrg) / 3));
+}
+}
+
+#forkongithub {
+    display: inline-block;
+    margin-bottom: 10px;
+}
+#forkongithub  a {
+    background: #aa0000;
+    color: #fff;
+    text-decoration: none;
+    font-family: arial, sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.4rem;
+    position: relative;
+    transition: all 0.5s;
+}
+#forkongithub a:hover {
+    background: #aa0000;
+    color: #fff;
+}
+#forkongithub a::before, #forkongithub a::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    z-index: 100;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub a::after
+{
+    bottom: 1px;
+    top: auto;
+}
+@media screen and (min-width:800px) {
+    #forkongithub {
+        position: absolute;
+        display: block;
+        z-index: 100;
+        top: 0;
+        right: 0;
+        width: 200px;
+        overflow: hidden;
+        height: 200px;
+        margin-bottom: 0;
+    }
+    #forkongithub a {
+        width: 200px;
+        position: absolute;
+        top: 60px;
+        right: -60px;
+        transform: rotate(45deg);
+        box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    }
+}
 </style>
 </head>
 <body>
+<span id="forkongithub"><a href="https://github.com/foo123/Chess">Play with me on GitHub</a></span>
 <div id="screen">
 <div id="controls">
 <select data-action="playwith" title="Play with..">
@@ -300,23 +619,20 @@ body {
 <option value="stockfish-human">Stockfish-Human</option>
 <option value="human-sunfish">Human-Sunfish</option>
 <option value="sunfish-human">Sunfish-Human</option>
-<option value="human-mcts">Human-MonteCarlo</option>
-<option value="mcts-human">MonteCarlo-Human</option>
-<option value="human-minimax">Human-Minimax</option>
-<option value="minimax-human">Minimax-Human</option>
-<option value="human-minimaxmcts">Human-MonteCarloMinimax</option>
-<option value="minimaxmcts-human">MonteCarloMinimax-Human</option>
-<option value="human-minimaxids">Human-MinimaxIDS</option>
-<option value="minimaxids-human">MinimaxIDS-Human</option>
-<option value="human-minimaxmctsids">Human-MonteCarloMinimaxIDS</option>
-<option value="minimaxmctsids-human">MonteCarloMinimaxIDS-Human</option>
+<option value="human-ab">Human-AB</option>
+<option value="ab-human">AB-Human</option>
+<option value="human-mtdf">Human-MTDf</option>
+<option value="mtdf-human">MTDf-Human</option>
+<option value="human-bns">Human-BNS</option>
+<option value="bns-human">BNS-Human</option>
+<option value="human-mcts">Human-MCTS</option>
+<option value="mcts-human">MCTS-Human</option>
 <option value="human-random">Human-Random</option>
 <option value="random-human">Random-Human</option>
 </optgroup>
 </select>
 <span class="break"></span>
-<div style="--displ:inline-block" class="input" id="elo-ctrl"><label for="elo">ELO:</label><input id="elo" data-action="elo" title="ELO Strength" type="number" min="1300" max="2500" step="100" value="1300" /></div>
-<div style="--displ:inline-block" class="input" id="depth-ctrl"><label for="depth">Depth:</label><input id="depth" data-action="depth" title="Depth of Search" type="number" min="1" max="50" step="1" value="4" /></div>
+<div style="--displ:inline-block" class="input" id="elo-ctrl"><label for="elo">ELO:</label><input id="elo" data-action="elo" title="ELO Strength" type="number" min="1300" max="2800" step="100" value="1300" /></div>
 <span class="break"></span>
 <button data-action="flip" title="Flip Sides"></button>
 <button data-action="new" title="New Game"></button>
@@ -330,7 +646,6 @@ body {
 <option value="knight">Knight</option>
 </optgroup>
 </select>
-<!--<button data-action="fen" title="Test FEN"></button>-->
 <p class="msg"><i id="hourglass" class="hourglass"></i><span>Play chess..</span></p>
 </div>
 <div id="chessgame"></div>
@@ -344,29 +659,748 @@ body {
 
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" style="position:fixed;display:inline-block;color:#f90b13;z-index:10;bottom:10px;right:10px;font-size:14px;">donate</a>
 
-<link rel="stylesheet" type="text/css" href="./chessapp.css" />
-<script type="text/javascript" src="./chess.js"></script>
-<script type="text/javascript" src="./chessapp.js"></script>
+<script type="text/javascript" src="./chess/ChessGame.js"></script>
+<script type="text/javascript" src="./chess/ChessBoard.js"></script>
 <script type="text/javascript">
-ChessApp({
-    Chess: Chess
-    ,stockfishjs: './stockfish/stockfish-16.1-lite-single.js'
-    ,sunfishjs: './sunfish/sunfish.js'
-    ,container: document.getElementById('chessgame')
-    ,controls: document.getElementById('controls')
-    ,options: document.getElementById('options')
-    //,moves: document.getElementById('moves')
-});
-</script>
-<script type="text/javascript">
-if ("serviceWorker" in navigator)
+(function(window) {
+/* Chess App */
+"use strict";
+
+function Chess()
 {
-    window.addEventListener("load", function() {
-        navigator.serviceWorker && navigator.serviceWorker.register("./serviceworker.js", {
-            scope: "./",
+    const container = document.getElementById('chessgame'),
+        controls = document.getElementById('controls'),
+        options = document.getElementById('options'),
+        moves = null,//document.getElementById('moves')
+        screen = container.parentNode
+    ;
+
+    // engines/algorithms
+    const algorithms = {
+        ab:   {algo:"ab", iterativedeepening:true, depth:245, time:10000},
+        mtdf: {algo:"mtdf", iterativedeepening:true, depth:245, time:10000},
+        bns:  {algo:"bns", depth:7, time:10000},
+        mcts: {algo:"mcts", iterations:500, uct:4, depth:20, time:10000}
+    };
+    const chess = {
+        js: './chess/ChessWorker.js',
+        worker: null,
+        init: function() {
+            if (chess.worker)
+            {
+                chess.worker.onmessage = function(evt) {
+                    //console.log('receive:',evt.data);
+                    if (chess.recv && evt.data /*&& evt.data.move*/)
+                    {
+                        chess.recv(evt.data.move);
+                    }
+                };
+                console.log('chess.worker running');
+            }
+        },
+        send: function(data, then) {
+            //console.log('send:',data);
+            if (chess.worker)
+            {
+                chess.worker.postMessage(data);
+                if (then) chess.recv = then;
+            }
+        },
+        recv: null
+    };
+    const sunfish = {
+        js: './sunfish/sunfish.js',
+        worker: null,
+        depth: 245,
+        time: 10000,
+        init: function() {
+            if (sunfish.worker)
+            {
+                sunfish.worker.onmessage = function(evt) {
+                    let line = evt.data, match = null;
+                    if ((typeof line) !== "string")
+                    {
+                        console.log("Got line ("+(typeof line)+"):", line);
+                    }
+                    else
+                    {
+                        //console.log('receive sunfish:"'+line+'"');
+                        if (sunfish.recv && (match = line.match(/^bestmove\s+([a-h][1-8])([a-h][1-8])([qrbn])?/)))
+                        {
+                            sunfish.recv({from:match[1], to:match[2], promotion:match[3]});
+                        }
+                    }
+                };
+                console.log('sunfish.worker running');
+            }
+        },
+        send: function(cmd, then) {
+            //console.log('send sunfish:"'+cmd+'"');
+            if (sunfish.worker)
+            {
+                sunfish.worker.postMessage(cmd);
+                if (then) sunfish.recv = then;
+            }
+        },
+        recv: null
+    };
+    const stockfish = {
+        js: './stockfish/stockfish-18-lite-single.js',
+        worker: null,
+        elo: 1300,
+        depth: 245,
+        time: 10000,
+        init: function() {
+            if (stockfish.worker)
+            {
+                stockfish.worker.onmessage = function(evt) {
+                    let line = evt.data, match = null;
+                    if ((typeof line) !== "string")
+                    {
+                        console.log("Got line ("+(typeof line)+"):", line);
+                    }
+                    else
+                    {
+                        //console.log('receive stockfish:"'+line+'"');
+                        if (stockfish.recv && (match = line.match(/^bestmove\s+([a-h][1-8])([a-h][1-8])([qrbn])?/)))
+                        {
+                            stockfish.recv({from:match[1], to:match[2], promotion:match[3]});
+                        }
+                    }
+                };
+                console.log('stockfish.worker running');
+            }
+        },
+        send: function(cmd, then) {
+            //console.log('send stockfish:"'+cmd+'"');
+            if (stockfish.worker)
+            {
+                stockfish.worker.postMessage(cmd);
+                if (then) stockfish.recv = then;
+            }
+        },
+        recv: null
+    };
+
+    let game, board, msg,
+        active_piece = null,
+        move_waiting = null,
+        play_with_computer = false,
+        computer_plays = false,
+        is_stockfish = false,
+        is_sunfish = false,
+        is_random = false,
+        algo = '';
+
+    function update_gui()
+    {
+        let isCheck = game.isCheck(),
+            isCheckMate = game.isCheckMate(),
+            isDraw = game.isDraw(),
+            isGameOver = isCheckMate || isDraw,
+            player = game.whoseTurn(),
+            playwith = play_with_computer ? controls.querySelector('select[data-action="playwith"]').value : 'human-human';
+
+        removeClass(board.squares(), 'w-check');
+        removeClass(board.squares(), 'b-check');
+
+        if (isCheck) addClass(board.squares(), 'BLACK' === player ? 'b-check' : 'w-check');
+
+        if ('BLACK' === player) addClass(container, 'b-turn');
+        else removeClass(container, 'b-turn');
+
+        computer_plays = play_with_computer ? (isGameOver ? false : (('BLACK' === player && -1 < playwith.indexOf('human-')) || ('WHITE' === player && -1 < playwith.indexOf('-human')))) : false;
+
+        if (computer_plays) addClass(el('hourglass'), 'spinning');
+        else if (play_with_computer) removeClass(el('hourglass'), 'spinning');
+
+        if (msg) msg.innerText = (isCheckMate ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' wins with checkmate! Game over.') : (isDraw ? ('It is a draw! Game over.') : (isCheck ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' checks! '+player+'\'s turn to play.') : (player+'\'s turn to play.'))));
+
+        if (isGameOver)
+        {
+            if (chess.worker) end_worker(chess);
+            if (sunfish.worker) end_worker(sunfish);
+            if (stockfish.worker) end_worker(stockfish);
+        }
+    }
+
+    function flip()
+    {
+        if (screen)
+        {
+            if (hasClass(screen, 'flipped')) removeClass(screen, 'flipped');
+            else addClass(screen, 'flipped');
+        }
+    }
+
+    function abort_move_in_progress()
+    {
+        if (computer_plays)
+        {
+            removeClass(el('hourglass'), 'spinning');
+            if (chess.worker) chess.send({stop:true}, () => {});
+            else if (sunfish.worker) sunfish.send('stop', () => {});
+            else if (stockfish.worker) stockfish.send('stop', () => {});
+        }
+        if (move_waiting)
+        {
+            clearTimeout(move_waiting);
+            move_waiting = null;
+        }
+    }
+
+    function engine_move(then)
+    {
+        if (stockfish.worker)
+        {
+            stockfish.send('position startpos moves ' + game.getMovesUpToNow().join(' '));
+            stockfish.send('go ' + (stockfish.depth ? ('depth ' + String(stockfish.depth)) : '') + (stockfish.time ? ('wtime ' + String(stockfish.time) + ' btime ' + String(stockfish.time)) : ''), then);
+        }
+        else if (sunfish.worker)
+        {
+            sunfish.send('position startpos moves ' + game.getMovesUpToNow().join(' '));
+            sunfish.send('go ' + (sunfish.depth ? ('depth ' + String(sunfish.depth)) : '') + (sunfish.time ? ('wtime ' + String(sunfish.time) + ' btime ' + String(sunfish.time)) : ''), then);
+        }
+        else if (chess.worker)
+        {
+            chess.send({bestmove:true, fen:game.getFEN(), opts:JSON.stringify(algorithms[algo])}, then);
+        }
+    }
+
+    function machine_move()
+    {
+        if (computer_plays)
+        {
+            addClass(el('hourglass'), 'spinning');
+            if (is_random)
+            {
+                setTimeout(function() {
+                    const move = game.getRandomMove();
+                    if (computer_plays && move)
+                    {
+                        domove(move.from, move.to, move.promotion);
+                    }
+                }, 10);
+            }
+            else
+            {
+                setTimeout(function() {
+                    engine_move(function(move) {
+                        if (computer_plays && move)
+                        {
+                            domove(move.from, move.to, move.promotion);
+                        }
+                        else
+                        {
+                            console.log('ignored move', move);
+                        }
+                    });
+                }, 10);
+            }
+        }
+    }
+
+    function domove(pos1, pos2, promoted)
+    {
+        let piece;
+
+        board.clear_possible_moves();
+        active_piece = null;
+
+        if (moves)
+        {
+            if ('WHITE' === game.whoseTurn()) moves.appendChild(m = $$('span'));
+            else m = moves.lastChild;
+        }
+
+        game.doMove(pos1, pos2, promoted);
+        board.move(piece = game.getPieceAt(pos2), el(pos1), el(pos2));
+
+        if ('PAWN' === piece.type)
+        {
+            // handle en passants
+            if ('BLACK' === piece.color && '3' === pos2.charAt(1))
+            {
+                board.maybe_remove(el(pos2.charAt(0)+'4'), game.getPieceAt(pos2.charAt(0)+'4'));
+            }
+            if ('WHITE' === piece.color && '6' === pos2.charAt(1))
+            {
+                board.maybe_remove(el(pos2.charAt(0)+'5'), game.getPieceAt(pos2.charAt(0)+'5'));
+            }
+        }
+
+        if ('KING' === piece.type)
+        {
+            if ('e1' === pos1)
+            {
+                if ('g1' === pos2)
+                {
+                    // kingside castling white
+                    board.move(game.getPieceAt('f1'), el('h1'), el('f1'));
+                }
+                else if ('c1' === pos2)
+                {
+                    // queenside castling white
+                    board.move(game.getPieceAt('d1'), el('a1'), el('d1'));
+                }
+            }
+            else if ('e8' === pos1)
+            {
+                if ('g8' === pos2)
+                {
+                    // kingside castling black
+                    board.move(game.getPieceAt('f8'), el('h8'), el('f8'));
+                }
+                else if ('c8' === pos2)
+                {
+                    // queenside castling black
+                    board.move(game.getPieceAt('d8'), el('a8'), el('d8'));
+                }
+            }
+        }
+        if (moves)
+        {
+            // Smith chess notation
+            m.innerText += (m.innerText.length ? ' ' : '') + (pos1+pos2).toLowerCase() + (game.isCheckMate() ? '#' : (game.isCheck() ? '+' : ''));
+        }
+        update_gui();
+    }
+
+    function undo()
+    {
+        let mov = game.undoMove(), pos1, pos2, sq1, sq2, piece;
+        if (mov)
+        {
+            abort_move_in_progress();
+            if (is_stockfish)
+            {
+                stockfish.send('ucinewgame');
+                stockfish.send('isready');
+            }
+            else if (is_sunfish)
+            {
+                sunfish.send('ucinewgame');
+                sunfish.send('isready');
+            }
+
+            board.clear_possible_moves();
+            active_piece = null;
+
+            if (moves)
+            {
+                if ('WHITE' === game.whoseTurn()) moves.removeChild(moves.lastChild);
+                else moves.lastChild.innerText = moves.lastChild.innerText.split(' ')[0];
+            }
+
+            sq1 = el(pos1=mov[0]);
+            sq2 = el(pos2=mov[2]);
+            board.empty(sq1);
+            board.empty(sq2);
+            board.add(sq1, piece=mov[1]);
+            board.add(sq2, mov[3]);
+
+            if ('PAWN' === piece.type)
+            {
+                // handle en passants
+                if ('BLACK' === piece.color && '3' === pos2.charAt(1))
+                {
+                    board.add(el(pos2.charAt(0)+'4'), game.getPieceAt(pos2.charAt(0)+'4'));
+                }
+                if ('WHITE' === piece.color && '6' === pos2.charAt(1))
+                {
+                    board.add(el(pos2.charAt(0)+'5'), game.getPieceAt(pos2.charAt(0)+'5'));
+                }
+            }
+
+            if ('KING' === piece.type)
+            {
+                if ('e1' === pos1)
+                {
+                    if ('g1' === pos2)
+                    {
+                        // kingside castling white
+                        board.move(game.getPieceAt('h1'), el('f1'), el('h1'));
+                    }
+                    else if ('c1' === pos2)
+                    {
+                        // queenside castling white
+                        board.move(game.getPieceAt('a1'), el('d1'), el('a1'));
+                    }
+                }
+                else if ('e8' === pos1)
+                {
+                    if ('g8' === pos2)
+                    {
+                        // kingside castling black
+                        board.move(game.getPieceAt('h8'), el('f8'), el('h8'));
+                    }
+                    else if ('c8' === pos2)
+                    {
+                        // queenside castling black
+                        board.move(game.getPieceAt('a8'), el('d8'), el('a8'));
+                    }
+                }
+            }
+
+            update_gui();
+            clearTimeout(move_waiting);
+            move_waiting = setTimeout(machine_move, 1500);
+        }
+    }
+
+    function redo()
+    {
+        let mov = game.redoMove(), m, pos1, pos2, piece;
+        if (mov)
+        {
+            abort_move_in_progress();
+            if (is_stockfish)
+            {
+                stockfish.send('ucinewgame');
+                stockfish.send('isready');
+            }
+            else if (is_sunfish)
+            {
+                sunfish.send('ucinewgame');
+                sunfish.send('isready');
+            }
+
+            board.clear_possible_moves();
+            active_piece = null;
+
+            if (moves)
+            {
+                if ('BLACK' === game.whoseTurn()) moves.appendChild(m = $$('span'));
+                else m = moves.lastChild;
+            }
+
+            pos1 = mov[0];
+            pos2 = mov[1];
+            board.move(piece = game.getPieceAt(pos2), el(pos1), el(pos2));
+
+            if ('PAWN' === piece.type)
+            {
+                // handle en passants
+                if ('BLACK' === piece.color && '3' === pos2.charAt(1))
+                {
+                    board.maybe_remove(el(pos2.charAt(0)+'4'), game.getPieceAt(pos2.charAt(0)+'4'));
+                }
+                if ('WHITE' === piece.color && '6' === pos2.charAt(1))
+                {
+                    board.maybe_remove(el(pos2.charAt(0)+'5'), game.getPieceAt(pos2.charAt(0)+'5'));
+                }
+            }
+
+            if ('KING' === piece.type)
+            {
+                if ('e1' === pos1)
+                {
+                    if ('g1' === pos2)
+                    {
+                        // kingside castling white
+                        board.move(game.getPieceAt('f1'), el('h1'), el('f1'));
+                    }
+                    else if ('c1' === pos2)
+                    {
+                        // queenside castling white
+                        board.move(game.getPieceAt('d1'), el('a1'), el('d1'));
+                    }
+                }
+                else if ('e8' === pos1)
+                {
+                    if ('g8' === pos2)
+                    {
+                        // kingside castling black
+                        board.move(game.getPieceAt('f8'), el('h8'), el('f8'));
+                    }
+                    else if ('c8' === pos2)
+                    {
+                        // queenside castling black
+                        board.move(game.getPieceAt('d8'), el('a8'), el('d8'));
+                    }
+                }
+            }
+
+            if (moves)
+            {
+                // Smith chess notation
+                m.innerText += (m.innerText.length ? ' ' : '') + (pos1+pos2).toLowerCase() + (game.isCheckMate() ? '#' : (game.isCheck() ? '+' : ''));
+            }
+            update_gui();
+            clearTimeout(move_waiting);
+            move_waiting = setTimeout(machine_move, 1500);
+        }
+    }
+
+    function newgame()
+    {
+        active_piece = null;
+        end_worker(chess);
+        end_worker(sunfish);
+        end_worker(stockfish);
+
+        removeClass(container, 'b-turn');
+        removeClass(container, 'human-human');
+        removeClass(container, 'human-computer');
+        removeClass(container, 'computer-human');
+
+        const playwith = (controls  ? (controls.querySelector('select[data-action="playwith"]')||{}).value : null) || 'human-human', opts = {};
+
+        stockfish.elo = controls ? parseInt(controls.querySelector('input[data-action="elo"]').value) : 1300;
+
+        play_with_computer = playwith !== 'human-human';
+        computer_plays = play_with_computer && (-1 < playwith.indexOf('-human'));
+        is_random = play_with_computer && (-1 < playwith.indexOf('random'));
+        is_sunfish = play_with_computer && (-1 < playwith.indexOf('sunfish'));
+        is_stockfish = play_with_computer && (-1 < playwith.indexOf('stockfish'));
+        algo = play_with_computer && !is_random && !is_sunfish && !is_stockfish ? playwith.replace('-human', '').replace('human-', '') : '';
+
+        if (game) game.dispose();
+
+        if (options) $('input', options).forEach(function(i) {
+            if (play_with_computer) i.checked = true;
+            opts[i.id] = !!i.checked;
         });
-    });
+
+        game = new ChessGame(opts);
+        if (controls && controls.querySelector('select[data-action="promoteto"]')) game.promoteTo(controls.querySelector('select[data-action="promoteto"]').value);
+        board = new ChessBoard(container, moves);
+        board.make(square => game.getPieceAt(square));
+
+        if (msg) msg.innerText = 'Game start. WHITE\'s turn to play.';
+
+        if (play_with_computer)
+        {
+            removeClass(el('hourglass'), 'hide');
+            addClass(el('hourglass'), 'show');
+            addClass(container, computer_plays ? 'computer-human' : 'human-computer');
+            if (is_stockfish)
+            {
+                start_worker(stockfish);
+                stockfish.send('uci');
+                stockfish.send('setoption name UCI_LimitStrength value true');
+                stockfish.send('setoption name UCI_Elo value ' + String(stockfish.elo));
+                stockfish.send('ucinewgame');
+                stockfish.send('isready');
+            }
+            else if (is_sunfish)
+            {
+                start_worker(sunfish);
+                sunfish.send('uci');
+                sunfish.send('ucinewgame');
+                sunfish.send('isready');
+            }
+            else if ('' !== algo)
+            {
+                start_worker(chess);
+            }
+            machine_move();
+        }
+        else
+        {
+            removeClass(el('hourglass'), 'show');
+            addClass(el('hourglass'), 'hide');
+            addClass(container, 'human-human');
+        }
+    }
+
+    function inputs(playwith)
+    {
+        if (-1 < playwith.indexOf('stockfish'))
+        {
+            addClass(removeClass(controls.querySelector('#elo-ctrl'), 'hide'), 'show');
+        }
+        else
+        {
+            addClass(removeClass(controls.querySelector('#elo-ctrl'), 'show'), 'hide');
+        }
+    }
+
+    function init()
+    {
+        addEvent(container, 'click', function(evt) {
+            evt.preventDefault && evt.preventDefault();
+            if (computer_plays) return false;
+            let square = evt.target.closest('.square'), pos1, pos2, piece, m;
+            if (active_piece)
+            {
+                if (active_piece === square)
+                {
+                    board.clear_possible_moves();
+                    active_piece = null;
+                    return false;
+                }
+                if (hasClass(square, 'active'))
+                {
+                    pos1 = active_piece.id;
+                    pos2 = square.id;
+                    domove(pos1, pos2);
+                    machine_move();
+                    return false;
+                }
+                else
+                {
+                    board.clear_possible_moves();
+                    active_piece = null;
+                }
+            }
+            if (hasClass(square, 'piece'))
+            {
+                piece = game.getPieceAt(square.id);
+                if (piece && (piece.color === game.whoseTurn()))
+                {
+                    active_piece = square;
+                    board.clear_possible_moves();
+                    addClass(square, 'active');
+                    board.show_possible_moves(game.getPossibleMovesAt(square.id));
+                }
+                else
+                {
+                    board.clear_possible_moves();
+                    active_piece = null;
+                }
+            }
+            else
+            {
+                board.clear_possible_moves();
+                active_piece = null;
+            }
+            return false;
+        }, {capture:false, passive:false});
+
+        if (controls)
+        {
+            msg = controls.querySelector('.msg');
+            if (msg) msg = msg.querySelector('span') || msg;
+
+            addEvent(controls, 'click', function(evt) {
+                var ctrl = evt.target.closest('button'),
+                    action = ctrl ? ctrl.getAttribute('data-action') : '';
+                evt.preventDefault && evt.preventDefault();
+                if ('flip' === action) flip();
+                else if ('new' === action) newgame();
+                else if ('undo' === action) undo();
+                else if ('redo' === action) redo();
+                return false;
+            }, {capture:false, passive:false});
+
+            addEvent(controls, 'change', function(evt) {
+                var ctrl = evt.target.closest('select'),
+                    action = ctrl ? ctrl.getAttribute('data-action') : '';
+                if ('promoteto' === action)
+                {
+                    if (game) game.promoteTo(ctrl.value);
+                }
+                else if ('playwith' === action)
+                {
+                    inputs(ctrl.value);
+                }
+            }, {capture:false, passive:true});
+        }
+
+        if (screen) addClass(screen, 'chessscreen');
+
+        inputs(controls ? controls.querySelector('select[data-action="playwith"]').value : 'human-human');
+
+        newgame();
+    }
+
+    init();
 }
+
+// utils
+function start_worker(engine)
+{
+    if (engine && !engine.worker && engine.js)
+    {
+        engine.worker = new Worker(engine.js);
+        if (engine.init) engine.init();
+    }
+    return engine;
+}
+function end_worker(engine)
+{
+    if (engine && engine.worker)
+    {
+        engine.worker.terminate();
+        engine.worker = null;
+    }
+    return engine;
+}
+function el(id)
+{
+    return document.getElementById(id);
+}
+function $(sel, el)
+{
+    return Array.prototype.slice.call((el || document).querySelectorAll(sel) || []);
+}
+function hasEventOptions()
+{
+    if (null == hasEventOptions.supported)
+    {
+        var passiveSupported = false, options = {};
+        try {
+            Object.defineProperty(options, 'passive', {
+                get: function(){
+                    passiveSupported = true;
+                    return false;
+                }
+            });
+            window.addEventListener('test', null, options);
+            window.removeEventListener('test', null, options);
+        } catch(e) {
+            passiveSupported = false;
+        }
+        hasEventOptions.supported = passiveSupported;
+    }
+    return hasEventOptions.supported;
+}
+function addEvent(target, event, handler, options)
+{
+    if (target.attachEvent) target.attachEvent('on' + event, handler);
+    else target.addEventListener(event, handler, hasEventOptions() ? options : ('object' === typeof(options) ? !!options.capture : !!options));
+}
+function removeEvent(target, event, handler, options)
+{
+    // if (el.removeEventListener) not working in IE11
+    if (target.detachEvent) target.detachEvent('on' + event, handler);
+    else target.removeEventListener(event, handler, hasEventOptions() ? options : ('object' === typeof(options) ? !!options.capture : !!options));
+}
+function hasClass(el, className)
+{
+    if (el)
+    {
+        return el.classList
+            ? el.classList.contains(className)
+            : -1 !== (' ' + el.className + ' ').indexOf(' ' + className + ' ')
+        ;
+    }
+}
+function addClass(el, className)
+{
+    if (el)
+    {
+        if (el.classList) el.classList.add(className);
+        else if (!hasClass(el, className)) el.className = '' === el.className ? className : (el.className + ' ' + className);
+    }
+    return el;
+}
+function removeClass(el, className)
+{
+    if (el)
+    {
+        if (el.classList) el.classList.remove(className);
+        else el.className = ((' ' + el.className + ' ').replace(' ' + className + ' ', ' ')).trim();
+    }
+    return el;
+}
+
+// export
+window.Chess = Chess;
+// start
+Chess();
+})(window);
 </script>
 </body>
 </html>
