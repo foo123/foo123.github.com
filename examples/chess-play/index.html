@@ -627,6 +627,8 @@ body {
 <option value="bns-human">BNS-Human</option>
 <option value="human-mcts">Human-MCTS</option>
 <option value="mcts-human">MCTS-Human</option>
+<!--<option value="human-abmcts">Human-ABMCTS</option>
+<option value="abmcts-human">ABMCTS-Human</option>-->
 <option value="human-random">Human-Random</option>
 <option value="random-human">Random-Human</option>
 </optgroup>
@@ -663,24 +665,25 @@ body {
 <script type="text/javascript" src="./chess/ChessBoard.js"></script>
 <script type="text/javascript">
 (function(window) {
-/* Chess App */
 "use strict";
-
+/* Chess App */
 function Chess()
 {
     const container = document.getElementById('chessgame'),
         controls = document.getElementById('controls'),
         options = document.getElementById('options'),
         moves = null,//document.getElementById('moves')
-        screen = container.parentNode
+        screen = container.parentNode,
+        echo = console.log
     ;
 
     // engines/algorithms
     const algorithms = {
-        ab:   {algo:"ab", iterativedeepening:true, depth:245, time:10000},
-        mtdf: {algo:"mtdf", iterativedeepening:true, depth:245, time:10000},
-        bns:  {algo:"bns", depth:7, time:10000},
-        mcts: {algo:"mcts", iterations:500, uct:4, depth:25, time:10000}
+        ab:     {algo:"ab", iterativedeepening:true, depth:245, time:10000},
+        mtdf:   {algo:"mtdf", iterativedeepening:true, depth:245, time:10000},
+        bns:    {algo:"bns", depth:7, time:10000},
+        mcts:   {algo:"mcts", iterations:500, uct:4, depth:10, time:10000},
+        abmcts: {algo:"ab", iterations:100, uct:5, mcts:3, depth:10, time:10000}
     };
     const chess = {
         js: './chess/ChessWorker.js',
@@ -689,17 +692,17 @@ function Chess()
             if (chess.worker)
             {
                 chess.worker.onmessage = function(evt) {
-                    //console.log('receive:',evt.data);
+                    //echo('receive:',evt.data);
                     if (chess.recv && evt.data /*&& evt.data.move*/)
                     {
                         chess.recv(evt.data.move);
                     }
                 };
-                console.log('chess.worker running');
+                echo('chess.worker running');
             }
         },
         send: function(data, then) {
-            //console.log('send:',data);
+            //echo('send:',data);
             if (chess.worker)
             {
                 chess.worker.postMessage(data);
@@ -720,22 +723,22 @@ function Chess()
                     let line = evt.data, match = null;
                     if ((typeof line) !== "string")
                     {
-                        console.log("Got line ("+(typeof line)+"):", line);
+                        echo("Got line ("+(typeof line)+"):", line);
                     }
                     else
                     {
-                        //console.log('receive sunfish:"'+line+'"');
+                        //echo('receive sunfish:"'+line+'"');
                         if (sunfish.recv && (match = line.match(/^bestmove\s+([a-h][1-8])([a-h][1-8])([qrbn])?/)))
                         {
                             sunfish.recv({from:match[1], to:match[2], promotion:match[3]});
                         }
                     }
                 };
-                console.log('sunfish.worker running');
+                echo('sunfish.worker running');
             }
         },
         send: function(cmd, then) {
-            //console.log('send sunfish:"'+cmd+'"');
+            //echo('send sunfish:"'+cmd+'"');
             if (sunfish.worker)
             {
                 sunfish.worker.postMessage(cmd);
@@ -757,22 +760,22 @@ function Chess()
                     let line = evt.data, match = null;
                     if ((typeof line) !== "string")
                     {
-                        console.log("Got line ("+(typeof line)+"):", line);
+                        echo("Got line ("+(typeof line)+"):", line);
                     }
                     else
                     {
-                        //console.log('receive stockfish:"'+line+'"');
+                        //echo('receive stockfish:"'+line+'"');
                         if (stockfish.recv && (match = line.match(/^bestmove\s+([a-h][1-8])([a-h][1-8])([qrbn])?/)))
                         {
                             stockfish.recv({from:match[1], to:match[2], promotion:match[3]});
                         }
                     }
                 };
-                console.log('stockfish.worker running');
+                echo('stockfish.worker running');
             }
         },
         send: function(cmd, then) {
-            //console.log('send stockfish:"'+cmd+'"');
+            //echo('send stockfish:"'+cmd+'"');
             if (stockfish.worker)
             {
                 stockfish.worker.postMessage(cmd);
@@ -782,7 +785,7 @@ function Chess()
         recv: null
     };
 
-    let game, board, msg,
+    let game, board, ply, msg,
         active_piece = null,
         move_waiting = null,
         play_with_computer = false,
@@ -818,9 +821,9 @@ function Chess()
 
         if (isGameOver)
         {
-            if (chess.worker) end_worker(chess);
-            if (sunfish.worker) end_worker(sunfish);
-            if (stockfish.worker) end_worker(stockfish);
+            end_worker(chess);
+            end_worker(sunfish);
+            end_worker(stockfish);
         }
     }
 
@@ -830,22 +833,6 @@ function Chess()
         {
             if (hasClass(screen, 'flipped')) removeClass(screen, 'flipped');
             else addClass(screen, 'flipped');
-        }
-    }
-
-    function abort_move_in_progress()
-    {
-        if (computer_plays)
-        {
-            removeClass(el('hourglass'), 'spinning');
-            if (chess.worker) chess.send({stop:true}, () => {});
-            else if (sunfish.worker) sunfish.send('stop', () => {});
-            else if (stockfish.worker) stockfish.send('stop', () => {});
-        }
-        if (move_waiting)
-        {
-            clearTimeout(move_waiting);
-            move_waiting = null;
         }
     }
 
@@ -867,36 +854,49 @@ function Chess()
         }
     }
 
-    function machine_move()
+    function machine_move(machine_ply)
     {
-        if (computer_plays)
+        addClass(el('hourglass'), 'spinning');
+        if (is_random)
         {
-            addClass(el('hourglass'), 'spinning');
-            if (is_random)
-            {
-                setTimeout(function() {
-                    const move = game.getRandomMove();
-                    if (computer_plays && move)
+            setTimeout(function() {
+                const move = game.getRandomMove();
+                if (computer_plays && (machine_ply === ply) && move)
+                {
+                    domove(move.from, move.to, move.promotion);
+                }
+            }, 10);
+        }
+        else
+        {
+            setTimeout(function() {
+                engine_move(function(move) {
+                    if (computer_plays && (machine_ply === ply) && move)
                     {
                         domove(move.from, move.to, move.promotion);
                     }
-                }, 10);
-            }
-            else
-            {
-                setTimeout(function() {
-                    engine_move(function(move) {
-                        if (computer_plays && move)
-                        {
-                            domove(move.from, move.to, move.promotion);
-                        }
-                        else
-                        {
-                            console.log('ignored move', move);
-                        }
-                    });
-                }, 10);
-            }
+                    else
+                    {
+                        echo('ignored move', move);
+                    }
+                });
+            }, 10);
+        }
+    }
+
+    function abort_move_in_progress()
+    {
+        if (computer_plays)
+        {
+            removeClass(el('hourglass'), 'spinning');
+            if (chess.worker) chess.send({stop:true}, () => {});
+            else if (sunfish.worker) sunfish.send('stop', () => {});
+            else if (stockfish.worker) stockfish.send('stop', () => {});
+        }
+        if (move_waiting)
+        {
+            clearTimeout(move_waiting);
+            move_waiting = null;
         }
     }
 
@@ -905,20 +905,19 @@ function Chess()
         board.clearPossibleMoves();
         active_piece = null;
 
-        if (moves)
-        {
-            if ('WHITE' === game.whoseTurn()) moves.appendChild(m = $$('span'));
-            else m = moves.lastChild;
-        }
-
         game.doMove(pos1, pos2, promoted);
         board.doMove(game.getPieceAt(pos2), pos1, pos2);
+        ++ply;
 
         if (moves)
         {
+            let m;
+            if ('WHITE' === game.whoseTurn()) moves.appendChild(m = $$('span'));
+            else m = moves.lastChild;
             // Smith chess notation
             m.innerText += (m.innerText.length ? ' ' : '') + (pos1+pos2).toLowerCase() + (game.isCheckMate() ? '#' : (game.isCheck() ? '+' : ''));
         }
+
         update_gui();
     }
 
@@ -928,6 +927,13 @@ function Chess()
         if (mov)
         {
             abort_move_in_progress();
+
+            board.clearPossibleMoves();
+            active_piece = null;
+
+            board.undoMove(mov[1], mov[3], mov[0], mov[2]);
+            --ply;
+
             if (is_stockfish)
             {
                 stockfish.send('ucinewgame');
@@ -939,20 +945,16 @@ function Chess()
                 sunfish.send('isready');
             }
 
-            board.clearPossibleMoves();
-            active_piece = null;
-
             if (moves)
             {
                 if ('WHITE' === game.whoseTurn()) moves.removeChild(moves.lastChild);
                 else moves.lastChild.innerText = moves.lastChild.innerText.split(' ')[0];
             }
 
-            board.undoMove(mov[1], mov[3], mov[0], mov[2]);
-
             update_gui();
+
             clearTimeout(move_waiting);
-            move_waiting = setTimeout(machine_move, 1500);
+            move_waiting = setTimeout(() => {if (computer_plays) machine_move(ply);}, 2000);
         }
     }
 
@@ -962,6 +964,13 @@ function Chess()
         if (mov)
         {
             abort_move_in_progress();
+
+            board.clearPossibleMoves();
+            active_piece = null;
+
+            board.doMove(game.getPieceAt(mov[1]), mov[0], mov[1]);
+            ++ply;
+
             if (is_stockfish)
             {
                 stockfish.send('ucinewgame');
@@ -973,31 +982,24 @@ function Chess()
                 sunfish.send('isready');
             }
 
-            board.clearPossibleMoves();
-            active_piece = null;
-
             if (moves)
             {
+                let m;
                 if ('BLACK' === game.whoseTurn()) moves.appendChild(m = $$('span'));
                 else m = moves.lastChild;
-            }
-
-            board.doMove(game.getPieceAt(mov[1]), mov[0], mov[1]);
-
-            if (moves)
-            {
                 // Smith chess notation
-                m.innerText += (m.innerText.length ? ' ' : '') + (pos1+pos2).toLowerCase() + (game.isCheckMate() ? '#' : (game.isCheck() ? '+' : ''));
+                m.innerText += (m.innerText.length ? ' ' : '') + (mov[0]+mov[1]).toLowerCase() + (game.isCheckMate() ? '#' : (game.isCheck() ? '+' : ''));
             }
+
             update_gui();
+
             clearTimeout(move_waiting);
-            move_waiting = setTimeout(machine_move, 1500);
+            move_waiting = setTimeout(() => {if (computer_plays) machine_move(ply);}, 2000);
         }
     }
 
     function newgame()
     {
-        active_piece = null;
         end_worker(chess);
         end_worker(sunfish);
         end_worker(stockfish);
@@ -1030,6 +1032,9 @@ function Chess()
         board = new ChessBoard(square => game.getPieceAt(square), container, moves);
         board.make();
 
+        ply = 0;
+        active_piece = null;
+
         if (msg) msg.innerText = 'Game start. WHITE\'s turn to play.';
 
         if (play_with_computer)
@@ -1057,7 +1062,7 @@ function Chess()
             {
                 start_worker(chess);
             }
-            machine_move();
+            if (computer_plays) machine_move(ply);
         }
         else
         {
@@ -1098,7 +1103,7 @@ function Chess()
                     pos1 = active_piece.id;
                     pos2 = square.id;
                     domove(pos1, pos2);
-                    machine_move();
+                    if (computer_plays) machine_move(ply);
                     return false;
                 }
                 else
