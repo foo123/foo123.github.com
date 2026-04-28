@@ -472,8 +472,8 @@ body {
     --cb: white;
     z-index: 2;
 }
-.chessboard-squares.b-check .square.piece.b-king,
-.chessboard-squares.w-check .square.piece.w-king {
+.chessboard.b-check .square.piece.b-king,
+.chessboard.w-check .square.piece.w-king {
     border: 2px solid red !important;
 }
 /*default piece set*/
@@ -686,7 +686,7 @@ function Chess()
         abmcts: {algo:"ab", iterations:100, uct:5, mcts:3, depth:10, time:10000}
     };
     const chess = {
-        js: './chess/ChessWorker.js',
+        js: './src/ChessWorker.js',
         worker: null,
         init: function() {
             if (chess.worker)
@@ -804,10 +804,10 @@ function Chess()
             player = game.whoseTurn(),
             playwith = play_with_computer ? controls.querySelector('select[data-action="playwith"]').value : 'human-human';
 
-        removeClass(board.squares(), 'w-check');
-        removeClass(board.squares(), 'b-check');
+        removeClass(container, 'w-check');
+        removeClass(container, 'b-check');
 
-        if (isCheck) addClass(board.squares(), 'BLACK' === player ? 'b-check' : 'w-check');
+        if (isCheck) addClass(container, 'BLACK' === player ? 'b-check' : 'w-check');
 
         if ('BLACK' === player) addClass(container, 'b-turn');
         else removeClass(container, 'b-turn');
@@ -1025,7 +1025,7 @@ function Chess()
 
         game = new ChessGame(opts);
         if (controls && controls.querySelector('select[data-action="promoteto"]')) game.promoteTo(controls.querySelector('select[data-action="promoteto"]').value);
-        board = new ChessBoard(square => game.getPieceAt(square), container, moves);
+        board = new ChessBoard(container, square => game.getPieceAt(square));
         board.make();
 
         ply = 0;
