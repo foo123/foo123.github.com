@@ -77,6 +77,7 @@ body {
     width: 700px;
     max-width: 100%;
     padding: 0;
+    border: 0;
     margin: 40px auto;
 }
 #controls {
@@ -90,6 +91,29 @@ body {
     margin: 0 auto;
     margin-bottom: 20px;
 }
+#type {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    vertical-align: middle;
+    color: #343434;
+    background: #dfdfdf;
+    font-size: 14px;
+    padding: 12px 8px;
+    margin-right: 8px;
+    border-radius: 10px;
+}
+#newgame {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    vertical-align: middle;
+    width: 120px;
+    height: 38px;
+    line-height: 38px;
+    cursor: pointer;
+    margin: 0;
+}
 #responsive-canvas {
     position: relative;
     display: inline-block;
@@ -97,6 +121,7 @@ body {
     max-width: 100%;
     min-width: 340px;
     height: auto;
+    overflow: hidden;
     font-size: 0;
     border: 0;
     padding: 0;
@@ -113,6 +138,13 @@ body {
     height: 500px;
     transform-origin: 0 0;
     transform: scale(1);
+}
+#instructions {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 13px;
 }
 #forkongithub {
     display: inline-block;
@@ -182,44 +214,23 @@ body {
 
 <div id="wrapper">
 <div id="controls">
-    <select id="type" style="
-        position: relative;
-        display: inline-block;
-        vertical-align: middle;
-        color: #121212;
-        background: #efefef;
-        font-size: 14px;
-        padding: 12px 6px;
-        margin-right: 8px;
-        border-radius: 10px;
-    ">
-    <option value="1" selected>American Pool</option>
-    <option value="2">French Billiard</option>
-    </select>
-
-    <button id="newgame" class="button" style="
-        position: relative;
-        display: inline-block;
-        vertical-align: middle;
-        width: 120px;
-        height: 38px;
-        line-height: 38px;
-        cursor: pointer;
-        margin: 0;
-    ">New Game</button>
-</div>
-<div id="responsive-canvas">
-<canvas id="canvas" width=700 height=500></canvas>
+<select id="type">
+<option value="1" selected>American Pool</option>
+<option value="2">French Billiard</option>
+</select>
+<button id="newgame" class="button">New Game</button>
 </div>
 
-<ol id="instructions" style="position:relative;display:block;width:100%;font-size:13px">
+<div id="responsive-canvas"><canvas id="canvas" width=700 height=500></canvas></div>
+
+<ol id="instructions">
 <li>Rotate Stick with mouse to direct hit.</li>
 <li>Press 'Q' key to lock stick and move mouse to give strike force.</li>
 <li>Release 'Q' key to strike ball.</li>
 </ol>
 </div>
 
-<div style="margin:10px auto; text-align:center; z-index:10;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" style="position:relative;display:inline-block;color:#f90b13;font-size:14px;">donate</a></div>
+<div style="margin:10px auto; text-align:center; z-index:10;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" style="color:#f90b13;font-size:14px;">donate</a></div>
 
 <script src="./NEngine.min.js"></script>
 <script src="./billiard.min.js"></script>
@@ -233,7 +244,7 @@ function responsive_canvas(canvas)
 {
     var scale = Math.min(1, canvas.parentNode.offsetWidth/canvas.width);
     canvas.style.transform = 'scale('+String(scale)+')';
-    canvas.parentNode.style.height = String(scale*canvas.height)+'px';
+    canvas.parentNode.style.maxHeight = String(Math.ceil(scale*canvas.height))+'px';
     return canvas;
 }
 
