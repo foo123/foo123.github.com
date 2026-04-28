@@ -836,42 +836,36 @@ function Chess()
         }
     }
 
-    function engine_move(then)
+    function computer_move()
     {
-        if (stockfish.worker)
+        function engine_move(then)
         {
-            stockfish.send('position startpos moves ' + game.getMovesUpToNow().join(' '));
-            stockfish.send('go ' + (stockfish.depth ? ('depth ' + String(stockfish.depth)) : '') + (stockfish.time ? ('wtime ' + String(stockfish.time) + ' btime ' + String(stockfish.time)) : ''), then);
+            if (is_random)
+            {
+                then(game.getRandomMove());
+            }
+            else if (chess.worker)
+            {
+                chess.send({bestmove:true, fen:game.getFEN(), opts:JSON.stringify(algorithms[algo])}, then);
+            }
+            else if (sunfish.worker)
+            {
+                sunfish.send('position startpos moves ' + game.getMovesUpToNow().join(' '));
+                sunfish.send('go ' + (sunfish.depth ? ('depth ' + String(sunfish.depth)) : '') + (sunfish.time ? ('wtime ' + String(sunfish.time) + ' btime ' + String(sunfish.time)) : ''), then);
+            }
+            else if (stockfish.worker)
+            {
+                stockfish.send('position startpos moves ' + game.getMovesUpToNow().join(' '));
+                stockfish.send('go ' + (stockfish.depth ? ('depth ' + String(stockfish.depth)) : '') + (stockfish.time ? ('wtime ' + String(stockfish.time) + ' btime ' + String(stockfish.time)) : ''), then);
+            }
         }
-        else if (sunfish.worker)
-        {
-            sunfish.send('position startpos moves ' + game.getMovesUpToNow().join(' '));
-            sunfish.send('go ' + (sunfish.depth ? ('depth ' + String(sunfish.depth)) : '') + (sunfish.time ? ('wtime ' + String(sunfish.time) + ' btime ' + String(sunfish.time)) : ''), then);
-        }
-        else if (chess.worker)
-        {
-            chess.send({bestmove:true, fen:game.getFEN(), opts:JSON.stringify(algorithms[algo])}, then);
-        }
-    }
 
-    function machine_move(machine_ply)
-    {
-        addClass(el('hourglass'), 'spinning');
-        if (is_random)
+        function do_move(computer_ply)
         {
-            setTimeout(function() {
-                const move = game.getRandomMove();
-                if (computer_plays && (machine_ply === ply) && move)
-                {
-                    domove(move.from, move.to, move.promotion);
-                }
-            }, 10);
-        }
-        else
-        {
+            addClass(el('hourglass'), 'spinning');
             setTimeout(function() {
                 engine_move(function(move) {
-                    if (computer_plays && (machine_ply === ply) && move)
+                    if (computer_plays && (computer_ply === ply) && move)
                     {
                         domove(move.from, move.to, move.promotion);
                     }
@@ -882,21 +876,23 @@ function Chess()
                 });
             }, 10);
         }
+
+        if (computer_plays) do_move(ply);
     }
 
     function abort_move_in_progress()
     {
+        if (move_waiting)
+        {
+            clearTimeout(move_waiting);
+            move_waiting = null;
+        }
         if (computer_plays)
         {
             removeClass(el('hourglass'), 'spinning');
             if (chess.worker) chess.send({stop:true}, () => {});
             else if (sunfish.worker) sunfish.send('stop', () => {});
             else if (stockfish.worker) stockfish.send('stop', () => {});
-        }
-        if (move_waiting)
-        {
-            clearTimeout(move_waiting);
-            move_waiting = null;
         }
     }
 
@@ -954,7 +950,7 @@ function Chess()
             update_gui();
 
             clearTimeout(move_waiting);
-            move_waiting = setTimeout(() => {if (computer_plays) machine_move(ply);}, 2000);
+            move_waiting = setTimeout(computer_move, 2000);
         }
     }
 
@@ -994,7 +990,7 @@ function Chess()
             update_gui();
 
             clearTimeout(move_waiting);
-            move_waiting = setTimeout(() => {if (computer_plays) machine_move(ply);}, 2000);
+            move_waiting = setTimeout(computer_move, 2000);
         }
     }
 
@@ -1062,7 +1058,7 @@ function Chess()
             {
                 start_worker(chess);
             }
-            if (computer_plays) machine_move(ply);
+            computer_move();
         }
         else
         {
@@ -1103,7 +1099,7 @@ function Chess()
                     pos1 = active_piece.id;
                     pos2 = square.id;
                     domove(pos1, pos2);
-                    if (computer_plays) machine_move(ply);
+                    computer_move();
                     return false;
                 }
                 else
