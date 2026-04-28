@@ -1,7 +1,7 @@
 /**
 *  ChessBoard
 *  A chess board for HTML
-*  https://github.com/foo123/Chess
+*  https://github.com/foo123/chess.js
 *  @VERSION: 1.0.0
 *
 **/

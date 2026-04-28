@@ -1,7 +1,7 @@
 /**
 *  ChessSearch
 *  Search algorithms to find best chess moves
-*  https://github.com/foo123/Chess
+*  https://github.com/foo123/chess.js
 *  @VERSION: 0.10.0
 *
 **/
