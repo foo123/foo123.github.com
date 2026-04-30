@@ -686,7 +686,7 @@ function Chess()
         abmcts: {algo:"ab", iterations:100, uct:5, mcts:3, depth:10, time:10000}
     };
     const chess = {
-        js: './src/ChessWorker.js',
+        js: './chess/ChessWorker.js',
         worker: null,
         init: function() {
             if (chess.worker)
