@@ -802,7 +802,8 @@ function Chess()
             isDraw = game.isDraw(),
             isGameOver = isCheckMate || isDraw,
             player = game.whoseTurn(),
-            playwith = play_with_computer ? controls.querySelector('select[data-action="playwith"]').value : 'human-human';
+            playwith = play_with_computer ? controls.querySelector('select[data-action="playwith"]').value : 'human-human',
+            last_move = game.lastMove();
 
         removeClass(container, 'w-check');
         removeClass(container, 'b-check');
@@ -817,14 +818,14 @@ function Chess()
         if (computer_plays) addClass(el('hourglass'), 'spinning');
         else if (play_with_computer) removeClass(el('hourglass'), 'spinning');
 
-        if (msg) msg.innerText = (isCheckMate ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' wins with checkmate! Game over.') : (isDraw ? ('It is a draw! Game over.') : (isCheck ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' checks! '+player+'\'s turn to play.') : (player+'\'s turn to play.'))));
+        if (msg) msg.innerText = (last_move ? el(last_move.to).title+'. ' : '')+(isCheckMate ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' wins with checkmate! Game over.') : (isDraw ? ('It is a draw! Game over.') : (isCheck ? (('WHITE' === player ? 'BLACK' : 'WHITE')+' checks! '+player+'\'s turn to play.') : (player+'\'s turn to play.'))));
 
-        if (isGameOver)
+        /*if (isGameOver)
         {
             end_worker(chess);
             end_worker(sunfish);
             end_worker(stockfish);
-        }
+        }*/
     }
 
     function flip()
@@ -927,15 +928,15 @@ function Chess()
             board.clearPossibleMoves();
             active_piece = null;
 
-            board.undoMove(mov[1], mov[3], mov[0], mov[2]);
+            board.undoMove(mov.moved_piece, mov.removed_piece, mov.from, mov.to);
             --ply;
 
-            if (is_stockfish)
+            if (stockfish.worker)
             {
                 stockfish.send('ucinewgame');
                 stockfish.send('isready');
             }
-            else if (is_sunfish)
+            else if (sunfish.worker)
             {
                 sunfish.send('ucinewgame');
                 sunfish.send('isready');
@@ -964,15 +965,15 @@ function Chess()
             board.clearPossibleMoves();
             active_piece = null;
 
-            board.doMove(game.getPieceAt(mov[1]), mov[0], mov[1]);
+            board.doMove(game.getPieceAt(mov.to), mov.from, mov.to);
             ++ply;
 
-            if (is_stockfish)
+            if (stockfish.worker)
             {
                 stockfish.send('ucinewgame');
                 stockfish.send('isready');
             }
-            else if (is_sunfish)
+            else if (sunfish.worker)
             {
                 sunfish.send('ucinewgame');
                 sunfish.send('isready');
@@ -1016,6 +1017,7 @@ function Chess()
         is_stockfish = play_with_computer && (-1 < playwith.indexOf('stockfish'));
         algo = play_with_computer && !is_random && !is_sunfish && !is_stockfish ? playwith.replace('-human', '').replace('human-', '') : '';
 
+        if (board) board.dispose();
         if (game) game.dispose();
 
         if (options) $('input', options).forEach(function(i) {
@@ -1025,8 +1027,8 @@ function Chess()
 
         game = new ChessGame(opts);
         if (controls && controls.querySelector('select[data-action="promoteto"]')) game.promoteTo(controls.querySelector('select[data-action="promoteto"]').value);
-        board = new ChessBoard(container, square => game.getPieceAt(square));
-        board.make();
+        board = new ChessBoard(square => game.getPieceAt(square), container);
+        board.toHTML();
 
         ply = 0;
         active_piece = null;
@@ -1113,10 +1115,10 @@ function Chess()
                 piece = game.getPieceAt(square.id);
                 if (piece && (piece.color === game.whoseTurn()))
                 {
-                    active_piece = square;
                     board.clearPossibleMoves();
+                    active_piece = square;
                     addClass(square, 'active');
-                    board.showPossibleMoves(game.getPossibleMovesAt(square.id));
+                    board.showPossibleMoves(game.getPossibleMovesAt(square.id), square);
                 }
                 else
                 {
