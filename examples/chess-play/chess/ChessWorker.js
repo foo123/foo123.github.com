@@ -10,8 +10,13 @@ onmessage = function(e) {
     {
         var game = new ChessGame(e.data.fen),
             opts = "string" === typeof e.data.opts ? JSON.parse(e.data.opts) : e.data.opts;
-        opts.stopped = function() {return stopped;};
-        opts.cb = function(move) {game.dispose(); postMessage({move:stopped ? null : move});};
+        opts.stopped = function() {
+            return stopped;
+        };
+        opts.cb = function(move) {
+            game.dispose();
+            setTimeout(function() {postMessage({move:stopped ? null : move});}, 1);
+        };
         stopped = false;
         (new ChessSearch.HybridSearch(game, opts)).bestMove(game.getBoard().turn);
     }
