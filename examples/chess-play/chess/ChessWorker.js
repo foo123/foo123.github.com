@@ -3,25 +3,32 @@
 importScripts('./ChessGame.js');
 importScripts('./ChessSearch.js');
 
-var stopped = false;
+function return_false()
+{
+    return false;
+}
+function return_true()
+{
+    return true;
+}
+var opts = null;
 
 onmessage = function(e) {
     if (e.data.bestmove && e.data.fen && e.data.opts)
     {
-        var game = new ChessGame(e.data.fen),
-            opts = "string" === typeof e.data.opts ? JSON.parse(e.data.opts) : e.data.opts;
-        opts.stopped = function() {
-            return stopped;
-        };
-        opts.cb = function(move) {
-            game.dispose();
-            setTimeout(function() {postMessage({move:stopped ? null : move});}, 1);
-        };
-        stopped = false;
-        (new ChessSearch.HybridSearch(game, opts)).bestMove(game.getBoard().turn);
+        if (opts) opts.stopped = return_true;
+        opts = "string" === typeof e.data.opts ? JSON.parse(e.data.opts) : e.data.opts;
+        (function(game, opts) {
+            opts.stopped = return_false;
+            opts.cb = function(move) {
+                game.dispose();
+                setTimeout(function() {postMessage({move:opts.stopped() ? null : move});}, 1);
+            };
+            (new ChessSearch.HybridSearch(game, opts)).bestMove(game.getBoard().turn);
+        })(new ChessGame(e.data.fen), opts);
     }
     else if (e.data.stop)
     {
-        stopped = true;
+        if (opts) opts.stopped = return_true;
     }
 };
