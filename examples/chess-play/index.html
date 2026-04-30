@@ -1001,6 +1001,8 @@ function Chess()
         end_worker(sunfish);
         end_worker(stockfish);
 
+        removeClass(container, 'w-check');
+        removeClass(container, 'b-check');
         removeClass(container, 'b-turn');
         removeClass(container, 'human-human');
         removeClass(container, 'human-computer');
