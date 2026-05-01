@@ -312,17 +312,20 @@ h1 {
     display: block;
     position: absolute;
     border: none;
-    top: 16px; left: 15px;
-    width: 40px; height: 40px;
+    top: 20px; left: 15px;
+    --w: 30px;
+    width: var(--w);
+    height: var(--w);
     background: /*#f0f0f0*/none;
     border-radius: 50%;
 }
 .menulink span {
     display: block;
     position: absolute;
+    width: var(--w);
+    height: calc(var(--w) * 14 / 21);
     top: 50%; left: 50%;
-    margin-top: -7px; margin-left: -10px;
-    width: 21px; height: 14px;
+    transform: translate(-50%, -50%);
     background: transparent url('data:image/svg+xml;utf8,<svg width="18px" height="12px" viewBox="0 0 18 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Rounded" transform="translate(-885.000000, -3438.000000)"><g id="Navigation" transform="translate(100.000000, 3378.000000)"><g id="-Round-/-Navigation-/-menu" transform="translate(782.000000, 54.000000)"><g transform="translate(0.000000, 0.000000)"><path d="M4,18 L20,18 C20.55,18 21,17.55 21,17 C21,16.45 20.55,16 20,16 L4,16 C3.45,16 3,16.45 3,17 C3,17.55 3.45,18 4,18 Z M4,13 L20,13 C20.55,13 21,12.55 21,12 C21,11.45 20.55,11 20,11 L4,11 C3.45,11 3,11.45 3,12 C3,12.55 3.45,13 4,13 Z M3,7 C3,7.55 3.45,8 4,8 L20,8 C20.55,8 21,7.55 21,7 C21,6.45 20.55,6 20,6 L4,6 C3.45,6 3,6.45 3,7 Z" id="-Icon-Color" fill="%23f0f0f0"></path></g></g></g></g></g></svg>') no-repeat center center;
     background-size: cover;
 }
@@ -459,7 +462,7 @@ h1 {
 <span id="forkongithub"><a href="https://github.com/foo123/sudoku.js">Play with me on GitHub</a></span>
 
 <header id="header" class="fluid col-1-1">
-    <button id="menu-open" class="menulink" title="Options Menu"><span></span></button><h1>Sudoku Game, Builder and Solver<!-- <span id="ver"></span>--></h1>
+    <button id="menu-open" class="menulink" title="Options Menu"><span></span></button><h1>Sudoku Game<!--, Builder and Solver--><!-- <span id="ver"></span>--></h1>
 </header>
 
 <section id="panel" class="fluid col-1-1" style="margin-top:40px;padding:10px;">
@@ -474,16 +477,16 @@ h1 {
 ModelView.jquery($);
 var puzzle = null, renderer = null, _id = 0,
     rnd = Math.random, ceil = Math.ceil, min = Math.min,
-    getRandomDuration = function(m, M) { return ceil( (M-m)*rnd() + m ); }
+    getRandomDuration = function(m, M) {return ceil((M-m)*rnd() + m);}
 ;
 
-var DisplayPuzzle = window.DisplayPuzzle = function( puzzle, sol, $dom, $controls ) {
+var DisplayPuzzle = window.DisplayPuzzle = function(puzzle, sol, $dom, $controls) {
     var self = this;
     self.id = 'sudoku_' + (++_id);
     self.puzzle = puzzle;
     self.scaling = 1.0;
     self.msg = 'Found Sudoku Solution!';
-    self.display( sol, $dom, $controls );
+    self.display(sol, $dom, $controls);
 };
 DisplayPuzzle.prototype = {
 
@@ -499,156 +502,156 @@ DisplayPuzzle.prototype = {
     toggleHighlighted: false,
     disposed: false,
 
-    dispose: function( ) {
+    dispose: function() {
         var self = this;
         self.stop();
-        if ( self.puzzle ) self.puzzle.dispose();
+        if (self.puzzle) self.puzzle.dispose();
         self.puzzle = null;
         self.$dom = null;
-        if ( self.$controls ) self.$controls.off('click.'+self.id);
+        if (self.$controls) self.$controls.off('click.'+self.id);
         self.$controls = null;
         self.disposed = true;
         return self;
     },
 
-    stop: function( ) {
+    stop: function() {
         var self = this;
-        if ( self.timer )
+        if (self.timer)
         {
-            clearTimeout( self.timer );
+            clearTimeout(self.timer);
             self.timer = null;
         }
         return self;
     },
 
-    display: function( sol, $dom, $controls ) {
+    display: function(sol, $dom, $controls) {
         var self = this, puzzle = self.puzzle;
-        if ( $dom && $dom.length && sol )
+        if ($dom && $dom.length && sol)
         {
             // @not use JSON.parse here, since template is already in literal object form
-            $dom.append( puzzle.grid );
-            puzzle.setRawGrid( sol ).enableUserMode( true );
-            self.bindControls( $controls ).checkIsSolved( );
+            $dom.append(puzzle.grid);
+            puzzle.setRawGrid(sol).enableUserMode(true);
+            self.bindControls($controls).checkIsSolved();
         }
         self.$dom = $dom;
         return self;
     },
 
-    bindControls: function( $controls ) {
+    bindControls: function($controls) {
         var self = this, puzzle, notesEnabled = false, allNotesEnabled = false;
         self.$controls = $controls || null;
-        if ( self.puzzle && $controls && $controls.length )
+        if (self.puzzle && $controls && $controls.length)
         {
             puzzle = self.puzzle;
 
             $controls.find('.puzzle-control:not(.puzzle-highlight-errors)').removeClass('setting-on');
-            if ( $controls.find('.puzzle-highlight-errors').hasClass('setting-on') )
+            if ($controls.find('.puzzle-highlight-errors').hasClass('setting-on'))
             {
                 self.toggleHighlighted = !self.toggleHighlighted;
                 puzzle.highlightErrors( self.toggleHighlighted );
             }
-            $controls.on('click.'+self.id, '.puzzle-control', function( evt ){
-                if ( self.disposed ) return false;
+            $controls.on('click.'+self.id, '.puzzle-control', function(evt) {
+                if (self.disposed) return false;
                 var $control = $(evt.target);
 
-                if ( $control.is('.puzzle-clear-all') )
+                if ($control.is('.puzzle-clear-all'))
                 {
-                    puzzle.clearCells( true );
+                    puzzle.clearCells(true);
                 }
-                else if ( $control.is('.puzzle-clear-highlighted') )
+                else if ($control.is('.puzzle-clear-highlighted'))
                 {
-                    puzzle.clearHighlighted( );
+                    puzzle.clearHighlighted();
                 }
-                else if ( $control.is('.puzzle-highlight-errors') )
+                else if ($control.is('.puzzle-highlight-errors'))
                 {
                     self.toggleHighlighted = !self.toggleHighlighted;
-                    puzzle.highlightErrors( self.toggleHighlighted );
-                    if ( self.toggleHighlighted ) $control.addClass('setting-on');
-                    else $control.removeClass('setting-on');
+                    puzzle.highlightErrors(self.toggleHighlighted);
+                    if (self.toggleHighlighted) $control.addClass('setting-on').attr('title', 'Setting is ON');
+                    else $control.removeClass('setting-on').attr('title', 'Setting is OFF');
                 }
-                else if ( $control.is('.puzzle-clear-errors') )
+                else if ($control.is('.puzzle-clear-errors'))
                 {
-                    puzzle.clearErrors( );
+                    puzzle.clearErrors();
                 }
-                else if ( $control.is('.puzzle-reveal-solution') )
+                else if ($control.is('.puzzle-reveal-solution'))
                 {
-                    puzzle.revealSolution( );
+                    puzzle.revealSolution();
                 }
-                else if ( $control.is('.puzzle-reveal-word') )
+                else if ($control.is('.puzzle-reveal-word'))
                 {
-                    puzzle.revealCells( puzzle.getHighlighted( ) );
+                    puzzle.revealCells(puzzle.getHighlighted());
                 }
-                else if ( $control.is('.puzzle-reveal-letter,.puzzle-reveal-symbol,.puzzle-reveal-cell') )
+                else if ($control.is('.puzzle-reveal-letter,.puzzle-reveal-symbol,.puzzle-reveal-cell'))
                 {
-                    puzzle.revealCell( );
+                    puzzle.revealCell();
                 }
-                else if ( $control.is('.puzzle-notes') )
+                else if ($control.is('.puzzle-notes'))
                 {
                     notesEnabled = !notesEnabled;
-                    puzzle.enableNotes( notesEnabled );
-                    if ( notesEnabled && allNotesEnabled ) allNotesEnabled = false;
-                    if ( notesEnabled ) $control.addClass('setting-on');
-                    else $control.removeClass('setting-on');
-                    if ( !allNotesEnabled ) $controls.find('.puzzle-all-notes').removeClass('setting-on');
+                    puzzle.enableNotes(notesEnabled);
+                    if (notesEnabled && allNotesEnabled) allNotesEnabled = false;
+                    if (notesEnabled) $control.addClass('setting-on').attr('title', 'Setting is ON');
+                    else $control.removeClass('setting-on').attr('title', 'Setting is OFF');
+                    if (!allNotesEnabled) $controls.find('.puzzle-all-notes').removeClass('setting-on').attr('title', 'Setting is OFF');
                 }
-                else if ( $control.is('.puzzle-all-notes') )
+                else if ($control.is('.puzzle-all-notes'))
                 {
                     allNotesEnabled = !allNotesEnabled;
-                    puzzle.enableAllNotes( allNotesEnabled );
-                    if ( allNotesEnabled && notesEnabled ) notesEnabled = false;
-                    if ( allNotesEnabled ) $control.addClass('setting-on');
-                    else $control.removeClass('setting-on');
-                    if ( !notesEnabled ) $controls.find('.puzzle-notes').removeClass('setting-on');
+                    puzzle.enableAllNotes(allNotesEnabled);
+                    if (allNotesEnabled && notesEnabled) notesEnabled = false;
+                    if (allNotesEnabled) $control.addClass('setting-on').attr('title', 'Setting is ON');
+                    else $control.removeClass('setting-on').attr('title', 'Setting is OFF');
+                    if (!notesEnabled) $controls.find('.puzzle-notes').removeClass('setting-on').attr('title', 'Setting is OFF');
                 }
-                else if ( $control.is('.puzzle-clear-notes') )
+                else if ($control.is('.puzzle-clear-notes'))
                 {
-                    puzzle.clearNotes( );
+                    puzzle.clearNotes();
                 }
             });
         }
         return self;
     },
 
-    checkIsSolved: function( ) {
+    checkIsSolved: function() {
         var self = this, testSolution, pzl = self.puzzle;
-        if ( pzl )
+        if (pzl)
         {
-            testSolution = function( ) {
-                if ( self.disposed ) return;
-                if ( pzl.checkIsSolved( ) )
+            testSolution = function testSolution() {
+                if (self.disposed) return;
+                if (pzl.checkIsSolved())
                 {
-                    self.stop( );
-                    setTimeout(function( ){ alert( self.msg ); }, 10 );
+                    self.stop();
+                    setTimeout(function() {alert(self.msg); }, 10);
                 }
                 else
                 {
                     // aloha
-                    self.timer = setTimeout( testSolution, getRandomDuration(900, 1200) );
+                    self.timer = setTimeout(testSolution, getRandomDuration(900, 1200));
                 }
             };
-            self.timer = setTimeout( testSolution, getRandomDuration(900, 1200) );
+            self.timer = setTimeout(testSolution, getRandomDuration(900, 1200));
         }
         return self;
     }
 };
 
-function build_sudoku( dimensions )
+function build_sudoku(dimensions)
 {
     var sudoku = Sudoku.Factory.getGrid('SUDOKU');
-    sudoku.build( dimensions ).setDichromia( true );
+    sudoku.build(dimensions).setDichromia(true);
     //sudoku.alphabet = alphabet || null;
     return sudoku;
 };
-function compile_sudoku( on_complete, sudoku, dimension, difficulty, symmetry, alphabet )
+function compile_sudoku(on_complete, sudoku, dimension, difficulty, symmetry, alphabet)
 {
-    var compiler = Sudoku.Factory.getCompiler( sudoku );
-    sudoku.setAlphabet(alphabet || Sudoku.range(dimension,{start:1}).join(''));
+    var compiler = Sudoku.Factory.getCompiler(sudoku);
+    sudoku.setAlphabet(alphabet || Sudoku.range(dimension, {start:1}).join(''));
     compiler.liveUpdate = false;
     compiler
-        .one('complete', function(evt){
-            compiler.setSolution( );
+        .one('complete', function(evt) {
+            compiler.setSolution();
             on_complete(sudoku, compiler);
-            compiler.dispose( ); compiler = null;
+            compiler.dispose(); compiler = null;
         })
         .compile(
             true, /* in web worker */
@@ -658,31 +661,31 @@ function compile_sudoku( on_complete, sudoku, dimension, difficulty, symmetry, a
     ;
     return sudoku;
 };
-function display_sudoku( sudoku, $grid, $controls )
+function display_sudoku(sudoku, $grid, $controls)
 {
-    $grid.empty( ); /*$controls.show( );*/
-    var renderer = new DisplayPuzzle( sudoku, sudoku.getRawGrid(), $grid, $controls );
+    $grid.empty(); /*$controls.show();*/
+    var renderer = new DisplayPuzzle(sudoku, sudoku.getRawGrid(), $grid, $controls);
     return renderer;
 }
 
 //$('#ver').html('v.'+Sudoku.VERSION);
 
 // on DOM ready
-$(function(){
+$(function() {
     var $panel = $('#panel'),
         $game_panel = $('#game_panel'),
         $grid = $('#grid'), $controls = $('#controls');
 
-    $('#menu-open').on('click', function(){
+    $('#menu-open').on('click', function() {
         $('body').addClass('menu-open');
     });
 
-    $('#menu-close').on('click', function(){
+    $('#menu-close').on('click', function() {
         $('body').removeClass('menu-open');
     });
 
-    /*document.body.addEventListener('click', function(evt){
-        if ( $('body').hasClass('menu-open') && !$(evt.target).closest('.sidemenu').length )
+    /*document.body.addEventListener('click', function(evt) {
+        if ($('body').hasClass('menu-open') && !$(evt.target).closest('.sidemenu').length)
             $('body').removeClass('menu-open');
     }, false);*/
 
@@ -712,22 +715,22 @@ $(function(){
                     dimension = model.get('type'),
                     difficulty = model.get('difficulty'),
                     symmetry = model.get('symmetry');
-                if ( 4 === dimension )
+                if (4 === dimension)
                 {
                     dimensions = {rows:4, columns:4, subRows:2, subColumns:2, cellSize:Math.min(Math.floor($grid.width()/4), 70)};
                     alphabet = "1234";
                 }
-                else if ( 6 === dimension )
+                else if (6 === dimension)
                 {
                     dimensions = {rows:6, columns:6, subRows:2, subColumns:3, cellSize:Math.min(Math.floor($grid.width()/6), 70)};
                     alphabet = "123456";
                 }
-                else if ( 12 === dimension )
+                else if (12 === dimension)
                 {
                     dimensions = {rows:12, columns:12, subRows:3, subColumns:4, cellSize:Math.min(Math.floor($grid.width()/12), 60)};
                     alphabet = "ABCDEFGHIJKL";
                 }
-                else if ( 16 === dimension )
+                else if (16 === dimension)
                 {
                     dimensions = {rows:16, columns:16, subRows:4, subColumns:4, cellSize:Math.min(Math.floor($grid.width()/16), 60)};
                     alphabet = "ABCDEFGHIJKLMNOP";
@@ -738,11 +741,11 @@ $(function(){
                     alphabet = "123456789";
                 }
                 $panel.addClass('ui-delayed').removeClass('ui-undelayed');
-                compile_sudoku(function( ){
+                compile_sudoku(function() {
                     $panel.addClass('ui-undelayed').removeClass('ui-delayed');
-                    if ( prev_renderer ) { prev_renderer.dispose(); prev_renderer = null; }
-                    renderer = display_sudoku( puzzle, $grid, $controls );
-                }, puzzle = build_sudoku( dimensions ), dimension, difficulty, symmetry, alphabet);
+                    if (prev_renderer) {prev_renderer.dispose(); prev_renderer = null;}
+                    renderer = display_sudoku(puzzle, $grid, $controls);
+                }, puzzle = build_sudoku(dimensions), dimension, difficulty, symmetry, alphabet);
             }
         }
     });
