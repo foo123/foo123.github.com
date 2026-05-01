@@ -1,7 +1,7 @@
 "use strict";
 
 var appName = "sudoku";
-var version = "v2.1"; // Change value to force update
+var version = "v2.2"; // Change value to force update
 var cacheKey = appName + "-" + version;
 var nocache = 'sw_nocache';
 var assets = [
