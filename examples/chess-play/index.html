@@ -897,13 +897,13 @@ function Chess()
         }
     }
 
-    function domove(pos1, pos2, promoted)
+    function domove(from_pos, to_pos, promoted)
     {
-        board.clearPossibleMoves();
+        board.clearPossibleMoves(container);
         active_piece = null;
 
-        game.doMove(pos1, pos2, promoted);
-        board.doMove(game.getPieceAt(pos2), pos1, pos2);
+        game.doMove(from_pos, to_pos, promoted);
+        board.doMove(from_pos, to_pos);
         ++ply;
 
         if (moves)
@@ -912,7 +912,7 @@ function Chess()
             if ('WHITE' === game.whoseTurn()) moves.appendChild(m = $$('span'));
             else m = moves.lastChild;
             // Smith chess notation
-            m.innerText += (m.innerText.length ? ' ' : '') + (pos1+pos2).toLowerCase() + (game.isCheckMate() ? '#' : (game.isCheck() ? '+' : ''));
+            m.innerText += (m.innerText.length ? ' ' : '') + (from_pos+to_pos).toLowerCase() + (promoted||'').toLowerCase() + (game.isCheckMate() ? '#' : (game.isCheck() ? '+' : ''));
         }
 
         update_gui();
@@ -925,7 +925,7 @@ function Chess()
         {
             abort_move_in_progress();
 
-            board.clearPossibleMoves();
+            board.clearPossibleMoves(container);
             active_piece = null;
 
             board.undoMove(mov.moved_piece, mov.removed_piece, mov.from, mov.to);
@@ -962,10 +962,10 @@ function Chess()
         {
             abort_move_in_progress();
 
-            board.clearPossibleMoves();
+            board.clearPossibleMoves(container);
             active_piece = null;
 
-            board.doMove(game.getPieceAt(mov.to), mov.from, mov.to);
+            board.doMove(mov.from, mov.to);
             ++ply;
 
             if (stockfish.worker)
@@ -985,7 +985,7 @@ function Chess()
                 if ('BLACK' === game.whoseTurn()) moves.appendChild(m = $$('span'));
                 else m = moves.lastChild;
                 // Smith chess notation
-                m.innerText += (m.innerText.length ? ' ' : '') + (mov[0]+mov[1]).toLowerCase() + (game.isCheckMate() ? '#' : (game.isCheck() ? '+' : ''));
+                m.innerText += (m.innerText.length ? ' ' : '') + (mov.from+mov.to).toLowerCase() + (mov.promotion||'').toLowerCase() + (game.isCheckMate() ? '#' : (game.isCheck() ? '+' : ''));
             }
 
             update_gui();
@@ -1029,8 +1029,8 @@ function Chess()
 
         game = new ChessGame(opts);
         if (controls && controls.querySelector('select[data-action="promoteto"]')) game.promoteTo(controls.querySelector('select[data-action="promoteto"]').value);
-        board = new ChessBoard(square => game.getPieceAt(square), container);
-        board.toHTML();
+        board = new ChessBoard(square => game.getPieceAt(square));
+        board.toHTML(container);
 
         ply = 0;
         active_piece = null;
@@ -1094,7 +1094,7 @@ function Chess()
             {
                 if (active_piece === square)
                 {
-                    board.clearPossibleMoves();
+                    board.clearPossibleMoves(container);
                     active_piece = null;
                     return false;
                 }
@@ -1108,7 +1108,7 @@ function Chess()
                 }
                 else
                 {
-                    board.clearPossibleMoves();
+                    board.clearPossibleMoves(container);
                     active_piece = null;
                 }
             }
@@ -1117,20 +1117,20 @@ function Chess()
                 piece = game.getPieceAt(square.id);
                 if (piece && (piece.color === game.whoseTurn()))
                 {
-                    board.clearPossibleMoves();
+                    board.clearPossibleMoves(container);
                     active_piece = square;
                     addClass(square, 'active');
                     board.showPossibleMoves(game.getPossibleMovesAt(square.id), square);
                 }
                 else
                 {
-                    board.clearPossibleMoves();
+                    board.clearPossibleMoves(container);
                     active_piece = null;
                 }
             }
             else
             {
-                board.clearPossibleMoves();
+                board.clearPossibleMoves(container);
                 active_piece = null;
             }
             return false;
