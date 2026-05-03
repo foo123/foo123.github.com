@@ -224,16 +224,17 @@ body {
 <div id="responsive-canvas"><canvas id="canvas" width=700 height=500></canvas></div>
 
 <ol id="instructions">
-<li>Rotate Stick with mouse to direct hit.</li>
-<li>Press 'Q' key to lock stick and move mouse to give strike force.</li>
-<li>Release 'Q' key to strike ball.</li>
+<li>Rotate stick with mouse or touch to direct hit.</li>
+<li>Press 'q' key or wait until target ball becomes bold.</li>
+<li>Move stick to give strike force.</li>
+<li>Release 'q' key or release touch to strike ball.</li>
 </ol>
 </div>
 
 <div style="margin:10px auto; text-align:center; z-index:10;"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" style="color:#f90b13;font-size:14px;">donate</a></div>
 
 <script src="./NEngine.min.js"></script>
-<script src="./billiard.min.js"></script>
+<script src="./Billiard.min.js"></script>
 <script type="text/javascript">
 //<![CDATA[
 (function(window) {
@@ -248,7 +249,7 @@ function responsive_canvas(canvas)
     return canvas;
 }
 
-billiard = new BILLIARD.Main(
+billiard = new window.BILLIARD.Game(
     responsive_canvas(canvas), 1,
     './assets/billiardtable1.png',
     './assets/billiardtable2.png',
