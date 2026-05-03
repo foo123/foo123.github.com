@@ -2165,6 +2165,7 @@ function colorize()
 {
     return rainbow ? rainbow_gradient : (colors.splice((colors.length-1) * Math.random(), 1)[0]);
 }
+requestAnimationFrame(function() {
 document.getElementById('page_main').style.backgroundImage = colorize();
 
 document.getElementById('page_frameworks').style.backgroundImage = colorize();
@@ -2191,6 +2192,7 @@ document.getElementById('page_various').style.backgroundImage = colorize();
 
 document.getElementById('page_projects').style.backgroundImage = colorize();
 
+});
 if (window.lozad)
 {
     var observer = lozad('.lozad', {
