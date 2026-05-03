@@ -1,62 +1,41 @@
 "use strict";
 
-var appName = "rubik3";
-var version = "v2.2"; // Change value to force update
+var appName = "billiard";
+var version = "v2"; // Change value to force update
 var cacheKey = appName + "-" + version;
 var nocache = 'sw_nocache';
 var assets = [
 "./",
-"./android-chrome-192x192.png",
-"./android-chrome-384x384.png",
-"./android-chrome-512x512.png",
 "./apple-touch-icon.png",
-"./apple-touch-icon-60x60.png",
-"./apple-touch-icon-76x76.png",
-"./apple-touch-icon-120x120.png",
-"./apple-touch-icon-152x152.png",
-"./browserconfig.xml",
+"./web-app-manifest-192x192.png",
+"./web-app-manifest-512x512.png",
 "./favicon.ico",
-"./favicon-16x16.png",
-"./favicon-32x32.png",
+"./favicon.svg",
+"./favicon-96x96.png",
 "./manifest.json",
-"./mstile-150x150.png",
-"./safari-pinned-tab.svg",
 "./index.html",
 "./serviceworker.js",
-"./assets/back.png",
-"./assets/cross.png",
-"./assets/pad.jpg",
-"./assets/rubik3.png",
-"./assets/select.png",
-"./common/css/common.min.css",
-"./common/js/three_old.js",
-"./common/js/Tween.js",
-"./Rubik.js",
-"./RubikApplication.js"
+"./assets/logo.png",
+"./assets/billiardtable1.png",
+"./assets/billiardtable2.png",
+"./assets/white.png",
+"./assets/black.png",
+"./assets/yellow.png",
+"./assets/red.png",
+"./assets/taco.png",
+"./NEngine.min.js",
+"./Billiard.min.js"
 ];
 // large or rarely changed assets
 var cached_first_assets = [
-"./android-chrome-192x192.png",
-"./android-chrome-384x384.png",
-"./android-chrome-512x512.png",
-"./apple-touch-icon.png",
-"./apple-touch-icon-60x60.png",
-"./apple-touch-icon-76x76.png",
-"./apple-touch-icon-120x120.png",
-"./apple-touch-icon-152x152.png",
-"./favicon.ico",
-"./favicon-16x16.png",
-"./favicon-32x32.png",
-"./mstile-150x150.png",
-"./safari-pinned-tab.svg",
-"./assets/back.png",
-"./assets/cross.png",
-"./assets/pad.jpg",
-"./assets/rubik3.png",
-"./assets/select.png",
-"./common/css/common.min.css",
-"./common/js/three_old.js",
-"./common/js/Tween.js"
+"./assets/logo.png",
+"./assets/billiardtable1.png",
+"./assets/billiardtable2.png",
+"./assets/white.png",
+"./assets/black.png",
+"./assets/yellow.png",
+"./assets/red.png",
+"./assets/taco.png"
 ];
 
 self.addEventListener("install", function(event) {

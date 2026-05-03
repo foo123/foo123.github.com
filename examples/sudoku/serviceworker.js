@@ -1,7 +1,7 @@
 "use strict";
 
 var appName = "sudoku";
-var version = "v2.3"; // Change value to force update
+var version = "v2.4"; // Change value to force update
 var cacheKey = appName + "-" + version;
 var nocache = 'sw_nocache';
 var assets = [
@@ -71,6 +71,10 @@ self.addEventListener("activate", function(event) {
                     if (appName === key.slice(0, appName.length) && cacheKey !== key)
                     {
                         return caches.delete(key);
+                    }
+                    else
+                    {
+                        return Promise.resolve();
                     }
                 })
             )

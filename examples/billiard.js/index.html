@@ -211,7 +211,7 @@ body {
 <body>
 <span id="forkongithub"><a href="https://github.com/foo123/Billiard.js">Play with me on GitHub</a></span>
 
-<center><img src='./assets/logo.png' style="max-width:300px;"/></center>
+<center><img src="./assets/logo.png" style="max-width:300px;"/></center>
 
 <div id="wrapper">
 <div id="controls">
@@ -272,6 +272,16 @@ window.addEventListener('resize', function() {
 });
 })(window);
 //]]>
+</script>
+<script type="text/javascript">
+if ("serviceWorker" in navigator)
+{
+    window.addEventListener("load", function() {
+        navigator.serviceWorker && navigator.serviceWorker.register("./serviceworker.js", {
+            scope: "./",
+        });
+    });
+}
 </script>
 </body>
 </html>
