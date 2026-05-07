@@ -1,10 +1,9 @@
 "use strict";
 
-var appName = "sudoku";
-var version = "v2.4"; // Change value to force update
-var cacheKey = appName + "-" + version;
-var nocache = 'sw_nocache';
-var assets = [
+const appName = "sudoku";
+const version = "v1-sw-1"; // Change value to force update
+const cacheKey = appName + "-" + version;
+const assets = [
 "./",
 "./android-chrome-192x192.png",
 "./android-chrome-512x512.png",
@@ -31,7 +30,7 @@ var assets = [
 "./sudoku.bundle.js"
 ];
 // large or rarely changed assets
-var cached_first_assets = [
+const cached_first_assets = [
 "./android-chrome-192x192.png",
 "./android-chrome-512x512.png",
 "./apple-touch-icon.png",
@@ -50,92 +49,177 @@ var cached_first_assets = [
 //"./jqueryui.js",
 "./common/js/modelview.simple.bundle.js"
 ];
+const options = {
+    nocache: true,
+    deletefirst: true,
+    ignorefailed: true,
+    request: {
+        credentials: 'omit',
+        mode: 'cors'
+    }
+};
 
-self.addEventListener("install", function(event) {
-    // Kick out the old service worker
-    self.skipWaiting();
-
-    event.waitUntil(
-        caches.open(cacheKey).then(function(cache) {
-            return cache.addAll(assets);
-        })
-    );
+self.addEventListener('install', function(event) {
+    // kick out the old service worker
+    if (self.skipWaiting) self.skipWaiting();
+    // cache necessary assets
+    event.waitUntil(caches.open(cacheKey).then(function(cache) {
+        return cacheAll(cache, assets, options);
+    }));
 });
-
-self.addEventListener("activate", function(event) {
-    // Delete any non-current cache of same app
+self.addEventListener('activate', function(event) {
     event.waitUntil(
+        // delete any non-current cache of same app
         caches.keys().then(function(keys) {
-            Promise.all(
-                keys.map(function(key) {
-                    if (appName === key.slice(0, appName.length) && cacheKey !== key)
-                    {
-                        return caches.delete(key);
-                    }
-                    else
-                    {
-                        return Promise.resolve();
-                    }
-                })
-            )
+            return Promise.all(keys.map(function(key) {
+                if (appName === key.slice(0, appName.length) && cacheKey !== key)
+                {
+                    return caches.delete(key);
+                }
+            }));
+        }).then(function() {
+            // take control of current app clients
+            if (self.clients && self.clients.claim)
+            {
+                return self.clients.claim();
+            }
         })
     );
 });
-
-function getRelativeUrl(absoluteUrl)
-{
-    var relativeUrl = absoluteUrl.split('?')[0],
-        baseUrl = self.location.href.split('?')[0].split('/').slice(0, -1).join('/') + '/';
-    if (baseUrl === relativeUrl.slice(0, baseUrl.length)) relativeUrl = './' + relativeUrl.slice(baseUrl.length);
-    return relativeUrl;
-}
-function fetchFirstThenCache(request, cacheKey)
-{
-    return fetch(request).then(function(response) {
-        if ('GET' === request.method && response.status < 400)
-        {
-            var responseCopy = response.clone();
-            caches.open(cacheKey).then(function(cache) {
-                cache.put(request, responseCopy);
-            });
-        }
-        return response;
-    }).catch(function() {
-        return caches.open(cacheKey).then(function(cache) {
-            return cache.match(request, {ignoreSearch:true,ignoreMethod:true});
-        });
-    });
-}
-function cacheFirstElseFetch(request, cacheKey)
-{
-    return caches.open(cacheKey).then(function(cache) {
-        return cache.match(request, {ignoreSearch:true,ignoreMethod:true}).then(function(cachedResponse) {
-            return cachedResponse || fetch(request).then(function(networkResponse) {
-                if ('GET' === request.method && networkResponse.status < 400)
-                {
-                    cache.put(request, networkResponse.clone());
-                }
-                return networkResponse;
-            });
-        });
-    }).catch(function() {
-        return fetch(request).then(function(response) {
-            if ('GET' === request.method && response.status < 400)
-            {
-                cache.put(request, response.clone());
-            }
-            return response;
-        });
-    });
-}
 self.addEventListener("fetch", function(event) {
-    if (
-        (-1 < ['GET','HEAD'].indexOf(event.request.method)) &&
-        (!nocache || !(new URL(event.request.url)).searchParams.get(nocache))
-    )
+    // handle only GET requests
+    if ("GET" !== event.request.method) return;
+
+    // prevent some weird issue with Chrome DevTools and 'only-if-cached'
+    if (event.request.cache === "only-if-cached" && event.request.mode !== "same-origin") return;
+
+    const url = getRelativeUrl(event.request.url);
+    if (-1 < assets.indexOf(url))
     {
         event.respondWith(
-            -1 < cached_first_assets.indexOf(getRelativeUrl(event.request.url)) ? cacheFirstElseFetch(event.request, cacheKey) : fetchFirstThenCache(event.request, cacheKey)
+            -1 < cached_first_assets.indexOf(url) ? cacheFirstResponse(event, url, cacheKey) : networkFirstResponse(event, url, cacheKey)
         );
     }
 });
+
+function cacheFirstResponse(event, url, cacheKey)
+{
+    return cachesMatch(url, cacheKey).then(function(response) {
+        return response ? response : (fetch(event.request).then(function(response) {
+            if (!response.ok) return response;
+
+            const responseCopy = response.clone();
+            event.waitUntil(
+                caches.open(cacheKey).then(function(cache) {
+                    return cache.put(url, responseCopy);
+                })
+            );
+
+            return response;
+        }));
+    });
+}
+function networkFirstResponse(event, url, cacheKey)
+{
+    return fetchWithPreload(event).then(function(response) {
+        if (response.ok) return response;
+        // reach the code in the catch
+        throw response;
+    }).catch(function(errResponse) {
+        // if network is down fetch will throw
+        return cachesMatch(url, cacheKey).then(function(response) {
+            if (response) return response;
+            if (errResponse instanceof Response) return errResponse;
+            throw errResponse;
+        });
+    });
+}
+
+// utils --------------------------
+function cacheAll(cache, requests, options)
+{
+    requests = requests.slice();
+
+    return Promise.all(requests.map(function(request) {
+        return fetch(options.nocache ? cacheBust(request) : request, options.request).then(
+            fixRedirectedResponse
+        ).then(
+            function(response) {
+                return !response.ok ? {error: true} : {response: response};
+            },
+            function() {
+                return {error: true};
+            }
+        );
+    })).then(function(responses) {
+        if (!options.ignorefailed && responses.filter(res => res.error).length)
+        {
+            return Promise.reject(new Error('Some responses failed'));
+        }
+
+        for (let i=responses.length-1; i>=0; --i)
+        {
+            if (responses[i].error)
+            {
+                responses.splice(i, 1);
+                requests.splice(i, 1);
+            }
+        }
+
+        return (options.deletefirst ? (
+            Promise.all(requests.map(function(request) {return cache.delete(request).catch(nop);}))
+        ) : (
+            Promise.resolve()
+        )).then(function() {
+            return Promise.all(requests.map(function(request, i) {
+                return cache.put(request, responses[i].response);
+            }));
+        });
+    });
+}
+function cachesMatch(request, cacheName)
+{
+    return caches.match(request, {cacheName: cacheName}).then(function(response) {
+        return isNotRedirectedResponse(response) ? response : (fixRedirectedResponse(response).then(function(response) {
+            return caches.open(cacheName).then(function(cache) {
+                return cache.put(request, response);
+            }).then(function() {
+                return response;
+            });
+        }));
+    }).catch(nop);
+}
+function fetchWithPreload(event)
+{
+    return event.preloadResponse ? (event.preloadResponse.then(function(response) {
+        return response || fetch(event.request);
+    })) : fetch(event.request);
+}
+function getRelativeUrl(absoluteUrl)
+{
+    var relativeUrl = absoluteUrl.split('#')[0].split('?')[0],
+        baseUrl = self.location.href.split('#')[0].split('?')[0].split('/').slice(0, -1).join('/') + '/';
+    if (baseUrl === relativeUrl.slice(0, baseUrl.length)) relativeUrl = './' + relativeUrl.slice(baseUrl.length);
+    return relativeUrl;
+}
+function cacheBust(url)
+{
+    return url + (-1 < url.indexOf('?') ? '&' : '?') + '__nocache__=' + encodeURIComponent(Date.now());
+}
+function isNotRedirectedResponse(response)
+{
+    return (
+        !response || !response.redirected ||
+        !response.ok || (response.type === 'opaqueredirect')
+    );
+}
+function fixRedirectedResponse(response)
+{
+    return isNotRedirectedResponse(response) ? Promise.resolve(response) : ((body = 'body' in response ? Promise.resolve(response.body) : response.blob()).then(function(data) {
+        return new Response(data, {
+            headers: response.headers,
+            status: response.status
+        });
+    }));
+}
+function nop() {}
