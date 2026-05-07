@@ -1,7 +1,7 @@
 "use strict";
 
 const appName = "billiard";
-const version = "v2-sw-1"; // Change value to force update
+const version = "v1-sw-1"; // Change value to force update
 const cacheKey = appName + "-" + version;
 const assets = [
 "./",
