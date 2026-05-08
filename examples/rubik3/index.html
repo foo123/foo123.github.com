@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" class="no-ie">
 <head>
-<title>Intuitive Rubik Cube with Three.js</title>
+<title>Intuitive 3D Rubik Cube with Three.js</title>
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
@@ -13,40 +13,42 @@
 <meta property="og:url" content="https://foo123.github.io/examples/rubik3/">
 <meta name="twitter:card" content="summary">
 
-<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=2">
-<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=2">
-<link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png?v=2">
-<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png?v=2">
-<link rel="manifest" href="./manifest.json?v=2">
-<link rel="mask-icon" href="./safari-pinned-tab.svg?v=2" color="#323232">
-<link rel="shortcut icon" href="./favicon.ico?v=2">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=1">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=1">
+<link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png?v=1">
+<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png?v=1">
+<link rel="manifest" href="./manifest.json?v=1">
+<link rel="mask-icon" href="./safari-pinned-tab.svg?v=1" color="#323232">
+<link rel="shortcut icon" href="./favicon.ico?v=1">
 <meta name="apple-mobile-web-app-title" content="Rubik3">
 <meta name="application-name" content="Rubik3">
 <meta name="msapplication-TileColor" content="#323232">
-<meta name="msapplication-config" content="./browserconfig.xml?v=2">
+<meta name="msapplication-config" content="./browserconfig.xml?v=1">
 <meta name="theme-color" content="#323232">
-
-
-
-<link rel="stylesheet" type="text/css" href="./common/css/common.min.css" />
-
+<!--<link rel="stylesheet" type="text/css" href="./common/css/common.min.css" />-->
 <style type="text/css">
 body {
+    box-sizing: border-box;
     font-family: Monospace;
+    font-size: 13px;
     background: #121212;
-    padding:0;
-    position:relative;
-    color:#aaa;
+    color: #aaa;
+    width: 100%;
+    max-width: 2000px;
+    margin: 0 auto;
+    padding: 0;
+    overflow-x: hidden;
     overflow-y: scroll;
 }
 #container {
     position: relative;
+    box-sizing: border-box;
     margin: 0 auto;
     padding: 0;
     border: 0;
     z-index: 0;
     cursor: pointer;
-    background-color: #121212; /*url('assets/back.png') no-repeat 50% 50%;*/
+    background-color: #121212; /*url('./assets/back.png') no-repeat 50% 50%;*/
     background-image: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.25) 5%, rgba(255,255,255,0) 50%);
     background-repeat: no-repeat;
     background-position: 50% 50%;
@@ -69,7 +71,7 @@ body {
 .colorSelector {
     width: 36px;
     height: 36px;
-    background-image: url(assets/select.png);
+    background-image: url(./assets/select.png);
 }
 .colorSelector div {
     position: absolute;
@@ -77,7 +79,7 @@ body {
     left: 3px;
     width: 30px;
     height: 30px;
-    background-image: url(assets/select.png);
+    background-image: url(./assets/select.png);
     background-position:center center;
 }*/
 .button {
@@ -126,9 +128,9 @@ body {
     top:1px;
 }
 .button {
-    width:120px;
-    height:30px;
-    line-height:30px;
+    width: 120px;
+    height: 30px;
+    line-height: 30px;
     cursor:pointer;
     position:relative;
     display:inline-block;
@@ -136,17 +138,18 @@ body {
 }
 #controls select {
     margin: 3px;
+    font-family: Monospace;
     font-size: 16px;
     padding: 5px;
     color: #121212;
 }
-#forkongithub a, #forkongithub a:hover{background:#fd0002;color:#fff;}
 #footer {
     z-index: 100;
     position:relative;
+    box-sizing: border-box;
     margin-top: 20px;
 }
-@media (max-width:800px){
+@media (max-width:800px) {
 #controls select {
     font-size: 13px;
     padding: 3px;
@@ -157,8 +160,62 @@ body {
     height: 25px;
     font-size: 11px;
     line-height: 25px;
-    margin: 3px 2px;
+    margin: 3px 1px;
 }
+}
+#forkongithub {
+}
+#forkongithub  a {
+    background: #ff0000;
+    color: #fff;
+    text-decoration: none;
+    font-family: arial, sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 0.9rem;
+    line-height: 1.4rem;
+    position: relative;
+    transition: all 0.5s;
+}
+#forkongithub a:hover {
+    background: #ff0000;
+    color: #fff;
+}
+#forkongithub a::before, #forkongithub a::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    z-index: 100;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub a::after {
+    bottom: 1px;
+    top: auto;
+}
+@media screen and (min-width:800px) {
+    #forkongithub {
+        position: absolute;
+        display: block;
+        z-index: 100;
+        top: 0;
+        right: 0;
+        width: 200px;
+        overflow: hidden;
+        height: 200px;
+    }
+    #forkongithub a {
+        width: 200px;
+        position: absolute;
+        top: 60px;
+        right: -60px;
+        transform: rotate(45deg);
+        box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    }
 }
 </style>
 <!--<link rel="stylesheet" href="../common/css/colorpicker.css" type="text/css" />
@@ -169,23 +226,26 @@ body {
 <script type="text/javascript" src="./Rubik.js"></script>
 <script type="text/javascript" src="./RubikApplication.js"></script>
 </head>
-<body class="responsive-864-container" style="max-width:2000px; overflow-x:hidden; margin:0 auto;">
-    <span id="forkongithub"><a href="https://github.com/foo123/Rubik3">Twist me on GitHub</a></span>
-<div id='controls' class="fluid col-1-1" style="margin-top:8px;">
+<body>
+<span id="forkongithub"><a href="https://github.com/foo123/Rubik3">Twist me on GitHub</a></span>
+
+<div id="controls" style="position:relative;box-sizing:border-box;display:block;width:100%;margin-top:8px;">
     <select size="1" id="rubik-type">
+        <optgroup label="Cube Type">
         <option value="2">2x2x2</option>
         <option value="3" selected="selected">3x3x3</option>
         <option value="4">4x4x4</option>
+        </optgroup>
     </select>
 
     <button class="button" id="newrubik">New Cube</button>
     <button class="button" id="scramble">Scramble</button>
     <button class="button" id="undo">Undo</button>
 
-    <p style="margin-top: 8px">Click or touch and drag on background to rotate cube. Drag row or column to rotate sides</p>
+    <p style="margin-top:8px">Click or touch and drag on background to rotate cube. Drag row or column to rotate sides</p>
 
-    <div class="fluid col-1-1" style="margin-top: 0px;">
-    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" class="donate">donate</a>
+    <div style="position:relative;box-sizing:border-box;display:block;width:100%;margin-top:0px;">
+    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" style="display:inline-block;color:#f90b13;font-size:14px;">donate</a>
     </div>
 
     <!--<div id='colors' style="position:relative;">
@@ -209,8 +269,6 @@ body {
 
 <script type="text/javascript">//<![CDATA[
 RubikApplication.init();
-//]]></script>
-<script type="text/javascript">
 if ("serviceWorker" in navigator)
 {
     window.addEventListener("load", function() {
@@ -219,6 +277,6 @@ if ("serviceWorker" in navigator)
         });
     });
 }
-</script>
+//]]></script>
 </body>
 </html>

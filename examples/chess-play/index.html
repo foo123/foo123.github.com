@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>Play Chess Game</title>
+<title>Chess Game</title>
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
@@ -9,12 +9,12 @@
 <meta property="og:image" content="https://foo123.github.io/examples/chess-play/screenshot.png">
 <meta property="og:url" content="https://foo123.github.io/examples/chess-play/">
 <meta name="twitter:card" content="summary">
-<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=0.10.0">
-<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=0.10.0">
-<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png?v=0.10.0">
-<link rel="manifest" href="./manifest.json?v=0.10.0">
-<link rel="mask-icon" href="./safari-pinned-tab.svg?v=0.10.0" color="#454545">
-<link rel="shortcut icon" href="./favicon.ico?v=0.10.0">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=0.11.0">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=0.11.0">
+<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png?v=0.11.0">
+<link rel="manifest" href="./manifest.json?v=0.11.0">
+<link rel="mask-icon" href="./safari-pinned-tab.svg?v=0.11.0" color="#454545">
+<link rel="shortcut icon" href="./favicon.ico?v=0.11.0">
 <meta name="apple-mobile-web-app-title" content="Chess">
 <meta name="application-name" content="Chess">
 <meta name="msapplication-TileColor" content="#454545">
@@ -664,6 +664,7 @@ body {
 <script type="text/javascript" src="./chess/ChessGame.js"></script>
 <script type="text/javascript" src="./chess/ChessBoard.js"></script>
 <script type="text/javascript">
+//<![CDATA[
 (function(window) {
 "use strict";
 /* Chess App */
@@ -1272,7 +1273,17 @@ function removeClass(el, className)
 window.Chess = Chess;
 // start
 Chess();
+
+if ("serviceWorker" in navigator)
+{
+    window.addEventListener("load", function() {
+        navigator.serviceWorker && navigator.serviceWorker.register("./serviceworker.js", {
+            scope: "./",
+        });
+    });
+}
 })(window);
+//]]>
 </script>
 </body>
 </html>

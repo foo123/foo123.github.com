@@ -267,13 +267,11 @@ billiard = new BILLIARD.Game(
 document.getElementById('newgame').addEventListener('click', function() {
     billiard.init(parseInt(types.options[types.selectedIndex].value));
 }, false);
+
 window.addEventListener('resize', function() {
     responsive_canvas(canvas);
 });
-})(window);
-//]]>
-</script>
-<script type="text/javascript">
+
 if ("serviceWorker" in navigator)
 {
     window.addEventListener("load", function() {
@@ -282,6 +280,8 @@ if ("serviceWorker" in navigator)
         });
     });
 }
+})(window);
+//]]>
 </script>
 </body>
 </html>
