@@ -1,7 +1,7 @@
 "use strict";
 
 const appName = "billiard";
-const version = "v1-sw-3"; // Change value to force update
+const version = "v1-sw-4"; // Change value to force update
 const cacheKey = appName + "-" + version;
 const assets = [
 "./",
@@ -15,8 +15,8 @@ const assets = [
 "./index.html",
 "./serviceworker.js",
 "./assets/logo.png",
-"./assets/billiardtable1.png",
-"./assets/billiardtable2.png",
+"./assets/tablepockets.png",
+"./assets/tablenopockets.png",
 "./assets/white.png",
 "./assets/black.png",
 "./assets/yellow.png",
@@ -28,8 +28,8 @@ const assets = [
 // large or rarely changed assets
 const cached_first_assets = [
 "./assets/logo.png",
-"./assets/billiardtable1.png",
-"./assets/billiardtable2.png",
+"./assets/tablepockets.png",
+"./assets/tablenopockets.png",
 "./assets/white.png",
 "./assets/black.png",
 "./assets/yellow.png",
