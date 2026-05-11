@@ -1,7 +1,7 @@
 "use strict";
 
 const appName = "sudoku";
-const version = "v1-sw-1"; // Change value to force update
+const version = "v1-sw-2"; // Change value to force update
 const cacheKey = appName + "-" + version;
 const assets = [
 "./",
@@ -31,19 +31,6 @@ const assets = [
 ];
 // large or rarely changed assets
 const cached_first_assets = [
-"./android-chrome-192x192.png",
-"./android-chrome-512x512.png",
-"./apple-touch-icon.png",
-"./apple-touch-icon-60x60.png",
-"./apple-touch-icon-76x76.png",
-"./apple-touch-icon-120x120.png",
-"./apple-touch-icon-152x152.png",
-"./apple-touch-icon-180x180.png",
-"./favicon.ico",
-"./favicon-16x16.png",
-"./favicon-32x32.png",
-"./mstile-150x150.png",
-"./safari-pinned-tab.svg",
 "./common/css/common.min.css",
 "./jquery.js",
 //"./jqueryui.js",

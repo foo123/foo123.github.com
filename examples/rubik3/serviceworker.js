@@ -1,7 +1,7 @@
 "use strict";
 
 const appName = "rubik3";
-const version = "v1-sw-3"; // Change value to force update
+const version = "v1-sw-4"; // Change value to force update
 const cacheKey = appName + "-" + version;
 const assets = [
 "./",
@@ -22,12 +22,12 @@ const assets = [
 "./manifest.json",
 "./index.html",
 "./serviceworker.js",
-"./assets/back.png",
+/*"./assets/back.png",
 "./assets/cross.png",
 "./assets/pad.jpg",
 "./assets/rubik3.png",
 "./assets/select.png",
-//"./common/css/common.min.css",
+"./common/css/common.min.css",*/
 "./common/js/three_old.js",
 "./common/js/Tween.js",
 "./Rubik.js",
@@ -35,25 +35,12 @@ const assets = [
 ];
 // large or rarely changed assets
 const cached_first_assets = [
-"./favicon.ico",
-"./favicon-16x16.png",
-"./favicon-32x32.png",
-"./android-chrome-192x192.png",
-"./android-chrome-384x384.png",
-"./android-chrome-512x512.png",
-"./apple-touch-icon.png",
-"./apple-touch-icon-60x60.png",
-"./apple-touch-icon-76x76.png",
-"./apple-touch-icon-120x120.png",
-"./apple-touch-icon-152x152.png",
-"./mstile-150x150.png",
-"./safari-pinned-tab.svg",
-"./assets/back.png",
+/*"./assets/back.png",
 "./assets/cross.png",
 "./assets/pad.jpg",
 "./assets/rubik3.png",
 "./assets/select.png",
-//"./common/css/common.min.css",
+"./common/css/common.min.css",*/
 "./common/js/three_old.js",
 "./common/js/Tween.js"
 ];
