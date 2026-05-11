@@ -1,6 +1,7 @@
 {
     "name": "Chess",
     "short_name": "Chess",
+    "version": "0.11.0",
     "display": "standalone",
     "start_url": "./",
     "scope": "./",
