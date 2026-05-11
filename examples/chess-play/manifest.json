@@ -1,6 +1,9 @@
 {
     "name": "Chess",
     "short_name": "Chess",
+    "lang": "en",
+    "description": "Chess Game against another human or various chess engines in pure HTML and JavaScript",
+    "categories": ["games", "entertainment"],
     "version": "0.11.0",
     "display": "standalone",
     "start_url": "./",
@@ -11,12 +14,14 @@
         {
             "src": "./android-chrome-192x192.png",
             "sizes": "192x192",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "maskable"
         },
         {
             "src": "./android-chrome-512x512.png",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "maskable"
         }
     ]
 }

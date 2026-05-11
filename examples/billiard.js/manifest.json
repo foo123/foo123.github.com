@@ -1,6 +1,9 @@
 {
     "name": "Billiard",
     "short_name": "Billiard",
+    "lang": "en",
+    "description": "American-style and French-style Billiard Game in pure HTML and JavaScript",
+    "categories": ["games", "entertainment"],
     "version": "1.0.0",
     "display": "standalone",
     "start_url": "./",
