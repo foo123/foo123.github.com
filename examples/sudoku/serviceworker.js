@@ -1,7 +1,7 @@
 "use strict";
 
 const appName = "sudoku";
-const version = "v1-sw-2"; // Change value to force update
+const version = "v1-sw-3"; // Change value to force update
 const cacheKey = appName + "-" + version;
 const assets = [
 "./",
@@ -109,7 +109,17 @@ function cacheFirstResponse(event, url, cacheKey)
 function networkFirstResponse(event, url, cacheKey)
 {
     return fetchWithPreload(event).then(function(response) {
-        if (response.ok) return response;
+        if (response.ok)
+        {
+            // update cache
+            const responseCopy = response.clone();
+            event.waitUntil(
+                caches.open(cacheKey).then(function(cache) {
+                    return cache.put(url, responseCopy);
+                })
+            );
+            return response;
+        }
         // reach the code in the catch
         throw response;
     }).catch(function(errResponse) {
@@ -184,8 +194,11 @@ function fetchWithPreload(event)
 }
 function getRelativeUrl(absoluteUrl)
 {
-    var relativeUrl = absoluteUrl.split('#')[0].split('?')[0],
-        baseUrl = self.location.href.split('#')[0].split('?')[0].split('/').slice(0, -1).join('/') + '/';
+    let relativeUrl = absoluteUrl.split('#')[0].split('?')[0],
+        baseUrl = self.location.href.split('#')[0].split('?')[0].split('/').slice(0, -1).join('/');
+    //if ('/' === relativeUrl.slice(-1)) relativeUrl = relativeUrl.slice(0, -1)
+    if ('/' === baseUrl.slice(-1)) baseUrl = baseUrl.slice(0, -1)
+    baseUrl += '/';
     if (baseUrl === relativeUrl.slice(0, baseUrl.length)) relativeUrl = './' + relativeUrl.slice(baseUrl.length);
     return relativeUrl;
 }
