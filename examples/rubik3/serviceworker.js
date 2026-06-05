@@ -1,7 +1,7 @@
 "use strict";
 
 const appName = "rubik3";
-const version = "v1-sw-5"; // Change value to force update
+const version = "v1.1.0-sw-1"; // Change value to force update
 const cacheKey = appName + "-" + version;
 const assets = [
 "./",
@@ -28,10 +28,9 @@ const assets = [
 "./assets/rubik3.png",
 "./assets/select.png",
 "./common/css/common.min.css",*/
-"./common/js/three_old.js",
-"./common/js/Tween.js",
+"./three.js",
+"./Tween.js",
 "./Rubik.js",
-"./RubikApplication.js"
 ];
 // large or rarely changed assets
 const cached_first_assets = [
@@ -41,8 +40,8 @@ const cached_first_assets = [
 "./assets/rubik3.png",
 "./assets/select.png",
 "./common/css/common.min.css",*/
-"./common/js/three_old.js",
-"./common/js/Tween.js"
+"./three.js",
+"./Tween.js"
 ];
 const options = {
     nocache: true,

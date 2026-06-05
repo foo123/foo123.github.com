@@ -8,19 +8,18 @@
 <meta property="og:image" content="https://foo123.github.io/thumbs/rubik3.jpg">
 <meta property="og:url" content="https://foo123.github.io/examples/rubik3/">
 <meta name="twitter:card" content="summary">
-<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=1.0.0">
-<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=1.0.0">
-<link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png?v=1.0.0">
-<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png?v=1.0.0">
-<link rel="manifest" href="./manifest.json?v=1.0.0r3">
-<link rel="mask-icon" href="./safari-pinned-tab.svg?v=1.0.0" color="#323232">
-<link rel="shortcut icon" href="./favicon.ico?v=1.0.0">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=1.1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=1.1.0">
+<link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png?v=1.1.0">
+<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png?v=1.1.0">
+<link rel="manifest" href="./manifest.json?v=1.1.0">
+<link rel="mask-icon" href="./safari-pinned-tab.svg?v=1.1.0" color="#323232">
+<link rel="shortcut icon" href="./favicon.ico?v=1.1.0">
 <meta name="apple-mobile-web-app-title" content="Rubik3">
 <meta name="application-name" content="Rubik3">
 <meta name="msapplication-TileColor" content="#323232">
-<meta name="msapplication-config" content="./browserconfig.xml?v=1.0.0">
+<meta name="msapplication-config" content="./browserconfig.xml?v=1.1.0">
 <meta name="theme-color" content="#323232">
-<!--<link rel="stylesheet" type="text/css" href="./common/css/common.min.css" />-->
 <style type="text/css">
 body {
     box-sizing: border-box;
@@ -213,57 +212,408 @@ body {
     }
 }
 </style>
-<!--<link rel="stylesheet" href="../common/css/colorpicker.css" type="text/css" />
-<script type="text/javascript" src="../common/js/jquery/jquery-3.7.1.slim.min.js"></script>
-<script type="text/javascript" src="../common/js/colorpicker.min.js"></script>-->
-<script type="text/javascript" src="./common/js/three_old.js"></script>
-<script type="text/javascript" src="./common/js/Tween.js"></script>
+<script type="text/javascript" src="./three.js"></script>
+<script type="text/javascript" src="./Tween.js"></script>
 <script type="text/javascript" src="./Rubik.js"></script>
-<script type="text/javascript" src="./RubikApplication.js"></script>
 </head>
 <body>
 <span id="forkongithub"><a href="https://github.com/foo123/Rubik3">Twist me on GitHub</a></span>
 
 <div id="controls" style="position:relative;box-sizing:border-box;display:block;width:100%;margin-top:8px;">
-    <select size="1" id="rubik-type">
-        <optgroup label="Cube Type">
-        <option value="2">2&times;2&times;2</option>
-        <option value="3" selected="selected">3&times;3&times;3</option>
-        <option value="4">4&times;4&times;4</option>
-        </optgroup>
-    </select>
+<select size="1" id="rubik-type">
+    <optgroup label="Cube Type">
+    <option value="2">2&times;2&times;2</option>
+    <option value="3" selected="selected">3&times;3&times;3</option>
+    <option value="4">4&times;4&times;4</option>
+    </optgroup>
+</select>
 
-    <button class="button" id="newrubik">New Cube</button>
-    <button class="button" id="scramble">Scramble</button>
-    <button class="button" id="undo">Undo</button>
+<button class="button" id="newrubik">New Cube</button>
+<button class="button" id="scramble">Scramble</button>
+<button class="button" id="undo">Undo</button>
 
-    <p style="margin-top:8px">Click or touch and drag on background to rotate cube. Drag row or column to rotate sides</p>
+<p style="margin-top:8px">Click or touch and drag on background to rotate cube. Drag row or column to rotate sides</p>
 
-    <div style="position:relative;box-sizing:border-box;display:block;width:100%;margin-top:0px;">
-    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" style="display:inline-block;color:#f90b13;font-size:14px;">donate</a>
-    </div>
-
-    <!--<div id='colors' style="position:relative;">
-        <div class='color-class colorSelector'><div id='cstop1'></div></div>
-        <div class='color-class colorSelector'><div id='csbottom1'></div></div>
-        <div class='color-class colorSelector'><div id='csleft1'></div></div>
-        <div style="float:none;clear:both"></div>
-        <div class='color-class colorSelector'><div id='csright1'></div></div>
-        <div class='color-class colorSelector'><div id='csfront1'></div></div>
-        <div class='color-class colorSelector'><div id='csback1'></div></div>
-        <div style="float:none;clear:both"></div>
-
-        <br /><br />
-
-        <div class='color-class colorSelector'><div id='csinside1'></div></div>
-        <div style="float:none;clear:both"></div>
-    </div>-->
+<div style="position:relative;box-sizing:border-box;display:block;width:100%;margin-top:0px;">
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DP8WED9XW9TAE" style="display:inline-block;color:#f90b13;font-size:14px;">donate</a>
+</div>
 </div>
 
 <div id="container"><div id="flatimage"></div></div>
 
 <script type="text/javascript">//<![CDATA[
-RubikApplication.init();
+(function(window, undef){
+"use strict";
+
+(function() {
+/**
+ * Provides requestAnimationFrame in a cross browser way.
+ * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+ */
+if (!window.requestAnimationFrame)
+{
+    window.requestAnimationFrame = (window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback, element) {window.setTimeout(callback, 1000 / 60);})
+    ;
+    window.cancelAnimationFrame = (window.webkitCancelAnimationFrame ||
+        window.mozCancelAnimationFrame ||
+        window.oCancelAnimationFrame ||
+        window.msCancelAnimationFrame ||
+        function(timer) {window.clearTimeout(timer);})
+    ;
+}
+})();
+
+function hasEventOptions()
+{
+    if (null == hasEventOptions.supported)
+    {
+        var passiveSupported = false, options = {};
+        try {
+            Object.defineProperty(options, 'passive', {
+                get: function(){
+                    passiveSupported = true;
+                    return false;
+                }
+            });
+            window.addEventListener('test', null, options);
+            window.removeEventListener('test', null, options);
+        } catch(e) {
+            passiveSupported = false;
+        }
+        hasEventOptions.supported = passiveSupported;
+    }
+    return hasEventOptions.supported;
+}
+function addEvent(el, event, handler, options)
+{
+    if (el)
+    {
+        if (el.attachEvent) el.attachEvent('on' + event, handler);
+        else el.addEventListener(event, handler, hasEventOptions() ? options : ((null != options) && ("object" === typeof options) ? !!options.capture : !!options));
+    }
+    return el;
+}
+function removeEvent(el, event, handler, options)
+{
+    if (el)
+    {
+        if (el.detachEvent) el.detachEvent('on' + event, handler);
+        else el.removeEventListener(event, handler, hasEventOptions() ? options : ((null != options) && ("object" === typeof options) ? !!options.capture : !!options));
+    }
+    return el;
+}
+function recursive_offset(node)
+{
+    var x = 0, y = 0, nodeStyle;
+
+    while (node)
+    {
+        try {
+            nodeStyle = window.getComputedStyle(node);
+        } catch(e) {
+            nodeStyle = null;
+        }
+        if (node.scrollLeft) x += node.scrollLeft;
+        if (node.scrollTop) y += node.scrollTop;
+        if (node.offsetLeft) x -= node.offsetLeft;
+        if (node.offsetTop) y -= node.offsetTop;
+        if (nodeStyle && nodeStyle.marginLeft) x -= parseInt(nodeStyle.marginLeft, 10);
+        if (nodeStyle && nodeStyle.marginTop) y -= parseInt(nodeStyle.marginTop, 10);
+        node = node.parentNode
+    }
+    return {x:x, y:y};
+}
+
+var stdMath = Math,
+    container, scramblebt, undobt, newbt,
+    flatimage, rubikN, camera, scene, renderer, rubikcube,
+
+    w, h, w2, h2,
+    targetRotationY = 0, targetRotationOnMouseDownY = 0,
+    targetRotationX = 0, targetRotationOnMouseDownX = 0,
+    rad = 500, mouse = {x:0, y:0},
+    mouseX = 0, mouseXOnMouseDown = 0,
+    mouseY = 0, mouseYOnMouseDown = 0,
+    mouseX0 = mouseX, mouseY0 = mouseY,
+
+    pressed_cubelet, released_cubelet,
+    isCubeRotation = false,
+
+    // mutually complementary colors
+    colors = {
+        inside: 0x2c2c2c,
+        top: 0xFF00FF,
+        bottom: 0x00FF00,
+        left: 0xFFFF00,
+        right: 0x0000FF,
+        front: 0xFF0000,
+        back: 0x00FFFF
+    },
+
+    multx = stdMath.PI/2, multy = -stdMath.PI
+;
+
+function updateflatimage()
+{
+    /*var flat =*/rubikcube.getFlatImage(flatimage);
+}
+function getCubelet(clientX, clientY)
+{
+    mouse.x = (clientX / w) * 2 - 1;
+    mouse.y = -(clientY / h) * 2 + 1;
+    return rubikcube.getCubelet(camera, mouse.x, mouse.y, true);
+}
+function onDocumentMouseDown(event)
+{
+    onDocumentDown(event, false);
+}
+function onDocumentTouchStart(event)
+{
+    onDocumentDown(event, true);
+}
+function onDocumentDown(event, isTouch)
+{
+    event.preventDefault();
+
+    var clientX = isTouch ? event.touches[0].clientX : event.clientX,
+        clientY = isTouch ? event.touches[0].clientY : event.clientY,
+        offset, target;
+
+    offset = recursive_offset(event.target);
+    clientX += offset.x; clientY += offset.y;
+    target = getCubelet(clientX, clientY);
+
+    if (!target)
+    {
+        isCubeRotation = true;
+        mouseX0 = mouseX = (clientX / w);
+        mouseY0 = mouseY = (clientY / h);
+
+        if (isTouch)
+        {
+            addEvent(container, 'touchmove', onDocumentTouchMove, {passive:false, capture:false});
+            addEvent(container, 'touchend', onDocumentTouchEnd, {passive:false, capture:false});
+            addEvent(container, 'touchcancel', onDocumentTouchEnd, {passive:false, capture:false});
+        }
+        else
+        {
+            addEvent(container, 'mousemove', onDocumentMouseMove, {passive:false, capture:false});
+            addEvent(container, 'mouseup', onDocumentMouseUp, {passive:false, capture:false});
+            addEvent(container, 'mouseout', onDocumentMouseOut, {passive:false, capture:false});
+        }
+    }
+    else
+    {
+        isCubeRotation = false;
+        if (!target.seenas) return;
+        pressed_cubelet = target;
+
+        if (isTouch)
+        {
+            //addEvent(container, 'touchmove', onDocumentTouchMove, {passive:false, capture:false});
+            addEvent(container, 'touchend', onDocumentTouchEnd, {passive:false, capture:false});
+            addEvent(container, 'touchcancel', onDocumentTouchEnd, {passive:false, capture:false});
+        }
+        else
+        {
+            //addEvent(container, 'mousemove', onDocumentMouseMove, {passive:false, capture:false});
+            addEvent(container, 'mouseup', onDocumentMouseUp, {passive:false, capture:false});
+            addEvent(container, 'mouseout', onDocumentMouseOut, {passive:false, capture:false});
+        }
+    }
+}
+function onDocumentMouseMove(event)
+{
+    onDocumentMove(event, false);
+}
+function onDocumentTouchMove(event)
+{
+    onDocumentMove(event, true);
+}
+function onDocumentMove(event, isTouch)
+{
+    var clientX = isTouch ? event.touches[0].clientX : event.clientX,
+        clientY = isTouch ? event.touches[0].clientY : event.clientY,
+        offset;
+
+    if (isCubeRotation)
+    {
+        offset = recursive_offset(event.target);
+        clientX += offset.x; clientY += offset.y;
+
+        if (clientX > w || clientX < 0 || clientY > h || clientY < 0) return;
+        mouseX = (clientX / w);
+        mouseY = (clientY / h);
+        targetRotationY += mouseX - mouseX0;
+        targetRotationX += mouseY - mouseY0;
+        mouseX0 = mouseX;
+        mouseY0 = mouseY;
+    }
+    else
+    {
+        // do nothing
+    }
+}
+function onDocumentMouseUp(event)
+{
+    onDocumentUp(event, false);
+}
+function onDocumentTouchEnd(event)
+{
+    onDocumentUp(event, true);
+}
+function onDocumentUp(event, isTouch)
+{
+    var clientX = isTouch ? event.touches[0].clientX : event.clientX,
+        clientY = isTouch ? event.touches[0].clientY : event.clientY,
+        offset;
+
+    if (isCubeRotation)
+    {
+        isCubeRotation = false;
+        if (isTouch)
+        {
+            removeEvent(container, 'touchmove', onDocumentTouchMove, {passive:false, capture:false});
+            removeEvent(container, 'touchend', onDocumentTouchEnd, {passive:false, capture:false});
+            removeEvent(container, 'touchcancel', onDocumentTouchEnd, {passive:false, capture:false});
+        }
+        else
+        {
+            removeEvent(container, 'mousemove', onDocumentMouseMove, {passive:false, capture:false});
+            removeEvent(container, 'mouseup', onDocumentMouseUp, {passive:false, capture:false});
+            removeEvent(container, 'mouseout', onDocumentMouseOut, {passive:false, capture:false});
+        }
+    }
+    else
+    {
+        if (!pressed_cubelet) return;
+
+        offset = recursive_offset(event.target);
+        clientX += offset.x; clientY += offset.y;
+
+        released_cubelet = getCubelet(clientX, clientY);
+        if (!released_cubelet || !released_cubelet.seenas) return;
+
+        var rotation = rubikcube.getRotation(pressed_cubelet, released_cubelet);
+        if (rotation)
+        {
+            rotation.duration = 1;
+            //rotation.onComplete = updateflatimage;
+            rubikcube.rotate(rotation);
+        }
+        if (isTouch)
+        {
+            //removeEvent(container, 'touchmove', onDocumentTouchMove, {passive:false, capture:false});
+            removeEvent(container, 'touchend', onDocumentTouchEnd, {passive:false, capture:false});
+            removeEvent(container, 'touchcancel', onDocumentTouchEnd, {passive:false, capture:false});
+        }
+        else
+        {
+            //removeEvent(container, 'mousemove', onDocumentMouseMove, {passive:false, capture:false});
+            removeEvent(container, 'mouseup', onDocumentMouseUp, {passive:false, capture:false});
+            removeEvent(container, 'mouseout', onDocumentMouseOut, {passive:false, capture:false});
+        }
+    }
+}
+function onDocumentMouseOut(event)
+{
+    isCubeRotation = false;
+    removeEvent(container, 'mousemove', onDocumentMouseMove, {passive:false, capture:false});
+    removeEvent(container, 'mouseup', onDocumentMouseUp, {passive:false, capture:false});
+    removeEvent(container, 'mouseout', onDocumentMouseOut, {passive:false, capture:false});
+}
+function animate()
+{
+    // sperical coordinate system for camera, with radius = rad
+    camera.position.x = rad * stdMath.sin(targetRotationY * multy) * stdMath.cos(targetRotationX * multx);
+    camera.position.y = rad * stdMath.sin(targetRotationX * multx);
+    camera.position.z = rad * stdMath.cos(targetRotationY * multy) * stdMath.cos(targetRotationX * multx);
+    camera.lookAt(scene.position);
+    if (Rubik.Tween) Rubik.Tween.tick();
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+}
+function setDimensions()
+{
+    w = stdMath.min(window.innerWidth, 2000) - 20;
+    h = stdMath.max(window.innerHeight - 150, 650);
+    w2 = w / 2;
+    h2 = h / 2;
+    container.style.width = String(w) + "px";
+    container.style.height = String(h) + "px";
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+}
+var app = {
+    init : function() {
+
+        container = document.getElementById('container');
+        newbt = document.getElementById('newrubik');
+        scramblebt = document.getElementById('scramble');
+        undobt = document.getElementById('undo');
+        flatimage = document.getElementById('flatimage');
+        rubikN = document.getElementById('rubik-type');
+
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(70, 1.0, 1, 1000);
+        camera.position.z = rad;
+        scene.add(camera);
+
+        // Rubik Cube
+        Rubik.Tween = window.Tween;
+        rubikcube = new Rubik(rubikN.options[rubikN.selectedIndex || 0].value, 200, 0.1, colors);
+        scene.add(rubikcube);
+        rubikcube.onChange = updateflatimage;
+
+        renderer = new THREE.CanvasRenderer();
+        setDimensions();
+        container.appendChild(renderer.domElement);
+
+        addEvent(window, 'resize', setDimensions, false);
+        addEvent(container, 'mousedown', onDocumentMouseDown, {passive:false, capture:false});
+        addEvent(container, 'touchstart', onDocumentTouchStart, {passive:false, capture:false});
+        addEvent(newbt, 'click', function() {
+            if (rubikcube) scene.remove(rubikcube);
+            rubikcube = new Rubik(rubikN.options[rubikN.selectedIndex || 0].value, 200, 0.1, colors);
+            scene.add(rubikcube);
+            rubikcube.onChange = updateflatimage;
+            renderer.render(scene, camera);
+            updateflatimage();
+        }, false);
+        addEvent(scramblebt, 'click', function() {
+            rubikcube.scramble(10);
+            updateflatimage();
+        }, false);
+        addEvent(undobt, 'click', function() {
+            if (rubikcube.undo() == 'setRubikColors')
+            {
+                colors = {
+                    front: rubikcube.rubik.colors.front,
+                    back: rubikcube.rubik.colors.back,
+                    left: rubikcube.rubik.colors.left,
+                    right: rubikcube.rubik.colors.right,
+                    top: rubikcube.rubik.colors.top,
+                    bottom: rubikcube.rubik.colors.bottom,
+                    inside: rubikcube.rubik.colors.inside
+                };
+                //updatecolors();
+            }
+        }, false);
+
+        // after render works
+        renderer.render(scene, camera);
+        updateflatimage();
+        requestAnimationFrame(animate);
+    }
+};
+// go
+app.init();
+
 if ("serviceWorker" in navigator)
 {
     window.addEventListener("load", function() {
@@ -272,6 +622,7 @@ if ("serviceWorker" in navigator)
         });
     });
 }
+})(window);
 //]]></script>
 </body>
 </html>

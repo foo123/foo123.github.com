@@ -5,7 +5,7 @@
     "lang": "en",
     "description": "Intuitive 3D Rubik Cube Game in pure HTML and JavaScript",
     "categories": ["games", "entertainment"],
-    "version": "1.0.0",
+    "version": "1.1.0",
     "display": "standalone",
     "start_url": "./",
     "scope": "./",

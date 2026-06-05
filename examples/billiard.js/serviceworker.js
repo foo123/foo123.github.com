@@ -1,7 +1,7 @@
 "use strict";
 
 const appName = "billiard";
-const version = "v1-sw-8"; // Change value to force update
+const version = "v1.1.0-sw-1"; // Change value to force update
 const cacheKey = appName + "-" + version;
 const assets = [
 "./",
@@ -22,7 +22,8 @@ const assets = [
 "./assets/yellow.png",
 "./assets/red.png",*/
 "./assets/taco.png",
-"./NEngine.min.js",
+"./Tween.min.js",
+"./Scene.min.js",
 "./Billiard.min.js"
 ];
 // large or rarely changed assets
