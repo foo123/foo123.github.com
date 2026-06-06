@@ -23,7 +23,7 @@ const assets = [
 "./assets/red.png",*/
 "./assets/taco.png",
 "./Tween.min.js",
-"./Scene.min.js",
+"./SceneLite.min.js",
 "./Billiard.min.js"
 ];
 // large or rarely changed assets
