@@ -555,7 +555,8 @@ function init($)
                 '"string"',
                 's = "str"',
                 's+"ing"',
-                '\'string\''
+                '\'string\'',
+                'sprintf("%02d %s %0.5f", 3.14, 3.14, 3.14)'
                 ]);
             break;
             case 'functions':
@@ -579,6 +580,7 @@ function init($)
                 'a = [1 2 3]',
                 'a(1)',
                 'a(1) = 0',
+                'b = [1:3; 4:6]',
                 'zeros(2, 3)',
                 'ones(2, 3)',
                 'eye(2)',
@@ -594,6 +596,7 @@ function init($)
                 'A',
                 'B = A\'',
                 'A(:)',
+                'A(:) = [4 3 2 1]',
                 'B = [1 2; 3 4]',
                 'B(B>1)',
                 'B(B>1) = 2',
@@ -750,7 +753,7 @@ function init($)
                 return run_session([
                 '% 2D plots',
                 't = 0:pi/100:2*pi;',
-                'plot(t,sin(t),"Color","m","LineStyle","--",t,cos(t),"Color","b","LineStyle","-.");',
+                'plot(t,sin(t),Color="m",LineStyle="--",t,cos(t),Color="b",LineStyle="-.");',
                 'xlabel("x");',
                 'ylabel("y");',
                 'title("plot x-y");',
@@ -769,7 +772,7 @@ function init($)
                 'title("semilogy x-y");',
                 'a = 2*(1:5)-1;',
                 'b = 1.2*(1:5)-1/2;',
-                'bar(a,"Color","b",b,"Color","r");',
+                'bar(a,Color="b",b,Color="r");',
                 'xlabel("x");',
                 'ylabel("y");',
                 'title("bar x-y");',
@@ -782,6 +785,7 @@ function init($)
                 'piechart([1 2 3 4],[2 2 3 4]);',
                 'title("piechart");',
                 'legend(["1","2","3","4"],["a","b","c","d"]);',
+                'A = [0.5 1 1.5 2];\nX = (0:0.05:10)\';\nY = [gammainc(X,A(1)), gammainc(X,A(2)), gammainc(X,A(3)), gammainc(X,A(4))];\nplot(X,Y);\ngrid(on);\nlegend("a = 0.5","a = 1","a = 1.5","a = 2");\ntitle("Regularized lower incomplete gamma function for a = 0.5, 1, 1.5, and 2");\nxlabel("x");\nylabel("P(x,a)");',
                 '% and more..'
                 ]);
             break;
@@ -837,14 +841,14 @@ function init($)
             case 'user_functions':
                 return run_session([
                 '% user defined functions',
-                'function fn=factorial(n)\n fn = prod(1:n);\nend',
+                'function fn=pfactorial(n)\n fn = prod(1:n);\nend',
                 'function fn=rfactorial(n)\n % recursion is supported\n if 1 >= n\n  fn = 1;\n else\n  fn = n*rfactorial(n-1);\n end\nend',
                 'function [s,varargout]=mysize(x)\n nout = max([nargout 1])-1;\n s = size(x);\n for i=1:nout\n  varargout{i} = s(i);\n end\nend',
                 'function varargout=echo(varargin)\n for i=1:min([nargin nargout])\n  varargout{i} = varargin{i};\n end\nend',
-                'fh = @factorial; % function handle',
-                'f = @(n) factorial(n); % anonymous function',
-                'factorial(3)',
-                'factorial(5)',
+                'fh = @pfactorial; % function handle',
+                'f = @(n) pfactorial(n); % anonymous function',
+                'pfactorial(3)',
+                'pfactorial(5)',
                 'rfactorial(3)',
                 'rfactorial(5)',
                 'fh(3)',
@@ -854,9 +858,21 @@ function init($)
                 'mysize(ones(3,2))',
                 '[s,rows,cols]=mysize(ones(3,2,4))',
                 '[o1,o2]=echo(1,2,3)',
-                'arrayfun(@factorial, [1 2; 3 4])',
+                'arrayfun(@pfactorial, [1 2; 3 4])',
                 'arrayfun(fh, [1 2; 3 4])',
-                'arrayfun(f, [1 2; 3 4])'
+                'arrayfun(f, [1 2; 3 4])',
+                '% internal functions/function scope',
+                'function out=test(n)\n if 1==n\n  f=@test1;\nelse\n  f=@test2;\n end\n out=f();\n function out=test1()\n  out=test2();\n  function out=test2()\n   out="test1";\n   end\n  end\n function out=test2()\n  out="test2";\nend\nend',
+                'test(1)',
+                'test(2)',
+                'test1() % local, not accessible',
+                'test2() % local, not accessible',
+                '% function Name=Value arguments',
+                'function s=surround(varargin,Prefix="foo",Suffix="bar") % all the default NameValues must be declared\n s=strjoin(cat(2, {Prefix}, varargin{:}, {Suffix}));\nend',
+                'surround("is","a") % use defaults',
+                'surround("is","the","best",Suffix="baz") % set only some',
+                'surround("is","the","best","Suffix","baz") % alternative way, must come last',
+                'surround("awesome","freakin..",Suffix="foo",Prefix="kung") % any ordering'
                 ]);
             break;
         }
