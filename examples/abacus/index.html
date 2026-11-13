@@ -610,7 +610,7 @@ function produce(model)
     if ('divisors' === object)
     {
         klass = "divisors";
-        model.set('summary', esc_html("Abacus.Math.divisors(\""+String(N)+"\", true)"), true);
+        model.set('summary', esc_html("Abacus.Math.divisors.numeric(\""+String(N)+"\", true)"), true);
     }
     else if ('prime_sieve' === object)
     {
@@ -1361,7 +1361,7 @@ function produce(model)
         else if ("divisors" === klass)
         {
             N = Arithmetic.num(N);
-            comb = Arithmetic.equ(N, 0) ? new Abacus.Iterator([Arithmetic.O]) : Abacus.Math.divisors(N, true);
+            comb = Arithmetic.equ(N, 0) ? new Abacus.Iterator([Arithmetic.O]) : Abacus.Math.divisors.numeric(N, true);
         }
         else
         {
