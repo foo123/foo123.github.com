@@ -263,7 +263,7 @@ window.MathJax = {
             <option value="partition">Partition</option>
             <option value="composition">Composition</option>
             <option value="set_partition">Set Partition</option>
-            <option value="balanced_paren">Balanced Parentheses</option>
+            <option value="dyck_word">Dyck Word</option>
             <option value="latin_square">Latin Square</option>
             <option value="magic_square">Magic Square</option>
         </optgroup>
@@ -1328,9 +1328,9 @@ function produce(model)
             $["parts="] = +K;
         }
     }
-    else if ("balanced_paren" === object)
+    else if ("dyck_word" === object)
     {
-        klass = "CatalanWord";
+        klass = "DyckWord";
         n = N;
         sep = '';
     }
@@ -1480,7 +1480,7 @@ appRouter.one({route:'#{%ALL%:hash}', handler:function(params) {
             model.set('alphabet', String(params.alphabet || ""), true);
             model.set('N', String(params.N), true);
             model.set('K', String(params.K), true);
-            model.set('object', String(params.object), true);
+            model.set('object', String(params.object).split("balanced_paren").join("dyck_word"), true);
             model.set('type', String(params.type), true);
             setTimeout(function() {produce(model);}, 10);
         }, 10);
@@ -1590,8 +1590,8 @@ $screen.modelview({
             "object.set_partition": function() {
                 return this.$data.object === "set_partition";
             },
-            "object.balanced_paren": function() {
-                return this.$data.object === "balanced_paren";
+            "object.dyck_word": function() {
+                return this.$data.object === "dyck_word";
             },
             "isCombinatorics": function() {
                 var o = this.$data.object;
