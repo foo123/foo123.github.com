@@ -684,6 +684,9 @@ function init()
                 'p = Poly("(x+y)^2", GF2)',
                 'Factor(p)',
                 'p.rad(2)',
+                'p = Poly("(x+y)^3", GF2)',
+                'Factor(p)',
+                'p.rad(3)',
                 'p = Poly("(x+y)^4", GF2)',
                 'Factor(p)',
                 'p.rad(2)',
@@ -694,10 +697,10 @@ function init()
                 'p.rad(2)',
                 'p = Poly("(x+y)^3", QR)',
                 'Factor(p)',
-                'p.rad(3)',
+                'p.rad(3)'/*,
                 'p = Poly("(x+y)(2x+1)", QR)',
                 'Factor(p)',
-                'p.rad(2)'
+                'p.rad(2)'*/
                 ]);
             break;
             case 'roots':
